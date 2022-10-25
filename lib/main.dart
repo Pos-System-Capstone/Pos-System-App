@@ -1,31 +1,157 @@
 import 'package:flutter/material.dart';
+import 'package:pos_apps/Views/Flutter3Demo/typography.dart';
+
+import 'Views/Flutter3Demo/color_palattes.dart';
+import 'Views/Flutter3Demo/component.dart';
+import 'Views/Flutter3Demo/elevation.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+const Color m3BaseColor = Color(0xff6750a4);
+const List<Color> colorOptions = [
+  m3BaseColor,
+  Colors.blue,
+  Colors.teal,
+  Colors.green,
+  Colors.yellow,
+  Colors.orange,
+  Colors.pink
+];
+const List<String> colorText = <String>[
+  "M3 Baseline",
+  "Blue",
+  "Teal",
+  "Green",
+  "Yellow",
+  "Orange",
+  "Pink",
+];
+
+class _MyAppState extends State<MyApp> {
+  bool useLightMode = true;
+  int colorSelected = 0;
+  int screenIndex = 0;
+
+  late ThemeData themeData;
+
+  @override
+  initState() {
+    super.initState();
+    themeData = updateThemes(colorSelected, useLightMode);
+  }
+
+  ThemeData updateThemes(int colorIndex, bool useLightMode) {
+    return ThemeData(
+        colorSchemeSeed: colorOptions[colorSelected],
+        useMaterial3: true,
+        brightness: useLightMode ? Brightness.light : Brightness.dark);
+  }
+
+  void handleScreenChanged(int selectedScreen) {
+    setState(() {
+      screenIndex = selectedScreen;
+    });
+  }
+
+  void handleBrightnessChange() {
+    setState(() {
+      useLightMode = !useLightMode;
+      themeData = updateThemes(colorSelected, useLightMode);
+    });
+  }
+
+  void handleColorSelect(int value) {
+    setState(() {
+      colorSelected = value;
+      themeData = updateThemes(colorSelected, useLightMode);
+    });
+  }
+
+  Widget createScreenFor(int screenIndex, bool showNavBarExample) {
+    switch (screenIndex) {
+      case 0:
+        return ComponentScreen(showNavBottomBar: showNavBarExample);
+      case 1:
+        return const ColorPalettesScreen();
+      case 2:
+        return const TypographyScreen();
+      case 3:
+        return const ElevationScreen();
+      default:
+        return ComponentScreen(showNavBottomBar: showNavBarExample);
+    }
+  }
+
+  PreferredSizeWidget createAppBar() {
+    return AppBar(
+      title: const Text("Material 3"),
+      actions: [
+        IconButton(
+          icon: useLightMode
+              ? const Icon(Icons.wb_sunny_outlined)
+              : const Icon(Icons.wb_sunny),
+          onPressed: handleBrightnessChange,
+          tooltip: "Toggle brightness",
+        ),
+        PopupMenuButton(
+          icon: const Icon(Icons.more_vert),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          itemBuilder: (context) {
+            return List.generate(colorOptions.length, (index) {
+              return PopupMenuItem(
+                  value: index,
+                  child: Wrap(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Icon(
+                          index == colorSelected
+                              ? Icons.color_lens
+                              : Icons.color_lens_outlined,
+                          color: colorOptions[index],
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(colorText[index]))
+                    ],
+                  ));
+            });
+          },
+          onSelected: handleColorSelect,
+        ),
+      ],
+    );
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Flutter Demo',
+        themeMode: useLightMode ? ThemeMode.light : ThemeMode.dark,
+        theme: themeData,
+        home: Scaffold(
+          appBar: createAppBar(),
+          body: Row(children: <Widget>[
+            createScreenFor(screenIndex, false),
+          ]),
+          bottomNavigationBar: NavigationBars(
+            onSelectItem: handleScreenChanged,
+            selectedIndex: screenIndex,
+            isExampleBar: false,
+          ),
+        ));
   }
 }
 
@@ -70,11 +196,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
