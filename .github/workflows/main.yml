@@ -13,6 +13,5 @@ jobs:
       with:
         flutter-version: '3.3.5'
     - run: flutter pub get
-    - run: flutter test
     - run: flutter build apk
     - run: flutter build appbundle
