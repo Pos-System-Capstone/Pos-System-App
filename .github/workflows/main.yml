@@ -2,16 +2,18 @@ on: push
 name: Flutter action
 jobs:
   build:
-    runs-on: macos-latest
+    name: Build
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v2
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
       with:
-       distribution: 'zulu'
-       java-version: '11'
-    - uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.3.5'
+          channel: 'dev'
     - run: flutter pub get
-    - run: flutter build apk
-    - run: flutter build appbundle
+    - run: flutter config --enable-web
+    - run: flutter build web
+    - name: Archive Production Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: web-build
+        path: build/web
