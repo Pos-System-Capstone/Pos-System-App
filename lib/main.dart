@@ -40,6 +40,7 @@ class _MyAppState extends State<MyApp> {
   bool useLightMode = true;
   int colorSelected = 0;
   int screenIndex = 0;
+  double narrowScreenWidthThreshold = 450;
 
   late ThemeData themeData;
 
@@ -138,20 +139,44 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        themeMode: useLightMode ? ThemeMode.light : ThemeMode.dark,
-        theme: themeData,
-        home: Scaffold(
-          appBar: createAppBar(),
-          body: Row(children: <Widget>[
-            createScreenFor(screenIndex, false),
-          ]),
-          bottomNavigationBar: NavigationBars(
-            onSelectItem: handleScreenChanged,
-            selectedIndex: screenIndex,
-            isExampleBar: false,
-          ),
-        ));
+      title: 'Flutter Demo',
+      themeMode: useLightMode ? ThemeMode.light : ThemeMode.dark,
+      theme: themeData,
+      home: LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth < narrowScreenWidthThreshold) {
+          return Scaffold(
+            appBar: createAppBar(),
+            body: Row(children: <Widget>[
+              createScreenFor(screenIndex, false),
+            ]),
+            bottomNavigationBar: NavigationBars(
+              onSelectItem: handleScreenChanged,
+              selectedIndex: screenIndex,
+              isExampleBar: false,
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: createAppBar(),
+            body: SafeArea(
+              bottom: false,
+              top: false,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: NavigationRailSection(
+                          onSelectItem: handleScreenChanged,
+                          selectedIndex: screenIndex)),
+                  const VerticalDivider(thickness: 1, width: 1),
+                  createScreenFor(screenIndex, true),
+                ],
+              ),
+            ),
+          );
+        }
+      }),
+    );
   }
 }
 
