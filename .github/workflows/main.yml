@@ -20,7 +20,6 @@ jobs:
     - run: flutter build ios --release --no-codesign
     # For Window
     - run: flutter build windows
-
     - name: Archive Production Artifact
       uses: actions/upload-artifact@master
       with:
