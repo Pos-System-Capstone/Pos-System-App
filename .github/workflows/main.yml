@@ -53,7 +53,7 @@ jobs:
       with:
         flutter-version: '3.3.5'
     - run: flutter pub get
-    - run: flutter build appbundle
+    - run: flutter build apk
     - name: Upload APK
       uses: actions/upload-artifact@master
       with:
