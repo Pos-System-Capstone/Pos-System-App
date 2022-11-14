@@ -1,30 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/Views/Flutter3Demo/marterialHome.dart';
 import 'package:pos_apps/Views/Flutter3Demo/typography.dart';
 
-import 'Routes/routes_constrants.dart';
-import 'Views/Flutter3Demo/color_palattes.dart';
-import 'Views/Flutter3Demo/component.dart';
-import 'Views/Flutter3Demo/elevation.dart';
-import 'Views/home.dart';
-import 'Views/onboard.dart';
-import 'Views/startup.dart';
-import 'setup.dart';
+import 'color_palattes.dart';
+import 'component.dart';
+import 'elevation.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  // HttpOverrides.global = new MyHttpOverrides();
-  createRouteBindings();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MarterialHome extends StatefulWidget {
+  const MarterialHome({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MarterialHome> createState() => _MyAppState();
 }
 
 const Color m3BaseColor = Color(0xff6750a4);
@@ -47,7 +33,7 @@ const List<String> colorText = <String>[
   "Pink",
 ];
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MarterialHome> {
   bool useLightMode = true;
   int colorSelected = 0;
   int screenIndex = 0;
@@ -150,40 +136,44 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        initialRoute: '/home',
-        title: 'Flutter Demo',
-        themeMode: useLightMode ? ThemeMode.light : ThemeMode.dark,
-        theme: themeData,
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case RouteHandler.HOME:
-              return CupertinoPageRoute<bool>(
-                  builder: (context) => HomeScreen(), settings: settings);
-            // case RouteHandler.NAV:
-            //   return CupertinoPageRoute(
-            //       builder: (context) => RootScreen(
-            //             initScreenIndex: settings.arguments ?? 0,
-            //           ),
-            //       settings: settings);
-            case RouteHandler.ONBOARD:
-              return CupertinoPageRoute(
-                  builder: (context) => OnBoardScreen(), settings: settings);
-            case RouteHandler.LOADING:
-              return CupertinoPageRoute<bool>(
-                  builder: (context) => LoadingScreen(
-                        title: settings.arguments.toString() ?? "Đang xử lý...",
-                      ),
-                  settings: settings);
-            // case RouteHandler.ONBOARD:
-            //   return ScaleRoute(page: OnBoardScreen());
-            case RouteHandler.DESIGN:
-              return CupertinoPageRoute<bool>(
-                  builder: (context) => MarterialHome(), settings: settings);
-            default:
-              return CupertinoPageRoute(
-                  builder: (context) => MarterialHome(), settings: settings);
-          }
-        },
-        home: const StartUpView());
+      initialRoute: '/home',
+      title: 'Flutter Demo',
+      themeMode: useLightMode ? ThemeMode.light : ThemeMode.dark,
+      theme: themeData,
+      home: LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth < narrowScreenWidthThreshold) {
+          return Scaffold(
+            appBar: createAppBar(),
+            body: Row(children: <Widget>[
+              createScreenFor(screenIndex, false),
+            ]),
+            bottomNavigationBar: NavigationBars(
+              onSelectItem: handleScreenChanged,
+              selectedIndex: screenIndex,
+              isExampleBar: false,
+            ),
+          );
+        } else {
+          return Scaffold(
+            appBar: createAppBar(),
+            body: SafeArea(
+              bottom: false,
+              top: false,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: NavigationRailSection(
+                          onSelectItem: handleScreenChanged,
+                          selectedIndex: screenIndex)),
+                  const VerticalDivider(thickness: 1, width: 1),
+                  createScreenFor(screenIndex, true),
+                ],
+              ),
+            ),
+          );
+        }
+      }),
+    );
   }
 }
