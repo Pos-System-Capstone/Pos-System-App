@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/Views/Flutter3Demo/marterialHome.dart';
 import 'package:pos_apps/Views/Flutter3Demo/typography.dart';
+import 'package:pos_apps/Views/LoginScreen/login_by_pos.dart';
 
 import 'Routes/routes_constrants.dart';
 import 'Views/Flutter3Demo/color_palattes.dart';
@@ -150,12 +151,16 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         initialRoute: '/home',
         title: 'Flutter Demo',
         themeMode: useLightMode ? ThemeMode.light : ThemeMode.dark,
         theme: themeData,
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            case RouteHandler.LOGIN:
+              return CupertinoPageRoute(
+                  builder: (context) => LoginByPos(), settings: settings);
             case RouteHandler.HOME:
               return CupertinoPageRoute<bool>(
                   builder: (context) => HomeScreen(), settings: settings);
