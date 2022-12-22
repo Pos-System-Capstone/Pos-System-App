@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as Get;
-import '../Routes/routes_constrants.dart';
+import '../routes/routes_constrants.dart';
 
 Map<String, dynamic> convertToQueryParams(
     [Map<String, dynamic> params = const {}]) {

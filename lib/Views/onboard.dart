@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_onboard/flutter_onboard.dart';
 
-import '../Routes/routes_constrants.dart';
-import '../Utils/sharePrefs.dart';
+import '../routes/routes_constrants.dart';
+import '../util/share_pref.dart';
 
 class OnBoardScreen extends StatefulWidget {
   OnBoardScreen({Key? key}) : super(key: key);

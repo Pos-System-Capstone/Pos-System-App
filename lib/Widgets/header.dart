@@ -7,7 +7,8 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromARGB(255, 166, 206, 57),
+      height: 48,
+      color: Theme.of(context).primaryColor,
       child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           child: WindowTitleBarBox(

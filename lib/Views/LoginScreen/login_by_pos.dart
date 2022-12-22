@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pos_apps/routes/routes_constrants.dart';
+import 'package:pos_apps/Widgets/AppBar/default_appbar.dart';
 import 'package:pos_apps/Widgets/footer.dart';
 import 'package:pos_apps/Widgets/header.dart';
 
@@ -13,11 +16,11 @@ class _LoginByPosState extends State<LoginByPos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Header(),
+          // Header(),
           Center(
             child: Container(
               decoration: BoxDecoration(
@@ -86,9 +89,10 @@ class _LoginByPosState extends State<LoginByPos> {
                           0.04, //height of button
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () => {},
+                          onPressed: () =>
+                              {Get.offAndToNamed(RouteHandler.HOME)},
                           style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 231, 250, 180),
+                              primary: Theme.of(context).primaryColor,
                               // minimumSize: const Size.fromHeight(60),
                               shape: RoundedRectangleBorder(
                                   borderRadius:

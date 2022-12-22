@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../Routes/routes_constrants.dart';
-import '../Utils/sharePrefs.dart';
+import '../routes/routes_constrants.dart';
+import '../util/share_pref.dart';
 import 'index.dart';
 
 class StartUpViewModel extends BaseViewModel {
@@ -14,14 +14,14 @@ class StartUpViewModel extends BaseViewModel {
     bool isFirstOnBoard = await getIsFirstOnboard() ?? true;
     // bool hasLoggedInUser = await _accountDAO.isUserLoggedIn();
 
-    if (isFirstOnBoard) {
+    if (false) {
       Get.offAndToNamed(RouteHandler.ONBOARD);
     }
     // else if (true) {
     //   Get.offAndToNamed(RouteHandler.HOME);
     // }
     else {
-      Get.offAndToNamed(RouteHandler.LOGIN);
+      Get.offAndToNamed(RouteHandler.NAV);
     }
   }
 }

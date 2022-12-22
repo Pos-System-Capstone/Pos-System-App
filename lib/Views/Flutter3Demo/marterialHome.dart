@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/Views/Flutter3Demo/typography.dart';
+import 'package:pos_apps/views/Flutter3Demo/typography.dart';
 
 import 'color_palattes.dart';
 import 'component.dart';
