@@ -1,16 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/Views/Flutter3Demo/marterialHome.dart';
-import 'package:pos_apps/Views/Flutter3Demo/typography.dart';
+import 'package:pos_apps/theme/app_theme.dart';
+import 'package:pos_apps/util/share_pref.dart';
+// import 'package:pos_apps/Views/Flutter3Demo/marterialHome.dart';
+import 'package:pos_apps/views/Flutter3Demo/typography.dart';
+import 'package:pos_apps/views/LoginScreen/login_by_pos.dart';
 
-import 'Routes/routes_constrants.dart';
-import 'Views/Flutter3Demo/color_palattes.dart';
-import 'Views/Flutter3Demo/component.dart';
-import 'Views/Flutter3Demo/elevation.dart';
-import 'Views/home.dart';
-import 'Views/onboard.dart';
-import 'Views/startup.dart';
+import 'Views/root_view.dart';
+import 'routes/routes_constrants.dart';
+import 'theme/theme_color.dart';
+import 'views/Flutter3Demo/color_palattes.dart';
+import 'views/Flutter3Demo/component.dart';
+import 'views/Flutter3Demo/elevation.dart';
+import 'views/LoginScreen/login_by_mobile_pos.dart';
+import 'views/home.dart';
+import 'views/onboard.dart';
+import 'views/startup.dart';
 import 'setup.dart';
 
 void main() {
@@ -27,144 +34,31 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-const Color m3BaseColor = Color(0xff6750a4);
-const List<Color> colorOptions = [
-  m3BaseColor,
-  Colors.blue,
-  Colors.teal,
-  Colors.green,
-  Colors.yellow,
-  Colors.orange,
-  Colors.pink
-];
-const List<String> colorText = <String>[
-  "M3 Baseline",
-  "Blue",
-  "Teal",
-  "Green",
-  "Yellow",
-  "Orange",
-  "Pink",
-];
-
 class _MyAppState extends State<MyApp> {
-  bool useLightMode = true;
-  int colorSelected = 0;
-  int screenIndex = 0;
-  double narrowScreenWidthThreshold = 450;
-
-  late ThemeData themeData;
-
   @override
   initState() {
     super.initState();
-    themeData = updateThemes(colorSelected, useLightMode);
   }
 
-  ThemeData updateThemes(int colorIndex, bool useLightMode) {
-    return ThemeData(
-        colorSchemeSeed: colorOptions[colorSelected],
-        useMaterial3: true,
-        brightness: useLightMode ? Brightness.light : Brightness.dark);
-  }
-
-  void handleScreenChanged(int selectedScreen) {
-    setState(() {
-      screenIndex = selectedScreen;
-    });
-  }
-
-  void handleBrightnessChange() {
-    setState(() {
-      useLightMode = !useLightMode;
-      themeData = updateThemes(colorSelected, useLightMode);
-    });
-  }
-
-  void handleColorSelect(int value) {
-    setState(() {
-      colorSelected = value;
-      themeData = updateThemes(colorSelected, useLightMode);
-    });
-  }
-
-  Widget createScreenFor(int screenIndex, bool showNavBarExample) {
-    switch (screenIndex) {
-      case 0:
-        return ComponentScreen(showNavBottomBar: showNavBarExample);
-      case 1:
-        return const ColorPalettesScreen();
-      case 2:
-        return const TypographyScreen();
-      case 3:
-        return const ElevationScreen();
-      default:
-        return ComponentScreen(showNavBottomBar: showNavBarExample);
-    }
-  }
-
-  PreferredSizeWidget createAppBar() {
-    return AppBar(
-      title: const Text("Material 3"),
-      actions: [
-        IconButton(
-          icon: useLightMode
-              ? const Icon(Icons.wb_sunny_outlined)
-              : const Icon(Icons.wb_sunny),
-          onPressed: handleBrightnessChange,
-          tooltip: "Toggle brightness",
-        ),
-        PopupMenuButton(
-          icon: const Icon(Icons.more_vert),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          itemBuilder: (context) {
-            return List.generate(colorOptions.length, (index) {
-              return PopupMenuItem(
-                  value: index,
-                  child: Wrap(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Icon(
-                          index == colorSelected
-                              ? Icons.color_lens
-                              : Icons.color_lens_outlined,
-                          color: colorOptions[index],
-                        ),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(colorText[index]))
-                    ],
-                  ));
-            });
-          },
-          onSelected: handleColorSelect,
-        ),
-      ],
-    );
-  }
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        initialRoute: '/home',
-        title: 'Flutter Demo',
-        themeMode: useLightMode ? ThemeMode.light : ThemeMode.dark,
-        theme: themeData,
+        debugShowCheckedModeBanner: false,
+        // initialRoute: RouteHandler.WELCOME,
+        title: 'POS System',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            case RouteHandler.LOGIN:
+              return CupertinoPageRoute(
+                  builder: (context) => LogInScreen(), settings: settings);
             case RouteHandler.HOME:
               return CupertinoPageRoute<bool>(
                   builder: (context) => HomeScreen(), settings: settings);
-            // case RouteHandler.NAV:
-            //   return CupertinoPageRoute(
-            //       builder: (context) => RootScreen(
-            //             initScreenIndex: settings.arguments ?? 0,
-            //           ),
-            //       settings: settings);
+            case RouteHandler.NAV:
+              return CupertinoPageRoute(
+                  builder: (context) => RootScreen(), settings: settings);
             case RouteHandler.ONBOARD:
               return CupertinoPageRoute(
                   builder: (context) => OnBoardScreen(), settings: settings);
@@ -176,12 +70,15 @@ class _MyAppState extends State<MyApp> {
                   settings: settings);
             // case RouteHandler.ONBOARD:
             //   return ScaleRoute(page: OnBoardScreen());
-            case RouteHandler.DESIGN:
+            // case RouteHandler.DESIGN:
+            //   return CupertinoPageRoute<bool>(
+            //       builder: (context) => MarterialHome(), settings: settings);
+            case RouteHandler.WELCOME:
               return CupertinoPageRoute<bool>(
-                  builder: (context) => MarterialHome(), settings: settings);
+                  builder: (context) => StartUpView(), settings: settings);
             default:
               return CupertinoPageRoute(
-                  builder: (context) => MarterialHome(), settings: settings);
+                  builder: (context) => StartUpView(), settings: settings);
           }
         },
         home: const StartUpView());

@@ -8,8 +8,9 @@
 // }
 
 import 'package:get/get.dart';
+import 'package:pos_apps/view_model/order_view_model.dart';
 
-import 'ViewModels/index.dart';
+import 'view_model/index.dart';
 
 void createRouteBindings() async {
   Get.put(StartUpViewModel());
@@ -21,5 +22,5 @@ void createRouteBindings() async {
   // Get.put(TransactionViewModel());
   // Get.put(BlogsViewModel());
   // Get.put(GiftViewModel());
-  // Get.put(OrderViewModel());
+  Get.put(OrderViewModel());
 }

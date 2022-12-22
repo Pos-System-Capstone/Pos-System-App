@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../ViewModels/index.dart';
+import '../view_model/index.dart';
 
 class StartUpView extends StatelessWidget {
   const StartUpView({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class StartUpView extends StatelessWidget {
                         SizedBox(height: 16),
                         Text(
                           "RESO POS",
-                          style: Theme.of(context).textTheme.titleLarge,
+                          style: Get.textTheme.headline5,
                         )
                       ],
                     ),
@@ -42,7 +42,7 @@ class StartUpView extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Giải pháp bán hàng',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Get.textTheme.bodyText2,
                   ),
                 ),
               ),
