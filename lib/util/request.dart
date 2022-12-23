@@ -77,7 +77,6 @@ class CustomInterceptors extends Interceptor {
 
 class MyRequest {
   static BaseOptions options = BaseOptions(
-      // baseUrl: 'https://localhost:5001/api/',
       baseUrl: 'https://api.pos-tech.systems/api/v1/',
       headers: {
         Headers.contentTypeHeader: "application/json",
@@ -86,7 +85,7 @@ class MyRequest {
       receiveTimeout: 5000);
   late Dio _inner;
   MyRequest() {
-    _inner = new Dio(options);
+    _inner = Dio(options);
     // _inner.interceptors.add(
     //     DioCacheManager(CacheConfig(baseUrl: options.baseUrl)).interceptor);
     _inner.interceptors.add(CustomInterceptors());
@@ -138,7 +137,7 @@ class MyRequest {
   }
 }
 
-final requestObj = new MyRequest();
+final requestObj = MyRequest();
 final request = requestObj.request;
 
 class MyHttpOverrides extends HttpOverrides {

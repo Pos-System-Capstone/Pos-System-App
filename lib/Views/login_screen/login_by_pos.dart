@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/routes/routes_constrants.dart';
-import 'package:pos_apps/Widgets/AppBar/default_appbar.dart';
 import 'package:pos_apps/Widgets/footer.dart';
 import 'package:pos_apps/Widgets/header.dart';
 

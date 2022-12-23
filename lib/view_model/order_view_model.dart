@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import 'package:pos_apps/enum/order_enum.dart';
+import 'package:pos_apps/enums/order_enum.dart';
 import 'package:pos_apps/view_model/index.dart';
 
 class OrderViewModel extends BaseViewModel {
