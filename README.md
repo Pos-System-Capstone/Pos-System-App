@@ -4,13 +4,23 @@ POS SYTEM APPLICATIONS
 
 ## Getting Started
 
+A project about Point Of Sale for Quick service restaurant system
 This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Naming convention
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Filename**: lowercase, use "_" between letter
+ - Ex: home_screen.dart
+
+**Widget Name (class name)**: UpperCase
+ - Ex: HomeScreen
+
+**Function Name**: camelCase, first letter must be a action of that function
+ - Ex: loginToSystem() {}
+
+**Constants**: FULLUPPERCASE
+ - Ex: BASE_URL 
+
+**Foldername**: lowercase, use "_" between letter
+  - Ex: home_screen

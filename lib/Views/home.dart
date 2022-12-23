@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:pos_apps/enum/order_enum.dart';
-import 'package:pos_apps/theme/theme_color.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/enums/order_enum.dart';
 import 'package:pos_apps/view_model/order_view_model.dart';
 import 'package:pos_apps/widgets/order_process/booking_table.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../Widgets/Dialogs/dialog.dart';
 import '../widgets/order_process/choose_delivery_type.dart';
 import '../widgets/order_process/orders.dart';
 
