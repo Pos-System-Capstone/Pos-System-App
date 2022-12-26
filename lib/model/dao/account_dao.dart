@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:pos_apps/model/DAO/index.dart';
-import 'package:pos_apps/model/DTO/account_dto.dart';
+import 'package:pos_apps/model/dao/index.dart';
+import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/util/request.dart';
 

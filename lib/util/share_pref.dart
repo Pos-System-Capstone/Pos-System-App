@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pos_apps/model/DTO/account_dto.dart';
+import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<bool> setIsFirstOnboard(bool isFirstOnboard) async {
@@ -58,7 +57,6 @@ Future<void> setUserInfo(AccountDTO userDTO) async {
 Future<AccountDTO?> getUserInfo() async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String? userData = pref.getString("userInfo");
-  debugPrint("userData ne: ${userData}");
   AccountDTO? userInfo;
   if (userData != null) {
     userInfo = AccountDTO.fromJson(jsonDecode(userData));

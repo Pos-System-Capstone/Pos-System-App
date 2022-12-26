@@ -7,6 +7,7 @@ import 'package:pos_apps/util/share_pref.dart';
 // import 'package:pos_apps/Views/Flutter3Demo/marterialHome.dart';
 import 'package:pos_apps/views/flutter3demo/typography.dart';
 import 'package:pos_apps/views/login_screen/login_by_pos.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'views/root_view.dart';
 import 'routes/routes_constrants.dart';
@@ -20,8 +21,10 @@ import 'views/onboard.dart';
 import 'views/startup.dart';
 import 'setup.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  await preferences.clear();
   // HttpOverrides.global = new MyHttpOverrides();
   createRouteBindings();
   runApp(const MyApp());
@@ -47,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         // initialRoute: RouteHandler.WELCOME,
         title: 'POS System',
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        // darkTheme: AppTheme.darkTheme,
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case RouteHandler.LOGIN:
