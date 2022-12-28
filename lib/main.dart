@@ -58,10 +58,10 @@ class _MyAppState extends State<MyApp> {
                   builder: (context) => LogInScreen(), settings: settings);
             case RouteHandler.HOME:
               return CupertinoPageRoute<bool>(
-                  builder: (context) => HomeScreen(), settings: settings);
+                  builder: (context) => RootScreen(), settings: settings);
             case RouteHandler.NAV:
               return CupertinoPageRoute(
-                  builder: (context) => RootScreen(), settings: settings);
+                  builder: (context) => HomeScreen(), settings: settings);
             case RouteHandler.ONBOARD:
               return CupertinoPageRoute(
                   builder: (context) => OnBoardScreen(), settings: settings);

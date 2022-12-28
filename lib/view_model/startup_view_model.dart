@@ -17,8 +17,6 @@ class StartUpViewModel extends BaseViewModel {
 
     if (!hasLoggedInUser) {
       Get.offAndToNamed(RouteHandler.LOGIN);
-    } else if (false) {
-      Get.offAndToNamed(RouteHandler.ONBOARD);
     } else if (true) {
       Get.offAndToNamed(RouteHandler.HOME);
     }

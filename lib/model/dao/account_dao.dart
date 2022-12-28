@@ -11,16 +11,21 @@ class AccountDAO extends BaseDAO {
       Response response = await request.post("auth/login",
           data: {"username": username, "password": password});
 
-      final user = response.data;
-      final accessToken = user['accessToken'] as String;
-      requestObj.setToken = accessToken;
-      setToken(accessToken);
+      if (response.statusCode?.compareTo(200) == 0) {
+        final user = response.data;
+        final accessToken = user['accessToken'] as String;
+        requestObj.setToken = accessToken;
+        setToken(accessToken);
 
-      AccountDTO userDTO = AccountDTO.fromJson(user);
-      return userDTO;
+        AccountDTO userDTO = AccountDTO.fromJson(user);
+        return userDTO;
+      } else {
+        return null;
+      }
     } catch (e) {
-      debugPrint('Error login: ${e.toString()}');
-      return null;
+      if (e is DioError) {
+        debugPrint('Dio Error login: ${e.toString()}');
+      }
     }
   }
 

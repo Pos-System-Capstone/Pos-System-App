@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:pos_apps/views/home.dart';
+import 'package:pos_apps/widgets/header.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -94,7 +92,15 @@ class _RootScreenState extends State<RootScreen> {
             VerticalDivider(thickness: 1, width: 1),
             // This is the main content.
             Expanded(
-              child: views.elementAt(_selectedIndex),
+              child: Column(
+                children: [
+                  Header(),
+                  Expanded(
+                    child: views.elementAt(_selectedIndex),
+                  ),
+                  // Footer(),
+                ],
+              ),
             )
           ],
         ),

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -8,16 +7,12 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromARGB(255, 166, 206, 57),
+      color: Theme.of(context).backgroundColor,
       child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                "Phiên bản: 0.0.1",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
               Row(
                 children: [
                   Icon(Icons.wifi),
