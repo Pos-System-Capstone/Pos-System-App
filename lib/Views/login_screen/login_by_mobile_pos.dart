@@ -252,7 +252,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 Image.asset(
                   "assets/images/cash-register.png",
                   width: 350,
-                )
+                ),
               ],
             ),
           ),

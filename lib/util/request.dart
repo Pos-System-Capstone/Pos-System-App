@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as Get;
+import 'package:pos_apps/widgets/dialogs/login_page_dialogs/login_page_dialogs.dart';
 import '../routes/routes_constrants.dart';
 
 Map<String, dynamic> convertToQueryParams(
@@ -96,31 +97,8 @@ class MyRequest {
       onError: (e, handler) async {
         print(e.response.toString());
         if (e.response?.statusCode == 401) {
-          openDialog(BuildContext context) {
-            showDialog<void>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Basic Dialog Title"),
-                content: const Text(
-                    "A dialog is a type of modal window that appears in front of app content to provide critical information, or prompt for a decision to be made."),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Dismiss'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  TextButton(
-                    child: const Text('Action'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          ;
-          // await showStatusDialog("assets/images/global_error.png", "Lỗi",
-          //     "Vui lòng đăng nhập lại");
-          Get.Get.offAllNamed(RouteHandler.LOGIN);
+          await showLoginErrorDialog(e.response.toString());
+          // Get.Get.offAllNamed(RouteHandler.LOGIN);
         } else {
           handler.next(e);
         }
