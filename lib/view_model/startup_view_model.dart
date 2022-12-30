@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pos_apps/model/dao/account_dao.dart';
 
 import '../routes/routes_constrants.dart';
 import '../util/share_pref.dart';
@@ -9,19 +10,15 @@ class StartUpViewModel extends BaseViewModel {
     handleStartUpLogic();
   }
   Future handleStartUpLogic() async {
-    // AccountDAO _accountDAO = AccountDAO();
+    AccountDAO accountDAO = AccountDAO();
     await Future.delayed(const Duration(seconds: 3));
     bool isFirstOnBoard = await getIsFirstOnboard() ?? true;
-    // bool hasLoggedInUser = await _accountDAO.isUserLoggedIn();
+    bool hasLoggedInUser = await accountDAO.isUserLoggedIn();
 
-    if (false) {
-      Get.offAndToNamed(RouteHandler.ONBOARD);
-    }
-    // else if (true) {
-    //   Get.offAndToNamed(RouteHandler.HOME);
-    // }
-    else {
-      Get.offAndToNamed(RouteHandler.NAV);
+    if (!hasLoggedInUser) {
+      Get.offAndToNamed(RouteHandler.LOGIN);
+    } else if (true) {
+      Get.offAndToNamed(RouteHandler.HOME);
     }
   }
 }

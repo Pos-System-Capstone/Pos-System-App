@@ -8,7 +8,7 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 48,
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).backgroundColor,
       child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           child: WindowTitleBarBox(
@@ -17,22 +17,8 @@ class Header extends StatelessWidget {
                 Expanded(
                     child: MoveWindow(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        "assets/images/white-icon-passio.png",
-                        width: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 100),
-                        child: Image.asset(
-                          "assets/images/white-logo.png",
-                          fit: BoxFit.fitWidth,
-                          width: 200,
-                        ),
-                      ),
-                      WindowButtons(),
-                    ],
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: const [WindowButtons()],
                   ),
                 )),
               ],
@@ -44,8 +30,8 @@ class Header extends StatelessWidget {
 
 final buttonColors = WindowButtonColors(
     iconNormal: const Color(0xFF000000),
-    mouseOver: const Color(0xFFA6CE39),
-    mouseDown: const Color(0xFFA6CE39),
+    mouseOver: const Color(0xFFCAC4D0),
+    mouseDown: const Color(0xFFCAC4D0),
     iconMouseOver: const Color(0xFF6D7175),
     iconMouseDown: const Color(0xFF6D7175));
 

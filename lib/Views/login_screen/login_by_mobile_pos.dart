@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/model/dao/account_dao.dart';
+import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:pos_apps/routes/routes_constrants.dart';
+import 'package:pos_apps/util/share_pref.dart';
+import 'package:pos_apps/view_model/login_view_model.dart';
+import 'package:pos_apps/widgets/header_footer/header.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -12,9 +18,17 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   // late LogInController controller;
   late OutlineInputBorder outlineInputBorder;
-  GlobalKey<FormState> _formKey = new GlobalKey();
   late FocusNode _userNameFocus;
   late FocusNode _passwordFocus;
+
+  final _formKey = GlobalKey<FormState>();
+  AccountDAO accountDao = AccountDAO();
+  LoginViewModel model = LoginViewModel();
+  String error = "";
+  String userName = "";
+  String password = "";
+  final _formUserNameFieldController = TextEditingController();
+  final _formPasswordFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -35,150 +49,226 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: EdgeInsets.fromLTRB(
-            MediaQuery.of(context).size.width * 0.2,
-            MediaQuery.of(context).size.height * 0.2,
-            MediaQuery.of(context).size.width * 0.2,
-            0),
-        padding: EdgeInsets.fromLTRB(16, 36, 16, 16),
-        child: ListView(
-          children: [
-            Text(
-              'Hello Again! \nWelcome back',
-              style: Get.textTheme.headline4,
-            ),
-            SizedBox(height: 32),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    style: Get.textTheme.button,
-                    decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        filled: true,
-                        isDense: true,
-                        labelStyle: Get.textTheme.labelLarge,
-                        fillColor: Get.theme.colorScheme.primaryContainer,
-                        prefixIcon: Icon(
-                          Icons.mail_outline,
-                          color: Get.theme.colorScheme.onBackground,
-                        ),
-                        hintText: "UserName",
-                        enabledBorder: outlineInputBorder,
-                        focusedBorder: outlineInputBorder,
-                        border: outlineInputBorder,
-                        contentPadding: EdgeInsets.all(16),
-                        hintStyle: Get.textTheme.bodyText2,
-                        isCollapsed: true),
-                    maxLines: 1,
-                    cursorColor: Get.theme.colorScheme.onPrimaryContainer,
-                    focusNode: _userNameFocus,
-                  ),
-                  SizedBox(height: 16),
-                  TextFormField(
-                    style: Get.textTheme.bodyText2,
-                    decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        filled: true,
-                        isDense: true,
-                        fillColor: Get.theme.colorScheme.primaryContainer,
-                        prefixIcon: Icon(
-                          Icons.lock_outline,
-                          color: Get.theme.colorScheme.onBackground,
-                        ),
-                        hintText: "Password",
-                        enabledBorder: outlineInputBorder,
-                        focusedBorder: outlineInputBorder,
-                        border: outlineInputBorder,
-                        contentPadding: EdgeInsets.all(16),
-                        hintStyle: Get.textTheme.bodyText2,
-                        isCollapsed: true),
-                    maxLines: 1,
-                    cursorColor: Get.theme.colorScheme.onBackground,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16),
-            // ElevatedButton(
-            //   onPressed: () {},
-            //   child: Text("Login", style: Get.textTheme.button),
-            //   style: ButtonStyle(backgroundColor: Get.theme.colorScheme.primar),
-            // ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                // Foreground color
-                // ignore: deprecated_member_use
-                onPrimary: Theme.of(context).colorScheme.onPrimary,
-                // Background color
-                // ignore: deprecated_member_use
-                primary: Theme.of(context).colorScheme.primary,
-              ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-              onPressed: () {
-                Get.offAndToNamed(RouteHandler.NAV);
-              },
-              child: Text("Login",
-                  style: Get.textTheme.button
-                      ?.copyWith(color: Get.theme.colorScheme.background)),
-            ),
-            // FxButton.block(
-            //   elevation: 0,
-            //   borderRadiusAll: mTheme.buttonRadius.large,
-            //   onPressed: () {
-            //     controller.login();
-            //   },
-            //   splashColor: mTheme.onPrimary.withAlpha(30),
-            //   backgroundColor: mTheme.primary,
-            //   child: FxText.l1(
-            //     "Sign In",
-            //     color: mTheme.onPrimary,
-            //   ),
-            // ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        children: [
+          Header(),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
-                    onPressed: () {},
-                    child: Text("Forgot Password ?",
-                        style: Get.textTheme.bodyText2?.copyWith(
-                            decoration: TextDecoration.underline,
-                            color: Get.theme.primaryColor))),
-                // FxButton.text(
-                //   onPressed: () {
-                //     controller.goToForgotPasswordScreen();
-                //   },
-                //   padding: FxSpacing.zero,
-                //   splashColor: mTheme.primary.withAlpha(40),
-                //   child: FxText.b3("Forgot your Password ?",
-                //       color: mTheme.primary,
-                //       decoration: TextDecoration.underline),
-                // ),
-                TextButton(
-                    onPressed: () {},
-                    child: Text("Sign up",
-                        style: Get.textTheme.bodyText2?.copyWith(
-                            decoration: TextDecoration.underline,
-                            color: Get.theme.primaryColor))),
-                // FxButton.text(
-                //   onPressed: () {
-                //     controller.goToRegisterScreen();
-                //   },
-                //   padding: FxSpacing.zero,
-                //   splashColor: mTheme.primary.withAlpha(40),
-                //   child: FxText.b3(
-                //     "Sign up",
-                //     color: mTheme.primary,
-                //     decoration: TextDecoration.underline,
-                //   ),
-                // ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Login to \nRESO POS',
+                        style: Get.textTheme.displayLarge,
+                      ),
+                      SizedBox(height: 32),
+
+                      //LOGIN FORM
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            // USERNAME FORM FIELD
+                            TextFormField(
+                              controller: _formUserNameFieldController,
+                              style: Get.textTheme.button,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.deny(" "),
+                              ],
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Username must not be empty!";
+                                } else if (value.length > 50) {
+                                  return "Username's max length is 50";
+                                } else {
+                                  return null;
+                                }
+                              },
+                              onChanged: (value) => {
+                                setState(
+                                  () => userName = value,
+                                )
+                              },
+                              decoration: InputDecoration(
+                                  hintText: "Username",
+                                  hintStyle: Get.textTheme.bodyMedium,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
+                                  filled: true,
+                                  isDense: true,
+                                  labelStyle: Get.textTheme.labelLarge,
+                                  fillColor: Get.theme.colorScheme.background,
+                                  prefixIcon: Icon(
+                                    Icons.portrait_rounded,
+                                    color: Get.theme.colorScheme.onBackground,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      _formUserNameFieldController.text = "";
+                                    },
+                                    icon: Icon(Icons.clear),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme
+                                              .primaryContainer,
+                                          width: 2.0)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme
+                                              .primaryContainer,
+                                          width: 2.0)),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme
+                                              .primaryContainer,
+                                          width: 2.0)),
+                                  contentPadding: EdgeInsets.all(16),
+                                  isCollapsed: true,
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme.error,
+                                          width: 2.0))),
+                              maxLines: 1,
+                              focusNode: _userNameFocus,
+                            ),
+
+                            SizedBox(height: 16),
+
+                            //PASSWORD FORM FIELD
+                            TextFormField(
+                              controller: _formPasswordFieldController,
+                              obscureText: true,
+                              obscuringCharacter: "*",
+                              style: Get.textTheme.bodyMedium,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Password must not be empty!";
+                                } else if (value.length < 6) {
+                                  return "Password must be at least 6 characters";
+                                } else if (value.length > 50) {
+                                  return "Password's max length is 50 characters";
+                                } else {
+                                  return null;
+                                }
+                              },
+                              onChanged: ((value) => setState(() {
+                                    password = value;
+                                  })),
+                              decoration: InputDecoration(
+                                  hintText: "Password",
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
+                                  filled: true,
+                                  isDense: true,
+                                  fillColor: Get.theme.colorScheme.background,
+                                  prefixIcon: Icon(
+                                    Icons.key,
+                                    color: Get.theme.colorScheme.onBackground,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    onPressed:
+                                        _formPasswordFieldController.clear,
+                                    icon: Icon(Icons.clear),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme
+                                              .primaryContainer,
+                                          width: 2.0)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme
+                                              .primaryContainer,
+                                          width: 2.0)),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme
+                                              .primaryContainer,
+                                          width: 2.0)),
+                                  contentPadding: EdgeInsets.all(16),
+                                  hintStyle: Get.textTheme.bodyMedium,
+                                  isCollapsed: true,
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide(
+                                          color: Get.theme.colorScheme.error,
+                                          width: 2.0))),
+                              maxLines: 1,
+                              cursorColor: Get.theme.colorScheme.onBackground,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          // Foreground color
+                          // ignore: deprecated_member_use
+                          minimumSize: const Size.fromHeight(45),
+                          onPrimary: Theme.of(context).colorScheme.onPrimary,
+                          // Background color
+                          // ignore: deprecated_member_use
+                          // primary: Theme.of(context).colorScheme.primary,
+                          primary: Theme.of(context).colorScheme.primary,
+                        ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+                        onPressed: () {
+                          login();
+                        },
+                        child: Text("Login",
+                            style: Get.textTheme.button?.copyWith(
+                                color: Get.theme.colorScheme.background)),
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                              onPressed: () {},
+                              child: Text("Forgot Password ?",
+                                  style: Get.textTheme.bodyText2?.copyWith(
+                                      decoration: TextDecoration.none,
+                                      color: Get.theme.primaryColor))),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 50,
+                ),
+                Image.asset(
+                  "assets/images/cash-register.png",
+                  width: 350,
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  login() async {
+    if (_formKey.currentState!.validate()) {
+      AccountDTO? userData = await model.posLogin(userName, password);
+      if (userData != null) {
+        Get.toNamed(RouteHandler.HOME);
+        final userInfo = await getUserInfo();
+        debugPrint("userInfo get tu sharepreference: ${userInfo}");
+      }
+    }
   }
 }

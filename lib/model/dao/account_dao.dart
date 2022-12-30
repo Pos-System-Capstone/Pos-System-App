@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:pos_apps/model/DAO/index.dart';
-import 'package:pos_apps/model/DTO/account_dto.dart';
+import 'package:pos_apps/model/dao/index.dart';
+import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/util/request.dart';
 
@@ -11,16 +11,23 @@ class AccountDAO extends BaseDAO {
       Response response = await request.post("auth/login",
           data: {"username": username, "password": password});
 
-      final user = response.data;
-      final accessToken = user['accessToken'] as String;
-      requestObj.setToken = accessToken;
-      setToken(accessToken);
+      if (response.statusCode?.compareTo(200) == 0) {
+        final user = response.data;
+        final accessToken = user['accessToken'] as String;
+        final userRole = user['role'] as String;
 
-      AccountDTO userDTO = AccountDTO.fromJson(user);
-      return userDTO;
+        requestObj.setToken = accessToken;
+        setToken(accessToken, userRole);
+
+        AccountDTO userDTO = AccountDTO.fromJson(user);
+        return userDTO;
+      } else {
+        return null;
+      }
     } catch (e) {
-      debugPrint('Error login: ${e.toString()}');
-      return null;
+      if (e is DioError) {
+        debugPrint('Dio Error login: ${e.toString()}');
+      }
     }
   }
 
