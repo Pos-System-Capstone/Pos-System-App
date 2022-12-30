@@ -6,7 +6,7 @@ import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:pos_apps/routes/routes_constrants.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
-import 'package:pos_apps/widgets/header.dart';
+import 'package:pos_apps/widgets/header_footer/header.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -263,10 +263,6 @@ class _LogInScreenState extends State<LogInScreen> {
 
   login() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        error = "";
-      });
-
       AccountDTO? userData = await model.posLogin(userName, password);
       if (userData != null) {
         Get.toNamed(RouteHandler.HOME);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pos_apps/views/home.dart';
-import 'package:pos_apps/widgets/header.dart';
+import 'package:pos_apps/widgets/header_footer/header.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});

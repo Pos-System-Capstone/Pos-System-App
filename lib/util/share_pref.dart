@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,10 +36,20 @@ Future<bool> expireToken() async {
   }
 }
 
-Future<bool> setToken(String value) async {
+Future<bool> setToken(String value, String userRole) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   String expireDate = DateFormat("yyyy-MM-dd hh:mm:ss")
-      .format(DateTime.now().add(Duration(days: 30)));
+      .format(DateTime.now().add(Duration(seconds: 0)));
+
+  //Config expire time of token based on role of user login to system
+  if (userRole == UserRole.Staff.toString()) {
+    expireDate = DateFormat("yyyy-MM-dd hh:mm:ss")
+        .format(DateTime.now().add(Duration(days: 1)));
+  } else {
+    expireDate = DateFormat("yyyy-MM-dd hh:mm:ss")
+        .format(DateTime.now().add(Duration(hours: 3)));
+  }
+
   prefs.setString('expireDate', expireDate.toString());
   return prefs.setString('token', value);
 }
@@ -50,7 +61,7 @@ Future<String> getToken() async {
 
 Future<void> setUserInfo(AccountDTO userDTO) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final userInfo = userDTO?.toJson();
+  final userInfo = userDTO.toJson();
   prefs.setString("userInfo", jsonEncode(userInfo));
 }
 

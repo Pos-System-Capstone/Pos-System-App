@@ -14,8 +14,10 @@ class AccountDAO extends BaseDAO {
       if (response.statusCode?.compareTo(200) == 0) {
         final user = response.data;
         final accessToken = user['accessToken'] as String;
+        final userRole = user['role'] as String;
+
         requestObj.setToken = accessToken;
-        setToken(accessToken);
+        setToken(accessToken, userRole);
 
         AccountDTO userDTO = AccountDTO.fromJson(user);
         return userDTO;

@@ -14,7 +14,7 @@ import 'views/startup.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.remove('userInfo');
+  await preferences.clear();
   // HttpOverrides.global = new MyHttpOverrides();
   createRouteBindings();
   runApp(const MyApp());
@@ -58,14 +58,9 @@ class _MyAppState extends State<MyApp> {
             case RouteHandler.LOADING:
               return CupertinoPageRoute<bool>(
                   builder: (context) => LoadingScreen(
-                        title: settings.arguments.toString() ?? "Đang xử lý...",
+                        title: settings.arguments.toString(),
                       ),
                   settings: settings);
-            // case RouteHandler.ONBOARD:
-            //   return ScaleRoute(page: OnBoardScreen());
-            // case RouteHandler.DESIGN:
-            //   return CupertinoPageRoute<bool>(
-            //       builder: (context) => MarterialHome(), settings: settings);
             case RouteHandler.WELCOME:
               return CupertinoPageRoute<bool>(
                   builder: (context) => StartUpView(), settings: settings);
