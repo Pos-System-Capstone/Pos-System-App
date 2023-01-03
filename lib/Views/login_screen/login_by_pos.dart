@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/Widgets/header_footer/footer.dart';
 import 'package:pos_apps/routes/routes_constrants.dart';
-import 'package:pos_apps/Widgets/footer.dart';
-import 'package:pos_apps/Widgets/header.dart';
 
 class LoginByPos extends StatefulWidget {
   const LoginByPos({super.key});
