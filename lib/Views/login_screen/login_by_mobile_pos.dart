@@ -28,6 +28,7 @@ class _LogInScreenState extends State<LogInScreen> {
   String error = "";
   String userName = "";
   String password = "";
+  bool _passwordVisible = false;
   final _formUserNameFieldController = TextEditingController();
   final _formPasswordFieldController = TextEditingController();
 
@@ -39,6 +40,8 @@ class _LogInScreenState extends State<LogInScreen> {
     // controller = FxControllerStore.putOrFind(LogInController());
     _userNameFocus = FocusNode();
     _passwordFocus = FocusNode();
+    _passwordVisible = false;
+
     outlineInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(8)),
       borderSide: BorderSide(
@@ -148,7 +151,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             //PASSWORD FORM FIELD
                             TextFormField(
                               controller: _formPasswordFieldController,
-                              obscureText: true,
+                              obscureText: !_passwordVisible,
                               obscuringCharacter: "*",
                               style: Get.textTheme.bodyMedium,
                               validator: (value) {
@@ -177,10 +180,25 @@ class _LogInScreenState extends State<LogInScreen> {
                                     color: Get.theme.colorScheme.onBackground,
                                   ),
                                   suffixIcon: IconButton(
-                                    onPressed:
-                                        _formPasswordFieldController.clear,
-                                    icon: Icon(Icons.clear),
-                                  ),
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        _passwordVisible = !_passwordVisible;
+                                      });
+                                    },
+                                  )
+                                  // IconButton(
+                                  //   onPressed:
+                                  //       _formPasswordFieldController.clear,
+                                  //   icon: Icon(Icons.clear),
+                                  // )
+                                  ,
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: BorderSide(
