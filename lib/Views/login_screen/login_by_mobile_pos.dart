@@ -7,6 +7,7 @@ import 'package:pos_apps/routes/routes_constrants.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
+import 'dart:io' show Platform;
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -51,7 +52,7 @@ class _LogInScreenState extends State<LogInScreen> {
     return Scaffold(
       body: Column(
         children: [
-          Header(),
+          Platform.isWindows ? Header() : SizedBox(),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
