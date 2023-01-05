@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:pos_apps/widgets/dialogs/login_page_dialogs/login_page_dialogs.dart';
+import 'package:pos_apps/widgets/dialogs/login_dialogs/login_dialogs.dart';
 
 Map<String, dynamic> convertToQueryParams(
     [Map<String, dynamic> params = const {}]) {

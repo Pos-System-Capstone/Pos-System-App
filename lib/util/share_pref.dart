@@ -25,12 +25,17 @@ Future<int?> getThemeColorIndex() async {
   return prefs.getInt('colorIndex');
 }
 
+//Return true if token is expire
 Future<bool> expireToken() async {
   try {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //convert datetime type to the same format to compare
+    DateTime now =
+        DateFormat("yyyy-MM-dd hh:mm:ss").parse(DateTime.now().toString());
     DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss")
-        .parse(prefs.getString('expireDate') ?? DateTime.now().toString());
-    return tempDate.compareTo(DateTime.now()) < 0;
+        .parse(prefs.getString('expireDate') ?? now.toString());
+
+    return tempDate.compareTo(now) < 0;
   } catch (e) {
     return true;
   }
@@ -38,8 +43,11 @@ Future<bool> expireToken() async {
 
 Future<bool> setToken(String value, String userRole) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  String expireDate = DateFormat("yyyy-MM-dd hh:mm:ss")
-      .format(DateTime.now().add(Duration(seconds: 0)));
+  String expireDate = DateFormat("yyyy-MM-dd hh:mm:ss").format(DateTime.now());
+
+  if (userRole == "" && value == "") {
+    return prefs.setString('token', value);
+  }
 
   //Config expire time of token based on role of user login to system
   if (userRole == UserRole.Staff.toString()) {

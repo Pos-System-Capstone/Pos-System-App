@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pos_apps/views/home.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
+import 'dart:io' show Platform;
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -94,7 +95,7 @@ class _RootScreenState extends State<RootScreen> {
             Expanded(
               child: Column(
                 children: [
-                  Header(),
+                  Platform.isWindows ? Header() : SizedBox(),
                   Expanded(
                     child: views.elementAt(_selectedIndex),
                   ),

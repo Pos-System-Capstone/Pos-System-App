@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:pos_apps/model/dao/index.dart';
 import 'package:pos_apps/model/dto/account_dto.dart';
-import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/util/request.dart';
+import 'package:pos_apps/util/share_pref.dart';
 
 class AccountDAO extends BaseDAO {
   Future<AccountDTO?> login(String username, String password) async {
@@ -25,19 +24,18 @@ class AccountDAO extends BaseDAO {
         return null;
       }
     } catch (e) {
-      if (e is DioError) {
-        debugPrint('Dio Error login: ${e.toString()}');
-      }
+      print('Error login (account_dao): ${e.toString()}');
     }
   }
 
   Future<bool> isUserLoggedIn() async {
     bool isTokenExpired = await expireToken();
     String token = await getToken();
-
     if (isTokenExpired) {
+      setToken("", "");
       return false;
-    } else if (!isTokenExpired && token.isNotEmpty) {
+    }
+    if (!isTokenExpired && token.isNotEmpty) {
       requestObj.setToken = token;
     }
     return token.isNotEmpty;
