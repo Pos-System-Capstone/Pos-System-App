@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../../enums/order_enum.dart';
+import '../../view_model/order_view_model.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -13,23 +17,46 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.75,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Get.theme.colorScheme.onInverseSurface,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              width: 56,
+    return ScopedModel(
+      model: Get.find<OrderViewModel>(),
+      child: ScopedModelDescendant<OrderViewModel>(
+        builder: (context, child, model) {
+          return SizedBox(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        model.changeState(OrderStateEnum.BOOKING_TABLE);
+                      },
+                    ),
+                    Text("3. Chọn món", style: Get.textTheme.headlineLarge),
+                  ],
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Get.theme.colorScheme.onInverseSurface,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          width: 56,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(flex: 2, child: checkoutOrder()),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(width: 8),
-          Expanded(flex: 2, child: checkoutOrder()),
-        ],
+          );
+        },
       ),
     );
   }

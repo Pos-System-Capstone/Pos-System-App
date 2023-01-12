@@ -13,39 +13,38 @@ class ChooseDeliveryTypeScreen extends StatelessWidget {
       model: Get.find<OrderViewModel>(),
       child: ScopedModelDescendant<OrderViewModel>(
           builder: (context, child, model) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.75,
+        return Container(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Chọn hình thức giao hàng",
-                style: Get.textTheme.headlineLarge,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    deliveryOptionButton(
-                      "Giao hàng",
-                      Icons.delivery_dining,
-                      () => model.chooseDeliveryType(DeliTypeEnum.DELIVERY),
-                      model.deliveryType == DeliTypeEnum.DELIVERY,
-                    ),
-                    deliveryOptionButton(
-                      "Tại cửa hàng",
-                      Icons.store,
-                      () => model.chooseDeliveryType(DeliTypeEnum.IN_STORE),
-                      model.deliveryType == DeliTypeEnum.IN_STORE,
-                    ),
-                    deliveryOptionButton(
-                        "Mang về",
-                        Icons.coffee_maker_outlined,
-                        () => model.chooseDeliveryType(DeliTypeEnum.TAKE_AWAY),
-                        model.deliveryType == DeliTypeEnum.TAKE_AWAY),
-                  ],
+              Text("1. Chọn hình thức giao hàng",
+                  style: Get.textTheme.headlineLarge),
+              Expanded(
+                child: Center(
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      deliveryOptionButton(
+                        "Giao hàng",
+                        Icons.delivery_dining,
+                        () => model.chooseDeliveryType(DeliTypeEnum.DELIVERY),
+                        model.deliveryType == DeliTypeEnum.DELIVERY,
+                      ),
+                      deliveryOptionButton(
+                        "Tại cửa hàng",
+                        Icons.store,
+                        () => model.chooseDeliveryType(DeliTypeEnum.IN_STORE),
+                        model.deliveryType == DeliTypeEnum.IN_STORE,
+                      ),
+                      deliveryOptionButton(
+                          "Mang về",
+                          Icons.coffee_maker_outlined,
+                          () =>
+                              model.chooseDeliveryType(DeliTypeEnum.TAKE_AWAY),
+                          model.deliveryType == DeliTypeEnum.TAKE_AWAY),
+                    ],
+                  ),
                 ),
               )
             ],

@@ -21,12 +21,13 @@ class OrderViewModel extends BaseViewModel {
 
   void chooseDeliveryType(DeliTypeEnum type) {
     deliveryType = type;
+    changeState(OrderStateEnum.BOOKING_TABLE);
     notifyListeners();
   }
 
   void chooseTable(int table) {
     selectedTable = table;
-    currentState = OrderStateEnum.ORDER_PRODUCT;
+    changeState(OrderStateEnum.ORDER_PRODUCT);
     notifyListeners();
   }
 
