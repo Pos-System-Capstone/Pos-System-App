@@ -52,6 +52,216 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    if (isPortrait) {
+      return Scaffold(
+        body: Column(
+          children: [
+            Platform.isWindows ? Header() : SizedBox(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/cash-register.png",
+                      width: MediaQuery.of(context).size.width * 0.4,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Login to RESO POS',
+                      style: Get.textTheme.displaySmall,
+                    ),
+                    SizedBox(height: 16),
+
+                    //LOGIN FORM
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          // USERNAME FORM FIELD
+                          TextFormField(
+                            controller: _formUserNameFieldController,
+                            style: Get.textTheme.button,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.deny(" "),
+                            ],
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Username must not be empty!";
+                              } else if (value.length > 50) {
+                                return "Username's max length is 50";
+                              } else {
+                                return null;
+                              }
+                            },
+                            onChanged: (value) => {
+                              setState(
+                                () => userName = value,
+                              )
+                            },
+                            decoration: InputDecoration(
+                                hintText: "Username",
+                                hintStyle: Get.textTheme.bodyMedium,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                filled: true,
+                                isDense: true,
+                                labelStyle: Get.textTheme.labelLarge,
+                                fillColor: Get.theme.colorScheme.background,
+                                prefixIcon: Icon(
+                                  Icons.portrait_rounded,
+                                  color: Get.theme.colorScheme.onBackground,
+                                ),
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    _formUserNameFieldController.text = "";
+                                  },
+                                  icon: Icon(Icons.clear),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                contentPadding: EdgeInsets.all(16),
+                                isCollapsed: true,
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get.theme.colorScheme.error,
+                                        width: 2.0))),
+                            maxLines: 1,
+                            focusNode: _userNameFocus,
+                          ),
+
+                          SizedBox(height: 16),
+
+                          //PASSWORD FORM FIELD
+                          TextFormField(
+                            controller: _formPasswordFieldController,
+                            obscureText: !_passwordVisible,
+                            obscuringCharacter: "*",
+                            style: Get.textTheme.bodyMedium,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Password must not be empty!";
+                              } else if (value.length < 6) {
+                                return "Password must be at least 6 characters";
+                              } else if (value.length > 50) {
+                                return "Password's max length is 50 characters";
+                              } else {
+                                return null;
+                              }
+                            },
+                            onChanged: ((value) => setState(() {
+                                  password = value;
+                                })),
+                            decoration: InputDecoration(
+                                hintText: "Password",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                filled: true,
+                                isDense: true,
+                                fillColor: Get.theme.colorScheme.background,
+                                prefixIcon: Icon(
+                                  Icons.key,
+                                  color: Get.theme.colorScheme.onBackground,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    // Based on passwordVisible state choose the icon
+                                    _passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    // Update the state i.e. toogle the state of passwordVisible variable
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                )
+                                // IconButton(
+                                //   onPressed:
+                                //       _formPasswordFieldController.clear,
+                                //   icon: Icon(Icons.clear),
+                                // )
+                                ,
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                contentPadding: EdgeInsets.all(16),
+                                hintStyle: Get.textTheme.bodyMedium,
+                                isCollapsed: true,
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get.theme.colorScheme.error,
+                                        width: 2.0))),
+                            maxLines: 1,
+                            cursorColor: Get.theme.colorScheme.onBackground,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        // Foreground color
+                        // ignore: deprecated_member_use
+                        minimumSize: const Size.fromHeight(45),
+                        onPrimary: Theme.of(context).colorScheme.onPrimary,
+                        // Background color
+                        // ignore: deprecated_member_use
+                        // primary: Theme.of(context).colorScheme.primary,
+                        primary: Theme.of(context).colorScheme.primary,
+                      ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+                      onPressed: () {
+                        login();
+                      },
+                      child: Text("Login",
+                          style: Get.textTheme.button?.copyWith(
+                              color: Get.theme.colorScheme.background)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     return Scaffold(
       body: Column(
         children: [
@@ -67,8 +277,8 @@ class _LogInScreenState extends State<LogInScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Login to \nRESO POS',
-                        style: Get.textTheme.displayLarge,
+                        'Login to RESO POS',
+                        style: Get.textTheme.displaySmall,
                       ),
                       SizedBox(height: 32),
 
@@ -270,7 +480,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 ),
                 Image.asset(
                   "assets/images/cash-register.png",
-                  width: 350,
+                  width: MediaQuery.of(context).size.width * 0.3,
                 ),
               ],
             ),

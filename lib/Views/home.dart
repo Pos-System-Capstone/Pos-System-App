@@ -55,96 +55,93 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ScopedModel(
-            model: Get.find<OrderViewModel>(),
-            // child: Stepper(
-            //   physics: ScrollPhysics(),
-            //   controlsBuilder: (BuildContext context, ControlsDetails details) {
-            //     return Padding(
-            //       padding: const EdgeInsets.only(top: 8.0),
-            //       child: Row(
-            //         crossAxisAlignment: CrossAxisAlignment.end,
-            //         mainAxisAlignment: MainAxisAlignment.start,
-            //         children: <Widget>[
-            //           ElevatedButton(
-            //             style: ElevatedButton.styleFrom(
-            //               // Foreground color
-            //               // ignore: deprecated_member_use
-            //               onPrimary: Get.theme.colorScheme.onPrimary,
-            //               // Background color
-            //               // ignore: deprecated_member_use
-            //               primary: Get.theme.colorScheme.error,
-            //             ),
-            //             onPressed: details.onStepCancel,
-            //             child: Text(
-            //               'Quay lại',
-            //               style: TextStyle(fontSize: 20),
-            //             ),
-            //           ),
-            //           SizedBox(width: 16),
-            //           ElevatedButton(
-            //             style: ElevatedButton.styleFrom(
-            //               // Foreground color
-            //               // ignore: deprecated_member_use
-            //               onPrimary: Get.theme.colorScheme.onPrimary,
+      body: ScopedModel(
+          model: Get.find<OrderViewModel>(),
+          // child: Stepper(
+          //   physics: ScrollPhysics(),
+          //   controlsBuilder: (BuildContext context, ControlsDetails details) {
+          //     return Padding(
+          //       padding: const EdgeInsets.only(top: 8.0),
+          //       child: Row(
+          //         crossAxisAlignment: CrossAxisAlignment.end,
+          //         mainAxisAlignment: MainAxisAlignment.start,
+          //         children: <Widget>[
+          //           ElevatedButton(
+          //             style: ElevatedButton.styleFrom(
+          //               // Foreground color
+          //               // ignore: deprecated_member_use
+          //               onPrimary: Get.theme.colorScheme.onPrimary,
+          //               // Background color
+          //               // ignore: deprecated_member_use
+          //               primary: Get.theme.colorScheme.error,
+          //             ),
+          //             onPressed: details.onStepCancel,
+          //             child: Text(
+          //               'Quay lại',
+          //               style: TextStyle(fontSize: 20),
+          //             ),
+          //           ),
+          //           SizedBox(width: 16),
+          //           ElevatedButton(
+          //             style: ElevatedButton.styleFrom(
+          //               // Foreground color
+          //               // ignore: deprecated_member_use
+          //               onPrimary: Get.theme.colorScheme.onPrimary,
 
-            //               // Background color
-            //               // ignore: deprecated_member_use
-            //               primary: Get.theme.colorScheme.primary,
-            //             ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-            //             onPressed: details.onStepContinue,
-            //             child: Text(
-            //               'Tiếp tục',
-            //               style: TextStyle(fontSize: 20),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     );
-            //   },
-            //   margin: EdgeInsets.only(top: -20),
-            //   steps: steps,
-            //   currentStep: _activeCurrentStep,
-            //   type: StepperType.horizontal,
-            //   onStepContinue: () {
-            //     if (_activeCurrentStep < (steps.length - 1)) {
-            //       setState(() {
-            //         _activeCurrentStep += 1;
-            //       });
-            //     }
-            //   },
-            //   onStepCancel: () {
-            //     if (_activeCurrentStep == 0) {
-            //       return;
-            //     }
-            //     setState(() {
-            //       _activeCurrentStep -= 1;
-            //       // _orderViewModel.clearOrderState();
-            //     });
-            //   },
-            //   onStepTapped: (int index) {
-            //     setState(() {
-            //       _activeCurrentStep = index;
-            //     });
-            //   },
-            // )
+          //               // Background color
+          //               // ignore: deprecated_member_use
+          //               primary: Get.theme.colorScheme.primary,
+          //             ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
+          //             onPressed: details.onStepContinue,
+          //             child: Text(
+          //               'Tiếp tục',
+          //               style: TextStyle(fontSize: 20),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     );
+          //   },
+          //   margin: EdgeInsets.only(top: -20),
+          //   steps: steps,
+          //   currentStep: _activeCurrentStep,
+          //   type: StepperType.horizontal,
+          //   onStepContinue: () {
+          //     if (_activeCurrentStep < (steps.length - 1)) {
+          //       setState(() {
+          //         _activeCurrentStep += 1;
+          //       });
+          //     }
+          //   },
+          //   onStepCancel: () {
+          //     if (_activeCurrentStep == 0) {
+          //       return;
+          //     }
+          //     setState(() {
+          //       _activeCurrentStep -= 1;
+          //       // _orderViewModel.clearOrderState();
+          //     });
+          //   },
+          //   onStepTapped: (int index) {
+          //     setState(() {
+          //       _activeCurrentStep = index;
+          //     });
+          //   },
+          // )
 
-            child: ScopedModelDescendant<OrderViewModel>(
-              builder: (context, child, model) {
-                return model.currentState == OrderStateEnum.CHOOSE_ORDER_TYPE
-                    ? ChooseDeliveryTypeScreen()
-                    : model.currentState == OrderStateEnum.BOOKING_TABLE
-                        ? BookingTableScreen()
-                        : model.currentState == OrderStateEnum.ORDER_PRODUCT
-                            ? OrderScreen()
-                            : model.currentState == OrderStateEnum.PAYMENT
-                                ? Container()
-                                : Container();
-              },
-            )),
-      ),
+          child: ScopedModelDescendant<OrderViewModel>(
+            builder: (context, child, model) {
+              return model.currentState == OrderStateEnum.CHOOSE_ORDER_TYPE
+                  ? ChooseDeliveryTypeScreen()
+                  : model.currentState == OrderStateEnum.BOOKING_TABLE
+                      ? BookingTableScreen()
+                      : model.currentState == OrderStateEnum.ORDER_PRODUCT
+                          ? OrderScreen()
+                          : model.currentState == OrderStateEnum.PAYMENT
+                              ? Container()
+                              : Container();
+            },
+          )),
     );
   }
 }

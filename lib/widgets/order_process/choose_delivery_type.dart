@@ -14,12 +14,23 @@ class ChooseDeliveryTypeScreen extends StatelessWidget {
       child: ScopedModelDescendant<OrderViewModel>(
           builder: (context, child, model) {
         return Container(
+          color: Get.theme.colorScheme.shadow,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("1. Chọn hình thức giao hàng",
-                  style: Get.textTheme.headlineLarge),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.shopping_cart_outlined, size: 24),
+                    onPressed: () {
+                      model.changeState(OrderStateEnum.CHOOSE_ORDER_TYPE);
+                    },
+                  ),
+                  Text("1. Chọn hình thức giao hàng",
+                      style: Get.textTheme.headlineSmall),
+                ],
+              ),
               Expanded(
                 child: Center(
                   child: Wrap(

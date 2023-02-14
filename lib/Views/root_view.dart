@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pos_apps/views/home.dart';
+import 'package:pos_apps/widgets/cart/cart_dialog.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
 import 'dart:io' show Platform;
 
@@ -14,7 +16,10 @@ class _RootScreenState extends State<RootScreen> {
   List<Widget> views = const [
     HomeScreen(),
     Center(
-      child: Text('Account'),
+      child: Text('Settings'),
+    ),
+    Center(
+      child: Text('Lish su'),
     ),
     Center(
       child: Text('Settings'),
@@ -30,6 +35,11 @@ class _RootScreenState extends State<RootScreen> {
       icon: Icon(Icons.settings),
       activeIcon: Icon(Icons.settings_outlined),
       label: 'Thiết lập',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.history),
+      activeIcon: Icon(Icons.settings_outlined),
+      label: 'Lịch sử',
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.account_circle),
@@ -49,6 +59,11 @@ class _RootScreenState extends State<RootScreen> {
       label: Text('Thiết lập'),
     ),
     NavigationRailDestination(
+      icon: Icon(Icons.history),
+      selectedIcon: Icon(Icons.history_outlined),
+      label: Text('Đơn hàng'),
+    ),
+    NavigationRailDestination(
       icon: Icon(Icons.account_circle),
       selectedIcon: Icon(Icons.account_circle_outlined),
       label: Text('Tài khoản'),
@@ -61,6 +76,10 @@ class _RootScreenState extends State<RootScreen> {
     if (isPortrait) {
       return SafeArea(
           child: Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: () => showCartDialog(),
+                child: Icon(Icons.shopping_cart),
+              ),
               bottomNavigationBar: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
                   currentIndex: _selectedIndex,

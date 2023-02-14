@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
         // initialRoute: RouteHandler.WELCOME,
         title: 'POS System',
         theme: AppTheme.lightTheme,
-        // darkTheme: AppTheme.darkTheme,
+        darkTheme: AppTheme.darkTheme,
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case RouteHandler.LOGIN:
