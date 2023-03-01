@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/views/home.dart';
+import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/cart/cart_dialog.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
 import 'dart:io' show Platform;
+
+import '../Views/setting.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -13,17 +16,13 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> {
-  List<Widget> views = const [
+  List<Widget> views = [
     HomeScreen(),
-    Center(
-      child: Text('Settings'),
-    ),
+    SettingsScreen(),
     Center(
       child: Text('Lish su'),
     ),
-    Center(
-      child: Text('Settings'),
-    ),
+    ProfileScreen()
   ];
   List<BottomNavigationBarItem> items = const [
     BottomNavigationBarItem(
@@ -99,6 +98,21 @@ class _RootScreenState extends State<RootScreen> {
               leading: Icon(
                 Icons.coffee_outlined,
                 size: 56,
+              ),
+              // groupAlignment: -0.5,
+              trailing: Column(
+                children: const [
+                  IconButton(
+                    alignment: Alignment.bottomCenter,
+                    tooltip: "Đăng xuất",
+                    onPressed: null,
+                    icon: Icon(
+                      Icons.logout,
+                      size: 40,
+                    ),
+                  ),
+                  Text("Đăng xuất")
+                ],
               ),
               selectedIndex: _selectedIndex,
               onDestinationSelected: (int index) {

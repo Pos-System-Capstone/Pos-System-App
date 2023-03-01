@@ -8,19 +8,13 @@
 // }
 
 import 'package:get/get.dart';
+import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/view_model/order_view_model.dart';
 
 import 'view_model/index.dart';
 
 void createRouteBindings() async {
+  Get.put(MenuViewModel());
   Get.put(StartUpViewModel());
-  // Get.put(RootViewModel());
-  // Get.put(HomeViewModel());
-  // Get.put(AccountViewModel());
-  // Get.put(OrderHistoryViewModel());
-  // Get.put(ProductFilterViewModel());
-  // Get.put(TransactionViewModel());
-  // Get.put(BlogsViewModel());
-  // Get.put(GiftViewModel());
   Get.put(OrderViewModel());
 }

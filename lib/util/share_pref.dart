@@ -5,6 +5,8 @@ import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/account.dart';
+
 Future<bool> setIsFirstOnboard(bool isFirstOnboard) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.setBool('isFirstOnBoard', isFirstOnboard);
@@ -67,7 +69,7 @@ Future<String> getToken() async {
   return prefs.getString('token') ?? "";
 }
 
-Future<void> setUserInfo(AccountDTO userDTO) async {
+Future<void> setUserInfo(Account userDTO) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final userInfo = userDTO.toJson();
   prefs.setString("userInfo", jsonEncode(userInfo));

@@ -17,7 +17,6 @@ class BookingTableScreen extends StatelessWidget {
         builder: (context, child, model) {
           int numberOfTable = model.numberOfTable;
           return Container(
-            color: Get.theme.colorScheme.shadow,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,

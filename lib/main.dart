@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/theme/app_theme.dart';
+import 'package:pos_apps/util/request.dart';
+import 'package:pos_apps/views/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'routes/routes_constrants.dart';
@@ -15,7 +19,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
   await preferences.clear();
-  // HttpOverrides.global = new MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
   createRouteBindings();
   runApp(const MyApp());
 }
@@ -49,6 +53,9 @@ class _MyAppState extends State<MyApp> {
             case RouteHandler.HOME:
               return CupertinoPageRoute<bool>(
                   builder: (context) => RootScreen(), settings: settings);
+            case RouteHandler.PROFILE:
+              return CupertinoPageRoute<bool>(
+                  builder: (context) => ProfileScreen(), settings: settings);
             case RouteHandler.NAV:
               return CupertinoPageRoute(
                   builder: (context) => HomeScreen(), settings: settings);

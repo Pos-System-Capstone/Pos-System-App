@@ -1,6 +1,6 @@
 import 'package:pos_apps/model/DTO/index.dart';
 
-class BaseDAO {
+class BaseData {
   late MetaDataDTO _metaDataDTO;
 
   MetaDataDTO get metaDataDTO => _metaDataDTO;

@@ -25,7 +25,6 @@ class _OrderScreenState extends State<OrderScreen> {
         child: ScopedModelDescendant<OrderViewModel>(
           builder: (context, child, model) {
             return Container(
-              color: Get.theme.colorScheme.shadow,
               child: Column(
                 children: [
                   Row(

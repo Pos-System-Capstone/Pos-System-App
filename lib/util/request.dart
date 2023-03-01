@@ -79,9 +79,10 @@ class MyRequest {
       baseUrl: 'https://api.pos-tech.systems/api/v1/',
       headers: {
         Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "text/plain"
       },
-      sendTimeout: 15000,
-      receiveTimeout: 5000);
+      sendTimeout: Duration(seconds: 15),
+      receiveTimeout: Duration(seconds: 5));
   late Dio _inner;
   MyRequest() {
     _inner = Dio(options);

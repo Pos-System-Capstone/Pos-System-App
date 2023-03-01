@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:pos_apps/model/dao/index.dart';
 import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
 
-class AccountDAO extends BaseDAO {
-  Future<AccountDTO?> login(String username, String password) async {
+import '../model/account.dart';
+import 'base_data.dart';
+
+class AccountData extends BaseData {
+  Future<Account?> login(String username, String password) async {
     try {
       Response response = await request.post("auth/login",
           data: {"username": username, "password": password});
@@ -18,8 +20,8 @@ class AccountDAO extends BaseDAO {
         requestObj.setToken = accessToken;
         setToken(accessToken, userRole);
 
-        AccountDTO userDTO = AccountDTO.fromJson(user);
-        return userDTO;
+        Account userResponse = Account.fromJson(user);
+        return userResponse;
       } else {
         return null;
       }
