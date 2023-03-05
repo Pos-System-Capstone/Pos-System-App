@@ -1,3 +1,5 @@
+import '../enums/product_enum.dart';
+
 class Product {
   String? id;
   String? code;

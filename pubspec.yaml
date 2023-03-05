@@ -44,12 +44,12 @@ dependencies:
   esc_pos_printer: ^4.1.0
   ping_discover_network: ^0.2.0+1
   settings_ui: ^2.0.2
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   bitsdojo_window: ^0.1.5
-  intl: ^0.18.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

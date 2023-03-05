@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/enums/product_enum.dart';
+import 'package:pos_apps/view_model/menu_view_model.dart';
+import 'package:pos_apps/widgets/cart/add_product_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../enums/order_enum.dart';
+import '../../model/index.dart';
+import '../../util/format.dart';
 import '../../view_model/order_view_model.dart';
 import '../cart/cart_screen.dart';
+import '../product_cart.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -89,116 +95,73 @@ class _OrderScreenState extends State<OrderScreen> {
 }
 
 Widget orderProduct(bool isPortrait) {
-  const tabs = [
-    Tab(
-      height: 30,
-      text: "Category",
-    ),
-    Tab(
-      height: 40,
-      text: "Category",
-    ),
-    Tab(
-      height: 40,
-      text: "Category",
-    ),
-    Tab(
-      height: 40,
-      text: "Category",
-    ),
-    Tab(
-      height: 40,
-      text: "Category",
-    ),
-    Tab(
-      height: 40,
-      text: "Category",
-    ),
-  ];
-  return Container(
-    decoration: BoxDecoration(
-      color: Get.theme.colorScheme.background,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: DefaultTabController(
-      length: 6,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: TabBar(
-              isScrollable: true,
-              indicatorColor: Get.theme.colorScheme.primary,
-              tabs: tabs,
-            ),
-          ),
-          Expanded(
-              child: TabBarView(children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.count(
-                  scrollDirection: Axis.vertical,
-                  mainAxisSpacing: isPortrait ? 8 : 16,
-                  crossAxisSpacing: isPortrait ? 8 : 16,
-                  crossAxisCount: isPortrait ? 3 : 5,
-                  children: [for (int i = 1; i <= 40; i++) productCard()]),
-            ),
-            Text("Test"),
-            Text("Test"),
-            Text("Test"),
-            Text("Test"),
-            Text("Test")
-          ]))
-        ],
-      ),
-    ),
-  );
-}
-
-Widget productCard() {
-  return Container(
-    padding: EdgeInsets.all(8),
-    height: 100,
-    decoration: BoxDecoration(
-      color: Get.theme.colorScheme.surfaceVariant,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Column(children: [
-      Expanded(
-        flex: 3,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "CoffeeMilk",
-              style: Get.theme.textTheme.titleSmall,
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  "35.000 d",
-                  style: Get.theme.textTheme.titleSmall,
+  return ScopedModel(
+    model: Get.find<MenuViewModel>(),
+    child:
+        ScopedModelDescendant<MenuViewModel>(builder: (context, child, model) {
+      List<Tab>? listCategoryTab;
+      listCategoryTab = model.currentMenu?.categories!.map((e) {
+        return Tab(
+          height: 40,
+          text: e.name,
+        );
+      }).toList();
+      listCategoryTab?.insert(
+          0,
+          Tab(
+            height: 40,
+            text: "Tất cả",
+          ));
+      return Container(
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.background,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: DefaultTabController(
+          length: listCategoryTab != null ? listCategoryTab.length : 0,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: TabBar(
+                  isScrollable: true,
+                  indicatorColor: Get.theme.colorScheme.primary,
+                  tabs: listCategoryTab!,
+                  onTap: (value) {
+                    debugPrint("value: $value");
+                    if (value == 0) {
+                      model.handleChangeFilterProductByCategory(null);
+                    } else {
+                      model.handleChangeFilterProductByCategory(
+                          model.currentMenu?.categories![value - 1].id);
+                    }
+                  },
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-      Divider(),
-      Expanded(
-          flex: 2,
-          child: Row(
-            children: const [
               Expanded(
-                  child: IconButton(onPressed: null, icon: Icon(Icons.remove))),
-              VerticalDivider(),
-              Expanded(
-                  child: IconButton(onPressed: null, icon: Icon(Icons.add))),
+                  child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.count(
+                    scrollDirection: Axis.vertical,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    crossAxisCount: isPortrait ? 2 : 5,
+                    children: [
+                      for (int i = 0; i < model.productsFilter!.length; i++)
+                        productCard(
+                            model.productsFilter![i],
+                            model.productsFilter![i].type ==
+                                    ProductTypeEnum.PARENT
+                                ? model.getChildProductByParentProduct(
+                                    model.productsFilter![i].id)
+                                : null)
+                    ]),
+              ))
             ],
-          ))
-    ]),
+          ),
+        ),
+      );
+    }),
   );
 }
 
