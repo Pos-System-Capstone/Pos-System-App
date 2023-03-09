@@ -23,14 +23,14 @@ void showCartDialog() {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.shopping_cart),
+                child: Icon(Icons.shopping_cart, size: 32),
               ),
               Expanded(
                   child: Center(
                       child:
                           Text("Giỏ hàng", style: Get.textTheme.titleLarge))),
               IconButton(
-                  iconSize: 24,
+                  iconSize: 40,
                   onPressed: () => Get.back(),
                   icon: Icon(Icons.close))
             ],

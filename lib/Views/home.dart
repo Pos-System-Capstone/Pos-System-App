@@ -5,8 +5,9 @@ import 'package:pos_apps/view_model/order_view_model.dart';
 import 'package:pos_apps/widgets/order_process/booking_table.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../widgets/order_process/cart.dart';
 import '../widgets/order_process/choose_delivery_type.dart';
-import '../widgets/order_process/orders.dart';
+import '../widgets/order_process/payment.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Step(
         state: _activeCurrentStep <= 2 ? StepState.editing : StepState.complete,
         title: Text('Chọn món'),
-        content: OrderScreen(),
+        content: AddToCartScreen(),
         isActive: _activeCurrentStep >= 2,
       ),
       Step(
@@ -136,9 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   : model.currentState == OrderStateEnum.BOOKING_TABLE
                       ? BookingTableScreen()
                       : model.currentState == OrderStateEnum.ORDER_PRODUCT
-                          ? OrderScreen()
+                          ? AddToCartScreen()
                           : model.currentState == OrderStateEnum.PAYMENT
-                              ? Container()
+                              ? PaymentScreen()
                               : Container();
             },
           )),

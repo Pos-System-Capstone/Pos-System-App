@@ -1,6 +1,10 @@
+import 'dart:math';
+
+import 'package:get/get.dart';
 import 'package:pos_apps/view_model/base_view_model.dart';
 
-import '../model/index.dart';
+import '../data/model/index.dart';
+import 'index.dart';
 
 class CartViewModel extends BaseViewModel {
   List<CartItem> _cartList = [];
@@ -88,5 +92,55 @@ class CartViewModel extends BaseViewModel {
 
   void clearCartData() {
     _cartList = [];
+    _finalAmount = 0;
+    _totalAmount = 0;
+    _discountAmount = 0;
+    _quantity = 0;
+    notifyListeners();
+  }
+
+  void updateProductInCartItem(Product product, int cartIndex) {
+    _cartList[cartIndex].product = product;
+    print(_cartList[cartIndex].product.name);
+    // countAmount();
+    print(totalAmount);
+    notifyListeners();
+  }
+
+  void createOrder() {
+    List<ProductInOrder> productList = <ProductInOrder>[];
+    List<ProductInOrder> extraList = <ProductInOrder>[];
+    for (CartItem cart in _cartList) {
+      cart.extras?.forEach((element) {
+        ProductInOrder extra = ProductInOrder(
+          productInMenuId: element.menuProductId,
+          quantity: 1,
+          sellingPrice: element.sellingPrice,
+        );
+        extraList.add(extra);
+      });
+      ProductInOrder product = ProductInOrder(
+        productInMenuId: cart.product.menuProductId,
+        quantity: cart.quantity,
+        sellingPrice: cart.totalAmount,
+        note: "test",
+        extras: extraList,
+      );
+      productList.add(product);
+    }
+    OrderModel order = OrderModel(
+      payment: "CASH",
+      orderType: "EAT_IN",
+      productsList: productList,
+      totalAmount: _totalAmount,
+      discountAmount: _discountAmount,
+      finalAmount: _finalAmount,
+      vat: 0,
+      vatAmount: 0,
+    );
+    print(order.toJson());
+    Get.find<OrderViewModel>().placeOrder(order);
+    Get.isDialogOpen ?? Get.back();
+    clearCartData();
   }
 }

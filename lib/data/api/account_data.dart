@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
 
-import '../model/account.dart';
+import '../model/index.dart';
 import 'base_data.dart';
 
-class AccountData extends BaseData {
+class AccountData {
   Future<Account?> login(String username, String password) async {
     try {
       Response response = await request.post("auth/login",

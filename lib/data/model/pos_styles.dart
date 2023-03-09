@@ -1,4 +1,4 @@
-import '../util/pos_style_enums.dart';
+import '../../util/pos_style_enums.dart';
 
 /// Text styles
 class PosStyles {

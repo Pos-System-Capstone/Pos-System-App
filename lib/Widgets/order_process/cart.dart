@@ -8,85 +8,55 @@ import 'package:pos_apps/widgets/cart/add_product_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../enums/order_enum.dart';
-import '../../model/index.dart';
+import '../../data/model/index.dart';
 import '../../util/format.dart';
 import '../../view_model/order_view_model.dart';
 import '../cart/cart_screen.dart';
 import '../product_cart.dart';
 
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+class AddToCartScreen extends StatefulWidget {
+  const AddToCartScreen({super.key});
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<AddToCartScreen> createState() => _AddToCartScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _AddToCartScreenState extends State<AddToCartScreen> {
   @override
   Widget build(BuildContext context) {
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    if (isPortrait) {
-      return ScopedModel(
-        model: Get.find<OrderViewModel>(),
-        child: ScopedModelDescendant<OrderViewModel>(
-          builder: (context, child, model) {
-            return Container(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, size: 24),
-                        onPressed: () {
-                          model.changeState(OrderStateEnum.BOOKING_TABLE);
-                        },
-                      ),
-                      Text("3. Chọn món", style: Get.textTheme.headlineSmall),
-                    ],
-                  ),
-                  Expanded(
-                    child: orderProduct(isPortrait),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      );
-    }
     return ScopedModel(
       model: Get.find<OrderViewModel>(),
       child: ScopedModelDescendant<OrderViewModel>(
         builder: (context, child, model) {
-          return Container(
-            color: Get.theme.colorScheme.shadow,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
+          return Column(
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          model.changeState(OrderStateEnum.BOOKING_TABLE);
-                        },
-                      ),
-                      Text("3. Chọn món", style: Get.textTheme.headlineMedium),
-                    ],
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      model.changeState(OrderStateEnum.BOOKING_TABLE);
+                    },
                   ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(flex: 5, child: orderProduct(isPortrait)),
-                        SizedBox(width: 8),
-                        Expanded(flex: 2, child: CartScreen()),
-                      ],
-                    ),
-                  ),
+                  Text("3. Chọn món", style: Get.textTheme.titleLarge),
                 ],
               ),
-            ),
+              Expanded(
+                child: Row(
+                  children: isPortrait
+                      ? [
+                          Expanded(
+                            child: orderProduct(isPortrait),
+                          ),
+                        ]
+                      : [
+                          Expanded(flex: 5, child: orderProduct(isPortrait)),
+                          Expanded(flex: 2, child: CartScreen()),
+                        ],
+                ),
+              ),
+            ],
           );
         },
       ),
@@ -112,18 +82,19 @@ Widget orderProduct(bool isPortrait) {
             height: 40,
             text: "Tất cả",
           ));
-      return Container(
-        decoration: BoxDecoration(
-          color: Get.theme.colorScheme.background,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: DefaultTabController(
-          length: listCategoryTab != null ? listCategoryTab.length : 0,
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: TabBar(
+      return Padding(
+        padding: const EdgeInsets.all(4),
+        child: Container(
+          padding: EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            border: Border.all(color: Get.theme.colorScheme.onBackground),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DefaultTabController(
+            length: listCategoryTab != null ? listCategoryTab.length : 0,
+            child: Column(
+              children: [
+                TabBar(
                   isScrollable: true,
                   indicatorColor: Get.theme.colorScheme.primary,
                   tabs: listCategoryTab!,
@@ -137,16 +108,13 @@ Widget orderProduct(bool isPortrait) {
                     }
                   },
                 ),
-              ),
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.count(
-                    scrollDirection: Axis.vertical,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    crossAxisCount: isPortrait ? 2 : 5,
-                    children: [
+                Expanded(
+                    child: GridView.count(
+                        scrollDirection: Axis.vertical,
+                        mainAxisSpacing: 2,
+                        crossAxisSpacing: 2,
+                        crossAxisCount: isPortrait ? 2 : 5,
+                        children: [
                       for (int i = 0; i < model.productsFilter!.length; i++)
                         productCard(
                             model.productsFilter![i],
@@ -155,9 +123,9 @@ Widget orderProduct(bool isPortrait) {
                                 ? model.getChildProductByParentProduct(
                                     model.productsFilter![i].id)
                                 : null)
-                    ]),
-              ))
-            ],
+                    ]))
+              ],
+            ),
           ),
         ),
       );

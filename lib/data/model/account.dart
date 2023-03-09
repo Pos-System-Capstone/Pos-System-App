@@ -1,6 +1,7 @@
 class Account {
   final String accessToken;
   final String id;
+  final String storeId;
   final String name;
   final String userName;
   final String userRole;
@@ -10,6 +11,7 @@ class Account {
   Account({
     required this.accessToken,
     required this.id,
+    required this.storeId,
     required this.name,
     required this.userName,
     required this.userRole,
@@ -19,12 +21,13 @@ class Account {
 
   @override
   String toString() {
-    return 'AccountDTO(uid: $id, name: $name, userName: $userName, userRole: $userRole, status: $status, picUrl: $picUrl)';
+    return 'AccountDTO(uid: $id, uid: $storeId, name: $name, userName: $userName, userRole: $userRole, status: $status, picUrl: $picUrl)';
   }
 
   factory Account.fromJson(dynamic json) => Account(
       accessToken: json['accessToken'],
       id: json["id"],
+      storeId: json["storeId"],
       name: json['name'],
       userName: json['username'] as String,
       userRole: json['role'],
@@ -35,6 +38,7 @@ class Account {
     return {
       "accessToken": accessToken.toString(),
       "id": id.toString(),
+      "storeId": storeId.toString(),
       "name": name,
       "username": userName,
       "role": userRole,

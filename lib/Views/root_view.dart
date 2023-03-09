@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/view_model/cart_view_model.dart';
+import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/views/home.dart';
 import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/cart/cart_dialog.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'dart:io' show Platform;
 
 import '../Views/setting.dart';
@@ -75,9 +78,54 @@ class _RootScreenState extends State<RootScreen> {
     if (isPortrait) {
       return SafeArea(
           child: Scaffold(
-              floatingActionButton: FloatingActionButton(
-                onPressed: () => showCartDialog(),
-                child: Icon(Icons.shopping_cart),
+              floatingActionButton: ScopedModel<CartViewModel>(
+                model: Get.find<CartViewModel>(),
+                child: ScopedModelDescendant(
+                    builder: (context, child, CartViewModel model) {
+                  if (model.quantity == 0) {
+                    return FloatingActionButton(
+                      // Your actual Fab
+                      onPressed: () => showCartDialog(),
+                      child: Icon(Icons.shopping_cart),
+                    );
+                  }
+                  return FittedBox(
+                    child: Stack(
+                      alignment: Alignment(1.4, -1.5),
+                      children: [
+                        FloatingActionButton(
+                          // Your actual Fab
+                          onPressed: () => showCartDialog(),
+                          child: Icon(Icons.shopping_cart),
+                        ),
+                        Container(
+                          // This is your Badge
+                          padding: EdgeInsets.all(8),
+                          constraints:
+                              BoxConstraints(minHeight: 32, minWidth: 32),
+                          decoration: BoxDecoration(
+                            // This controls the shadow
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  color: Colors.black.withAlpha(50))
+                            ],
+                            borderRadius: BorderRadius.circular(16),
+                            color: Get.theme.colorScheme
+                                .secondary, // This would be color of the Badge
+                          ),
+                          // This is your Badge
+                          child: Center(
+                            // Here you can put whatever content you want inside your Badge
+                            child: Text(model.quantity.toString(),
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ),
               bottomNavigationBar: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
@@ -101,11 +149,11 @@ class _RootScreenState extends State<RootScreen> {
               ),
               // groupAlignment: -0.5,
               trailing: Column(
-                children: const [
+                children: [
                   IconButton(
                     alignment: Alignment.bottomCenter,
                     tooltip: "Đăng xuất",
-                    onPressed: null,
+                    onPressed: () => Get.find<LoginViewModel>().logout(),
                     icon: Icon(
                       Icons.logout,
                       size: 40,

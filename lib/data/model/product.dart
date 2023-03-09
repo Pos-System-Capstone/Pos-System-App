@@ -1,7 +1,8 @@
-import '../enums/product_enum.dart';
+import '../../enums/product_enum.dart';
 
 class Product {
   String? id;
+  String? menuProductId;
   String? code;
   String? name;
   int? sellingPrice;
@@ -21,6 +22,7 @@ class Product {
 
   Product(
       {this.id,
+      this.menuProductId,
       this.code,
       this.name,
       this.sellingPrice,
@@ -56,27 +58,29 @@ class Product {
     categoryId = json['categoryId'];
     collectionIds = json['collectionIds'].cast<String>();
     extraCategoryIds = json['extraCategoryIds'].cast<String>();
+    menuProductId = json['menuProductId'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['code'] = this.code;
-    data['name'] = this.name;
-    data['sellingPrice'] = this.sellingPrice;
-    data['picUrl'] = this.picUrl;
-    data['status'] = this.status;
-    data['historicalPrice'] = this.historicalPrice;
-    data['discountPrice'] = this.discountPrice;
-    data['description'] = this.description;
-    data['displayOrder'] = this.displayOrder;
-    data['size'] = this.size;
-    data['type'] = this.type;
-    data['parentProductId'] = this.parentProductId;
-    data['brandId'] = this.brandId;
-    data['categoryId'] = this.categoryId;
-    data['collectionIds'] = this.collectionIds;
-    data['extraCategoryIds'] = this.extraCategoryIds;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['code'] = code;
+    data['name'] = name;
+    data['sellingPrice'] = sellingPrice;
+    data['picUrl'] = picUrl;
+    data['status'] = status;
+    data['historicalPrice'] = historicalPrice;
+    data['discountPrice'] = discountPrice;
+    data['description'] = description;
+    data['displayOrder'] = displayOrder;
+    data['size'] = size;
+    data['type'] = type;
+    data['parentProductId'] = parentProductId;
+    data['brandId'] = brandId;
+    data['categoryId'] = categoryId;
+    data['collectionIds'] = collectionIds;
+    data['extraCategoryIds'] = extraCategoryIds;
+    data['menuProductId'] = menuProductId;
     return data;
   }
 }

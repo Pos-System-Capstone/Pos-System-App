@@ -1,9 +1,11 @@
-import 'package:pos_apps/model/dto/index.dart';
+import 'package:get/get.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/account_data.dart';
-import '../model/account.dart';
+import '../data/api/index.dart';
+import '../data/model/account.dart';
+import '../routes/routes_constrants.dart';
 
 class LoginViewModel extends BaseViewModel {
   AccountData dao = AccountData();
@@ -15,5 +17,11 @@ class LoginViewModel extends BaseViewModel {
       setUserInfo(userDTO);
     }
     return userDTO;
+  }
+
+  Future<void> logout() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
+    await Get.offAllNamed(RouteHandler.LOGIN);
   }
 }

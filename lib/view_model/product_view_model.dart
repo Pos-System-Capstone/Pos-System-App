@@ -3,7 +3,7 @@ import 'package:pos_apps/enums/product_enum.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 
-import '../model/index.dart';
+import '../data/model/index.dart';
 import 'cart_view_model.dart';
 
 class ProductViewModel extends BaseViewModel {

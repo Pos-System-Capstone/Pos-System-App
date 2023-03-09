@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pos_apps/model/index.dart';
+import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/view_model/index.dart';
 
-import '../data/index.dart';
+import '../data/api/index.dart';
 import '../enums/product_enum.dart';
 import '../enums/view_status.dart';
 

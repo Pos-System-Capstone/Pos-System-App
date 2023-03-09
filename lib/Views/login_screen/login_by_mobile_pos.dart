@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:pos_apps/routes/routes_constrants.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
 import 'dart:io' show Platform;
-
-import '../../data/account_data.dart';
-import '../../model/account.dart';
+import '../../data/api/index.dart';
+import '../../data/model/account.dart';
 import '../../view_model/menu_view_model.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -72,12 +70,12 @@ class _LogInScreenState extends State<LogInScreen> {
                       "assets/images/cash-register.png",
                       width: MediaQuery.of(context).size.width * 0.4,
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 8),
                     Text(
-                      'Login to RESO POS',
-                      style: Get.textTheme.displaySmall,
+                      'Đăng nhập',
+                      style: Get.textTheme.titleLarge,
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 8),
 
                     //LOGIN FORM
                     Form(
@@ -153,7 +151,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             focusNode: _userNameFocus,
                           ),
 
-                          SizedBox(height: 16),
+                          SizedBox(height: 8),
 
                           //PASSWORD FORM FIELD
                           TextFormField(
@@ -239,23 +237,16 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        // Foreground color
-                        // ignore: deprecated_member_use
-                        minimumSize: const Size.fromHeight(45),
-                        onPrimary: Theme.of(context).colorScheme.onPrimary,
-                        // Background color
-                        // ignore: deprecated_member_use
-                        // primary: Theme.of(context).colorScheme.primary,
-                        primary: Theme.of(context).colorScheme.primary,
-                      ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-                      onPressed: () {
-                        login();
-                      },
-                      child: Text("Login",
-                          style: Get.textTheme.button?.copyWith(
-                              color: Get.theme.colorScheme.background)),
+                    Container(
+                      width: Get.width,
+                      height: 48,
+                      child: FilledButton.tonal(
+                        onPressed: () {
+                          login();
+                        },
+                        child:
+                            Text("Đăng nhập", style: Get.textTheme.titleMedium),
+                      ),
                     ),
                   ],
                 ),
@@ -280,7 +271,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Login to RESO POS',
+                        'Đăng nhập',
                         style: Get.textTheme.displaySmall,
                       ),
                       SizedBox(height: 32),
@@ -312,7 +303,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                 )
                               },
                               decoration: InputDecoration(
-                                  hintText: "Username",
+                                  hintText: "Tên đăng nhập",
                                   hintStyle: Get.textTheme.bodyMedium,
                                   floatingLabelBehavior:
                                       FloatingLabelBehavior.never,
@@ -382,7 +373,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                     password = value;
                                   })),
                               decoration: InputDecoration(
-                                  hintText: "Password",
+                                  hintText: "Mật khẩu",
                                   floatingLabelBehavior:
                                       FloatingLabelBehavior.never,
                                   filled: true,
@@ -498,7 +489,7 @@ class _LogInScreenState extends State<LogInScreen> {
       Account? userData = await model.posLogin(userName, password);
       if (userData != null) {
         Get.find<MenuViewModel>().getMenuOfStore();
-        Get.toNamed(RouteHandler.HOME);
+        Get.offAndToNamed(RouteHandler.HOME);
         final userInfo = await getUserInfo();
         debugPrint("userInfo get tu sharepreference: ${userInfo}");
       }

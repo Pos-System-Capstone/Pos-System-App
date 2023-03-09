@@ -26,7 +26,7 @@ class ChooseDeliveryTypeScreen extends StatelessWidget {
                       model.changeState(OrderStateEnum.CHOOSE_ORDER_TYPE);
                     },
                   ),
-                  Text("1. Chọn hình thức", style: Get.textTheme.headlineSmall),
+                  Text("1. Chọn hình thức", style: Get.textTheme.titleLarge),
                 ],
               ),
               Expanded(
@@ -71,28 +71,25 @@ Widget deliveryOptionButton(
     child: InkWell(
       onTap: onTap,
       child: SizedBox(
-        width: 160,
-        height: 160,
+        width: 100,
+        height: 100,
         child: Card(
           color: isSelected
-              ? Get.theme.colorScheme.primary
+              ? Get.theme.colorScheme.primaryContainer
               : Get.theme.colorScheme.background,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(icon, size: 72),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    title,
-                    style: Get.textTheme.titleLarge,
-                  ),
-                )
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, size: 40),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  title,
+                  style: Get.textTheme.titleMedium,
+                ),
+              )
+            ],
           ),
         ),
       ),

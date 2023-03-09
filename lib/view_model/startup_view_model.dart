@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 
-import '../data/account_data.dart';
+import '../data/api/index.dart';
 import '../routes/routes_constrants.dart';
 import '../util/share_pref.dart';
 import 'index.dart';

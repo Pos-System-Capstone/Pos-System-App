@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 import 'package:pos_apps/enums/index.dart';
-import 'package:pos_apps/model/dto/account_dto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/account.dart';
+import '../data/model/account.dart';
 
 Future<bool> setIsFirstOnboard(bool isFirstOnboard) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,18 +68,38 @@ Future<String> getToken() async {
   return prefs.getString('token') ?? "";
 }
 
+Future<bool> setThemeColor(String value) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setString('themColor', value);
+}
+
+Future<String?> getThemeColor() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('themColor');
+}
+
 Future<void> setUserInfo(Account userDTO) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final userInfo = userDTO.toJson();
   prefs.setString("userInfo", jsonEncode(userInfo));
 }
 
-Future<AccountDTO?> getUserInfo() async {
+Future<Account?> getUserInfo() async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String? userData = pref.getString("userInfo");
-  AccountDTO? userInfo;
+  Account? userInfo;
   if (userData != null) {
-    userInfo = AccountDTO.fromJson(jsonDecode(userData));
+    userInfo = Account.fromJson(jsonDecode(userData));
   }
   return userInfo;
+}
+
+Future<int?> getTableNumber() async {
+  int? number = -1;
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  if (pref.containsKey("numberOfTable")) {
+    number = pref.getInt("numberOfTable");
+  }
+
+  return number;
 }

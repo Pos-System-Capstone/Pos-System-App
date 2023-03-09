@@ -1,20 +1,25 @@
 import 'dart:core';
 
+import 'package:flutter/material.dart';
+import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/enums/order_enum.dart';
+import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 
-import '../model/index.dart';
+import '../data/api/order_api.dart';
+import '../data/model/index.dart';
 
 class OrderViewModel extends BaseViewModel {
   late OrderStateEnum currentState;
-  late int numberOfTable;
   int selectedTable = 0;
   DeliTypeEnum deliveryType = DeliTypeEnum.NONE;
   Cart? currentCart;
+  late OrderAPI api = OrderAPI();
+  OrderResponseModel? orderResponseModel;
 
   OrderViewModel() {
     currentState = OrderStateEnum.CHOOSE_ORDER_TYPE;
-    numberOfTable = 40;
+    api = OrderAPI();
   }
 
   void changeState(OrderStateEnum newState) {
@@ -38,6 +43,28 @@ class OrderViewModel extends BaseViewModel {
     selectedTable = 0;
     deliveryType = DeliTypeEnum.NONE;
     notifyListeners();
+  }
+
+  Future<void> placeOrder(OrderModel order) async {
+    Account? userInfo = await getUserInfo();
+    var res = await api.placeOrder(order, userInfo!.storeId);
+    print(res.toString());
+    OrderResponseModel? orderRes =
+        await getOrderByStore(userInfo.storeId, res.toString());
+    if (orderRes != null) {
+      orderResponseModel = orderRes;
+      changeState(OrderStateEnum.PAYMENT);
+    } else {
+      orderResponseModel = null;
+    }
+  }
+
+  Future<OrderResponseModel?> getOrderByStore(
+      String storeId, String orderId) async {
+    // Account? userInfo = await getUserInfo();
+    OrderResponseModel res = await api.getOrderOfStore(storeId, orderId);
+    print(res.toString());
+    return res;
   }
 
   // void addProductToCart(Product product)  {

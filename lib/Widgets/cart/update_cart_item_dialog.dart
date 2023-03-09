@@ -23,15 +23,17 @@ import '../../view_model/menu_view_model.dart';
 import '../../view_model/product_view_model.dart';
 import '../product_cart.dart';
 
-class ProductDialog extends StatefulWidget {
-  final Product product;
-  const ProductDialog({required this.product, super.key});
+class UpdateCartItemDialog extends StatefulWidget {
+  final CartItem cartItem;
+  final int idx;
+  const UpdateCartItemDialog(
+      {required this.cartItem, required this.idx, super.key});
 
   @override
-  State<ProductDialog> createState() => _ProductDialogState();
+  State<UpdateCartItemDialog> createState() => _UpdateCartItemDialogState();
 }
 
-class _ProductDialogState extends State<ProductDialog> {
+class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   MenuViewModel menuViewModel = Get.find<MenuViewModel>();
   ProductViewModel productViewModel = ProductViewModel();
   List<Product> childProducts = [];
@@ -40,13 +42,13 @@ class _ProductDialogState extends State<ProductDialog> {
   @override
   void initState() {
     super.initState();
-    productViewModel.addProductToCartItem(widget.product);
+    productViewModel.addProductToCartItem(widget.cartItem.product);
     extraProduct =
-        menuViewModel.getExtraProductByNormalProduct(widget.product)!;
-    if (widget.product.type == ProductTypeEnum.PARENT) {
-      childProducts =
-          menuViewModel.getChildProductByParentProduct(widget.product.id!)!;
-      selectedSize = childProducts[0].id;
+        menuViewModel.getExtraProductByNormalProduct(widget.cartItem.product)!;
+    if (widget.cartItem.product.type == ProductTypeEnum.CHILD) {
+      childProducts = menuViewModel.getChildProductByParentProduct(
+          widget.cartItem.product.parentProductId!)!;
+      selectedSize = widget.cartItem.product.id;
       productViewModel.addProductToCartItem(childProducts[0]);
     }
   }
@@ -117,12 +119,15 @@ class _ProductDialogState extends State<ProductDialog> {
                 Expanded(
                   child: DefaultTabController(
                     length:
-                        widget.product.type == ProductTypeEnum.PARENT ? 3 : 2,
+                        widget.cartItem.product.type == ProductTypeEnum.CHILD
+                            ? 3
+                            : 2,
                     child: Column(
                       children: [
                         TabBar(
                           indicatorSize: TabBarIndicatorSize.tab,
-                          tabs: widget.product.type == ProductTypeEnum.PARENT
+                          tabs: widget.cartItem.product.type ==
+                                  ProductTypeEnum.CHILD
                               ? parentProductTab
                               : singleProductTab,
                           isScrollable: true,
@@ -130,17 +135,17 @@ class _ProductDialogState extends State<ProductDialog> {
                         ),
                         Expanded(
                           child: TabBarView(
-                              children:
-                                  widget.product.type == ProductTypeEnum.PARENT
-                                      ? [
-                                          productSize(model),
-                                          addExtra(model),
-                                          productNotes(model),
-                                        ]
-                                      : [
-                                          addExtra(model),
-                                          productNotes(model),
-                                        ]),
+                              children: widget.cartItem.product.type ==
+                                      ProductTypeEnum.CHILD
+                                  ? [
+                                      productSize(model),
+                                      addExtra(model),
+                                      productNotes(model),
+                                    ]
+                                  : [
+                                      addExtra(model),
+                                      productNotes(model),
+                                    ]),
                         )
                       ],
                     ),
@@ -201,7 +206,7 @@ class _ProductDialogState extends State<ProductDialog> {
                       ),
                       Container(
                         width: double.infinity,
-                        child: FilledButton.tonal(
+                        child: OutlinedButton(
                             onPressed: () {
                               model.addProductToCart();
                             },
