@@ -45,3 +45,11 @@ String percentageCalculation(
     String price, String discount, String discountType) {
   return '$discount${discountType == 'percent' ? '%' : '\$'} OFF';
 }
+
+String formatTime(String time) {
+  DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  String result = time.replaceAll('T', ' ');
+  DateTime dateTime = dateFormat.parse(result);
+  String formattedDate = DateFormat('HH:mm dd/MM/yyyy').format(dateTime);
+  return formattedDate;
+}

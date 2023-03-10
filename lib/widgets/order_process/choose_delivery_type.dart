@@ -21,12 +21,12 @@ class ChooseDeliveryTypeScreen extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.shopping_cart_outlined, size: 24),
+                    icon: Icon(Icons.delivery_dining, size: 24),
                     onPressed: () {
                       model.changeState(OrderStateEnum.CHOOSE_ORDER_TYPE);
                     },
                   ),
-                  Text("1. Chọn hình thức", style: Get.textTheme.titleLarge),
+                  Text("Chọn hình thức", style: Get.textTheme.titleLarge),
                 ],
               ),
               Expanded(
@@ -66,31 +66,28 @@ class ChooseDeliveryTypeScreen extends StatelessWidget {
 
 Widget deliveryOptionButton(
     String title, IconData icon, Function() onTap, bool isSelected) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: InkWell(
-      onTap: onTap,
-      child: SizedBox(
-        width: 100,
-        height: 100,
-        child: Card(
-          color: isSelected
-              ? Get.theme.colorScheme.primaryContainer
-              : Get.theme.colorScheme.background,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(icon, size: 40),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  title,
-                  style: Get.textTheme.titleMedium,
-                ),
-              )
-            ],
-          ),
+  return InkWell(
+    onTap: onTap,
+    child: SizedBox(
+      width: 120,
+      height: 120,
+      child: Card(
+        color: isSelected
+            ? Get.theme.colorScheme.primaryContainer
+            : Get.theme.colorScheme.background,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(icon, size: 40),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                title,
+                style: Get.textTheme.titleMedium,
+              ),
+            )
+          ],
         ),
       ),
     ),

@@ -30,7 +30,7 @@ class BookingTableScreen extends StatelessWidget {
                         model.changeState(OrderStateEnum.CHOOSE_ORDER_TYPE);
                       },
                     ),
-                    Text("2. Chọn bàn", style: Get.textTheme.titleLarge),
+                    Text("Chọn bàn", style: Get.textTheme.titleLarge),
                   ],
                 ),
                 Expanded(

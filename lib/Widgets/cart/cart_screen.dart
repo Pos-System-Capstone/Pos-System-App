@@ -26,10 +26,10 @@ class _CartScreenState extends State<CartScreen> {
           builder: (context, child, model) {
         int selectedTable = Get.find<OrderViewModel>().selectedTable;
         return Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: const EdgeInsets.all(8),
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Get.theme.colorScheme.onBackground),
+              color: Get.theme.colorScheme.onInverseSurface,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -176,7 +176,7 @@ class _CartScreenState extends State<CartScreen> {
                                         {model.clearCartData(), Get.back()},
                                     icon: Icon(
                                       Icons.delete_outlined,
-                                      size: 40,
+                                      size: 32,
                                     )),
                               ),
                               Expanded(
@@ -188,9 +188,10 @@ class _CartScreenState extends State<CartScreen> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
                                       'Thanh toán',
-                                      style: Get.textTheme.titleLarge?.copyWith(
-                                          color:
-                                              Get.theme.colorScheme.background),
+                                      style: Get.textTheme.titleMedium
+                                          ?.copyWith(
+                                              color: Get.theme.colorScheme
+                                                  .background),
                                     ),
                                   ),
                                 ),

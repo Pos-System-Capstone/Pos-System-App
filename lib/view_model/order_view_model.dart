@@ -1,9 +1,11 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/enums/order_enum.dart';
 import 'package:pos_apps/util/share_pref.dart';
+import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 
 import '../data/api/order_api.dart';
@@ -42,6 +44,8 @@ class OrderViewModel extends BaseViewModel {
   void clearOrderState() {
     selectedTable = 0;
     deliveryType = DeliTypeEnum.NONE;
+    Get.find<CartViewModel>().clearCartData();
+    changeState(OrderStateEnum.CHOOSE_ORDER_TYPE);
     notifyListeners();
   }
 
@@ -54,9 +58,13 @@ class OrderViewModel extends BaseViewModel {
     if (orderRes != null) {
       orderResponseModel = orderRes;
       changeState(OrderStateEnum.PAYMENT);
+      if (Get.isDialogOpen!) {
+        Get.back();
+      }
     } else {
       orderResponseModel = null;
     }
+    notifyListeners();
   }
 
   Future<OrderResponseModel?> getOrderByStore(

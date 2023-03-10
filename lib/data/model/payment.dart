@@ -34,3 +34,36 @@ class PaymentModel {
     return data;
   }
 }
+
+class Payment {
+  String? id;
+  String? paymentTypeId;
+  String? paymentType;
+  String? picUrl;
+  int? paidAmount;
+
+  Payment(
+      {this.id,
+      this.paymentTypeId,
+      this.paymentType,
+      this.picUrl,
+      this.paidAmount});
+
+  Payment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    paymentTypeId = json['paymentTypeId'];
+    paymentType = json['paymentType'];
+    picUrl = json['picUrl'];
+    paidAmount = json['paidAmount'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['paymentTypeId'] = this.paymentTypeId;
+    data['paymentType'] = this.paymentType;
+    data['picUrl'] = this.picUrl;
+    data['paidAmount'] = this.paidAmount;
+    return data;
+  }
+}
