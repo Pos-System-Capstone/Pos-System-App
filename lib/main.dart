@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/theme/app_theme.dart';
+import 'package:pos_apps/theme/theme_color.dart';
 import 'package:pos_apps/util/request.dart';
+import 'package:pos_apps/util/share_pref.dart';
+import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,20 +22,24 @@ import 'views/startup.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.clear();
+  await deleteUserInfo();
   HttpOverrides.global = MyHttpOverrides();
+  int? colorInx = await getThemeColor();
+
   createRouteBindings();
-  runApp(const MyApp());
+  runApp(MyApp(colorInx ?? 0));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  int colorIdx = 0;
+  MyApp(this.colorIdx, {super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  late int themeIndex;
   @override
   initState() {
     super.initState();
@@ -43,8 +51,9 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         // initialRoute: RouteHandler.WELCOME,
         title: 'POS System',
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: AppTheme.getThemeLight(widget.colorIdx),
+        darkTheme: AppTheme.getThemeDark(widget.colorIdx),
+        themeMode: ThemeMode.system,
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case RouteHandler.LOGIN:

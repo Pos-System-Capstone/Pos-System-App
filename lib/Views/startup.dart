@@ -14,25 +14,20 @@ class StartUpView extends StatelessWidget {
       child: ScopedModelDescendant<StartUpViewModel>(
           builder: (context, child, model) {
         return Scaffold(
-          backgroundColor: Colors.white,
           body: Stack(
             children: [
               Center(
-                child: Container(
-                  width: 250.0,
-                  color: Colors.white,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // LoadingBean(),
-                        SizedBox(height: 16),
-                        Text(
-                          "RESO POS",
-                          style: Get.textTheme.headline5,
-                        )
-                      ],
-                    ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // LoadingBean(),
+                      SizedBox(height: 16),
+                      Text(
+                        "RESO POS",
+                        style: Get.textTheme.displaySmall,
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -42,7 +37,7 @@ class StartUpView extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Giải pháp bán hàng',
-                    style: Get.textTheme.bodyText2,
+                    style: Get.textTheme.titleLarge,
                   ),
                 ),
               ),
@@ -61,21 +56,17 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        // width: 250.0,
-        color: Colors.white,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // LoadingBean(),
-              SizedBox(height: 16),
-              Text(
-                this.title,
-                style: Get.theme.textTheme.headline1,
-              )
-            ],
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // LoadingBean(),
+            SizedBox(height: 16),
+            Text(
+              this.title,
+              style: Get.theme.textTheme.displaySmall,
+            )
+          ],
         ),
       ),
     );

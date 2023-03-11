@@ -299,13 +299,18 @@ class _ProductDialogState extends State<ProductDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              'Ghi chú',
-              style: Get.textTheme.titleSmall,
-            ),
-            Divider(
-              thickness: 1,
-            ),
+            TextFormField(
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: "Ghi chú",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onChanged: (value) {
+                model.setNotes(value);
+              },
+            )
           ],
         ));
   }

@@ -3,13 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class ThemeColor {
-  Color m3BaseColor = Color(0xff6750a4);
-  Color blue = Colors.blue;
-  Color teal = Colors.teal;
-  Color green = Colors.green;
-  Color yellow = Colors.yellow;
-  Color orange = Colors.orange;
-  Color pink = Colors.pink;
+  static Color m3BaseColor = Color(0xff6750a4);
+  static Color blue = Colors.blue;
+  static Color teal = Colors.teal;
+  static Color green = Colors.green;
+  static Color yellow = Colors.yellow;
+  static Color orange = Colors.orange;
+  static Color pink = Colors.pink;
 }
 
 const List<Color> colorOptions = [

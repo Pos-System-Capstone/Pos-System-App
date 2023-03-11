@@ -68,14 +68,14 @@ Future<String> getToken() async {
   return prefs.getString('token') ?? "";
 }
 
-Future<bool> setThemeColor(String value) async {
+Future<bool> setThemeColor(int idx) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.setString('themColor', value);
+  return prefs.setInt('themeColor', idx);
 }
 
-Future<String?> getThemeColor() async {
+Future<int?> getThemeColor() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('themColor');
+  return prefs.getInt('themeColor');
 }
 
 Future<void> setUserInfo(Account userDTO) async {
@@ -92,6 +92,11 @@ Future<Account?> getUserInfo() async {
     userInfo = Account.fromJson(jsonDecode(userData));
   }
   return userInfo;
+}
+
+Future<void> deleteUserInfo() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove("userInfo");
 }
 
 Future<int?> getTableNumber() async {

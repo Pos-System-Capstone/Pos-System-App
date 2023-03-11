@@ -66,6 +66,14 @@ class CartViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void updateCart(CartItem cartModel, int cartIndex) {
+    _cartList[cartIndex] = cartModel;
+    countCartAmount();
+    countCartQuantity();
+    print(_cartList.length);
+    notifyListeners();
+  }
+
   void countCartAmount() {
     _totalAmount = 0;
     for (CartItem cart in _cartList) {
@@ -82,9 +90,9 @@ class CartViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void removeFromCart(CartItem item) {
-    _totalAmount = _totalAmount - (item.totalAmount);
-    _cartList.remove(item);
+  void removeFromCart(int idx) {
+    _totalAmount = _totalAmount - (_cartList[idx].totalAmount);
+    _cartList.remove(_cartList[idx]);
     countCartAmount();
     countCartQuantity();
     notifyListeners();
@@ -99,12 +107,64 @@ class CartViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  //UPDATE CART ITEM
+
+  CartItem countCartItemAmount(CartItem cartItem) {
+    cartItem.totalAmount = cartItem.product.sellingPrice! * quantity!;
+    cartItem = addExtraCartItemAmount(cartItem);
+    return cartItem;
+  }
+
+  CartItem addExtraCartItemAmount(CartItem cartItem) {
+    for (int index = 0; index < cartItem.extras!.length; index++) {
+      cartItem.totalAmount += cartItem.extras![index].sellingPrice!;
+    }
+    return cartItem;
+  }
+
   void updateProductInCartItem(Product product, int cartIndex) {
     _cartList[cartIndex].product = product;
+    _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
     print(_cartList[cartIndex].product.name);
-    // countAmount();
+    countCartAmount();
     print(totalAmount);
     notifyListeners();
+  }
+
+  void updateExtraInCartItem(Product extra, int cartIndex) {
+    _cartList[cartIndex].extras!.add(extra);
+    _cartList[cartIndex] = addExtraCartItemAmount(_cartList[cartIndex]);
+    print(_cartList[cartIndex].product.name);
+    countCartAmount();
+    print(totalAmount);
+    notifyListeners();
+  }
+
+  void increaseCartItemQuantity(int cartIndex) {
+    _cartList[cartIndex].quantity++;
+    _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
+    print(_cartList[cartIndex].product.name);
+    countCartAmount();
+    print(totalAmount);
+    notifyListeners();
+  }
+
+  void decreaseCartItemQuantity(int cartIndex) {
+    _cartList[cartIndex].quantity--;
+    _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
+    print(_cartList[cartIndex].product.name);
+    countCartAmount();
+    print(totalAmount);
+    notifyListeners();
+  }
+
+  bool isExtraExist(Product extra, int cartIndex) {
+    for (int index = 0; index < _cartList[cartIndex].extras!.length; index++) {
+      if (_cartList[cartIndex].extras![index].id == extra.id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void createOrder() {

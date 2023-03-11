@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../view_model/cart_view_model.dart';
@@ -172,8 +173,16 @@ class _CartScreenState extends State<CartScreen> {
                               Expanded(
                                 flex: 1,
                                 child: IconButton(
-                                    onPressed: () =>
-                                        {model.clearCartData(), Get.back()},
+                                    onPressed: () async {
+                                      var result = await showConfirmDialog(
+                                          title: 'Xác nhận',
+                                          content:
+                                              'Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng không?');
+                                      if (result) {
+                                        model.clearCartData();
+                                      }
+                                      Get.back();
+                                    },
                                     icon: Icon(
                                       Icons.delete_outlined,
                                       size: 32,
@@ -306,6 +315,17 @@ class _CartScreenState extends State<CartScreen> {
                 );
               },
             ),
+            if (item.note != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(item.note!,
+                      style: Get.textTheme.bodySmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ),
             Divider(
               color: Get.theme.colorScheme.onSurface,
               thickness: 0.5,

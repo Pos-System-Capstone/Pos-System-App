@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/theme/app_theme.dart';
+import 'package:pos_apps/util/share_pref.dart';
 
 import '../theme/theme_color.dart';
 import 'base_view_model.dart';
 
 class RootViewModel extends BaseViewModel {
   int numberOfTable = 20;
-  void handleChangeTheme() {
-    if (Get.isDarkMode) {
-      Get.changeTheme(AppTheme.lightTheme);
+  bool isDarkMode = false;
+  int colorIndex = 0;
+  void handleChangeTheme(bool isDarkMode) async {
+    int index = await getThemeColor() ?? 0;
+    if (isDarkMode) {
+      Get.changeTheme(AppTheme.getThemeLight(index));
     } else {
-      Get.changeTheme(AppTheme.darkTheme);
+      Get.changeTheme(AppTheme.getThemeDark(index));
     }
-    notifyListeners();
   }
 
-  void handleColorSelect(int value) {
-    if (Get.isDarkMode) {
-      ThemeData darkTheme = ThemeData(
-        colorSchemeSeed: colorOptions[value],
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      );
-      Get.changeTheme(darkTheme);
+  void handleColorSelect(bool isDarkMode, int value) {
+    setThemeColor(value);
+    print(value);
+    if (isDarkMode) {
+      Get.changeTheme(AppTheme.getThemeDark(value));
     } else {
-      ThemeData lightTheme = ThemeData(
-        colorSchemeSeed: colorOptions[value],
-        useMaterial3: true,
-        brightness: Brightness.light,
-      );
-      Get.changeTheme(lightTheme);
+      Get.changeTheme(AppTheme.getThemeLight(value));
     }
+    // Get.changeTheme(isDarkMode
+    //     ? AppTheme.getThemeDark(value)
+    //     : AppTheme.getThemeLight(value));
+
+    colorIndex = value;
     notifyListeners();
   }
 

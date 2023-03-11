@@ -5,7 +5,9 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Theme/app_theme.dart';
 import '../theme/theme_color.dart';
+import '../util/share_pref.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,26 +17,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  Color colorSelect = colorOptions[0];
-  bool isNotificationsEnabled = true;
-
   @override
   void initState() {
     super.initState();
-    loadSettings();
-  }
-
-  loadSettings() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      // colorSelect = prefs.getString('color');
-      isNotificationsEnabled = prefs.getBool('notifications') ?? true;
-    });
-  }
-
-  saveSettings(String key, bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(key, value);
   }
 
   @override
@@ -44,58 +29,74 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ScopedModelDescendant<RootViewModel>(
             builder: (context, child, model) {
           return Scaffold(
-              appBar: AppBar(
-                title: Text('Settings'),
-                // actions: [
-                //   IconButton(
-                //     icon: !Get.isDarkMode
-                //         ? const Icon(Icons.wb_sunny_outlined)
-                //         : const Icon(Icons.wb_sunny),
-                //     onPressed: null,
-                //     tooltip: "Toggle brightness",
-                //   ),
-                //   PopupMenuButton(
-                //     icon: const Icon(Icons.more_vert),
-                //     shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(10)),
-                //     itemBuilder: (context) {
-                //       return List.generate(colorOptions.length, (index) {
-                //         return PopupMenuItem(
-                //             value: index,
-                //             child: Wrap(
-                //               children: [
-                //                 Padding(
-                //                   padding: const EdgeInsets.only(left: 10),
-                //                   child: Icon(
-                //                     Icons.color_lens,
-                //                     // index == colorSelected
-                //                     //     ? Icons.color_lens
-                //                     //     : Icons.color_lens_outlined,
-                //                     color: colorOptions[index],
-                //                   ),
-                //                 ),
-                //                 Padding(
-                //                     padding: const EdgeInsets.only(left: 20),
-                //                     child: Text(colorText[index]))
-                //               ],
-                //             ));
-                //       });
-                //     },
-                //     onSelected: null,
-                //   ),
-                // ],
-              ),
               body: Container(
-                child: Column(children: [
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        "Cài đặt",
+                        style: Get.textTheme.titleLarge,
+                      )),
                   SwitchListTile(
                     title: Text('Chế độ tối'),
-                    value: Get.isDarkMode,
-                    onChanged: (value) {
-                      model.handleChangeTheme();
+                    value: context.isDarkMode,
+                    onChanged: (value) async {
+                      model.handleChangeTheme(context.isDarkMode);
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Màu nền', style: Get.textTheme.titleMedium),
+                        PopupMenuButton(
+                          tooltip: "Đổi màu sắc",
+                          icon: Icon(
+                            Icons.colorize,
+                            color: Get.theme.colorScheme.primary,
+                            size: 32,
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          itemBuilder: (context) {
+                            return List.generate(colorOptions.length, (index) {
+                              Future<int?> idx = getThemeColor();
+                              return PopupMenuItem(
+                                  value: index,
+                                  child: Wrap(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10),
+                                        child: Icon(
+                                          idx == index
+                                              ? Icons.color_lens
+                                              : Icons.color_lens_outlined,
+                                          color: colorOptions[index],
+                                        ),
+                                      ),
+                                      Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Text(colorText[index]))
+                                    ],
+                                  ));
+                            });
+                          },
+                          onSelected: (index) {
+                            model.handleColorSelect(context.isDarkMode, index);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,7 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   )
                 ]),
-              ));
+          ));
         }));
   }
 }

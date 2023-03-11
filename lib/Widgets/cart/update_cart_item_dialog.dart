@@ -42,14 +42,13 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   @override
   void initState() {
     super.initState();
-    productViewModel.addProductToCartItem(widget.cartItem.product);
-    extraProduct =
-        menuViewModel.getExtraProductByNormalProduct(widget.cartItem.product)!;
+    productViewModel.getCartItemToUpdate(widget.cartItem);
+    extraProduct = menuViewModel
+        .getExtraProductByNormalProduct(productViewModel.productInCart!)!;
     if (widget.cartItem.product.type == ProductTypeEnum.CHILD) {
       childProducts = menuViewModel.getChildProductByParentProduct(
-          widget.cartItem.product.parentProductId!)!;
-      selectedSize = widget.cartItem.product.id;
-      productViewModel.addProductToCartItem(childProducts[0]);
+          productViewModel.productInCart!.parentProductId!)!;
+      selectedSize = productViewModel.productInCart!.id;
     }
   }
 
@@ -206,15 +205,42 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                       ),
                       Container(
                         width: double.infinity,
-                        child: OutlinedButton(
-                            onPressed: () {
-                              model.addProductToCart();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Text("Thêm ",
-                                  style: Get.textTheme.titleLarge),
-                            )),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: OutlinedButton(
+                                  onPressed: () {
+                                    model.deleteCartItemInCart(widget.idx);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Text("Xoá",
+                                        style: Get.textTheme.titleMedium),
+                                  )),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: FilledButton(
+                                  onPressed: () {
+                                    model.updateCartItemInCart(widget.idx);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Text("Cập nhật ",
+                                        style: Get.textTheme.titleMedium
+                                            ?.copyWith(
+                                                color: Get.theme.colorScheme
+                                                    .background)),
+                                  )),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -304,13 +330,19 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              'Ghi chú',
-              style: Get.textTheme.titleSmall,
-            ),
-            Divider(
-              thickness: 1,
-            ),
+            TextFormField(
+              initialValue: model.notes,
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: "Ghi chú",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onChanged: (value) {
+                model.setNotes(value);
+              },
+            )
           ],
         ));
   }
