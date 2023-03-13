@@ -1,11 +1,11 @@
 class OrderResponseModel {
   String? orderId;
   String? invoiceId;
-  int? totalAmount;
-  int? finalAmount;
-  int? vat;
-  int? vatAmount;
-  int? discount;
+  num? totalAmount;
+  num? finalAmount;
+  num? vat;
+  num? vatAmount;
+  num? discount;
   String? orderStatus;
   String? orderType;
   String? checkInDate;

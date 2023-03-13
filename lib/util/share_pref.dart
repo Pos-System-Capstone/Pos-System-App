@@ -108,3 +108,18 @@ Future<int?> getTableNumber() async {
 
   return number;
 }
+
+Future<bool> setPrinterDeviceIP(String ip) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setString("printer", ip);
+}
+
+Future<String?> getPrinterDeviceIP() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString("printer");
+}
+
+Future<void> deletePrinterDeviceIP() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove("printer");
+}

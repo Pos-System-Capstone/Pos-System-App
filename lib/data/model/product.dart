@@ -5,11 +5,11 @@ class Product {
   String? menuProductId;
   String? code;
   String? name;
-  int? sellingPrice;
+  num? sellingPrice;
   String? picUrl;
   String? status;
-  int? historicalPrice;
-  int? discountPrice;
+  num? historicalPrice;
+  num? discountPrice;
   String? description;
   int? displayOrder;
   String? size;
@@ -44,6 +44,7 @@ class Product {
     id = json['id'];
     code = json['code'];
     name = json['name'];
+    // sellingPrice = json['sellingPrice'];
     sellingPrice = json['sellingPrice'];
     picUrl = json['picUrl'];
     status = json['status'];

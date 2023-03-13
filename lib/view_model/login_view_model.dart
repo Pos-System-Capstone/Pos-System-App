@@ -13,6 +13,7 @@ class LoginViewModel extends BaseViewModel {
 
   Future<Account?> posLogin(String userName, String password) async {
     Account? userDTO = await dao.login(userName, password);
+    print(userDTO!.name);
     if (userDTO != null) {
       setUserInfo(userDTO);
     }

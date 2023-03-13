@@ -14,6 +14,7 @@ class StartUpViewModel extends BaseViewModel {
     AccountData accountDAO = AccountData();
     await Future.delayed(const Duration(seconds: 1));
     bool hasLoggedInUser = await accountDAO.isUserLoggedIn();
+    print(hasLoggedInUser);
 
     if (!hasLoggedInUser) {
       Get.offAndToNamed(RouteHandler.LOGIN);

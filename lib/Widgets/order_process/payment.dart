@@ -44,27 +44,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
                 Expanded(
                     child: Get.context!.isPortrait
-                        ? SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  height: 600,
-                                  child: orderConfig(),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  height: 600,
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: BillScreen(),
-                                )
-                              ],
-                            ),
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(child: orderConfig()),
+                            ],
                           )
                         : Row(children: [
                             Expanded(
@@ -105,6 +90,10 @@ Widget orderConfig() {
           text: "Khuyến mãi",
           icon: Icon(Icons.local_offer),
         ),
+        Tab(
+          text: "Hoá đơn",
+          icon: Icon(Icons.receipt_long),
+        ),
       ];
       return Container(
         child: DefaultTabController(
@@ -112,6 +101,7 @@ Widget orderConfig() {
           child: Column(
             children: [
               TabBar(
+                isScrollable: true,
                 indicatorColor: Get.theme.colorScheme.primary,
                 tabs: listPaymentTab,
                 onTap: (value) {
@@ -133,6 +123,7 @@ Widget orderConfig() {
                   paymentTypeSelect(model),
                   cusstomerInfoSelect(model),
                   promotionTypeSelect(model),
+                  BillScreen(),
                 ],
               ))
             ],
@@ -433,7 +424,7 @@ Widget checkoutPayment(OrderViewModel model) {
                         style: Get.textTheme.bodyMedium,
                       ),
                       Text(
-                        model.orderResponseModel!.vat!.toString() + ' %',
+                        '${model.orderResponseModel!.vat! * 100} %',
                         style: Get.textTheme.bodyMedium,
                       ),
                     ],

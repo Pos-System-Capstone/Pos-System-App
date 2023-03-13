@@ -1,13 +1,23 @@
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:esc_pos_printer/esc_pos_printer.dart';
+import 'package:esc_pos_utils_plus/esc_pos_utils.dart';
+import 'package:flutter/material.dart' hide Image;
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image/image.dart';
+import 'package:ping_discover_network/ping_discover_network.dart';
+import 'package:pos_apps/view_model/printer_view_model.dart';
+import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
+
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:settings_ui/settings_ui.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Theme/app_theme.dart';
 import '../theme/theme_color.dart';
 import '../util/share_pref.dart';
+import '../widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -17,6 +27,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  TextEditingController portController = TextEditingController(text: '9100');
+  TextEditingController ipController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +59,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (value) async {
                       model.handleChangeTheme(context.isDarkMode);
                     },
+                  ),
+                  Divider(
+                    thickness: 1,
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -95,6 +111,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                   ),
+                  Divider(
+                    thickness: 1,
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
@@ -127,7 +146,70 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Máy in wifi',
+                                style: Get.textTheme.titleMedium),
+                            Get.find<NetworkPrinterViewModel>()
+                                        .selectedDevice !=
+                                    null
+                                ? Text(
+                                    '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
+                                  )
+                                : Text("Chưa kết nối thiết bị"),
+                          ],
+                        ),
+                        OutlinedButton(
+                            onPressed: () => showInputIpDialog(),
+                            child: Text("Tuỳ chỉnh"))
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Máy in wifi',
+                                style: Get.textTheme.titleMedium),
+                            Get.find<NetworkPrinterViewModel>()
+                                        .selectedDevice !=
+                                    null
+                                ? Text(
+                                    '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
+                                  )
+                                : Text("Chưa kết nối thiết bị"),
+                          ],
+                        ),
+                        OutlinedButton(
+                            onPressed: () => showInputIpDialog(),
+                            child: Text("Tuỳ chỉnh"))
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
                 ]),
           ));
         }));

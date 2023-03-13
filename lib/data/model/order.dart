@@ -2,11 +2,11 @@ class OrderModel {
   String? payment;
   String? orderType;
   List<ProductInOrder>? productsList;
-  int? totalAmount;
-  int? discountAmount;
-  int? vat;
-  int? vatAmount;
-  int? finalAmount;
+  num? totalAmount;
+  num? discountAmount;
+  num? vat;
+  num? vatAmount;
+  num? finalAmount;
 
   OrderModel(
       {this.payment,
@@ -53,7 +53,7 @@ class OrderModel {
 class ProductInOrder {
   String? productInMenuId;
   int? quantity;
-  int? sellingPrice;
+  num? sellingPrice;
   String? note;
   List<ProductInOrder>? extras;
 
