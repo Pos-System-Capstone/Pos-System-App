@@ -1,10 +1,10 @@
 import 'package:intl/intl.dart';
 
-String formatPrice(int price) {
+String formatPrice(num price) {
   return NumberFormat.simpleCurrency(locale: 'vi').format(price);
 }
 
-String formatPriceWithoutUnit(double price) {
+String formatPriceWithoutUnit(num price) {
   NumberFormat format = NumberFormat("###0.00");
   format.minimumFractionDigits = 0;
   return format.format(price);

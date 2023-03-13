@@ -10,7 +10,6 @@ class BaseViewModel extends Model {
 
   void setState(ViewStatus newState, [String? msg]) {
     _status = newState;
-    _msg = msg!;
     notifyListeners();
   }
 }

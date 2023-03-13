@@ -8,19 +8,19 @@ import 'index.dart';
 
 class CartViewModel extends BaseViewModel {
   List<CartItem> _cartList = [];
-  int _finalAmount = 0;
+  num _finalAmount = 0;
   bool _isCartUpdate = false;
   int? _peopleNumber;
-  int _totalAmount = 0;
-  int _discountAmount = 0;
+  num _totalAmount = 0;
+  num _discountAmount = 0;
   int _quantity = 0;
 
   List<CartItem> get cartList => _cartList;
-  int get finalAmount => _finalAmount;
-  int get totalAmount => _totalAmount;
+  num get finalAmount => _finalAmount;
+  num get totalAmount => _totalAmount;
   bool get isCartUpdate => _isCartUpdate;
   int? get peopleNumber => _peopleNumber;
-  int? get discountAmount => _discountAmount;
+  num? get discountAmount => _discountAmount;
   int? get quantity => _quantity;
 
   set setPeopleNumber(int value) {
@@ -79,6 +79,7 @@ class CartViewModel extends BaseViewModel {
     for (CartItem cart in _cartList) {
       _totalAmount = _totalAmount + cart.totalAmount;
     }
+    _finalAmount = _totalAmount - _discountAmount;
     notifyListeners();
   }
 
@@ -122,50 +123,50 @@ class CartViewModel extends BaseViewModel {
     return cartItem;
   }
 
-  void updateProductInCartItem(Product product, int cartIndex) {
-    _cartList[cartIndex].product = product;
-    _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
-    print(_cartList[cartIndex].product.name);
-    countCartAmount();
-    print(totalAmount);
-    notifyListeners();
-  }
+  // void updateProductInCartItem(Product product, int cartIndex) {
+  //   _cartList[cartIndex].product = product;
+  //   _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
+  //   print(_cartList[cartIndex].product.name);
+  //   countCartAmount();
+  //   print(totalAmount);
+  //   notifyListeners();
+  // }
 
-  void updateExtraInCartItem(Product extra, int cartIndex) {
-    _cartList[cartIndex].extras!.add(extra);
-    _cartList[cartIndex] = addExtraCartItemAmount(_cartList[cartIndex]);
-    print(_cartList[cartIndex].product.name);
-    countCartAmount();
-    print(totalAmount);
-    notifyListeners();
-  }
+  // void updateExtraInCartItem(Product extra, int cartIndex) {
+  //   _cartList[cartIndex].extras!.add(extra);
+  //   _cartList[cartIndex] = addExtraCartItemAmount(_cartList[cartIndex]);
+  //   print(_cartList[cartIndex].product.name);
+  //   countCartAmount();
+  //   print(totalAmount);
+  //   notifyListeners();
+  // }
 
-  void increaseCartItemQuantity(int cartIndex) {
-    _cartList[cartIndex].quantity++;
-    _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
-    print(_cartList[cartIndex].product.name);
-    countCartAmount();
-    print(totalAmount);
-    notifyListeners();
-  }
+  // void increaseCartItemQuantity(int cartIndex) {
+  //   _cartList[cartIndex].quantity++;
+  //   _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
+  //   print(_cartList[cartIndex].product.name);
+  //   countCartAmount();
+  //   print(totalAmount);
+  //   notifyListeners();
+  // }
 
-  void decreaseCartItemQuantity(int cartIndex) {
-    _cartList[cartIndex].quantity--;
-    _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
-    print(_cartList[cartIndex].product.name);
-    countCartAmount();
-    print(totalAmount);
-    notifyListeners();
-  }
+  // void decreaseCartItemQuantity(int cartIndex) {
+  //   _cartList[cartIndex].quantity--;
+  //   _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
+  //   print(_cartList[cartIndex].product.name);
+  //   countCartAmount();
+  //   print(totalAmount);
+  //   notifyListeners();
+  // }
 
-  bool isExtraExist(Product extra, int cartIndex) {
-    for (int index = 0; index < _cartList[cartIndex].extras!.length; index++) {
-      if (_cartList[cartIndex].extras![index].id == extra.id) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // bool isExtraExist(Product extra, int cartIndex) {
+  //   for (int index = 0; index < _cartList[cartIndex].extras!.length; index++) {
+  //     if (_cartList[cartIndex].extras![index].id == extra.id) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   void createOrder() {
     List<ProductInOrder> productList = <ProductInOrder>[];
@@ -183,7 +184,7 @@ class CartViewModel extends BaseViewModel {
         productInMenuId: cart.product.menuProductId,
         quantity: cart.quantity,
         sellingPrice: cart.totalAmount,
-        note: "test",
+        note: cart.note,
         extras: extraList,
       );
       productList.add(product);
@@ -195,8 +196,8 @@ class CartViewModel extends BaseViewModel {
       totalAmount: _totalAmount,
       discountAmount: _discountAmount,
       finalAmount: _finalAmount,
-      vat: 0,
-      vatAmount: 0,
+      vat: 0.1,
+      vatAmount: _finalAmount * 0.1,
     );
     print(order.toJson());
     Get.find<OrderViewModel>().placeOrder(order);

@@ -7,7 +7,7 @@ import '../data/model/index.dart';
 import 'cart_view_model.dart';
 
 class ProductViewModel extends BaseViewModel {
-  int? totalAmount;
+  num? totalAmount;
   Product? productInCart;
   int quantity = 1;
   List<Product> extras = [];

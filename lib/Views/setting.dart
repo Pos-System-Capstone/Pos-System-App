@@ -60,6 +60,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       model.handleChangeTheme(context.isDarkMode);
                     },
                   ),
+                  Divider(
+                    thickness: 1,
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
@@ -108,6 +111,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                   ),
+                  Divider(
+                    thickness: 1,
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
@@ -141,18 +147,68 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ],
                     ),
                   ),
+                  Divider(
+                    thickness: 1,
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('Máy in', style: Get.textTheme.titleMedium),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Máy in wifi',
+                                style: Get.textTheme.titleMedium),
+                            Get.find<NetworkPrinterViewModel>()
+                                        .selectedDevice !=
+                                    null
+                                ? Text(
+                                    '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
+                                  )
+                                : Text("Chưa kết nối thiết bị"),
+                          ],
+                        ),
                         OutlinedButton(
                             onPressed: () => showInputIpDialog(),
                             child: Text("Tuỳ chỉnh"))
                       ],
                     ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Máy in wifi',
+                                style: Get.textTheme.titleMedium),
+                            Get.find<NetworkPrinterViewModel>()
+                                        .selectedDevice !=
+                                    null
+                                ? Text(
+                                    '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
+                                  )
+                                : Text("Chưa kết nối thiết bị"),
+                          ],
+                        ),
+                        OutlinedButton(
+                            onPressed: () => showInputIpDialog(),
+                            child: Text("Tuỳ chỉnh"))
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
                   ),
                 ]),
           ));
