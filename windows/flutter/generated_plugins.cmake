@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   charset_converter
+  connectivity_plus
   flutter_pos_printer_platform
   network_info_plus
   screen_retriever

@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  charcode:
+    dependency: transitive
+    description:
+      name: charcode
+      sha256: fb98c0f6d12c920a02ee2d998da788bca066ca5f148492b7085ee23372b12306
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.1"
   charset_converter:
     dependency: transitive
     description:
@@ -105,6 +113,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  connectivity_plus:
+    dependency: "direct main"
+    description:
+      name: connectivity_plus
+      sha256: "8875e8ed511a49f030e313656154e4bbbcef18d68dfd32eb853fac10bce48e96"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.3"
+  connectivity_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: connectivity_plus_platform_interface
+      sha256: cf1d1c28f4416f8c654d7dc3cd638ec586076255d407cef3ddbdaf178272a71a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.4"
   convert:
     dependency: transitive
     description:
@@ -137,6 +161,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  dart_ping:
+    dependency: transitive
+    description:
+      name: dart_ping
+      sha256: "91ee37e5bf5316caca5bd6f7b6016e73cd861b6a4b99565a2fd89b1d65003e1a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.0.1"
+  dart_ping_ios:
+    dependency: "direct main"
+    description:
+      name: dart_ping_ios
+      sha256: ade22dedb8bbe37b6ba69bbfb0cbb36b6a20f55f6a63abcb4583373f9ea8eebd
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   dbus:
     dependency: transitive
     description:
@@ -222,6 +262,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.6"
+  flutter_icmp_ping:
+    dependency: transitive
+    description:
+      name: flutter_icmp_ping
+      sha256: a06c2255a857c8f9d1b0a68f546b113557e48e7a543f91e38bd66aeab296f3a6
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -352,6 +400,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.0"
+  isolate_contactor:
+    dependency: transitive
+    description:
+      name: isolate_contactor
+      sha256: e6afce524574cd16a4370dfae75a1718e561ea24175e0b2db5db4ba82d86662f
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  isolate_manager:
+    dependency: transitive
+    description:
+      name: isolate_manager
+      sha256: e3c45ca3db27ad1d55acc539dc243f0bd27fe25006ae9f27e83b0a5beec17285
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0+2"
   js:
     dependency: transitive
     description:
@@ -376,6 +440,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: "04094f2eb032cbb06c6f6e8d3607edcfcb0455e2bb6cbc010cb01171dcb64e6d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
+  lottie:
+    dependency: "direct main"
+    description:
+      name: lottie
+      sha256: "0cf78e7a3dd3431523a7debcf33ce4c41ecbfa113e2d10c24c3fe6667d55b556"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   matcher:
     dependency: transitive
     description:
@@ -400,6 +480,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  multicast_dns:
+    dependency: transitive
+    description:
+      name: multicast_dns
+      sha256: "80e54aba906a7cc68fdc6a201e76b135af27155e2f8e958181d85e2b73786591"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.2+3"
   network_info_plus:
     dependency: transitive
     description:
@@ -416,6 +504,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.3"
+  network_tools:
+    dependency: "direct main"
+    description:
+      name: network_tools
+      sha256: "9502a3d66b043d6f85811ffe9be6c61e9d7f376708d1900b622e595d21573572"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   nm:
     dependency: transitive
     description:
@@ -488,14 +584,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  ping_discover_network:
-    dependency: "direct main"
-    description:
-      name: ping_discover_network
-      sha256: f0b2a14cfecdf214e4e6587c362656dd56eaede0e4e26ae0439ad11990d61d7a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0+1"
   ping_discover_network_forked:
     dependency: transitive
     description:
@@ -536,6 +624,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
+  process_run:
+    dependency: transitive
+    description:
+      name: process_run
+      sha256: "1142d7f4f0c3f36393a1319406efcf481def2b6d862b2bf600c8ae8fa74d5bd8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.12.5+2"
+  pub_semver:
+    dependency: transitive
+    description:
+      name: pub_semver
+      sha256: "307de764d305289ff24ad257ad5c5793ce56d04947599ad68b3baa124105fc17"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.3"
   qr:
     dependency: transitive
     description:
@@ -685,6 +789,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      sha256: "33b31b6beb98100bf9add464a36a8dd03eb10c7a8cf15aeec535e9b054aaf04b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -709,6 +821,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "06866290206d196064fd61df4c7aea1ffe9a4e7c4ccaa8fcded42dd41948005d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
+  url_strategy:
+    dependency: "direct main"
+    description:
+      name: url_strategy
+      sha256: "42b68b42a9864c4d710401add17ad06e28f1c1d5500c93b98c431f6b0ea4ab87"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
+  usb_device:
+    dependency: transitive
+    description:
+      name: usb_device
+      sha256: "034046c5533ab4e66bd251ef788ae14be54a0943545b9277d7d18116c3687de1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
+  usb_device_platform_interface:
+    dependency: transitive
+    description:
+      name: usb_device_platform_interface
+      sha256: "97e34276a32a34c49eebeaa97efe4add7b7a63d4cd50ee0817aa0ccc7741bd57"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
+  usb_device_web:
+    dependency: transitive
+    description:
+      name: usb_device_web
+      sha256: "365aafb0928e5d2fa6a6f0d9f1c0725942b0c1fe38def28cb0b8b526aad9acce"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
+  usb_thermal_printer_web:
+    dependency: "direct main"
+    description:
+      name: usb_thermal_printer_web
+      sha256: cfb7cde9628102a1d2da7d82caf8858f08352a8b1bf39525d83198b8a5a1a89c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   vector_math:
     dependency: transitive
     description:
@@ -749,6 +909,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.2"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      sha256: "23812a9b125b48d4007117254bca50abb6c712352927eece9e155207b1db2370"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
 sdks:
-  dart: ">=2.18.4 <3.0.0"
-  flutter: ">=3.0.0"
+  dart: ">=2.19.2 <3.0.0"
+  flutter: ">=3.3.0"

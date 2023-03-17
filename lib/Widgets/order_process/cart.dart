@@ -3,6 +3,8 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/product_enum.dart';
+import 'package:pos_apps/enums/view_status.dart';
+import 'package:pos_apps/helper/responsive_helper.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/widgets/cart/add_product_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -24,34 +26,23 @@ class AddToCartScreen extends StatefulWidget {
 class _AddToCartScreenState extends State<AddToCartScreen> {
   @override
   Widget build(BuildContext context) {
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return ScopedModel(
       model: Get.find<OrderViewModel>(),
       child: ScopedModelDescendant<OrderViewModel>(
         builder: (context, child, model) {
           return Column(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      model.changeState(OrderStateEnum.BOOKING_TABLE);
-                    },
-                  ),
-                  Text("Chọn món", style: Get.textTheme.titleLarge),
-                ],
-              ),
               Expanded(
                 child: Row(
-                  children: isPortrait
+                  children: context.isPortrait
                       ? [
                           Expanded(
-                            child: orderProduct(isPortrait),
+                            child: orderProduct(context.isPortrait),
                           ),
                         ]
                       : [
-                          Expanded(flex: 2, child: orderProduct(isPortrait)),
+                          Expanded(
+                              flex: 2, child: orderProduct(context.isPortrait)),
                           Expanded(flex: 1, child: CartScreen()),
                         ],
                 ),
@@ -69,6 +60,11 @@ Widget orderProduct(bool isPortrait) {
     model: Get.find<MenuViewModel>(),
     child:
         ScopedModelDescendant<MenuViewModel>(builder: (context, child, model) {
+      if (model.status == ViewStatus.Loading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      }
       List<Tab>? listCategoryTab;
       listCategoryTab = model.currentMenu?.categories!.map((e) {
         return Tab(
@@ -107,7 +103,15 @@ Widget orderProduct(bool isPortrait) {
                       scrollDirection: Axis.vertical,
                       mainAxisSpacing: 2,
                       crossAxisSpacing: 2,
-                      crossAxisCount: isPortrait ? 2 : 4,
+                      crossAxisCount: ResponsiveHelper.isDesktop()
+                          ? 6
+                          : ResponsiveHelper.isTab()
+                              ? 5
+                              : ResponsiveHelper.isSmallTab()
+                                  ? 4
+                                  : ResponsiveHelper.isMobile()
+                                      ? 3
+                                      : 2,
                       children: [
                     for (int i = 0; i < model.productsFilter!.length; i++)
                       productCard(

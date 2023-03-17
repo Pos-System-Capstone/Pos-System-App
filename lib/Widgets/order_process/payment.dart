@@ -527,7 +527,7 @@ Widget checkoutPayment(OrderViewModel model) {
                   child: Container(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () => {model.clearOrderState()},
+                      onPressed: () => {},
                       icon: Icon(Icons.cancel_outlined),
                       label: Padding(
                         padding: const EdgeInsets.all(8.0),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-void showInputIpDialog() {
+void showAddPrinterDialog() {
   Get.bottomSheet(BottomSheet(
     onClosing: () {
       Get.back();
@@ -85,18 +86,17 @@ void showInputIpDialog() {
                   style: TextStyle(fontSize: 16)),
               SizedBox(height: 15),
               FilledButton(
-                  onPressed: () =>
-                      model.discover(ipController.text, portController.text),
+                  onPressed: () => model.scanPrinter(PrinterType.network),
                   child: model.status == ViewStatus.Loading
                       ? Text('Dang tìm kiếm...')
                       : Text('Tìm kiếm')),
               SizedBox(height: 15),
               Text(
-                'Tìm thấy: ${model.devices.length} thiết bị',
+                'Tìm thấy: ${model.printerDevices.length} thiết bị',
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: model.devices.length,
+                  itemCount: model.printerDevices.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
@@ -111,23 +111,23 @@ void showInputIpDialog() {
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  model.devices[index],
+                                  model.printerDevices[index].name,
                                 ),
                               ),
                               SizedBox(width: 8),
-                              model.isDeviceSaved(model.devices[index])
+                              model.isDeviceSaved(
+                                      model.printerDevices![index]!.address!)
                                   ? TextButton(
                                       onPressed: () => model.deletePrinter(),
                                       child: Text("Xoá"))
                                   : FilledButton(
-                                      onPressed: () => model.savePrinterDevice(
-                                            model.devices[index],
-                                          ),
+                                      onPressed: () => model.connectDevice(
+                                          model.printerDevices[index],
+                                          PrinterType.network),
                                       child: Text("Ket noi")),
                               SizedBox(width: 8),
                               OutlinedButton(
-                                  onPressed: () =>
-                                      model.testPrint(model.devices[index]),
+                                  onPressed: () => model.printReceiveTest(),
                                   child: Text("In thử"))
                             ],
                           ),

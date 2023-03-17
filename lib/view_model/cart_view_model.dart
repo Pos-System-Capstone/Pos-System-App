@@ -169,6 +169,7 @@ class CartViewModel extends BaseViewModel {
   // }
 
   void createOrder() {
+    String deliType = Get.find<OrderViewModel>().deliveryType;
     List<ProductInOrder> productList = <ProductInOrder>[];
     List<ProductInOrder> extraList = <ProductInOrder>[];
     for (CartItem cart in _cartList) {
@@ -191,13 +192,11 @@ class CartViewModel extends BaseViewModel {
     }
     OrderModel order = OrderModel(
       payment: "CASH",
-      orderType: "EAT_IN",
+      orderType: deliType,
       productsList: productList,
       totalAmount: _totalAmount,
       discountAmount: _discountAmount,
       finalAmount: _finalAmount,
-      vat: 0.1,
-      vatAmount: _finalAmount * 0.1,
     );
     print(order.toJson());
     Get.find<OrderViewModel>().placeOrder(order);

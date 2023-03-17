@@ -46,7 +46,9 @@ class _ProductDialogState extends State<ProductDialog> {
     if (widget.product.type == ProductTypeEnum.PARENT) {
       childProducts =
           menuViewModel.getChildProductByParentProduct(widget.product.id!)!;
-      selectedSize = childProducts[0].id;
+      if (childProducts.isNotEmpty) {
+        selectedSize = childProducts[0].id;
+      }
       productViewModel.addProductToCartItem(childProducts[0]);
     }
   }
@@ -300,7 +302,7 @@ class _ProductDialogState extends State<ProductDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             TextFormField(
-              maxLines: 5,
+              maxLines: 3,
               decoration: InputDecoration(
                 hintText: "Ghi chú",
                 border: OutlineInputBorder(
@@ -310,7 +312,44 @@ class _ProductDialogState extends State<ProductDialog> {
               onChanged: (value) {
                 model.setNotes(value);
               },
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Ghi chú nhanh nếu có",
+                style: Get.textTheme.titleSmall,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: sugarNoteEnums
+                    .map(
+                      (e) => FilledButton.tonal(
+                          onPressed: () {
+                            model.addMoreNotes(e);
+                          },
+                          child: Text(e)),
+                    )
+                    .toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: iceNoteEnums
+                    .map(
+                      (e) => FilledButton.tonal(
+                          onPressed: () {
+                            model.addMoreNotes(e);
+                          },
+                          child: Text(e)),
+                    )
+                    .toList(),
+              ),
+            ),
           ],
         ));
   }

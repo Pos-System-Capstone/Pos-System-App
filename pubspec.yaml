@@ -42,13 +42,18 @@ dependencies:
   flutter_onboard: ^2.0.0
   google_fonts: ^4.0.3
   esc_pos_printer: ^4.1.0
-  ping_discover_network: ^0.2.0+1
   intl: ^0.18.0
   window_manager: ^0.3.1
   image: ^3.3.0
   qr_flutter: ^4.0.0
   esc_pos_utils_plus: ^2.0.1+6
+  connectivity_plus: ^3.0.3
+  lottie: ^2.3.0
+  url_strategy: ^0.2.0
+  network_tools: ^3.2.0
+  usb_thermal_printer_web: ^0.0.3
   flutter_pos_printer_platform: ^1.1.0
+  dart_ping_ios: ^3.0.0
 
 dev_dependencies:
   flutter_test:

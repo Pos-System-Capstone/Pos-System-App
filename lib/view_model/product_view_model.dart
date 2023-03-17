@@ -12,6 +12,7 @@ class ProductViewModel extends BaseViewModel {
   int quantity = 1;
   List<Product> extras = [];
   String? notes;
+  List<String> productNotes = [];
 
   void addProductToCartItem(Product product) {
     productInCart = product;
@@ -76,6 +77,15 @@ class ProductViewModel extends BaseViewModel {
   void setNotes(String note) {
     notes = note;
     print(notes);
+    notifyListeners();
+  }
+
+  void addMoreNotes(
+    String note,
+  ) {
+    productNotes.clear();
+    productNotes.add(note);
+    print(productNotes);
     notifyListeners();
   }
 

@@ -7,45 +7,33 @@ import 'package:pos_apps/enums/order_enum.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
+import 'package:pos_apps/widgets/cart/choose_table_dialog.dart';
 
 import '../data/api/order_api.dart';
 import '../data/model/index.dart';
 
 class OrderViewModel extends BaseViewModel {
-  late OrderStateEnum currentState;
-  int selectedTable = 0;
-  DeliTypeEnum deliveryType = DeliTypeEnum.NONE;
+  int selectedTable = 01;
+  String deliveryType = DeliType.EAT_IN;
   Cart? currentCart;
   late OrderAPI api = OrderAPI();
   OrderResponseModel? orderResponseModel;
 
   OrderViewModel() {
-    currentState = OrderStateEnum.CHOOSE_ORDER_TYPE;
     api = OrderAPI();
   }
 
-  void changeState(OrderStateEnum newState) {
-    currentState = newState;
-    notifyListeners();
-  }
-
-  void chooseDeliveryType(DeliTypeEnum type) {
+  void chooseDeliveryType(String type) {
     deliveryType = type;
-    changeState(OrderStateEnum.BOOKING_TABLE);
+    hideDialog();
+
     notifyListeners();
   }
 
   void chooseTable(int table) {
     selectedTable = table;
-    changeState(OrderStateEnum.ORDER_PRODUCT);
-    notifyListeners();
-  }
-
-  void clearOrderState() {
-    selectedTable = 0;
-    deliveryType = DeliTypeEnum.NONE;
-    Get.find<CartViewModel>().clearCartData();
-    changeState(OrderStateEnum.CHOOSE_ORDER_TYPE);
+    hideDialog();
     notifyListeners();
   }
 
@@ -57,7 +45,7 @@ class OrderViewModel extends BaseViewModel {
         await getOrderByStore(userInfo.storeId, res.toString());
     if (orderRes != null) {
       orderResponseModel = orderRes;
-      changeState(OrderStateEnum.PAYMENT);
+      // changeState(OrderStateEnum.PAYMENT);
       if (Get.isDialogOpen!) {
         Get.back();
       }

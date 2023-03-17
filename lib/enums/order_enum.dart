@@ -10,7 +10,7 @@ enum DeliTypeEnum { TAKE_AWAY, IN_STORE, DELIVERY, NONE }
 
 class DeliType {
   static const String TAKE_AWAY = 'TAKE_AWAY';
-  static const String IN_STORE = 'IN_STORE';
+  static const String EAT_IN = 'EAT_IN';
   static const String DELIVERY = 'DELIVERY';
 }
 

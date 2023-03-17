@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -53,12 +54,10 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    if (isPortrait) {
+    if (context.isPortrait) {
       return Scaffold(
         body: Column(
           children: [
-            Platform.isWindows ? Header() : SizedBox(),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
@@ -68,11 +67,11 @@ class _LogInScreenState extends State<LogInScreen> {
                   children: [
                     Image.asset(
                       "assets/images/cash-register.png",
-                      width: MediaQuery.of(context).size.width * 0.4,
+                      width: Get.size.width * 0.4,
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Đăng nhập',
+                      'Đăng nhập POS',
                       style: Get.textTheme.titleLarge,
                     ),
                     SizedBox(height: 8),
@@ -259,19 +258,18 @@ class _LogInScreenState extends State<LogInScreen> {
     return Scaffold(
       body: Column(
         children: [
-          Platform.isWindows ? Header() : SizedBox(),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.25,
+                  width: Get.size.width * 0.25,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Đăng nhập',
+                        'Đăng nhập POS',
                         style: Get.textTheme.displaySmall,
                       ),
                       SizedBox(height: 32),
@@ -436,36 +434,29 @@ class _LogInScreenState extends State<LogInScreen> {
                         ),
                       ),
                       SizedBox(height: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          // Foreground color
-                          // ignore: deprecated_member_use
-                          minimumSize: const Size.fromHeight(45),
-                          onPrimary: Theme.of(context).colorScheme.onPrimary,
-                          // Background color
-                          // ignore: deprecated_member_use
-                          // primary: Theme.of(context).colorScheme.primary,
-                          primary: Theme.of(context).colorScheme.primary,
-                        ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0)),
-                        onPressed: () {
-                          login();
-                        },
-                        child: Text("Login",
-                            style: Get.textTheme.button?.copyWith(
-                                color: Get.theme.colorScheme.background)),
+                      Container(
+                        width: Get.width,
+                        height: 48,
+                        child: FilledButton.tonal(
+                          onPressed: () {
+                            login();
+                          },
+                          child: Text("Đăng nhập",
+                              style: Get.textTheme.titleMedium),
+                        ),
                       ),
                       SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                              onPressed: () {},
-                              child: Text("Forgot Password ?",
-                                  style: Get.textTheme.bodyText2?.copyWith(
-                                      decoration: TextDecoration.none,
-                                      color: Get.theme.primaryColor))),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     TextButton(
+                      //         onPressed: () {},
+                      //         child: Text("Forgot Password ?",
+                      //             style: Get.textTheme.bodyText2?.copyWith(
+                      //                 decoration: TextDecoration.none,
+                      //                 color: Get.theme.primaryColor))),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),
@@ -474,7 +465,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 ),
                 Image.asset(
                   "assets/images/cash-register.png",
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  width: Get.size.width * 0.3,
                 ),
               ],
             ),

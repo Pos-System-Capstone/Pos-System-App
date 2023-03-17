@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/views/home.dart';
 import 'package:pos_apps/views/profile.dart';
+import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:pos_apps/widgets/cart/cart_dialog.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -76,65 +76,62 @@ class _RootScreenState extends State<RootScreen> {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    if (isPortrait) {
+    if (context.isPortrait) {
       return SafeArea(
           child: ScopedModel(
         model: Get.find<OrderViewModel>(),
         child: ScopedModelDescendant(
             builder: (context, child, OrderViewModel model) {
           return Scaffold(
-              floatingActionButton: model.currentState == OrderStateEnum.PAYMENT
-                  ? SizedBox()
-                  : ScopedModel<CartViewModel>(
-                      model: Get.find<CartViewModel>(),
-                      child: ScopedModelDescendant(
-                          builder: (context, child, CartViewModel model) {
-                        if (model.quantity == 0) {
-                          return FloatingActionButton(
-                            // Your actual Fab
-                            onPressed: () => showCartDialog(),
-                            child: Icon(Icons.shopping_cart),
-                          );
-                        }
-                        return FittedBox(
-                          child: Stack(
-                            alignment: Alignment(1.4, -1.5),
-                            children: [
-                              FloatingActionButton(
-                                // Your actual Fab
-                                onPressed: () => showCartDialog(),
-                                child: Icon(Icons.shopping_cart),
-                              ),
-                              Container(
-                                // This is your Badge
-                                padding: EdgeInsets.all(8),
-                                constraints:
-                                    BoxConstraints(minHeight: 32, minWidth: 32),
-                                decoration: BoxDecoration(
-                                  // This controls the shadow
-                                  boxShadow: [
-                                    BoxShadow(
-                                        spreadRadius: 1,
-                                        blurRadius: 5,
-                                        color: Colors.black.withAlpha(50))
-                                  ],
-                                  borderRadius: BorderRadius.circular(16),
-                                  color: Get.theme.colorScheme
-                                      .secondary, // This would be color of the Badge
-                                ),
-                                // This is your Badge
-                                child: Center(
-                                  // Here you can put whatever content you want inside your Badge
-                                  child: Text(model.quantity.toString(),
-                                      style: TextStyle(color: Colors.white)),
-                                ),
-                              ),
+              floatingActionButton: ScopedModel<CartViewModel>(
+                model: Get.find<CartViewModel>(),
+                child: ScopedModelDescendant(
+                    builder: (context, child, CartViewModel model) {
+                  if (model.quantity == 0) {
+                    return FloatingActionButton(
+                      // Your actual Fab
+                      onPressed: () => showCartDialog(),
+                      child: Icon(Icons.shopping_cart),
+                    );
+                  }
+                  return FittedBox(
+                    child: Stack(
+                      alignment: Alignment(1.4, -1.5),
+                      children: [
+                        FloatingActionButton(
+                          // Your actual Fab
+                          onPressed: () => showCartDialog(),
+                          child: Icon(Icons.shopping_cart),
+                        ),
+                        Container(
+                          // This is your Badge
+                          padding: EdgeInsets.all(8),
+                          constraints:
+                              BoxConstraints(minHeight: 32, minWidth: 32),
+                          decoration: BoxDecoration(
+                            // This controls the shadow
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  color: Colors.black.withAlpha(50))
                             ],
+                            borderRadius: BorderRadius.circular(16),
+                            color: Get.theme.colorScheme
+                                .secondary, // This would be color of the Badge
                           ),
-                        );
-                      }),
+                          // This is your Badge
+                          child: Center(
+                            // Here you can put whatever content you want inside your Badge
+                            child: Text(model.quantity.toString(),
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      ],
                     ),
+                  );
+                }),
+              ),
               bottomNavigationBar: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
                   currentIndex: _selectedIndex,
@@ -158,19 +155,49 @@ class _RootScreenState extends State<RootScreen> {
                 size: 56,
               ),
               // groupAlignment: -0.5,
-              trailing: Column(
-                children: [
-                  IconButton(
-                    alignment: Alignment.bottomCenter,
-                    tooltip: "Đăng xuất",
-                    onPressed: () => Get.find<LoginViewModel>().logout(),
-                    icon: Icon(
-                      Icons.logout,
-                      size: 40,
+              trailing: Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      alignment: Alignment.bottomCenter,
+                      tooltip: "Đăng xuất",
+                      onPressed: () => Get.find<LoginViewModel>().logout(),
+                      icon: Icon(
+                        Icons.logout,
+                        size: 32,
+                      ),
                     ),
-                  ),
-                  Text("Đăng xuất")
-                ],
+                    Text("Đăng xuất"),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    IconButton(
+                      alignment: Alignment.bottomCenter,
+                      tooltip: "Thoát",
+                      onPressed: () {
+                        Future<bool> res = showConfirmDialog(
+                          title: "Thoát ứng dụng",
+                          content: "Bạn có muốn thoát ứng dụng không?",
+                          confirmText: "Thoát",
+                        );
+                        res.then((value) {
+                          if (value) {
+                            Get.close(0);
+                          }
+                        });
+                      },
+                      icon: Icon(
+                        Icons.close_outlined,
+                        size: 32,
+                      ),
+                    ),
+                    Text("Thoát"),
+                    SizedBox(
+                      height: 16,
+                    )
+                  ],
+                ),
               ),
               selectedIndex: _selectedIndex,
               onDestinationSelected: (int index) {
@@ -186,7 +213,7 @@ class _RootScreenState extends State<RootScreen> {
             Expanded(
               child: Column(
                 children: [
-                  Platform.isWindows ? Header() : SizedBox(),
+                  // Platform.isWindows ? Header() : SizedBox(),
                   Expanded(
                     child: views.elementAt(_selectedIndex),
                   ),

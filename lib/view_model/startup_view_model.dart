@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pos_apps/routes/route_helper.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 
 import '../data/api/index.dart';
@@ -17,10 +18,10 @@ class StartUpViewModel extends BaseViewModel {
     print(hasLoggedInUser);
 
     if (!hasLoggedInUser) {
-      Get.offAndToNamed(RouteHandler.LOGIN);
+      Get.offNamed(RouteHelper.login);
     } else if (true) {
       Get.find<MenuViewModel>().getMenuOfStore();
-      Get.offAndToNamed(RouteHandler.HOME);
+      Get.offNamed(RouteHelper.home);
     }
   }
 }

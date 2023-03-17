@@ -4,8 +4,6 @@ class OrderModel {
   List<ProductInOrder>? productsList;
   num? totalAmount;
   num? discountAmount;
-  num? vat;
-  num? vatAmount;
   num? finalAmount;
 
   OrderModel(
@@ -14,8 +12,6 @@ class OrderModel {
       this.productsList,
       this.totalAmount,
       this.discountAmount,
-      this.vat,
-      this.vatAmount,
       this.finalAmount});
 
   OrderModel.fromJson(Map<String, dynamic> json) {
@@ -29,8 +25,6 @@ class OrderModel {
     }
     totalAmount = json['totalAmount'];
     discountAmount = json['discountAmount'];
-    vat = json['vat'];
-    vatAmount = json['vatAmount'];
     finalAmount = json['finalAmount'];
   }
 
@@ -43,8 +37,6 @@ class OrderModel {
     }
     data['totalAmount'] = totalAmount;
     data['discountAmount'] = discountAmount;
-    data['vat'] = vat;
-    data['vatAmount'] = vatAmount;
     data['finalAmount'] = finalAmount;
     return data;
   }

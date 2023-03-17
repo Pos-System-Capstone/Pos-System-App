@@ -15,8 +15,8 @@ class ResponsiveHelper {
     return kIsWeb;
   }
 
-  static bool isMobile(context) {
-    final size = MediaQuery.of(context).size.width;
+  static bool isMobile() {
+    final size = Get.size.width;
     if (size < 650 || !kIsWeb) {
       return true;
     } else {
@@ -24,8 +24,8 @@ class ResponsiveHelper {
     }
   }
 
-  static bool isTab(context) {
-    final size = MediaQuery.of(context).size.width;
+  static bool isTab() {
+    final size = Get.size.width;
     if (size >= 650) {
       return true;
     } else {
@@ -33,8 +33,8 @@ class ResponsiveHelper {
     }
   }
 
-  static bool isDesktop(context) {
-    final size = MediaQuery.of(context).size.width;
+  static bool isDesktop() {
+    final size = Get.size.width;
     if (size >= 1300) {
       return true;
     } else {
@@ -42,8 +42,8 @@ class ResponsiveHelper {
     }
   }
 
-  static bool isTabHorizontal(context) {
-    final size = MediaQuery.of(context).size.width;
+  static bool isTabHorizontal() {
+    final size = Get.size.width;
     if (size >= 1000) {
       return true;
     } else {
@@ -51,8 +51,8 @@ class ResponsiveHelper {
     }
   }
 
-  static int getLen(context) {
-    final size = MediaQuery.of(context).size.height;
+  static int getLen() {
+    final size = Get.size.height;
     if (size <= 700) {
       return 6;
     } else if (size > 700 && size < 1100) {
@@ -63,5 +63,5 @@ class ResponsiveHelper {
   }
 
   static bool isSmallTab() =>
-      ResponsiveHelper.isTab(Get.context) && Get.context!.width < 900;
+      ResponsiveHelper.isTab() && Get.context!.width < 900;
 }

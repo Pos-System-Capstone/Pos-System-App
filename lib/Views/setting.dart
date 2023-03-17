@@ -6,9 +6,10 @@ import 'package:flutter/material.dart' hide Image;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart';
-import 'package:ping_discover_network/ping_discover_network.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
+import 'package:pos_apps/view_model/theme_view_model.dart';
 import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
+import 'package:pos_apps/widgets/Dialogs/printer_dialogs/add_any_printer_dialog.dart';
 
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
@@ -53,67 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         "Cài đặt",
                         style: Get.textTheme.titleLarge,
                       )),
-                  SwitchListTile(
-                    title: Text('Chế độ tối'),
-                    value: context.isDarkMode,
-                    onChanged: (value) async {
-                      model.handleChangeTheme(context.isDarkMode);
-                    },
-                  ),
-                  Divider(
-                    thickness: 1,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('Màu nền', style: Get.textTheme.titleMedium),
-                        PopupMenuButton(
-                          tooltip: "Đổi màu sắc",
-                          icon: Icon(
-                            Icons.colorize,
-                            color: Get.theme.colorScheme.primary,
-                            size: 32,
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          itemBuilder: (context) {
-                            return List.generate(colorOptions.length, (index) {
-                              Future<int?> idx = getThemeColor();
-                              return PopupMenuItem(
-                                  value: index,
-                                  child: Wrap(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: Icon(
-                                          idx == index
-                                              ? Icons.color_lens
-                                              : Icons.color_lens_outlined,
-                                          color: colorOptions[index],
-                                        ),
-                                      ),
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 20),
-                                          child: Text(colorText[index]))
-                                    ],
-                                  ));
-                            });
-                          },
-                          onSelected: (index) {
-                            model.handleColorSelect(context.isDarkMode, index);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                  ),
+                  themeSetting(),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
@@ -190,19 +131,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Máy in wifi',
+                            Text('Tìm toàn bộ máy in',
                                 style: Get.textTheme.titleMedium),
-                            Get.find<NetworkPrinterViewModel>()
-                                        .selectedDevice !=
-                                    null
-                                ? Text(
-                                    '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
-                                  )
-                                : Text("Chưa kết nối thiết bị"),
+                            // Get.find<NetworkPrinterViewModel>()
+                            //             .selectedDevice !=
+                            //         null
+                            //     ? Text(
+                            //         '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
+                            //       )
+                            //     : Text("Chưa kết nối thiết bị"),
                           ],
                         ),
                         OutlinedButton(
-                            onPressed: () => showInputIpDialog(),
+                            onPressed: () => showAddPrinterDialog(),
                             child: Text("Tuỳ chỉnh"))
                       ],
                     ),
@@ -212,6 +153,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ]),
           ));
+        }));
+  }
+
+  Widget themeSetting() {
+    return ScopedModel(
+        model: ThemeViewModel(),
+        child: ScopedModelDescendant<ThemeViewModel>(
+            builder: (context, child, model) {
+          return Column(
+            children: [
+              SwitchListTile(
+                title: Text('Chế độ tối'),
+                value: model.darkTheme,
+                onChanged: (value) {
+                  model.toggleTheme();
+                },
+              ),
+              Divider(
+                thickness: 1,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Màu nền', style: Get.textTheme.titleMedium),
+                    PopupMenuButton(
+                      tooltip: "Đổi màu sắc",
+                      icon: Icon(
+                        Icons.colorize,
+                        color: Get.theme.colorScheme.primary,
+                        size: 32,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      itemBuilder: (context) {
+                        return List.generate(colorOptions.length, (index) {
+                          Future<int?> idx = getThemeColor();
+                          return PopupMenuItem(
+                              value: index,
+                              child: Wrap(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Icon(
+                                      idx == index
+                                          ? Icons.color_lens
+                                          : Icons.color_lens_outlined,
+                                      color: colorOptions[index],
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 20),
+                                      child: Text(colorText[index]))
+                                ],
+                              ));
+                        });
+                      },
+                      onSelected: (index) {
+                        model.handleColorSelect(index);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                thickness: 1,
+              ),
+            ],
+          );
         }));
   }
 }

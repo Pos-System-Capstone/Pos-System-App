@@ -332,7 +332,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
           children: [
             TextFormField(
               initialValue: model.notes,
-              maxLines: 5,
+              maxLines: 3,
               decoration: InputDecoration(
                 hintText: "Ghi chú",
                 border: OutlineInputBorder(

@@ -13,7 +13,9 @@ class RootViewModel extends BaseViewModel {
   void handleChangeTheme(bool isDarkMode) async {
     int index = await getThemeColor() ?? 0;
     if (isDarkMode) {
+      print(isDarkMode);
       Get.changeTheme(AppTheme.getThemeLight(index));
+      // Get.changeThemeMode(ThemeMode.light);
     } else {
       Get.changeTheme(AppTheme.getThemeDark(index));
     }

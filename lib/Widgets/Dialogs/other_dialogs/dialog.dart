@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-Future<void> showChooseDeliTypeDialog() async {
-  hideDialog();
-  await Get.dialog(Dialog(
+void showChooseDeliTypeDialog() async {
+  Get.dialog(Dialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
-      width: MediaQuery.of(Get.overlayContext!).size.width * 0.5,
+      width: Get.size.width * 0.5,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.background,
@@ -106,7 +105,7 @@ Future<bool> showAlertDialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
-      width: MediaQuery.of(Get.overlayContext!).size.width * 0.3,
+      width: Get.size.width * 0.3,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.background,
@@ -174,7 +173,7 @@ Future<bool> showConfirmDialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
-      width: MediaQuery.of(Get.overlayContext!).size.width * 0.3,
+      width: Get.size.width * 0.3,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.background,

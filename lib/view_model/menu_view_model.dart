@@ -16,9 +16,12 @@ class MenuViewModel extends BaseViewModel {
 
   MenuViewModel() {
     menuData = MenuData();
+    currentMenu = Menu();
   }
 
   Future<void> getMenuOfStore() async {
+    setState(ViewStatus.Loading);
+
     currentMenu = await menuData?.getMenuOfStore();
     normalProducts = currentMenu?.products!
         .where((element) =>
@@ -35,6 +38,7 @@ class MenuViewModel extends BaseViewModel {
     debugPrint('normalProducts: ${normalProducts!.length}');
     debugPrint('extraProducts: ${extraProducts!.length}');
     debugPrint('childProducts: ${childProducts!.length}');
+    setState(ViewStatus.Completed);
     notifyListeners();
   }
 

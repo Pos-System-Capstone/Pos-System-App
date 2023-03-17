@@ -1,18 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/enums/index.dart';
-import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/view_model/order_view_model.dart';
+import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class BookingTableScreen extends StatelessWidget {
-  const BookingTableScreen({super.key});
+import '../../enums/order_enum.dart';
+import '../../view_model/order_view_model.dart';
+import '../../view_model/root_view_model.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return ScopedModel(
+void chooseTableDialog() {
+  hideDialog();
+  Get.dialog(Dialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+    ),
+    elevation: 0,
+    child: ScopedModel(
       model: Get.find<OrderViewModel>(),
       child: ScopedModelDescendant<OrderViewModel>(
         builder: (context, child, model) {
@@ -20,17 +22,23 @@ class BookingTableScreen extends StatelessWidget {
           return Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back, size: 24),
-                      onPressed: () {
-                        model.changeState(OrderStateEnum.CHOOSE_ORDER_TYPE);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.shopping_cart, size: 32),
                     ),
-                    Text("Chọn bàn", style: Get.textTheme.titleLarge),
+                    Expanded(
+                        child: Center(
+                            child: Text("Chọn số bàn",
+                                style: Get.textTheme.titleLarge))),
+                    IconButton(
+                        iconSize: 40,
+                        onPressed: () => Get.back(),
+                        icon: Icon(Icons.close))
                   ],
                 ),
                 Expanded(
@@ -72,6 +80,6 @@ class BookingTableScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
+    ),
+  ));
 }

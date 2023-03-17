@@ -76,6 +76,7 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
   );
+
   static ThemeData getThemeLight(int idx) {
     return ThemeData(
       colorSchemeSeed: colorOptions[idx],

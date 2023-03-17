@@ -6,6 +6,11 @@ import '../util/format.dart';
 import 'cart/add_product_dialog.dart';
 
 Widget productCard(Product product, List<Product>? childProducts) {
+  if (childProducts == null) {
+    return Card(
+      child: Center(child: Text("Không có sản phẩm con")),
+    );
+  }
   return Card(
     child: InkWell(
       onTap: () => Get.dialog(ProductDialog(product: product)),
@@ -24,7 +29,7 @@ Widget productCard(Product product, List<Product>? childProducts) {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                childProducts != null
+                childProducts.isNotEmpty
                     ? "Từ ${formatPrice(childProducts[0].sellingPrice!)}"
                     : formatPrice(product.sellingPrice!),
                 style: Get.theme.textTheme.bodyLarge,
