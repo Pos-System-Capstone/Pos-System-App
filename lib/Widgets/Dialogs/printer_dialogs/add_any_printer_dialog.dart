@@ -24,69 +24,69 @@ void showAddPrinterDialog() {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Thiết lập Máy in',
+                  'Thiết lập Máy in USB',
                   style: Get.textTheme.titleLarge,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "IP:",
-                        style: Get.textTheme.titleMedium,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: ipController,
-                        decoration: InputDecoration(
-                          labelText: 'Ip',
-                          hintText: '192.168.31.1',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Port:",
-                        style: Get.textTheme.titleMedium,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: portController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Port',
-                          hintText: '9100',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              Text('Ip: ${Get.find<NetworkPrinterViewModel>().selectedIp}',
-                  style: TextStyle(fontSize: 16)),
+              // Padding(
+              //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: [
+              //       Expanded(
+              //         flex: 1,
+              //         child: Text(
+              //           "IP:",
+              //           style: Get.textTheme.titleMedium,
+              //         ),
+              //       ),
+              //       Expanded(
+              //         flex: 3,
+              //         child: TextField(
+              //           controller: ipController,
+              //           decoration: InputDecoration(
+              //             labelText: 'Ip',
+              //             hintText: '192.168.31.1',
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: [
+              //       Expanded(
+              //         flex: 1,
+              //         child: Text(
+              //           "Port:",
+              //           style: Get.textTheme.titleMedium,
+              //         ),
+              //       ),
+              //       Expanded(
+              //         flex: 3,
+              //         child: TextField(
+              //           controller: portController,
+              //           keyboardType: TextInputType.number,
+              //           decoration: InputDecoration(
+              //             labelText: 'Port',
+              //             hintText: '9100',
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // SizedBox(height: 10),
+              // Text('Ip: ${Get.find<NetworkPrinterViewModel>().selectedIp}',
+              //     style: TextStyle(fontSize: 16)),
               SizedBox(height: 15),
               FilledButton(
-                  onPressed: () => model.scanPrinter(PrinterType.network),
+                  onPressed: () => model.scanPrinter(PrinterType.usb),
                   child: model.status == ViewStatus.Loading
                       ? Text('Dang tìm kiếm...')
                       : Text('Tìm kiếm')),
@@ -115,16 +115,17 @@ void showAddPrinterDialog() {
                                 ),
                               ),
                               SizedBox(width: 8),
-                              model.isDeviceSaved(
-                                      model.printerDevices![index]!.address!)
-                                  ? TextButton(
-                                      onPressed: () => model.deletePrinter(),
-                                      child: Text("Xoá"))
-                                  : FilledButton(
-                                      onPressed: () => model.connectDevice(
-                                          model.printerDevices[index],
-                                          PrinterType.network),
-                                      child: Text("Ket noi")),
+                              // model.isDeviceSaved(
+                              //         model.printerDevices![index]!.address!)
+                              //     ? TextButton(
+                              //         onPressed: () => model.deletePrinter(),
+                              //         child: Text("Xoá"))
+                              //     :
+                              FilledButton(
+                                  onPressed: () => model.connectDevice(
+                                      model.printerDevices[index],
+                                      PrinterType.usb),
+                                  child: Text("Ket noi")),
                               SizedBox(width: 8),
                               OutlinedButton(
                                   onPressed: () => model.printReceiveTest(),

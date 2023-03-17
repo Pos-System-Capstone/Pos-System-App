@@ -837,38 +837,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
-  usb_device:
-    dependency: transitive
-    description:
-      name: usb_device
-      sha256: "034046c5533ab4e66bd251ef788ae14be54a0943545b9277d7d18116c3687de1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.7"
-  usb_device_platform_interface:
-    dependency: transitive
-    description:
-      name: usb_device_platform_interface
-      sha256: "97e34276a32a34c49eebeaa97efe4add7b7a63d4cd50ee0817aa0ccc7741bd57"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
-  usb_device_web:
-    dependency: transitive
-    description:
-      name: usb_device_web
-      sha256: "365aafb0928e5d2fa6a6f0d9f1c0725942b0c1fe38def28cb0b8b526aad9acce"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.6"
-  usb_thermal_printer_web:
-    dependency: "direct main"
-    description:
-      name: usb_thermal_printer_web
-      sha256: cfb7cde9628102a1d2da7d82caf8858f08352a8b1bf39525d83198b8a5a1a89c
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   vector_math:
     dependency: transitive
     description:
@@ -918,5 +886,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.19.2 <3.0.0"
+  dart: ">=2.18.4 <3.0.0"
   flutter: ">=3.3.0"

@@ -51,7 +51,6 @@ dependencies:
   lottie: ^2.3.0
   url_strategy: ^0.2.0
   network_tools: ^3.2.0
-  usb_thermal_printer_web: ^0.0.3
   flutter_pos_printer_platform: ^1.1.0
   dart_ping_ios: ^3.0.0
 

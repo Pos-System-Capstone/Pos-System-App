@@ -20,7 +20,6 @@ import 'package:network_tools/network_tools.dart';
 import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:usb_thermal_printer_web/usb_thermal_printer_web.dart';
 import '../widgets/Dialogs/other_dialogs/dialog.dart';
 import 'base_view_model.dart';
 
@@ -33,22 +32,31 @@ class NetworkPrinterViewModel extends BaseViewModel {
 
   NetworkPrinter? networkPrinter;
 
-  var printerManager = PrinterManager.instance;
+  PrinterManager printerManager = PrinterManager.instance;
+  UsbPrinterConnector usbPrinterConnector = UsbPrinterConnector.instance;
   List<PrinterDevice> printerDevices = [];
   PrinterDevice? selectedPrinterDevices;
   //Create an instance of printer
-  final WebThermalPrinter _printer = WebThermalPrinter();
 
   scanPrinter(PrinterType type) {
     setState(ViewStatus.Loading);
     printerDevices.clear();
     print('Progress for finding printers');
     // Find printers
-    printerManager.discovery(type: PrinterType.usb).listen((device) {
+    usbPrinterConnector.discovery().listen((device) {
       print('Found device: ${device.name}');
+      print('Found device address: ${device.address}');
+      print('Found device productId: ${device.productId}');
+      print('Found device vendor ID: ${device.vendorId}');
+      print('Found device type: ${device.operatingSystem}');
       printerDevices.add(device);
-    });
-    setState(ViewStatus.Completed);
+    }, onDone: () {
+      print('Finished scanning');
+      setState(ViewStatus.Completed);
+      notifyListeners();
+    }, onError: ((dynamic e) {
+      showAlertDialog(title: 'Unexpected exception');
+    }));
     notifyListeners();
   }
 
