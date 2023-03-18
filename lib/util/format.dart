@@ -41,6 +41,10 @@ double calculation(double amount, double discount, String type, int quantity) {
   return calculatedAmount;
 }
 
+String percentCalculation(num amount) {
+  return '${amount * 100} %';
+}
+
 String percentageCalculation(
     String price, String discount, String discountType) {
   return '$discount${discountType == 'percent' ? '%' : '\$'} OFF';

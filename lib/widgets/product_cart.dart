@@ -23,7 +23,7 @@ Widget productCard(Product product, List<Product>? childProducts) {
             Expanded(
               child: Text(
                 product.name!,
-                style: Get.theme.textTheme.bodyLarge,
+                style: Get.theme.textTheme.bodyMedium,
               ),
             ),
             Align(
@@ -32,7 +32,7 @@ Widget productCard(Product product, List<Product>? childProducts) {
                 childProducts.isNotEmpty
                     ? "Từ ${formatPrice(childProducts[0].sellingPrice!)}"
                     : formatPrice(product.sellingPrice!),
-                style: Get.theme.textTheme.bodyLarge,
+                style: Get.theme.textTheme.bodyMedium,
               ),
             ),
           ],

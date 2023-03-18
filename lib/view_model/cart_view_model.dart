@@ -123,58 +123,13 @@ class CartViewModel extends BaseViewModel {
     return cartItem;
   }
 
-  // void updateProductInCartItem(Product product, int cartIndex) {
-  //   _cartList[cartIndex].product = product;
-  //   _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
-  //   print(_cartList[cartIndex].product.name);
-  //   countCartAmount();
-  //   print(totalAmount);
-  //   notifyListeners();
-  // }
-
-  // void updateExtraInCartItem(Product extra, int cartIndex) {
-  //   _cartList[cartIndex].extras!.add(extra);
-  //   _cartList[cartIndex] = addExtraCartItemAmount(_cartList[cartIndex]);
-  //   print(_cartList[cartIndex].product.name);
-  //   countCartAmount();
-  //   print(totalAmount);
-  //   notifyListeners();
-  // }
-
-  // void increaseCartItemQuantity(int cartIndex) {
-  //   _cartList[cartIndex].quantity++;
-  //   _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
-  //   print(_cartList[cartIndex].product.name);
-  //   countCartAmount();
-  //   print(totalAmount);
-  //   notifyListeners();
-  // }
-
-  // void decreaseCartItemQuantity(int cartIndex) {
-  //   _cartList[cartIndex].quantity--;
-  //   _cartList[cartIndex] = countCartItemAmount(_cartList[cartIndex]);
-  //   print(_cartList[cartIndex].product.name);
-  //   countCartAmount();
-  //   print(totalAmount);
-  //   notifyListeners();
-  // }
-
-  // bool isExtraExist(Product extra, int cartIndex) {
-  //   for (int index = 0; index < _cartList[cartIndex].extras!.length; index++) {
-  //     if (_cartList[cartIndex].extras![index].id == extra.id) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
   void createOrder() {
     String deliType = Get.find<OrderViewModel>().deliveryType;
     List<ProductInOrder> productList = <ProductInOrder>[];
-    List<ProductInOrder> extraList = <ProductInOrder>[];
+    List<ExtraInOrder> extraList = <ExtraInOrder>[];
     for (CartItem cart in _cartList) {
       cart.extras?.forEach((element) {
-        ProductInOrder extra = ProductInOrder(
+        ExtraInOrder extra = ExtraInOrder(
           productInMenuId: element.menuProductId,
           quantity: 1,
           sellingPrice: element.sellingPrice,

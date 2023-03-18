@@ -18,10 +18,10 @@ class StartUpViewModel extends BaseViewModel {
     print(hasLoggedInUser);
 
     if (!hasLoggedInUser) {
-      Get.offNamed(RouteHelper.login);
+      Get.offNamed(RouteHandler.LOGIN);
     } else if (true) {
       Get.find<MenuViewModel>().getMenuOfStore();
-      Get.offNamed(RouteHelper.home);
+      Get.offNamed(RouteHandler.HOME);
     }
   }
 }

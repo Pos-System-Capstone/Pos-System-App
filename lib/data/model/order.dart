@@ -47,7 +47,7 @@ class ProductInOrder {
   int? quantity;
   num? sellingPrice;
   String? note;
-  List<ProductInOrder>? extras;
+  List<ExtraInOrder>? extras;
 
   ProductInOrder(
       {this.productInMenuId,
@@ -62,15 +62,15 @@ class ProductInOrder {
     sellingPrice = json['sellingPrice'];
     note = json['note'];
     if (json['extras'] != null) {
-      extras = <ProductInOrder>[];
+      extras = <ExtraInOrder>[];
       json['extras'].forEach((v) {
-        extras!.add(ProductInOrder.fromJson(v));
+        extras!.add(ExtraInOrder.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['productInMenuId'] = productInMenuId;
     data['quantity'] = quantity;
     data['sellingPrice'] = sellingPrice;
@@ -78,6 +78,28 @@ class ProductInOrder {
     if (extras != null) {
       data['extras'] = extras!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class ExtraInOrder {
+  String? productInMenuId;
+  int? quantity;
+  num? sellingPrice;
+
+  ExtraInOrder({this.productInMenuId, this.quantity, this.sellingPrice});
+
+  ExtraInOrder.fromJson(Map<String, dynamic> json) {
+    productInMenuId = json['productInMenuId'];
+    quantity = json['quantity'];
+    sellingPrice = json['sellingPrice'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['productInMenuId'] = productInMenuId;
+    data['quantity'] = quantity;
+    data['sellingPrice'] = sellingPrice;
     return data;
   }
 }

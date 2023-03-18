@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_apps/enums/order_enum.dart';
 import 'package:pos_apps/view_model/order_view_model.dart';
 import 'package:pos_apps/widgets/dialogs/other_dialogs/dialog.dart';
+import 'package:pos_apps/widgets/order_process/payment.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../widgets/order_process/cart.dart';
 

@@ -28,18 +28,15 @@ class _LogInScreenState extends State<LogInScreen> {
   AccountData accountDao = AccountData();
   LoginViewModel model = LoginViewModel();
   String error = "";
-  String userName = "";
-  String password = "";
+  String userName = "deerstaff";
+  String password = "123456";
   bool _passwordVisible = false;
-  final _formUserNameFieldController = TextEditingController();
-  final _formPasswordFieldController = TextEditingController();
+  final _formUserNameFieldController = TextEditingController(text: "deerstaff");
+  final _formPasswordFieldController = TextEditingController(text: "123456");
 
   @override
   void initState() {
     super.initState();
-    // theme = AppTheme.theme;
-    // mTheme = MaterialTheme.learningTheme;
-    // controller = FxControllerStore.putOrFind(LogInController());
     _userNameFocus = FocusNode();
     _passwordFocus = FocusNode();
     _passwordVisible = false;
@@ -446,17 +443,6 @@ class _LogInScreenState extends State<LogInScreen> {
                         ),
                       ),
                       SizedBox(height: 16),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     TextButton(
-                      //         onPressed: () {},
-                      //         child: Text("Forgot Password ?",
-                      //             style: Get.textTheme.bodyText2?.copyWith(
-                      //                 decoration: TextDecoration.none,
-                      //                 color: Get.theme.primaryColor))),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),

@@ -12,8 +12,8 @@ class ProductViewModel extends BaseViewModel {
   int quantity = 1;
   List<Product> extras = [];
   String? notes;
-  List<String> productNotes = [];
-
+  String? sugarNote = SugarNoteEnums.SUGAR_100;
+  String? iceNote = IceNoteEnums.ICE_100;
   void addProductToCartItem(Product product) {
     productInCart = product;
     print(productInCart!.name);
@@ -23,11 +23,17 @@ class ProductViewModel extends BaseViewModel {
   }
 
   void addProductToCart() {
+    String? finalNotes;
+    if (notes == null) {
+      finalNotes = "$sugarNote, $iceNote |";
+    } else {
+      finalNotes = "$sugarNote, $iceNote |$notes";
+    }
     CartItem cartItem = CartItem(
       productInCart!,
       quantity,
       totalAmount!,
-      note: notes,
+      note: finalNotes,
       extras: extras,
     );
     Get.find<CartViewModel>().addToCart(cartItem);
@@ -80,12 +86,19 @@ class ProductViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void addMoreNotes(
+  void addSugarNotes(
     String note,
   ) {
-    productNotes.clear();
-    productNotes.add(note);
-    print(productNotes);
+    sugarNote = note;
+    print(sugarNote);
+    notifyListeners();
+  }
+
+  void addIceNotes(
+    String note,
+  ) {
+    iceNote = note;
+    print(iceNote);
     notifyListeners();
   }
 
@@ -100,21 +113,39 @@ class ProductViewModel extends BaseViewModel {
   }
 
   void getCartItemToUpdate(CartItem cartItem) {
+    for (var element in sugarNoteEnums) {
+      if (cartItem.note!.contains(element)) {
+        sugarNote = element;
+      }
+    }
+    for (var element in iceNoteEnums) {
+      if (cartItem.note!.contains(element)) {
+        iceNote = element;
+      }
+    }
+    notes = cartItem.note!
+        .substring(cartItem.note!.indexOf("|") + 1, cartItem.note!.length);
     productInCart = cartItem.product;
     quantity = cartItem.quantity;
     extras = cartItem.extras!;
-    notes = cartItem.note;
+    // notes = cartItem.note;
     totalAmount = cartItem.totalAmount;
     // countAmount();
     notifyListeners();
   }
 
   void updateCartItemInCart(int idx) {
+    String? finalNotes;
+    if (notes == null) {
+      finalNotes = "$sugarNote, $iceNote |";
+    } else {
+      finalNotes = "$sugarNote, $iceNote |$notes";
+    }
     CartItem cartItem = CartItem(
       productInCart!,
       quantity,
       totalAmount!,
-      note: notes,
+      note: finalNotes,
       extras: extras,
     );
     Get.find<CartViewModel>().updateCart(cartItem, idx);

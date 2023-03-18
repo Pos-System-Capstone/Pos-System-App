@@ -1,23 +1,12 @@
-import 'dart:typed_data';
-import 'dart:ui';
-import 'package:esc_pos_printer/esc_pos_printer.dart';
-import 'package:esc_pos_utils_plus/esc_pos_utils.dart';
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image/image.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pos_apps/view_model/theme_view_model.dart';
-import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
-import 'package:pos_apps/widgets/Dialogs/printer_dialogs/add_any_printer_dialog.dart';
-
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
-
 import '../theme/theme_color.dart';
 import '../util/share_pref.dart';
+import '../widgets/Dialogs/printer_dialogs/add_any_printer_dialog.dart';
 import '../widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -165,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               SwitchListTile(
                 title: Text('Chế độ tối'),
-                value: model.darkTheme,
+                value: context.isDarkMode,
                 onChanged: (value) {
                   model.toggleTheme();
                 },

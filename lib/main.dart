@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/theme/app_theme.dart';
 import 'package:pos_apps/theme/theme_color.dart';
 import 'package:pos_apps/util/request.dart';
@@ -11,6 +12,7 @@ import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/theme_view_model.dart';
 import 'package:pos_apps/views/profile.dart';
+import 'package:pos_apps/widgets/order_process/payment.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -59,54 +61,55 @@ class _MyAppState extends State<MyApp> {
           return GetMaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'POS System',
-              theme: model.darkTheme
-                  ? AppTheme.getThemeDark(model.colorIndex)
-                  : AppTheme.getThemeLight(model.colorIndex),
+              themeMode: model.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              darkTheme: AppTheme.getThemeDark(model.colorIndex),
+              theme: AppTheme.getThemeLight(model.colorIndex),
               scrollBehavior: MaterialScrollBehavior().copyWith(
                 dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
               ),
               navigatorKey: Get.key,
-              initialRoute: RouteHelper.splash,
-              getPages: RouteHelper.routes,
-              unknownRoute: GetPage(name: '/', page: () => NotFoundScreen()),
               defaultTransition: Transition.topLevel,
               transitionDuration: Duration(milliseconds: 500),
-              // onGenerateRoute: (settings) {
-              //   switch (settings.name) {
-              //     case RouteHandler.LOGIN:
-              //       return CupertinoPageRoute(
-              //           builder: (context) => LogInScreen(),
-              //           settings: settings);
-              //     case RouteHandler.HOME:
-              //       return CupertinoPageRoute<bool>(
-              //           builder: (context) => RootScreen(), settings: settings);
-              //     case RouteHandler.PROFILE:
-              //       return CupertinoPageRoute<bool>(
-              //           builder: (context) => ProfileScreen(),
-              //           settings: settings);
-              //     case RouteHandler.NAV:
-              //       return CupertinoPageRoute(
-              //           builder: (context) => HomeScreen(), settings: settings);
-              //     case RouteHandler.ONBOARD:
-              //       return CupertinoPageRoute(
-              //           builder: (context) => OnBoardScreen(),
-              //           settings: settings);
-              //     case RouteHandler.LOADING:
-              //       return CupertinoPageRoute<bool>(
-              //           builder: (context) => LoadingScreen(
-              //                 title: settings.arguments.toString(),
-              //               ),
-              //           settings: settings);
-              //     case RouteHandler.WELCOME:
-              //       return CupertinoPageRoute<bool>(
-              //           builder: (context) => StartUpView(),
-              //           settings: settings);
-              //     default:
-              //       return CupertinoPageRoute(
-              //           builder: (context) => StartUpView(),
-              //           settings: settings);
-              //   }
-              // },
+              onGenerateRoute: (settings) {
+                switch (settings.name) {
+                  case RouteHandler.LOGIN:
+                    return CupertinoPageRoute(
+                        builder: (context) => LogInScreen(),
+                        settings: settings);
+                  case RouteHandler.HOME:
+                    return CupertinoPageRoute<bool>(
+                        builder: (context) => RootScreen(), settings: settings);
+                  case RouteHandler.PROFILE:
+                    return CupertinoPageRoute<bool>(
+                        builder: (context) => ProfileScreen(),
+                        settings: settings);
+                  case RouteHandler.NAV:
+                    return CupertinoPageRoute(
+                        builder: (context) => HomeScreen(), settings: settings);
+                  case RouteHandler.ONBOARD:
+                    return CupertinoPageRoute(
+                        builder: (context) => OnBoardScreen(),
+                        settings: settings);
+                  case RouteHandler.LOADING:
+                    return CupertinoPageRoute<bool>(
+                        builder: (context) => LoadingScreen(
+                              title: settings.arguments.toString(),
+                            ),
+                        settings: settings);
+                  case RouteHandler.WELCOME:
+                    return CupertinoPageRoute<bool>(
+                        builder: (context) => StartUpView(),
+                        settings: settings);
+                  case RouteHandler.PAYMENT:
+                    return CupertinoPageRoute<bool>(
+                        builder: (context) => PaymentScreen(),
+                        settings: settings);
+                  default:
+                    return CupertinoPageRoute(
+                        builder: (context) => StartUpView(),
+                        settings: settings);
+                }
+              },
               home: const StartUpView());
         }));
   }

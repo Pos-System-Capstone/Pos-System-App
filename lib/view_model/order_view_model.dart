@@ -3,7 +3,9 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/enums/order_enum.dart';
+import 'package:pos_apps/routes/route_helper.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
@@ -12,6 +14,7 @@ import 'package:pos_apps/widgets/cart/choose_table_dialog.dart';
 
 import '../data/api/order_api.dart';
 import '../data/model/index.dart';
+import '../routes/routes_constrants.dart';
 
 class OrderViewModel extends BaseViewModel {
   int selectedTable = 01;
@@ -19,6 +22,29 @@ class OrderViewModel extends BaseViewModel {
   Cart? currentCart;
   late OrderAPI api = OrderAPI();
   OrderResponseModel? orderResponseModel;
+  OrderStateEnum orderState = OrderStateEnum.ORDER_PRODUCT;
+  // List<Payment> paymentList = [
+  //   Payment(
+  //       id: "1",
+  //       paymentTypeId: "1",
+  //       paymentType: PaymentType.CASH,
+  //       isSelected: false,
+  //   Payment(
+  //       paymentId: "2",
+  //       paymentName: "Thẻ",
+  //       paymentType: PaymentType.CARD,
+  //       paymentStatus: PaymentStatus.PENDING),
+  //   Payment(
+  //       paymentId: "3",
+  //       paymentName: "Momo",
+  //       paymentType: PaymentType.MOMO,
+  //       paymentStatus: PaymentStatus.PENDING),
+  //   Payment(
+  //       paymentId: "4",
+  //       paymentName: "ZaloPay",
+  //       paymentType: PaymentType.ZALOPAY,
+  //       paymentStatus: PaymentStatus.PENDING),
+  // ];
 
   OrderViewModel() {
     api = OrderAPI();
@@ -37,30 +63,103 @@ class OrderViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void changeState(OrderStateEnum state) {
+    orderState = state;
+    notifyListeners();
+  }
+
   Future<void> placeOrder(OrderModel order) async {
-    Account? userInfo = await getUserInfo();
-    var res = await api.placeOrder(order, userInfo!.storeId);
-    print(res.toString());
-    OrderResponseModel? orderRes =
-        await getOrderByStore(userInfo.storeId, res.toString());
-    if (orderRes != null) {
-      orderResponseModel = orderRes;
-      // changeState(OrderStateEnum.PAYMENT);
+    try {
+      setState(ViewStatus.Loading);
+      Account? userInfo = await getUserInfo();
+      var res = await api.placeOrder(order, userInfo!.storeId);
       if (Get.isDialogOpen!) {
         Get.back();
       }
+      setState(ViewStatus.Completed);
+      getOrderByStore(userInfo.storeId, res.toString());
+    } catch (e) {
+      showAlertDialog(title: "Lỗi tạo đơn hàng", content: e.toString());
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
+
+  Future<void> getOrderByStore(String storeId, String orderId) async {
+    OrderResponseModel orderRes = await api.getOrderOfStore(storeId, orderId);
+    print(orderRes.toString());
+    if (orderRes != null) {
+      orderResponseModel = orderRes;
+      Get.toNamed(RouteHandler.PAYMENT);
     } else {
       orderResponseModel = null;
     }
     notifyListeners();
   }
 
-  Future<OrderResponseModel?> getOrderByStore(
-      String storeId, String orderId) async {
-    // Account? userInfo = await getUserInfo();
-    OrderResponseModel res = await api.getOrderOfStore(storeId, orderId);
-    print(res.toString());
-    return res;
+  Future<void> updatePayment(
+      String orderId, String status, String payment) async {
+    try {
+      Account? userInfo = await getUserInfo();
+      setState(ViewStatus.Loading);
+      print("update order");
+      print(userInfo!.storeId);
+      print(orderId);
+      var res = api.updateOrder(userInfo!.storeId, orderId, status, payment);
+      print(res.toString());
+      getOrderByStore(userInfo.storeId, res.toString());
+      showAlertDialog(
+          title: "Cập nhật thanh toán",
+          content: "Cập nhật thanh toán thành công");
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      showAlertDialog(title: "Lỗi cập nhật đơn hàng", content: e.toString());
+      setState(ViewStatus.Error);
+    }
+  }
+
+  Future<void> completeOrder(
+    String orderId,
+    String payment,
+  ) async {
+    try {
+      Account? userInfo = await getUserInfo();
+      setState(ViewStatus.Loading);
+      print("update order");
+      print(userInfo!.storeId);
+      print(orderId);
+      api.updateOrder(userInfo.storeId, orderId, OrderStatusEnum.PAID, payment);
+      Get.offAndToNamed(RouteHandler.HOME);
+      showAlertDialog(
+          title: "Hoàn thành đơn hàng",
+          content: "Hoàn thành đơn hàng thành công");
+
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      showAlertDialog(title: "Lỗi hoàn thành đơn hàng", content: e.toString());
+      setState(ViewStatus.Error);
+    }
+  }
+
+  Future<void> cancleOrder(
+    String orderId,
+    String payment,
+  ) async {
+    try {
+      Account? userInfo = await getUserInfo();
+      setState(ViewStatus.Loading);
+      print("update order");
+      print(userInfo!.storeId);
+      print(orderId);
+      api.updateOrder(
+          userInfo.storeId, orderId, OrderStatusEnum.CANCELED, payment);
+      Get.offAndToNamed(RouteHandler.HOME);
+      showAlertDialog(
+          title: "Huỷ đơn hàng", content: "Huỷ đơn hàng thành công");
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      showAlertDialog(title: "Lỗi huỷ đơn hàng", content: e.toString());
+      setState(ViewStatus.Error);
+    }
   }
 
   // void addProductToCart(Product product)  {

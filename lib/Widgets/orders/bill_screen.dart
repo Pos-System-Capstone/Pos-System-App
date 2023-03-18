@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../util/format.dart';
 import '../../view_model/index.dart';
+import '../Dialogs/other_dialogs/dialog.dart';
 
 class BillScreen extends StatefulWidget {
   const BillScreen({super.key});
@@ -102,12 +102,29 @@ class _BillScreenState extends State<BillScreen> {
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
-                                'User',
+                                'Người dùng',
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ],
                           ),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //       Text(
+                        //         'Thanh toán',
+                        //         style: Get.textTheme.bodyMedium,
+                        //       ),
+                        //       Text(
+                        //         model.orderResponseModel!.payment!.paymentType!,
+                        //         style: Get.textTheme.bodyMedium,
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                           child: Row(
@@ -115,11 +132,17 @@ class _BillScreenState extends State<BillScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Thanh toán',
+                                'Trạng thái',
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
-                                model.orderResponseModel!.payment!.paymentType!,
+                                model.orderResponseModel!.orderStatus ==
+                                        OrderStatusEnum.PENDING
+                                    ? "Đợi thanh toán"
+                                    : model.orderResponseModel!.orderStatus ==
+                                            OrderStatusEnum.PENDING
+                                        ? "Đã thanh toán"
+                                        : "Đã hủy",
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ],
@@ -193,8 +216,8 @@ class _BillScreenState extends State<BillScreen> {
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
-                                model.orderResponseModel!.vat!.toString() +
-                                    ' %',
+                                percentCalculation(
+                                    model.orderResponseModel!.vat!),
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ],
@@ -301,7 +324,16 @@ class _BillScreenState extends State<BillScreen> {
                           child: Container(
                             width: double.infinity,
                             child: OutlinedButton.icon(
-                              onPressed: () => {},
+                              onPressed: () async {
+                                var result = await showConfirmDialog(
+                                    title: 'Xác nhận',
+                                    content: 'Xác nhận huỷ đơn hàng');
+                                if (result) {
+                                  model.cancleOrder(
+                                      model.orderResponseModel!.orderId!,
+                                      'CASH');
+                                }
+                              },
                               icon: Icon(Icons.cancel_outlined),
                               label: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -318,15 +350,24 @@ class _BillScreenState extends State<BillScreen> {
                           thickness: 1,
                         ),
                         Expanded(
-                          child: Container(
+                          child: SizedBox(
                             width: double.infinity,
                             child: FilledButton.icon(
-                              onPressed: () => {null},
+                              onPressed: () async {
+                                var result = await showConfirmDialog(
+                                    title: 'Xác nhận',
+                                    content: 'Xác nhận hoàn thành đơn hàng');
+                                if (result) {
+                                  model.completeOrder(
+                                      model.orderResponseModel!.orderId!,
+                                      'CASH');
+                                }
+                              },
                               icon: Icon(Icons.check),
                               label: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Hoan thành',
+                                  'Hoàn thành',
                                   style: Get.textTheme.titleMedium?.copyWith(
                                       color: Get.theme.colorScheme.background),
                                 ),

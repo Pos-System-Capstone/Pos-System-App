@@ -37,6 +37,8 @@ class _ProductDialogState extends State<ProductDialog> {
   List<Product> childProducts = [];
   List<Product> extraProduct = [];
   String? selectedSize;
+  String? selectedIceNote;
+  String? selectedSugarNote;
   @override
   void initState() {
     super.initState();
@@ -51,11 +53,25 @@ class _ProductDialogState extends State<ProductDialog> {
       }
       productViewModel.addProductToCartItem(childProducts[0]);
     }
+    selectedIceNote = productViewModel.iceNote;
+    selectedSugarNote = productViewModel.sugarNote;
   }
 
   setSelectedRadio(String val) {
     setState(() {
       selectedSize = val;
+    });
+  }
+
+  setSelectedSugar(String val) {
+    setState(() {
+      selectedSugarNote = val;
+    });
+  }
+
+  setSelectedIce(String val) {
+    setState(() {
+      selectedIceNote = val;
     });
   }
 
@@ -87,7 +103,7 @@ class _ProductDialogState extends State<ProductDialog> {
       child: ScopedModelDescendant(
         builder: (context, child, ProductViewModel model) {
           return Container(
-            width: isPortrait ? Get.size.width : Get.size.width * 0.4,
+            width: isPortrait ? Get.size.width : Get.size.width * 0.5,
             decoration: BoxDecoration(
               color: Get.theme.colorScheme.onInverseSurface,
               borderRadius: BorderRadius.all(
@@ -244,7 +260,7 @@ class _ProductDialogState extends State<ProductDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Size ${childProducts[i].size!}"),
+                  Text("Size ${childProducts[i].name!}"),
                   Text(formatPrice(childProducts[i].sellingPrice!)),
                 ],
               ),
@@ -302,7 +318,7 @@ class _ProductDialogState extends State<ProductDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             TextFormField(
-              maxLines: 3,
+              maxLines: 2,
               decoration: InputDecoration(
                 hintText: "Ghi chú",
                 border: OutlineInputBorder(
@@ -320,34 +336,56 @@ class _ProductDialogState extends State<ProductDialog> {
                 style: Get.textTheme.titleSmall,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            Expanded(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: sugarNoteEnums
-                    .map(
-                      (e) => FilledButton.tonal(
-                          onPressed: () {
-                            model.addMoreNotes(e);
+                children: [
+                  Expanded(
+                    child: Container(
+                      child: ListView.builder(
+                        itemCount: sugarNoteEnums.length,
+                        itemBuilder: (context, i) {
+                          return RadioListTile(
+                            // dense: true,
+                            visualDensity: VisualDensity(
+                              horizontal: VisualDensity.minimumDensity,
+                              vertical: VisualDensity.minimumDensity,
+                            ),
+                            title: Text(" ${sugarNoteEnums[i]}"),
+                            value: sugarNoteEnums[i],
+                            groupValue: selectedSugarNote,
+                            selected: selectedSugarNote == sugarNoteEnums[i],
+                            onChanged: (value) {
+                              model.addSugarNotes(sugarNoteEnums[i]);
+                              setSelectedSugar(value!);
+                              // setSelectedRadio(value!);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: iceNoteEnums.length,
+                      itemBuilder: (context, i) {
+                        return RadioListTile(
+                          // dense: true,
+                          visualDensity: VisualDensity(
+                            horizontal: VisualDensity.minimumDensity,
+                            vertical: VisualDensity.minimumDensity,
+                          ),
+                          title: Text(" ${iceNoteEnums[i]}"),
+                          value: iceNoteEnums[i],
+                          groupValue: selectedIceNote,
+                          onChanged: (value) {
+                            model.addIceNotes(iceNoteEnums[i]);
+                            setSelectedIce(value!);
                           },
-                          child: Text(e)),
-                    )
-                    .toList(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: iceNoteEnums
-                    .map(
-                      (e) => FilledButton.tonal(
-                          onPressed: () {
-                            model.addMoreNotes(e);
-                          },
-                          child: Text(e)),
-                    )
-                    .toList(),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

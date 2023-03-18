@@ -26,4 +26,5 @@ class RouteHandler {
   static const String VOUCHER = "/voucher";
   static const String DESIGN = "/design";
   static const String WELCOME = "/welcome";
+  static const String PAYMENT = "/payment";
 }

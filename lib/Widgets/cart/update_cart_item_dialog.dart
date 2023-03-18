@@ -39,6 +39,8 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   List<Product> childProducts = [];
   List<Product> extraProduct = [];
   String? selectedSize;
+  String? selectedIceNote;
+  String? selectedSugarNote;
   @override
   void initState() {
     super.initState();
@@ -49,12 +51,26 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
       childProducts = menuViewModel.getChildProductByParentProduct(
           productViewModel.productInCart!.parentProductId!)!;
       selectedSize = productViewModel.productInCart!.id;
+      selectedSugarNote = productViewModel.sugarNote;
+      selectedIceNote = productViewModel.iceNote;
     }
   }
 
   setSelectedRadio(String val) {
     setState(() {
       selectedSize = val;
+    });
+  }
+
+  setSelectedSugar(String val) {
+    setState(() {
+      selectedSugarNote = val;
+    });
+  }
+
+  setSelectedIce(String val) {
+    setState(() {
+      selectedIceNote = val;
     });
   }
 
@@ -332,7 +348,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
           children: [
             TextFormField(
               initialValue: model.notes,
-              maxLines: 3,
+              maxLines: 2,
               decoration: InputDecoration(
                 hintText: "Ghi chú",
                 border: OutlineInputBorder(
@@ -342,7 +358,66 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
               onChanged: (value) {
                 model.setNotes(value);
               },
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Ghi chú nhanh nếu có",
+                style: Get.textTheme.titleSmall,
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      child: ListView.builder(
+                        itemCount: sugarNoteEnums.length,
+                        itemBuilder: (context, i) {
+                          return RadioListTile(
+                            // dense: true,
+                            visualDensity: VisualDensity(
+                              horizontal: VisualDensity.minimumDensity,
+                              vertical: VisualDensity.minimumDensity,
+                            ),
+                            title: Text(" ${sugarNoteEnums[i]}"),
+                            value: sugarNoteEnums[i],
+                            groupValue: selectedSugarNote,
+                            selected: selectedSugarNote == sugarNoteEnums[i],
+                            onChanged: (value) {
+                              model.addSugarNotes(sugarNoteEnums[i]);
+                              setSelectedSugar(value!);
+                              // setSelectedRadio(value!);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: iceNoteEnums.length,
+                      itemBuilder: (context, i) {
+                        return RadioListTile(
+                          // dense: true,
+                          visualDensity: VisualDensity(
+                            horizontal: VisualDensity.minimumDensity,
+                            vertical: VisualDensity.minimumDensity,
+                          ),
+                          title: Text(" ${iceNoteEnums[i]}"),
+                          value: iceNoteEnums[i],
+                          groupValue: selectedIceNote,
+                          onChanged: (value) {
+                            model.addIceNotes(iceNoteEnums[i]);
+                            setSelectedIce(value!);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ));
   }

@@ -21,3 +21,9 @@ class OrderState {
   static const String PAYMENT = 'PAYMENT';
   static const String COMPLETE_ORDER = 'COMPLETE_ORDER';
 }
+
+class OrderStatusEnum {
+  static const String PENDING = 'PENDING';
+  static const String CANCELED = 'CANCELED';
+  static const String PAID = 'PAID';
+}

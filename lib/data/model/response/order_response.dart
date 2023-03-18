@@ -38,17 +38,17 @@ class OrderResponseModel {
     orderType = json['orderType'];
     checkInDate = json['checkInDate'];
     payment =
-        json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+        json['payment'] != null ? Payment.fromJson(json['payment']) : null;
     if (json['productList'] != null) {
       productList = <ProductList>[];
       json['productList'].forEach((v) {
-        productList!.add(new ProductList.fromJson(v));
+        productList!.add(ProductList.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['orderId'] = orderId;
     data['invoiceId'] = invoiceId;
     data['totalAmount'] = totalAmount;
@@ -81,7 +81,8 @@ class Payment {
       this.paymentTypeId,
       this.paymentType,
       this.picUrl,
-      this.paidAmount});
+      this.paidAmount,
+      required bool isSelected});
 
   Payment.fromJson(Map<String, dynamic> json) {
     id = json['id'];

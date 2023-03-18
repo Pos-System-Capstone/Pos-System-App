@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_apps/views/home.dart';
 import 'package:pos_apps/views/login_screen/login_by_mobile_pos.dart';
 import 'package:pos_apps/views/startup.dart';
+import 'package:pos_apps/widgets/order_process/payment.dart';
 
 import '../Views/root_view.dart';
 import '../helper/responsive_helper.dart';
@@ -12,6 +13,7 @@ class RouteHelper {
   static const String splash = '/splash';
   static const String home = '/home';
   static const String login = "/login";
+  static const String payment = "/payment";
   static getInitialRoute() => '$initial';
   static getSplashRoute() => '$splash';
   static getHomeRoute(String name) => '$home?name=$name';
@@ -27,6 +29,12 @@ class RouteHelper {
     GetPage(
       name: home,
       page: () => RootScreen(),
+      transition: Transition.leftToRight,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: payment,
+      page: () => PaymentScreen(),
       transition: Transition.leftToRight,
       transitionDuration: Duration(milliseconds: 300),
     ),

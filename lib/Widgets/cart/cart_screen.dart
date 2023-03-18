@@ -209,7 +209,14 @@ class _CartScreenState extends State<CartScreen> {
                           Expanded(
                             flex: 4,
                             child: FilledButton.icon(
-                              onPressed: () => {model.createOrder()},
+                              onPressed: () async {
+                                var result = await showConfirmDialog(
+                                    title: 'Xác nhận',
+                                    content: 'Xác nhận tạo đơn hàng');
+                                if (result) {
+                                  model.createOrder();
+                                }
+                              },
                               icon: Icon(Icons.payment),
                               label: Padding(
                                 padding: const EdgeInsets.all(8.0),

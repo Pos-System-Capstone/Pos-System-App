@@ -55,9 +55,27 @@ class MenuViewModel extends BaseViewModel {
   }
 
   List<Product>? getChildProductByParentProduct(String? productId) {
-    return childProducts
-        ?.where((element) => element.parentProductId == productId)
+    List<Product> listChilds = childProducts!
+        .where((element) => element.parentProductId == productId)
         .toList();
+
+    List<Product> listChildsSorted = [];
+    for (Product item in listChilds) {
+      if (item.size == ProductSizeEnum.SMALL) {
+        listChildsSorted.add(item);
+      }
+    }
+    for (Product item in listChilds) {
+      if (item.size == ProductSizeEnum.MEDIUM) {
+        listChildsSorted.add(item);
+      }
+    }
+    for (Product item in listChilds) {
+      if (item.size == ProductSizeEnum.LARGE) {
+        listChildsSorted.add(item);
+      }
+    }
+    return listChildsSorted;
   }
 
   List<Product>? getExtraProductByNormalProduct(Product product) {

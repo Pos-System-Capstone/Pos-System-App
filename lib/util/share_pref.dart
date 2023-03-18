@@ -78,6 +78,16 @@ Future<int?> getThemeColor() async {
   return prefs.getInt('themeColor');
 }
 
+Future<bool> setThemeMode(bool isDark) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setBool('darkMode', isDark);
+}
+
+Future<bool?> getThemeMode() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('darkMode');
+}
+
 Future<void> setUserInfo(Account userDTO) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final userInfo = userDTO.toJson();
