@@ -19,18 +19,13 @@ class ThemeViewModel extends BaseViewModel {
     Get.changeThemeMode(Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
     setThemeMode(Get.isDarkMode ? false : true);
     isDarkMode = !isDarkMode;
-    print("IsDarkMode");
-    print(isDarkMode);
     notifyListeners();
   }
 
   void _loadCurrentTheme() async {
     colorIndex = await getThemeColor() ?? 0;
     isDarkMode = await getThemeMode() ?? false;
-    print("colorIndex");
-    print(colorIndex);
-    print("IsDarkMode");
-    print(isDarkMode);
+
     notifyListeners();
   }
 

@@ -9,10 +9,6 @@ class MenuData {
       'stores/menus',
     );
     var jsonList = res.data;
-    if (kDebugMode) {
-      print(jsonList);
-    }
-    //metaDataDTO = MetaDataDTO.fromJson(res.data["metadata"]);
     Menu menu = Menu.fromJson(jsonList);
     return menu;
   }

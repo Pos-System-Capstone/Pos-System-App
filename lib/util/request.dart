@@ -1,7 +1,11 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart' hide Response;
+import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:pos_apps/widgets/dialogs/login_dialogs/login_dialogs.dart';
+
+import '../routes/routes_constrants.dart';
 
 Map<String, dynamic> convertToQueryParams(
     [Map<String, dynamic> params = const {}]) {
@@ -87,21 +91,52 @@ class MyRequest {
   late Dio _inner;
   MyRequest() {
     _inner = Dio(options);
-    // _inner.interceptors.add(
-    //     DioCacheManager(CacheConfig(baseUrl: options.baseUrl)).interceptor);
     _inner.interceptors.add(CustomInterceptors());
     _inner.interceptors.add(InterceptorsWrapper(
       onResponse: (e, handler) {
         return handler.next(e); // continue
       },
       onError: (e, handler) async {
-        print(e.response.toString());
-        if (e.response?.statusCode == 401) {
-          await showLoginErrorDialog(e.response.toString());
-          // Get.Get.offAllNamed(RouteHandler.LOGIN);
+        print(e.response?.statusCode);
+        if (e.response?.statusCode == 400) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
+        } else if (e.response?.statusCode == 500) {
+          showAlertDialog(
+            title: "Lỗi hệ thống",
+            content: e.response?.data["Error"],
+          );
+          Get.offAllNamed(RouteHandler.LOGIN);
+        } else if (e.response?.statusCode == 403) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
+        } else if (e.response?.statusCode == 404) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
+        } else if (e.response?.statusCode == 500) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
+        } else if (e.response?.statusCode == 503) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
         } else {
-          handler.next(e);
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
         }
+        print(e.response?.data["Error"]);
+        handler.next(e);
       },
     ));
   }

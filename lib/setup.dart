@@ -13,7 +13,7 @@ void createRouteBindings() async {
   Get.put(RootViewModel());
   Get.put(LoginViewModel());
   Get.put(MenuViewModel());
-  Get.put(OrderViewModel());
   Get.put(CartViewModel());
+  Get.put(OrderViewModel());
   Get.put(NetworkPrinterViewModel());
 }

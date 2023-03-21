@@ -5,22 +5,10 @@ String formatPrice(num price) {
 }
 
 String formatPriceWithoutUnit(num price) {
-  NumberFormat format = NumberFormat("###0.00");
+  NumberFormat format = NumberFormat("###0.0");
   format.minimumFractionDigits = 0;
   return format.format(price);
 }
-
-// String convertPrice(double price, {double? discount, String? discountType}) {
-//   if (discount != null && discountType != null) {
-//     if (discountType == 'amount') {
-//       price = price - discount;
-//     } else if (discountType == 'percent') {
-//       price = price - ((discount / 100) * price);
-//     }
-//   return '\$'
-//       '${(price).toStringAsFixed(Get.find<SplashController>().configModel?.decimalPointSettings ?? 2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}';
-// }
-//   }
 
 double convertWithDiscount(double price, double discount, String discountType) {
   if (discountType == 'amount') {
@@ -42,7 +30,7 @@ double calculation(double amount, double discount, String type, int quantity) {
 }
 
 String percentCalculation(num amount) {
-  return '${amount * 100} %';
+  return '${amount * 100}%';
 }
 
 String percentageCalculation(

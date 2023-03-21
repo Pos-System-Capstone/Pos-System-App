@@ -53,6 +53,8 @@ dependencies:
   network_tools: ^3.2.0
   flutter_pos_printer_platform: ^1.1.0
   dart_ping_ios: ^3.0.0
+  tiengviet: ^0.5.0
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

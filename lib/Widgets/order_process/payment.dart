@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -25,6 +26,12 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   @override
+  void initState() {
+    super.initState();
+    Get.find<OrderViewModel>().getOrderByStore();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ScopedModel(
@@ -38,7 +45,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(child: orderConfig()),
+                        Container(
+                            width: double.infinity,
+                            height: 300,
+                            child: orderConfig()),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: BillScreen(),
+                          ),
+                        )
                       ],
                     )
                   : Row(children: [
@@ -87,6 +103,8 @@ Widget orderConfig() {
       return DefaultTabController(
         length: listPaymentTab.length,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TabBar(
               indicatorColor: Get.theme.colorScheme.primary,
@@ -112,117 +130,76 @@ Widget orderConfig() {
 }
 
 Widget paymentTypeSelect(OrderViewModel model) {
-  return Container(
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+  return Expanded(
+      child: Container(
+    decoration: BoxDecoration(
+      color: Get.theme.colorScheme.onInverseSurface,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    width: double.infinity,
+    height: double.infinity,
+    child: Column(
       children: [
         Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: Get.theme.colorScheme.onInverseSurface,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("Phuơng thức"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              alignment: WrapAlignment.center,
+              children: model.listPayment
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: InkWell(
+                        onTap: () {
+                          model.selectPayment(e);
+                        },
                         child: Card(
+                          color: model.selectedPaymentMethod == e
+                              ? Get.theme.colorScheme.primary
+                              : Get.theme.colorScheme.onInverseSurface,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(Icons.money_rounded, size: 40),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
+                                Image.network(
+                                  e!.picUrl!,
+                                  width: 120,
+                                  height: 120,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
                                   child: Text(
-                                    "Tiền mặt",
-                                    style: Get.textTheme.titleMedium,
+                                    e.name!,
+                                    style: Get.textTheme.titleLarge,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.credit_card, size: 40),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Text(
-                                    "VNPay",
-                                    style: Get.textTheme.titleMedium,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.wallet, size: 40),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Text(
-                                    "MoMo",
-                                    style: Get.textTheme.titleMedium,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            )),
-        Expanded(
-            flex: 2,
-            child: Container(
-                decoration: BoxDecoration(
-                  color: Get.theme.colorScheme.onInverseSurface,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                width: double.infinity,
-                height: double.infinity,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Tièn khách trả"),
                     ),
-                  ],
-                ))),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: ElevatedButton(
+              onPressed: () {
+                model.updatePayment();
+              },
+              child: Text("Thanh toán"),
+            ),
+          ),
+        ),
       ],
     ),
-  );
+  ));
 }
 
 Widget customerInfoSelect(OrderViewModel model) {

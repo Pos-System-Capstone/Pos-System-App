@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/view_model/index.dart';
 
@@ -21,7 +22,6 @@ class MenuViewModel extends BaseViewModel {
 
   Future<void> getMenuOfStore() async {
     setState(ViewStatus.Loading);
-
     currentMenu = await menuData?.getMenuOfStore();
     normalProducts = currentMenu?.products!
         .where((element) =>
@@ -35,11 +35,8 @@ class MenuViewModel extends BaseViewModel {
         .where((element) => element.type == ProductTypeEnum.CHILD)
         .toList();
     productsFilter = normalProducts;
-    debugPrint('normalProducts: ${normalProducts!.length}');
-    debugPrint('extraProducts: ${extraProducts!.length}');
-    debugPrint('childProducts: ${childProducts!.length}');
+    Get.find<OrderViewModel>().getListPayment();
     setState(ViewStatus.Completed);
-    notifyListeners();
   }
 
   void handleChangeFilterProductByCategory(String? categoryId) {
@@ -82,6 +79,22 @@ class MenuViewModel extends BaseViewModel {
     return extraProducts
         ?.where(
             (element) => product.extraCategoryIds!.contains(element.categoryId))
+        .toList();
+  }
+
+  List<Category>? getExtraCategoryByNormalProduct(Product product) {
+    List<Category> listExtraCategory = [];
+    for (Category item in currentMenu!.categories!) {
+      if (product.extraCategoryIds!.contains(item.id)) {
+        listExtraCategory.add(item);
+      }
+    }
+    return listExtraCategory;
+  }
+
+  List<Product> getProductsByCategory(String? categoryId) {
+    return extraProducts!
+        .where((element) => element.categoryId == categoryId)
         .toList();
   }
 }

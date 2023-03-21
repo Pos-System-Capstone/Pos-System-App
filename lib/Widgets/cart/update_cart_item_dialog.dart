@@ -37,40 +37,24 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   MenuViewModel menuViewModel = Get.find<MenuViewModel>();
   ProductViewModel productViewModel = ProductViewModel();
   List<Product> childProducts = [];
-  List<Product> extraProduct = [];
+  List<Category> extraCategory = [];
   String? selectedSize;
-  String? selectedIceNote;
-  String? selectedSugarNote;
   @override
   void initState() {
     super.initState();
     productViewModel.getCartItemToUpdate(widget.cartItem);
-    extraProduct = menuViewModel
-        .getExtraProductByNormalProduct(productViewModel.productInCart!)!;
+    extraCategory =
+        menuViewModel.getExtraCategoryByNormalProduct(widget.cartItem.product)!;
     if (widget.cartItem.product.type == ProductTypeEnum.CHILD) {
       childProducts = menuViewModel.getChildProductByParentProduct(
           productViewModel.productInCart!.parentProductId!)!;
       selectedSize = productViewModel.productInCart!.id;
-      selectedSugarNote = productViewModel.sugarNote;
-      selectedIceNote = productViewModel.iceNote;
     }
   }
 
   setSelectedRadio(String val) {
     setState(() {
       selectedSize = val;
-    });
-  }
-
-  setSelectedSugar(String val) {
-    setState(() {
-      selectedSugarNote = val;
-    });
-  }
-
-  setSelectedIce(String val) {
-    setState(() {
-      selectedIceNote = val;
     });
   }
 
@@ -102,7 +86,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
       child: ScopedModelDescendant(
         builder: (context, child, ProductViewModel model) {
           return Container(
-            width: isPortrait ? Get.size.width : Get.size.width * 0.4,
+            width: isPortrait ? Get.size.width : Get.size.width * 0.7,
             decoration: BoxDecoration(
               color: Get.theme.colorScheme.onInverseSurface,
               borderRadius: BorderRadius.all(
@@ -308,34 +292,51 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   }
 
   Widget addExtra(ProductViewModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: extraProduct.length,
-          physics: ScrollPhysics(),
-          itemBuilder: (context, i) {
-            bool isSelect = false;
-            return CheckboxListTile(
-              contentPadding: EdgeInsets.all(8),
-              // dense: true,
-              visualDensity: VisualDensity(
-                horizontal: VisualDensity.minimumDensity,
-                vertical: VisualDensity.minimumDensity,
-              ),
-              title: Text(extraProduct[i].name!),
-              subtitle: Text("+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
-              value: model.isExtraExist(extraProduct[i]),
-              selected: model.isExtraExist(extraProduct[i]),
-              onChanged: (value) {
-                model.addOrRemoveExtra(extraProduct[i]);
-              },
-            );
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: extraCategory.map((e) {
+              List<Product> extraProduct =
+                  menuViewModel.getProductsByCategory(e.id);
+              return Column(
+                children: [
+                  Text(e.name!, style: Get.textTheme.titleMedium),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: extraProduct.length,
+                    physics: ScrollPhysics(),
+                    itemBuilder: (context, i) {
+                      return CheckboxListTile(
+                        contentPadding: EdgeInsets.all(8),
+                        // dense: true,
+                        visualDensity: VisualDensity(
+                          horizontal: VisualDensity.minimumDensity,
+                          vertical: VisualDensity.minimumDensity,
+                        ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(extraProduct[i].name!),
+                            Text(
+                                "+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
+                          ],
+                        ),
+
+                        value: model.isExtraExist(extraProduct[i]),
+                        selected: model.isExtraExist(extraProduct[i]),
+                        onChanged: (value) {
+                          model.addOrRemoveExtra(extraProduct[i]);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              );
+            }).toList()),
+      ),
     );
   }
 
@@ -358,65 +359,6 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
               onChanged: (value) {
                 model.setNotes(value);
               },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Ghi chú nhanh nếu có",
-                style: Get.textTheme.titleSmall,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: ListView.builder(
-                        itemCount: sugarNoteEnums.length,
-                        itemBuilder: (context, i) {
-                          return RadioListTile(
-                            // dense: true,
-                            visualDensity: VisualDensity(
-                              horizontal: VisualDensity.minimumDensity,
-                              vertical: VisualDensity.minimumDensity,
-                            ),
-                            title: Text(" ${sugarNoteEnums[i]}"),
-                            value: sugarNoteEnums[i],
-                            groupValue: selectedSugarNote,
-                            selected: selectedSugarNote == sugarNoteEnums[i],
-                            onChanged: (value) {
-                              model.addSugarNotes(sugarNoteEnums[i]);
-                              setSelectedSugar(value!);
-                              // setSelectedRadio(value!);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: iceNoteEnums.length,
-                      itemBuilder: (context, i) {
-                        return RadioListTile(
-                          // dense: true,
-                          visualDensity: VisualDensity(
-                            horizontal: VisualDensity.minimumDensity,
-                            vertical: VisualDensity.minimumDensity,
-                          ),
-                          title: Text(" ${iceNoteEnums[i]}"),
-                          value: iceNoteEnums[i],
-                          groupValue: selectedIceNote,
-                          onChanged: (value) {
-                            model.addIceNotes(iceNoteEnums[i]);
-                            setSelectedIce(value!);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ));

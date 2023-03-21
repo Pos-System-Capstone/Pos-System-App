@@ -33,6 +33,11 @@ class PaymentModel {
     data['brandId'] = brandId;
     return data;
   }
+
+  List<PaymentModel> fromList(dynamic jsonList) {
+    var list = jsonList as List;
+    return list.map((map) => PaymentModel.fromJson(map)).toList();
+  }
 }
 
 class Payment {

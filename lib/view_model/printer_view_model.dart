@@ -17,9 +17,11 @@ import 'package:get/get.dart';
 import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:network_tools/network_tools.dart';
+import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../util/print-bill.dart';
 import '../widgets/Dialogs/other_dialogs/dialog.dart';
 import 'base_view_model.dart';
 
@@ -467,5 +469,26 @@ class NetworkPrinterViewModel extends BaseViewModel {
     // Get.showSnackbar(snackBar);
   }
 
+  void printBill(OrderResponseModel order) async {
+    const PaperSize paper = PaperSize.mm58;
+    final profile = await CapabilityProfile.load();
+    final printer = NetworkPrinter(paper, profile);
+    final PosPrintResult res =
+        await printer.connect(selectedDevice!, port: selectedPort);
+
+    if (res == PosPrintResult.success) {
+      // DEMO RECEIPT
+      // await printDemoReceipt(printer);
+      printBillModel(order, printer);
+      // TEST PRINT
+      // await testReceipt(printer);
+      printer.disconnect();
+    }
+    showAlertDialog(title: res.msg, content: "In hoá đơn thành công");
+
+    // final snackBar =
+    //     GetSnackBar(titleText: Text(res.msg, textAlign: TextAlign.center));
+    // Get.showSnackbar(snackBar);
+  }
   // ************************ (end) Printer Commands ************************
 }

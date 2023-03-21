@@ -35,16 +35,15 @@ class _ProductDialogState extends State<ProductDialog> {
   MenuViewModel menuViewModel = Get.find<MenuViewModel>();
   ProductViewModel productViewModel = ProductViewModel();
   List<Product> childProducts = [];
-  List<Product> extraProduct = [];
+  List<Category> extraCategory = [];
   String? selectedSize;
-  String? selectedIceNote;
-  String? selectedSugarNote;
   @override
   void initState() {
     super.initState();
     productViewModel.addProductToCartItem(widget.product);
-    extraProduct =
-        menuViewModel.getExtraProductByNormalProduct(widget.product)!;
+    extraCategory =
+        menuViewModel.getExtraCategoryByNormalProduct(widget.product)!;
+
     if (widget.product.type == ProductTypeEnum.PARENT) {
       childProducts =
           menuViewModel.getChildProductByParentProduct(widget.product.id!)!;
@@ -53,25 +52,11 @@ class _ProductDialogState extends State<ProductDialog> {
       }
       productViewModel.addProductToCartItem(childProducts[0]);
     }
-    selectedIceNote = productViewModel.iceNote;
-    selectedSugarNote = productViewModel.sugarNote;
   }
 
   setSelectedRadio(String val) {
     setState(() {
       selectedSize = val;
-    });
-  }
-
-  setSelectedSugar(String val) {
-    setState(() {
-      selectedSugarNote = val;
-    });
-  }
-
-  setSelectedIce(String val) {
-    setState(() {
-      selectedIceNote = val;
     });
   }
 
@@ -103,7 +88,7 @@ class _ProductDialogState extends State<ProductDialog> {
       child: ScopedModelDescendant(
         builder: (context, child, ProductViewModel model) {
           return Container(
-            width: isPortrait ? Get.size.width : Get.size.width * 0.5,
+            width: isPortrait ? Get.size.width : Get.size.width * 0.6,
             decoration: BoxDecoration(
               color: Get.theme.colorScheme.onInverseSurface,
               borderRadius: BorderRadius.all(
@@ -243,7 +228,7 @@ class _ProductDialogState extends State<ProductDialog> {
   Widget productSize(ProductViewModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ListView.builder(
           shrinkWrap: true,
@@ -260,7 +245,7 @@ class _ProductDialogState extends State<ProductDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Size ${childProducts[i].name!}"),
+                  Text("Size ${childProducts[i].size!}"),
                   Text(formatPrice(childProducts[i].sellingPrice!)),
                 ],
               ),
@@ -279,34 +264,51 @@ class _ProductDialogState extends State<ProductDialog> {
   }
 
   Widget addExtra(ProductViewModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: extraProduct.length,
-          physics: ScrollPhysics(),
-          itemBuilder: (context, i) {
-            bool isSelect = false;
-            return CheckboxListTile(
-              contentPadding: EdgeInsets.all(8),
-              // dense: true,
-              visualDensity: VisualDensity(
-                horizontal: VisualDensity.minimumDensity,
-                vertical: VisualDensity.minimumDensity,
-              ),
-              title: Text(extraProduct[i].name!),
-              subtitle: Text("+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
-              value: model.isExtraExist(extraProduct[i]),
-              selected: model.isExtraExist(extraProduct[i]),
-              onChanged: (value) {
-                model.addOrRemoveExtra(extraProduct[i]);
-              },
-            );
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: extraCategory.map((e) {
+              List<Product> extraProduct =
+                  menuViewModel.getProductsByCategory(e.id);
+              return Column(
+                children: [
+                  Text(e.name!, style: Get.textTheme.titleMedium),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: extraProduct.length,
+                    physics: ScrollPhysics(),
+                    itemBuilder: (context, i) {
+                      return CheckboxListTile(
+                        contentPadding: EdgeInsets.all(8),
+                        // dense: true,
+                        visualDensity: VisualDensity(
+                          horizontal: VisualDensity.minimumDensity,
+                          vertical: VisualDensity.minimumDensity,
+                        ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(extraProduct[i].name!),
+                            Text(
+                                "+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
+                          ],
+                        ),
+
+                        value: model.isExtraExist(extraProduct[i]),
+                        selected: model.isExtraExist(extraProduct[i]),
+                        onChanged: (value) {
+                          model.addOrRemoveExtra(extraProduct[i]);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              );
+            }).toList()),
+      ),
     );
   }
 
@@ -328,65 +330,6 @@ class _ProductDialogState extends State<ProductDialog> {
               onChanged: (value) {
                 model.setNotes(value);
               },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Ghi chú nhanh nếu có",
-                style: Get.textTheme.titleSmall,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      child: ListView.builder(
-                        itemCount: sugarNoteEnums.length,
-                        itemBuilder: (context, i) {
-                          return RadioListTile(
-                            // dense: true,
-                            visualDensity: VisualDensity(
-                              horizontal: VisualDensity.minimumDensity,
-                              vertical: VisualDensity.minimumDensity,
-                            ),
-                            title: Text(" ${sugarNoteEnums[i]}"),
-                            value: sugarNoteEnums[i],
-                            groupValue: selectedSugarNote,
-                            selected: selectedSugarNote == sugarNoteEnums[i],
-                            onChanged: (value) {
-                              model.addSugarNotes(sugarNoteEnums[i]);
-                              setSelectedSugar(value!);
-                              // setSelectedRadio(value!);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: iceNoteEnums.length,
-                      itemBuilder: (context, i) {
-                        return RadioListTile(
-                          // dense: true,
-                          visualDensity: VisualDensity(
-                            horizontal: VisualDensity.minimumDensity,
-                            vertical: VisualDensity.minimumDensity,
-                          ),
-                          title: Text(" ${iceNoteEnums[i]}"),
-                          value: iceNoteEnums[i],
-                          groupValue: selectedIceNote,
-                          onChanged: (value) {
-                            model.addIceNotes(iceNoteEnums[i]);
-                            setSelectedIce(value!);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ));

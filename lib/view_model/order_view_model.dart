@@ -9,11 +9,14 @@ import 'package:pos_apps/routes/route_helper.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:pos_apps/widgets/cart/choose_table_dialog.dart';
 
 import '../data/api/order_api.dart';
+import '../data/api/payment_data.dart';
 import '../data/model/index.dart';
+import '../data/model/payment.dart';
 import '../routes/routes_constrants.dart';
 
 class OrderViewModel extends BaseViewModel {
@@ -21,33 +24,30 @@ class OrderViewModel extends BaseViewModel {
   String deliveryType = DeliType.EAT_IN;
   Cart? currentCart;
   late OrderAPI api = OrderAPI();
+  String? orderResponseId;
   OrderResponseModel? orderResponseModel;
   OrderStateEnum orderState = OrderStateEnum.ORDER_PRODUCT;
-  // List<Payment> paymentList = [
-  //   Payment(
-  //       id: "1",
-  //       paymentTypeId: "1",
-  //       paymentType: PaymentType.CASH,
-  //       isSelected: false,
-  //   Payment(
-  //       paymentId: "2",
-  //       paymentName: "Thẻ",
-  //       paymentType: PaymentType.CARD,
-  //       paymentStatus: PaymentStatus.PENDING),
-  //   Payment(
-  //       paymentId: "3",
-  //       paymentName: "Momo",
-  //       paymentType: PaymentType.MOMO,
-  //       paymentStatus: PaymentStatus.PENDING),
-  //   Payment(
-  //       paymentId: "4",
-  //       paymentName: "ZaloPay",
-  //       paymentType: PaymentType.ZALOPAY,
-  //       paymentStatus: PaymentStatus.PENDING),
-  // ];
+  List<PaymentModel?> listPayment = [];
+  PaymentModel? selectedPaymentMethod;
+  PaymentData? paymentData;
 
   OrderViewModel() {
     api = OrderAPI();
+    paymentData = PaymentData();
+  }
+
+  void getListPayment() {
+    paymentData!.getListPayment().then((value) {
+      listPayment = value;
+      selectedPaymentMethod = listPayment[0];
+      print(listPayment);
+      notifyListeners();
+    });
+  }
+
+  void selectPayment(PaymentModel payment) {
+    selectedPaymentMethod = payment;
+    notifyListeners();
   }
 
   void chooseDeliveryType(String type) {
@@ -68,51 +68,60 @@ class OrderViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> placeOrder(OrderModel order) async {
+  Future<bool> placeOrder(OrderModel order) async {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
       var res = await api.placeOrder(order, userInfo!.storeId);
-      if (Get.isDialogOpen!) {
-        Get.back();
+      orderResponseId = res.toString();
+      if (orderResponseId != null) {
+        Get.toNamed(RouteHandler.PAYMENT);
       }
       setState(ViewStatus.Completed);
-      getOrderByStore(userInfo.storeId, res.toString());
+      return true;
+      // getOrderByStore(userInfo.storeId, res.toString());
     } catch (e) {
-      showAlertDialog(title: "Lỗi tạo đơn hàng", content: e.toString());
       setState(ViewStatus.Error, e.toString());
+      orderResponseId = null;
+      return false;
     }
   }
 
-  Future<void> getOrderByStore(String storeId, String orderId) async {
-    OrderResponseModel orderRes = await api.getOrderOfStore(storeId, orderId);
-    print(orderRes.toString());
-    if (orderRes != null) {
-      orderResponseModel = orderRes;
-      Get.toNamed(RouteHandler.PAYMENT);
-    } else {
-      orderResponseModel = null;
+  Future<void> getOrderByStore() async {
+    try {
+      setState(ViewStatus.Loading);
+      if (orderResponseId == null) return;
+      Account? userInfo = await getUserInfo();
+      OrderResponseModel orderRes =
+          await api.getOrderOfStore(userInfo!.storeId, orderResponseId!);
+      if (orderRes != null) {
+        orderResponseModel = orderRes;
+      } else {
+        orderResponseModel = null;
+      }
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      showAlertDialog(title: "Lỗi đơn hàng", content: e.toString());
+      setState(ViewStatus.Error);
     }
-    notifyListeners();
   }
 
-  Future<void> updatePayment(
-      String orderId, String status, String payment) async {
+  Future<void> updatePayment() async {
     try {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
-      print("update order");
-      print(userInfo!.storeId);
-      print(orderId);
-      var res = api.updateOrder(userInfo!.storeId, orderId, status, payment);
-      print(res.toString());
-      getOrderByStore(userInfo.storeId, res.toString());
+      var res = api.updateOrder(userInfo!.storeId, orderResponseModel!.orderId!,
+          orderResponseModel?.orderStatus, selectedPaymentMethod?.id);
+      orderResponseId = res.toString();
+      // getOrderByStore(userInfo.storeId, res.toString());
       showAlertDialog(
           title: "Cập nhật thanh toán",
           content: "Cập nhật thanh toán thành công");
       setState(ViewStatus.Completed);
-    } catch (e) {
-      showAlertDialog(title: "Lỗi cập nhật đơn hàng", content: e.toString());
+    } catch (e, stacktrace) {
+      showAlertDialog(
+          title: "Lỗi cập nhật đơn hàng",
+          content: e.toString() + stacktrace.toString());
       setState(ViewStatus.Error);
     }
   }
@@ -124,10 +133,11 @@ class OrderViewModel extends BaseViewModel {
     try {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
-      print("update order");
-      print(userInfo!.storeId);
-      print(orderId);
-      api.updateOrder(userInfo.storeId, orderId, OrderStatusEnum.PAID, payment);
+
+      api.updateOrder(
+          userInfo!.storeId, orderId, OrderStatusEnum.PAID, payment);
+      Get.find<NetworkPrinterViewModel>().printBill(orderResponseModel!);
+      clearOrder();
       Get.offAndToNamed(RouteHandler.HOME);
       showAlertDialog(
           title: "Hoàn thành đơn hàng",
@@ -147,11 +157,9 @@ class OrderViewModel extends BaseViewModel {
     try {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
-      print("update order");
-      print(userInfo!.storeId);
-      print(orderId);
       api.updateOrder(
-          userInfo.storeId, orderId, OrderStatusEnum.CANCELED, payment);
+          userInfo!.storeId, orderId, OrderStatusEnum.CANCELED, payment);
+      clearOrder();
       Get.offAndToNamed(RouteHandler.HOME);
       showAlertDialog(
           title: "Huỷ đơn hàng", content: "Huỷ đơn hàng thành công");
@@ -160,6 +168,12 @@ class OrderViewModel extends BaseViewModel {
       showAlertDialog(title: "Lỗi huỷ đơn hàng", content: e.toString());
       setState(ViewStatus.Error);
     }
+  }
+
+  void clearOrder() {
+    orderResponseId = null;
+    orderResponseModel = null;
+    notifyListeners();
   }
 
   // void addProductToCart(Product product)  {

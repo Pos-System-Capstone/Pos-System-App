@@ -317,7 +317,7 @@ class _CartScreenState extends State<CartScreen> {
                       Expanded(
                         flex: 6,
                         child: Text(
-                          item.extras![i].name!,
+                          "+${item.extras![i].name!}",
                           style: Get.textTheme.bodySmall,
                         ),
                       ),

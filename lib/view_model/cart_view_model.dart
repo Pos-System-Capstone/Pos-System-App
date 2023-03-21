@@ -62,7 +62,6 @@ class CartViewModel extends BaseViewModel {
     _cartList.add(cartModel);
     countCartAmount();
     countCartQuantity();
-    print(_cartList.length);
     notifyListeners();
   }
 
@@ -70,7 +69,6 @@ class CartViewModel extends BaseViewModel {
     _cartList[cartIndex] = cartModel;
     countCartAmount();
     countCartQuantity();
-    print(_cartList.length);
     notifyListeners();
   }
 
@@ -123,7 +121,7 @@ class CartViewModel extends BaseViewModel {
     return cartItem;
   }
 
-  void createOrder() {
+  Future<void> createOrder() async {
     String deliType = Get.find<OrderViewModel>().deliveryType;
     List<ProductInOrder> productList = <ProductInOrder>[];
     List<ExtraInOrder> extraList = <ExtraInOrder>[];
@@ -139,7 +137,7 @@ class CartViewModel extends BaseViewModel {
       ProductInOrder product = ProductInOrder(
         productInMenuId: cart.product.menuProductId,
         quantity: cart.quantity,
-        sellingPrice: cart.totalAmount,
+        sellingPrice: cart.product.sellingPrice,
         note: cart.note,
         extras: extraList,
       );
@@ -153,7 +151,6 @@ class CartViewModel extends BaseViewModel {
       discountAmount: _discountAmount,
       finalAmount: _finalAmount,
     );
-    print(order.toJson());
     Get.find<OrderViewModel>().placeOrder(order);
     Get.isDialogOpen ?? Get.back();
     clearCartData();

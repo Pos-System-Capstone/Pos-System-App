@@ -91,13 +91,13 @@ Widget deliveryOptionButton(
     String title, IconData icon, Function() onTap, bool isSelected) {
   return InkWell(
     onTap: onTap,
-    child: SizedBox(
-      width: 120,
-      height: 120,
-      child: Card(
-        color: isSelected
-            ? Get.theme.colorScheme.primaryContainer
-            : Get.theme.colorScheme.background,
+    child: Card(
+      color: isSelected
+          ? Get.theme.colorScheme.primaryContainer
+          : Get.theme.colorScheme.background,
+      child: SizedBox(
+        width: 120,
+        height: 120,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
