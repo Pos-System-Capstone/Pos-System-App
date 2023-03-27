@@ -14,6 +14,7 @@ class OrderAPI {
     print(dataJson);
     final res = await request.post('stores/$storeId/orders', data: dataJson);
     var jsonList = res.data;
+    print(jsonList);
     return jsonList;
   }
 
@@ -29,15 +30,15 @@ class OrderAPI {
     String storeId,
     String orderId,
     String? status,
-    String? paymentType,
+    String? paymentId,
   ) async {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
-    data['payment'] = paymentType;
+    data['paymentId'] = paymentId;
     print(data);
     final res =
         await request.put('stores/$storeId/orders/$orderId', data: data);
-    var jsonList = res.data;
-    return jsonList;
+    var json = res.data;
+    return json;
   }
 }

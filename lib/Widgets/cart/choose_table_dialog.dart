@@ -45,9 +45,6 @@ void chooseTableDialog() {
                   child: Center(
                     child: SingleChildScrollView(
                       child: Wrap(
-                        // mainAxisSpacing: isPortrait ? 2 : 8,
-                        // crossAxisSpacing: isPortrait ? 2 : 8,
-                        // crossAxisCount: isPortrait ? 4 : 8,
                         children: [
                           for (int i = 1; i <= numberOfTable; i++)
                             InkWell(
@@ -58,9 +55,9 @@ void chooseTableDialog() {
                                 color: model.selectedTable == i
                                     ? Get.theme.colorScheme.primaryContainer
                                     : Get.theme.colorScheme.background,
-                                child: Container(
-                                  width: 80,
-                                  height: 80,
+                                child: SizedBox(
+                                  width: 120,
+                                  height: 120,
                                   child: Center(
                                     child: Text(
                                       i < 10 ? '0$i' : '$i',

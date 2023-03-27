@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "904970774154",
+    "firebase_url": "https://pos-system-47f93-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "pos-system-47f93",
+    "storage_bucket": "pos-system-47f93.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904970774154:android:daa359228e416245d56f73",
+        "android_client_info": {
+          "package_name": "com.example.pos_web_payment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904970774154-dduqfcpjmupeert2vcijjne8413ip9lm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi7bzpU4d2mA9mns_91IveIItDd2sEjHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904970774154-dduqfcpjmupeert2vcijjne8413ip9lm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "904970774154-g2sou9vvjjtacj7u4maevhfk7etgomr3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.posWebPayment"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904970774154:android:8a79327102eeb289d56f73",
+        "android_client_info": {
+          "package_name": "com.reso.pos_apps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904970774154-dduqfcpjmupeert2vcijjne8413ip9lm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDi7bzpU4d2mA9mns_91IveIItDd2sEjHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904970774154-dduqfcpjmupeert2vcijjne8413ip9lm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "904970774154-g2sou9vvjjtacj7u4maevhfk7etgomr3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.posWebPayment"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -46,3 +46,8 @@ List<String> iceNoteEnums = [
   IceNoteEnums.ICE_70,
   IceNoteEnums.ICE_100,
 ];
+
+class CategoryTypeEnum {
+  static const String Normal = 'Normal';
+  static const String Extra = 'Extra';
+}

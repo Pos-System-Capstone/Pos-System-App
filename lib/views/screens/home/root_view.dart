@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
-import 'package:pos_apps/views/home.dart';
+import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:pos_apps/widgets/cart/cart_dialog.dart';
@@ -11,7 +11,8 @@ import 'package:pos_apps/widgets/header_footer/header.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:io' show Platform;
 
-import '../Views/setting.dart';
+import '../../../Views/setting.dart';
+import 'home.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -24,10 +25,10 @@ class _RootScreenState extends State<RootScreen> {
   List<Widget> views = [
     HomeScreen(),
     SettingsScreen(),
-    Center(
-      child: Text('Lish su'),
-    ),
-    ProfileScreen()
+    // Center(
+    //   child: Text('Lish su'),
+    // ),
+    // ProfileScreen()
   ];
   List<BottomNavigationBarItem> items = const [
     BottomNavigationBarItem(
@@ -40,16 +41,16 @@ class _RootScreenState extends State<RootScreen> {
       activeIcon: Icon(Icons.settings_outlined),
       label: 'Thiết lập',
     ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.history),
-      activeIcon: Icon(Icons.settings_outlined),
-      label: 'Lịch sử',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.account_circle),
-      activeIcon: Icon(Icons.account_circle_outlined),
-      label: 'Tài khoản',
-    ),
+    // BottomNavigationBarItem(
+    //   icon: Icon(Icons.history),
+    //   activeIcon: Icon(Icons.settings_outlined),
+    //   label: 'Lịch sử',
+    // ),
+    // BottomNavigationBarItem(
+    //   icon: Icon(Icons.account_circle),
+    //   activeIcon: Icon(Icons.account_circle_outlined),
+    //   label: 'Tài khoản',
+    // ),
   ];
   List<NavigationRailDestination> destinations = const [
     NavigationRailDestination(
@@ -62,16 +63,16 @@ class _RootScreenState extends State<RootScreen> {
       selectedIcon: Icon(Icons.settings_outlined),
       label: Text('Thiết lập'),
     ),
-    NavigationRailDestination(
-      icon: Icon(Icons.history),
-      selectedIcon: Icon(Icons.history_outlined),
-      label: Text('Đơn hàng'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.account_circle),
-      selectedIcon: Icon(Icons.account_circle_outlined),
-      label: Text('Tài khoản'),
-    ),
+    // NavigationRailDestination(
+    //   icon: Icon(Icons.history),
+    //   selectedIcon: Icon(Icons.history_outlined),
+    //   label: Text('Đơn hàng'),
+    // ),
+    // NavigationRailDestination(
+    //   icon: Icon(Icons.account_circle),
+    //   selectedIcon: Icon(Icons.account_circle_outlined),
+    //   label: Text('Tài khoản'),
+    // ),
   ];
   int _selectedIndex = 0;
   @override
@@ -161,6 +162,25 @@ class _RootScreenState extends State<RootScreen> {
                   children: [
                     IconButton(
                       alignment: Alignment.bottomCenter,
+                      tooltip: "Cập nhật dữ liệu thực đơn",
+                      onPressed: () =>
+                          Get.find<MenuViewModel>().getMenuOfStore(),
+                      icon: Icon(
+                        Icons.update,
+                        size: 32,
+                      ),
+                    ),
+                    Text(
+                      "Cập nhật ",
+                    ),
+                    Text(
+                      "Menu ",
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    IconButton(
+                      alignment: Alignment.bottomCenter,
                       tooltip: "Đăng xuất",
                       onPressed: () => Get.find<LoginViewModel>().logout(),
                       icon: Icon(
@@ -172,30 +192,6 @@ class _RootScreenState extends State<RootScreen> {
                     SizedBox(
                       height: 16,
                     ),
-                    IconButton(
-                      alignment: Alignment.bottomCenter,
-                      tooltip: "Thoát",
-                      onPressed: () {
-                        Future<bool> res = showConfirmDialog(
-                          title: "Thoát ứng dụng",
-                          content: "Bạn có muốn thoát ứng dụng không?",
-                          confirmText: "Thoát",
-                        );
-                        res.then((value) {
-                          if (value) {
-                            Get.close(0);
-                          }
-                        });
-                      },
-                      icon: Icon(
-                        Icons.close_outlined,
-                        size: 32,
-                      ),
-                    ),
-                    Text("Thoát"),
-                    SizedBox(
-                      height: 16,
-                    )
                   ],
                 ),
               ),

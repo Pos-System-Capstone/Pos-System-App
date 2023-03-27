@@ -108,23 +108,23 @@ class _BillScreenState extends State<BillScreen> {
                             ],
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        //   child: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     crossAxisAlignment: CrossAxisAlignment.center,
-                        //     children: [
-                        //       Text(
-                        //         'Thanh toán',
-                        //         style: Get.textTheme.bodyMedium,
-                        //       ),
-                        //       Text(
-                        //         model.orderResponseModel!.payment!.paymentType!,
-                        //         style: Get.textTheme.bodyMedium,
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Thanh toán',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                model.orderResponseModel!.payment!.name!,
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                           child: Row(
@@ -359,8 +359,8 @@ class _BillScreenState extends State<BillScreen> {
                                     content: 'Xác nhận hoàn thành đơn hàng');
                                 if (result) {
                                   model.completeOrder(
-                                      model.orderResponseModel!.orderId!,
-                                      'CASH');
+                                    model.orderResponseModel!.orderId!,
+                                  );
                                 }
                               },
                               icon: Icon(Icons.check),

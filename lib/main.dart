@@ -1,39 +1,38 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/theme/app_theme.dart';
-import 'package:pos_apps/theme/theme_color.dart';
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
-import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/theme_view_model.dart';
 import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/order_process/payment.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-import 'routes/route_helper.dart';
+import 'firebase_options.dart';
 import 'routes/routes_constrants.dart';
 import 'setup.dart';
-import 'views/home.dart';
+import 'views/screens/home/home.dart';
 import 'views/login_screen/login_by_mobile_pos.dart';
-import 'views/not_found_screen.dart';
 import 'views/onboard.dart';
-import 'views/root_view.dart';
+import 'views/screens/home/root_view.dart';
 import 'views/startup.dart';
 
 void main() async {
   if (!GetPlatform.isWeb) {
     HttpOverrides.global = MyHttpOverrides();
   }
-  setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
-  // await deleteUserInfo();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  setPathUrlStrategy();
+  await deleteUserInfo();
   createRouteBindings();
   runApp(MyApp());
 }

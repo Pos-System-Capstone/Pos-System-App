@@ -72,6 +72,7 @@ class OrderViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
+      order.paymentId = listPayment[0]!.id;
       var res = await api.placeOrder(order, userInfo!.storeId);
       orderResponseId = res.toString();
       if (orderResponseId != null) {
@@ -96,6 +97,8 @@ class OrderViewModel extends BaseViewModel {
           await api.getOrderOfStore(userInfo!.storeId, orderResponseId!);
       if (orderRes != null) {
         orderResponseModel = orderRes;
+        selectedPaymentMethod = listPayment
+            .firstWhere((element) => element!.id == orderRes.payment!.id!);
       } else {
         orderResponseModel = null;
       }
@@ -110,13 +113,20 @@ class OrderViewModel extends BaseViewModel {
     try {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
-      var res = api.updateOrder(userInfo!.storeId, orderResponseModel!.orderId!,
-          orderResponseModel?.orderStatus, selectedPaymentMethod?.id);
-      orderResponseId = res.toString();
-      // getOrderByStore(userInfo.storeId, res.toString());
-      showAlertDialog(
-          title: "Cập nhật thanh toán",
-          content: "Cập nhật thanh toán thành công");
+      var orderRes = await api.updateOrder(
+          userInfo!.storeId,
+          orderResponseModel!.orderId!,
+          orderResponseModel?.orderStatus,
+          selectedPaymentMethod?.id);
+      orderResponseId = orderRes;
+      if (orderResponseId != null) {
+        getOrderByStore();
+        showAlertDialog(
+            title: "Cập nhật thanh toán",
+            content: "Cập nhật thanh toán thành công");
+      } else {
+        orderResponseModel = null;
+      }
       setState(ViewStatus.Completed);
     } catch (e, stacktrace) {
       showAlertDialog(
@@ -128,14 +138,13 @@ class OrderViewModel extends BaseViewModel {
 
   Future<void> completeOrder(
     String orderId,
-    String payment,
   ) async {
     try {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
 
-      api.updateOrder(
-          userInfo!.storeId, orderId, OrderStatusEnum.PAID, payment);
+      api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
+          selectedPaymentMethod!.id);
       Get.find<NetworkPrinterViewModel>().printBill(orderResponseModel!);
       clearOrder();
       Get.offAndToNamed(RouteHandler.HOME);
@@ -157,8 +166,8 @@ class OrderViewModel extends BaseViewModel {
     try {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
-      api.updateOrder(
-          userInfo!.storeId, orderId, OrderStatusEnum.CANCELED, payment);
+      api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.CANCELED,
+          orderResponseModel?.payment!.id!);
       clearOrder();
       Get.offAndToNamed(RouteHandler.HOME);
       showAlertDialog(

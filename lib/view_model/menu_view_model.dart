@@ -11,6 +11,7 @@ class MenuViewModel extends BaseViewModel {
   late Menu? currentMenu;
   MenuData? menuData;
   List<Product>? normalProducts = [];
+  List<Category>? categories = [];
   List<Product>? extraProducts = [];
   List<Product>? childProducts = [];
   List<Product>? productsFilter = [];
@@ -23,6 +24,9 @@ class MenuViewModel extends BaseViewModel {
   Future<void> getMenuOfStore() async {
     setState(ViewStatus.Loading);
     currentMenu = await menuData?.getMenuOfStore();
+    categories = currentMenu?.categories!
+        .where((element) => element.type == CategoryTypeEnum.Normal)
+        .toList();
     normalProducts = currentMenu?.products!
         .where((element) =>
             element.type == ProductTypeEnum.SINGLE ||

@@ -144,7 +144,6 @@ class CartViewModel extends BaseViewModel {
       productList.add(product);
     }
     OrderModel order = OrderModel(
-      payment: "CASH",
       orderType: deliType,
       productsList: productList,
       totalAmount: _totalAmount,

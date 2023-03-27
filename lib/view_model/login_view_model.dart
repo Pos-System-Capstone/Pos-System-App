@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/api/index.dart';
 import '../data/model/account.dart';
 import '../routes/routes_constrants.dart';
+import '../services/realtime_database.dart';
 
 class LoginViewModel extends BaseViewModel {
   AccountData dao = AccountData();

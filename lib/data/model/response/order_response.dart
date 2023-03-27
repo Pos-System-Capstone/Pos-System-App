@@ -1,3 +1,5 @@
+import 'package:pos_apps/data/model/payment.dart';
+
 class OrderResponseModel {
   String? orderId;
   String? invoiceId;
@@ -9,7 +11,7 @@ class OrderResponseModel {
   String? orderStatus;
   String? orderType;
   String? checkInDate;
-  Payment? payment;
+  PaymentModel? payment;
   List<ProductList>? productList;
 
   OrderResponseModel(
@@ -38,7 +40,7 @@ class OrderResponseModel {
     orderType = json['orderType'];
     checkInDate = json['checkInDate'];
     payment =
-        json['payment'] != null ? Payment.fromJson(json['payment']) : null;
+        json['payment'] != null ? PaymentModel.fromJson(json['payment']) : null;
     if (json['productList'] != null) {
       productList = <ProductList>[];
       json['productList'].forEach((v) {

@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../data/model/index.dart';
+import '../enums/product_enum.dart';
 import '../util/format.dart';
 import 'cart/add_product_dialog.dart';
 
 Widget productCard(Product product, List<Product>? childProducts) {
-  if (childProducts == null) {
+  if (childProducts == null && product.type == ProductTypeEnum.PARENT) {
     return Card(
       child: Center(child: Text("Không có sản phẩm con")),
     );
@@ -14,29 +17,50 @@ Widget productCard(Product product, List<Product>? childProducts) {
   return Card(
     child: InkWell(
       onTap: () => Get.dialog(ProductDialog(product: product)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                product.name!,
-                style: Get.theme.textTheme.bodyMedium,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(product.picUrl ??
+                            "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash.png?alt=media&token=8425fef2-175d-4e26-9f74-f67644295f57"),
+                        fit: BoxFit.cover)),
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                childProducts.isNotEmpty
-                    ? "Từ ${formatPrice(childProducts[0].sellingPrice!)}"
-                    : formatPrice(product.sellingPrice!),
-                style: Get.theme.textTheme.bodyMedium,
+          ),
+          Expanded(
+            flex: 3,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      product.name!,
+                      style: Get.theme.textTheme.bodyLarge,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      (childProducts != null &&
+                              product.type == ProductTypeEnum.PARENT)
+                          ? ""
+                          : formatPrice(product.sellingPrice!),
+                      style: Get.theme.textTheme.bodyLarge,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );

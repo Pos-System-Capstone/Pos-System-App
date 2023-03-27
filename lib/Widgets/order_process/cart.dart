@@ -66,7 +66,7 @@ Widget orderProduct(bool isPortrait) {
         );
       }
       List<Tab>? listCategoryTab;
-      listCategoryTab = model.currentMenu?.categories!.map((e) {
+      listCategoryTab = model.categories!.map((e) {
         return Tab(
           height: 40,
           text: e.name,
@@ -94,7 +94,7 @@ Widget orderProduct(bool isPortrait) {
                     model.handleChangeFilterProductByCategory(null);
                   } else {
                     model.handleChangeFilterProductByCategory(
-                        model.currentMenu?.categories![value - 1].id);
+                        model.categories![value - 1].id);
                   }
                 },
               ),
@@ -103,15 +103,16 @@ Widget orderProduct(bool isPortrait) {
                       scrollDirection: Axis.vertical,
                       mainAxisSpacing: 2,
                       crossAxisSpacing: 2,
+                      childAspectRatio: 2,
                       crossAxisCount: ResponsiveHelper.isDesktop()
-                          ? 6
+                          ? 3
                           : ResponsiveHelper.isTab()
-                              ? 5
+                              ? 2
                               : ResponsiveHelper.isSmallTab()
-                                  ? 4
+                                  ? 2
                                   : ResponsiveHelper.isMobile()
-                                      ? 3
-                                      : 2,
+                                      ? 1
+                                      : 1,
                       children: [
                     for (int i = 0; i < model.productsFilter!.length; i++)
                       productCard(

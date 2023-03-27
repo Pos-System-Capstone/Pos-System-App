@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/views/home.dart';
 import 'package:pos_apps/views/login_screen/login_by_mobile_pos.dart';
 import 'package:pos_apps/views/startup.dart';
 import 'package:pos_apps/widgets/order_process/payment.dart';
 
-import '../Views/root_view.dart';
-import '../helper/responsive_helper.dart';
+import '../views/screens/home/root_view.dart';
 
 class RouteHelper {
   static const String initial = '/';

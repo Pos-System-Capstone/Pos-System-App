@@ -90,15 +90,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Máy in wifi',
+                            Text('Máy in hoá đơn wifi',
                                 style: Get.textTheme.titleMedium),
                             Get.find<NetworkPrinterViewModel>()
                                         .selectedDevice !=
                                     null
                                 ? Text(
-                                    '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
+                                    'Máy in hoá đơn:${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
                                   )
-                                : Text("Chưa kết nối thiết bị"),
+                                : Text("Máy in hoá đơn: Chưa kết nối thiết bị"),
+                            Text("Máy in cho bếp: Chưa kết nối thiết bị")
                           ],
                         ),
                         OutlinedButton(
@@ -120,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Tìm toàn bộ máy in',
+                            Text('Máy in USB',
                                 style: Get.textTheme.titleMedium),
                             // Get.find<NetworkPrinterViewModel>()
                             //             .selectedDevice !=

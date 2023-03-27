@@ -81,7 +81,7 @@ class CustomInterceptors extends Interceptor {
 class MyRequest {
   static BaseOptions options = BaseOptions(
       // baseUrl: 'https://api.pos-tech.systems/api/v1/',
-      baseUrl: 'http://120.72.85.82/api/v1/',
+      baseUrl: 'https://admin.reso.vn/api/v1/',
       headers: {
         Headers.contentTypeHeader: "application/json",
         Headers.acceptHeader: "text/plain"
