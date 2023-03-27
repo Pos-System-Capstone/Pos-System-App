@@ -28,9 +28,9 @@ void main() async {
     HttpOverrides.global = MyHttpOverrides();
   }
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   setPathUrlStrategy();
   await deleteUserInfo();
   createRouteBindings();
