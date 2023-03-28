@@ -77,6 +77,18 @@ class PrinterViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void deleteBillPrinter() {
+    selectedBillPrinter = null;
+    deleteBillPrinter();
+    notifyListeners();
+  }
+
+  void deleteProductPrinter() {
+    selectedProductPrinter = null;
+    deleteProductPrinter();
+    notifyListeners();
+  }
+
   void testPrinter(Printer printer) {
     Printing.directPrintPdf(
         printer: printer,

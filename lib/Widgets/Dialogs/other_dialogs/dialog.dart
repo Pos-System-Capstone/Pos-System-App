@@ -173,7 +173,7 @@ Future<bool> showConfirmDialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: Container(
-      width: Get.size.width * 0.3,
+      width: Get.size.width * 0.5,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.background,

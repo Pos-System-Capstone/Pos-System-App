@@ -56,7 +56,8 @@ void showInputIpDialog() {
                               SizedBox(width: 8),
                               model.isPrinterConnected(model.listDevice![index])
                                   ? TextButton(
-                                      onPressed: () => null, child: Text("Xoá"))
+                                      onPressed: () => model.deleteBillPrinter,
+                                      child: Text("Xoá in bill"))
                                   : FilledButton(
                                       onPressed: () => model.selectBillPrinter(
                                             model.listDevice![index],
@@ -65,7 +66,9 @@ void showInputIpDialog() {
                               SizedBox(width: 8),
                               model.isPrinterConnected(model.listDevice![index])
                                   ? TextButton(
-                                      onPressed: () => null, child: Text("Xoá"))
+                                      onPressed: () =>
+                                          model.deleteProductPrinter(),
+                                      child: Text("Xóa in tem"))
                                   : FilledButton(
                                       onPressed: () =>
                                           model.selectProductPrinter(

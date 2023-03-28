@@ -139,7 +139,12 @@ Future<String?> getProductPrinter() async {
   return prefs.getString("productPrinter");
 }
 
-Future<void> deletePrinterDeviceIP() async {
+Future<void> deleteBillPrinter() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.remove("billPrinter");
+}
+
+Future<void> deleteProductPrinter() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove("productPrinter");
 }

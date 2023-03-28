@@ -13,7 +13,6 @@ import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/order_process/payment.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_strategy/url_strategy.dart';
-import 'package:window_manager/window_manager.dart';
 import 'firebase_options.dart';
 import 'routes/routes_constrants.dart';
 import 'setup.dart';
@@ -27,9 +26,6 @@ void main() async {
     HttpOverrides.global = MyHttpOverrides();
   }
   WidgetsFlutterBinding.ensureInitialized();
-  if (GetPlatform.isWindows) {
-    await WindowManager.instance.setTitleBarStyle(TitleBarStyle.normal);
-  }
   await deleteUserInfo();
   createRouteBindings();
   runApp(MyApp());

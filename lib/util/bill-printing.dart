@@ -20,7 +20,10 @@ Future<Uint8List> generateBillInvoice(
               children: [
                 pw.Text("DEER COFFEE",
                     textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 14)),
+                    style: pw.TextStyle(
+                        font: font,
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 16),
                 pw.Text("S202 Vinhome GrandPark, TP Thu Duc, HCM",
                     textAlign: pw.TextAlign.center,

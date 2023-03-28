@@ -6,7 +6,6 @@ import 'package:pos_apps/routes/routes_constrants.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/widgets/header_footer/header.dart';
-import 'dart:io' show Platform;
 import '../../data/api/index.dart';
 import '../../data/model/account.dart';
 import '../../view_model/menu_view_model.dart';

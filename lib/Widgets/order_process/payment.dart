@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/enums/product_enum.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/widgets/cart/add_product_dialog.dart';
@@ -38,6 +39,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         model: Get.find<OrderViewModel>(),
         child: ScopedModelDescendant<OrderViewModel>(
           builder: (context, child, model) {
+            if (model.status == ViewStatus.Loading) {
+              return Center(child: CircularProgressIndicator());
+            }
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Get.context!.isPortrait

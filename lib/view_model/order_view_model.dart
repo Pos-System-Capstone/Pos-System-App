@@ -13,6 +13,7 @@ import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:pos_apps/widgets/cart/choose_table_dialog.dart';
 
+import '../Widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 import '../data/api/order_api.dart';
 import '../data/api/payment_data.dart';
 import '../data/model/index.dart';
@@ -143,16 +144,31 @@ class OrderViewModel extends BaseViewModel {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
 
-      api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
-          selectedPaymentMethod!.id);
-      Get.find<PrinterViewModel>().printBill(orderResponseModel!);
-      clearOrder();
-      Get.offAndToNamed(RouteHandler.HOME);
-      showAlertDialog(
-          title: "Hoàn thành đơn hàng",
-          content: "Hoàn thành đơn hàng thành công");
-
-      setState(ViewStatus.Completed);
+      if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
+        Get.find<PrinterViewModel>().printBill(orderResponseModel!);
+        setState(ViewStatus.Completed);
+      } else {
+        bool result = await showConfirmDialog(
+          title: "Lỗi in hóa đơn",
+          content: "Vui lòng chọn máy in hóa đơn",
+          confirmText: "Tiếp tục hoàn thành đơn hàng",
+          cancelText: "Chọn máy in",
+        );
+        if (!result) {
+          showInputIpDialog();
+          setState(ViewStatus.Completed);
+          return;
+        } else {
+          api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
+              selectedPaymentMethod!.id);
+          setState(ViewStatus.Completed);
+          clearOrder();
+          Get.offAndToNamed(RouteHandler.HOME);
+          showAlertDialog(
+              title: "Hoàn thành đơn hàng",
+              content: "Hoàn thành đơn hàng thành công");
+        }
+      }
     } catch (e) {
       showAlertDialog(title: "Lỗi hoàn thành đơn hàng", content: e.toString());
       setState(ViewStatus.Error);
