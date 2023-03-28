@@ -15,5 +15,5 @@ void createRouteBindings() async {
   Get.put(MenuViewModel());
   Get.put(CartViewModel());
   Get.put(OrderViewModel());
-  Get.put(NetworkPrinterViewModel());
+  Get.put(PrinterViewModel());
 }

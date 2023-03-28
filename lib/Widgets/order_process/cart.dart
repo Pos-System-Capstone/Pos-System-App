@@ -68,26 +68,26 @@ Widget orderProduct(bool isPortrait) {
       List<Tab>? listCategoryTab;
       listCategoryTab = model.categories!.map((e) {
         return Tab(
-          height: 40,
-          text: e.name,
+          height: 48,
+          child: Text(e.name ?? '', style: Get.textTheme.titleLarge),
         );
       }).toList();
-      listCategoryTab?.insert(
+      listCategoryTab.insert(
           0,
           Tab(
-            height: 40,
-            text: "Tất cả",
+            height: 48,
+            child: Text("Tất cả", style: Get.textTheme.titleLarge),
           ));
       return Padding(
         padding: const EdgeInsets.all(4),
         child: DefaultTabController(
-          length: listCategoryTab != null ? listCategoryTab.length : 0,
+          length: listCategoryTab.length,
           child: Column(
             children: [
               TabBar(
                 isScrollable: true,
                 indicatorColor: Get.theme.colorScheme.primary,
-                tabs: listCategoryTab!,
+                tabs: listCategoryTab,
                 onTap: (value) {
                   debugPrint("value: $value");
                   if (value == 0) {
@@ -99,30 +99,33 @@ Widget orderProduct(bool isPortrait) {
                 },
               ),
               Expanded(
-                  child: GridView.count(
-                      scrollDirection: Axis.vertical,
-                      mainAxisSpacing: 2,
-                      crossAxisSpacing: 2,
-                      childAspectRatio: 2,
-                      crossAxisCount: ResponsiveHelper.isDesktop()
-                          ? 3
-                          : ResponsiveHelper.isTab()
-                              ? 2
-                              : ResponsiveHelper.isSmallTab()
-                                  ? 2
-                                  : ResponsiveHelper.isMobile()
-                                      ? 1
-                                      : 1,
-                      children: [
-                    for (int i = 0; i < model.productsFilter!.length; i++)
-                      productCard(
-                          model.productsFilter![i],
-                          model.productsFilter![i].type ==
-                                  ProductTypeEnum.PARENT
-                              ? model.getChildProductByParentProduct(
-                                  model.productsFilter![i].id)
-                              : null)
-                  ]))
+                  child: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: GridView.count(
+                    scrollDirection: Axis.vertical,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 2,
+                    childAspectRatio: 2,
+                    crossAxisCount: ResponsiveHelper.isDesktop()
+                        ? 3
+                        : ResponsiveHelper.isTab()
+                            ? 2
+                            : ResponsiveHelper.isSmallTab()
+                                ? 2
+                                : ResponsiveHelper.isMobile()
+                                    ? 1
+                                    : 1,
+                    children: [
+                      for (int i = 0; i < model.productsFilter!.length; i++)
+                        productCard(
+                            model.productsFilter![i],
+                            model.productsFilter![i].type ==
+                                    ProductTypeEnum.PARENT
+                                ? model.getChildProductByParentProduct(
+                                    model.productsFilter![i].id)
+                                : null)
+                    ]),
+              ))
             ],
           ),
         ),

@@ -6,7 +6,6 @@ import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../theme/theme_color.dart';
 import '../util/share_pref.dart';
-import '../widgets/Dialogs/printer_dialogs/add_any_printer_dialog.dart';
 import '../widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -92,11 +91,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           children: [
                             Text('Máy in hoá đơn wifi',
                                 style: Get.textTheme.titleMedium),
-                            Get.find<NetworkPrinterViewModel>()
-                                        .selectedDevice !=
+                            Get.find<PrinterViewModel>().selectedBillPrinter !=
                                     null
                                 ? Text(
-                                    'Máy in hoá đơn:${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
+                                    'Máy in hoá đơn: ${Get.find<PrinterViewModel>().selectedBillPrinter!.name}',
                                   )
                                 : Text("Máy in hoá đơn: Chưa kết nối thiết bị"),
                             Text("Máy in cho bếp: Chưa kết nối thiết bị")
@@ -104,36 +102,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         OutlinedButton(
                             onPressed: () => showInputIpDialog(),
-                            child: Text("Tuỳ chỉnh"))
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Máy in USB',
-                                style: Get.textTheme.titleMedium),
-                            // Get.find<NetworkPrinterViewModel>()
-                            //             .selectedDevice !=
-                            //         null
-                            //     ? Text(
-                            //         '${Get.find<NetworkPrinterViewModel>().selectedDevice}:${Get.find<NetworkPrinterViewModel>().selectedPort.toString()}',
-                            //       )
-                            //     : Text("Chưa kết nối thiết bị"),
-                          ],
-                        ),
-                        OutlinedButton(
-                            onPressed: () => showAddPrinterDialog(),
                             child: Text("Tuỳ chỉnh"))
                       ],
                     ),

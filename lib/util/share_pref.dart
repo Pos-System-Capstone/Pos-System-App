@@ -119,17 +119,27 @@ Future<int?> getTableNumber() async {
   return number;
 }
 
-Future<bool> setPrinterDeviceIP(String ip) async {
+Future<bool> setBillPrinter(String url) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.setString("printer", ip);
+  return prefs.setString("billPrinter", url);
 }
 
-Future<String?> getPrinterDeviceIP() async {
+Future<String?> getBillPrinter() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString("printer");
+  return prefs.getString("billPrinter");
+}
+
+Future<bool> setProductPrinter(String url) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setString("productPrinter", url);
+}
+
+Future<String?> getProductPrinter() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString("productPrinter");
 }
 
 Future<void> deletePrinterDeviceIP() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove("printer");
+  await prefs.remove("billPrinter");
 }

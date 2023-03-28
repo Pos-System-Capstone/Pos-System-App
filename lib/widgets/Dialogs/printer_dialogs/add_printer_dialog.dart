@@ -11,13 +11,9 @@ void showInputIpDialog() {
     },
     builder: (BuildContext context) {
       return ScopedModel(
-        model: Get.find<NetworkPrinterViewModel>(),
-        child: ScopedModelDescendant<NetworkPrinterViewModel>(
+        model: Get.find<PrinterViewModel>(),
+        child: ScopedModelDescendant<PrinterViewModel>(
             builder: (context, child, model) {
-          TextEditingController portController =
-              TextEditingController(text: '9100');
-          TextEditingController ipController =
-              TextEditingController(text: '192.168.31.1');
           return Column(
             children: [
               Padding(
@@ -27,76 +23,19 @@ void showInputIpDialog() {
                   style: Get.textTheme.titleLarge,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "IP:",
-                        style: Get.textTheme.titleMedium,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: ipController,
-                        decoration: InputDecoration(
-                          labelText: 'Ip',
-                          hintText: '192.168.31.1',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Port:",
-                        style: Get.textTheme.titleMedium,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: portController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Port',
-                          hintText: '9100',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              Text('Ip: ${Get.find<NetworkPrinterViewModel>().selectedIp}',
-                  style: TextStyle(fontSize: 16)),
-              SizedBox(height: 15),
               FilledButton(
-                  onPressed: () =>
-                      model.discover(ipController.text, portController.text),
+                  onPressed: () => model.scanPrinter(),
                   child: model.status == ViewStatus.Loading
                       ? Text('Dang tìm kiếm...')
                       : Text('Tìm kiếm')),
               SizedBox(height: 15),
               Text(
-                'Tìm thấy: ${model.devices.length} thiết bị',
+                'Tìm thấy: ${model.listDevice?.length} thiết bị',
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: model.devices.length,
+                  itemCount:
+                      model.listDevice != null ? model.listDevice!.length : 0,
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
@@ -106,28 +45,27 @@ void showInputIpDialog() {
                           alignment: Alignment.centerLeft,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
+                            children: [
                               Icon(Icons.print),
                               SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  model.devices[index],
+                                  model.listDevice![index].name,
                                 ),
                               ),
                               SizedBox(width: 8),
-                              model.isDeviceSaved(model.devices[index])
+                              model.isPrinterConnected(model.listDevice![index])
                                   ? TextButton(
-                                      onPressed: () => model.deletePrinter(),
-                                      child: Text("Xoá"))
+                                      onPressed: () => null, child: Text("Xoá"))
                                   : FilledButton(
-                                      onPressed: () => model.savePrinterDevice(
-                                            model.devices[index],
+                                      onPressed: () => model.selectBillPrinter(
+                                            model.listDevice![index],
                                           ),
                                       child: Text("Ket noi")),
                               SizedBox(width: 8),
                               OutlinedButton(
-                                  onPressed: () =>
-                                      model.testPrint(model.devices[index]),
+                                  onPressed: () => model
+                                      .testPrinter(model.listDevice![index]),
                                   child: Text("In thử"))
                             ],
                           ),

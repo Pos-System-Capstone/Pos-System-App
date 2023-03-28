@@ -145,7 +145,7 @@ class OrderViewModel extends BaseViewModel {
 
       api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
           selectedPaymentMethod!.id);
-      Get.find<NetworkPrinterViewModel>().printBill(orderResponseModel!);
+      Get.find<PrinterViewModel>().printBill(orderResponseModel!);
       clearOrder();
       Get.offAndToNamed(RouteHandler.HOME);
       showAlertDialog(

@@ -13,13 +13,12 @@ import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/order_process/payment.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_strategy/url_strategy.dart';
-
+import 'package:window_manager/window_manager.dart';
 import 'firebase_options.dart';
 import 'routes/routes_constrants.dart';
 import 'setup.dart';
 import 'views/screens/home/home.dart';
 import 'views/login_screen/login_by_mobile_pos.dart';
-import 'views/onboard.dart';
 import 'views/screens/home/root_view.dart';
 import 'views/startup.dart';
 
@@ -28,10 +27,9 @@ void main() async {
     HttpOverrides.global = MyHttpOverrides();
   }
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  setPathUrlStrategy();
+  if (GetPlatform.isWindows) {
+    await WindowManager.instance.setTitleBarStyle(TitleBarStyle.normal);
+  }
   await deleteUserInfo();
   createRouteBindings();
   runApp(MyApp());
@@ -85,10 +83,6 @@ class _MyAppState extends State<MyApp> {
                   case RouteHandler.NAV:
                     return CupertinoPageRoute(
                         builder: (context) => HomeScreen(), settings: settings);
-                  case RouteHandler.ONBOARD:
-                    return CupertinoPageRoute(
-                        builder: (context) => OnBoardScreen(),
-                        settings: settings);
                   case RouteHandler.LOADING:
                     return CupertinoPageRoute<bool>(
                         builder: (context) => LoadingScreen(
