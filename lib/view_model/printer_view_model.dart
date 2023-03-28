@@ -105,7 +105,7 @@ class PrinterViewModel extends BaseViewModel {
 
   Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
     final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-    final font = await PdfGoogleFonts.nunitoExtraLight();
+    final font = await PdfGoogleFonts.inconsolataRegular();
 
     pdf.addPage(
       pw.Page(

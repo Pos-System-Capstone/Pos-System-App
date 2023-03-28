@@ -124,8 +124,8 @@ class CartViewModel extends BaseViewModel {
   Future<void> createOrder() async {
     String deliType = Get.find<OrderViewModel>().deliveryType;
     List<ProductInOrder> productList = <ProductInOrder>[];
-    List<ExtraInOrder> extraList = <ExtraInOrder>[];
     for (CartItem cart in _cartList) {
+      List<ExtraInOrder> extraList = <ExtraInOrder>[];
       cart.extras?.forEach((element) {
         ExtraInOrder extra = ExtraInOrder(
           productInMenuId: element.menuProductId,

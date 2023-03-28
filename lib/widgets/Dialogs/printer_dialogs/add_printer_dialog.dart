@@ -61,7 +61,17 @@ void showInputIpDialog() {
                                       onPressed: () => model.selectBillPrinter(
                                             model.listDevice![index],
                                           ),
-                                      child: Text("Ket noi")),
+                                      child: Text("Ket noi in hoa don")),
+                              SizedBox(width: 8),
+                              model.isPrinterConnected(model.listDevice![index])
+                                  ? TextButton(
+                                      onPressed: () => null, child: Text("Xoá"))
+                                  : FilledButton(
+                                      onPressed: () =>
+                                          model.selectProductPrinter(
+                                            model.listDevice![index],
+                                          ),
+                                      child: Text("Ket noi in tem")),
                               SizedBox(width: 8),
                               OutlinedButton(
                                   onPressed: () => model
