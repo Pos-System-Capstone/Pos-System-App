@@ -21,6 +21,9 @@ class _BillScreenState extends State<BillScreen> {
         model: Get.find<OrderViewModel>(),
         child: ScopedModelDescendant(
             builder: (context, child, OrderViewModel model) {
+          if (model.status == ViewStatus.Loading) {
+            return Center(child: CircularProgressIndicator());
+          }
           return Container(
             decoration: BoxDecoration(
               color: Get.theme.colorScheme.onInverseSurface,

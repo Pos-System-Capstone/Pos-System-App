@@ -147,6 +147,11 @@ class OrderViewModel extends BaseViewModel {
       if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
         Get.find<PrinterViewModel>().printBill(orderResponseModel!);
         setState(ViewStatus.Completed);
+        clearOrder();
+        Get.offAndToNamed(RouteHandler.HOME);
+        showAlertDialog(
+            title: "Hoàn thành đơn hàng",
+            content: "Hoàn thành đơn hàng thành công");
       } else {
         bool result = await showConfirmDialog(
           title: "Lỗi in hóa đơn",
