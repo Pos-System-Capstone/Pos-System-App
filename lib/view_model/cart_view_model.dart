@@ -151,7 +151,6 @@ class CartViewModel extends BaseViewModel {
       finalAmount: _finalAmount,
     );
     Get.find<OrderViewModel>().placeOrder(order);
-    Get.isDialogOpen ?? Get.back();
     clearCartData();
   }
 }

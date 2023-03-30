@@ -89,10 +89,10 @@ class _MyAppState extends State<MyApp> {
                     return CupertinoPageRoute<bool>(
                         builder: (context) => StartUpView(),
                         settings: settings);
-                  case RouteHandler.PAYMENT:
-                    return CupertinoPageRoute<bool>(
-                        builder: (context) => PaymentScreen(),
-                        settings: settings);
+                  // case RouteHandler.PAYMENT:
+                  //   return CupertinoPageRoute<bool>(
+                  //       builder: (context) => PaymentScreen(),
+                  //       settings: settings);
                   default:
                     return CupertinoPageRoute(
                         builder: (context) => StartUpView(),

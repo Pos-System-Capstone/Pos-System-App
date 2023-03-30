@@ -4,9 +4,10 @@ import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pos_apps/view_model/theme_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
+import '../Widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
+import '../enums/order_enum.dart';
 import '../theme/theme_color.dart';
 import '../util/share_pref.dart';
-import '../widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -31,86 +32,117 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ScopedModelDescendant<RootViewModel>(
             builder: (context, child, model) {
           return Scaffold(
-              body: Container(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        "Cài đặt",
-                        style: Get.textTheme.titleLarge,
-                      )),
-                  themeSetting(),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('Số lượng bàn', style: Get.textTheme.titleMedium),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  model.decreaseNumberOfTabele();
-                                },
-                                icon: Icon(
-                                  Icons.remove,
-                                  size: 32,
-                                )),
-                            Text("${model.numberOfTable}",
-                                style: Get.textTheme.titleLarge),
-                            IconButton(
-                                onPressed: () {
-                                  model.increaseNumberOfTabele();
-                                },
-                                icon: Icon(
-                                  Icons.add,
-                                  size: 32,
-                                )),
-                          ],
-                        ),
-                      ],
-                    ),
+              body: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      "Cài đặt",
+                      style: Get.textTheme.titleLarge,
+                    )),
+                themeSetting(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('Số lượng bàn', style: Get.textTheme.titleMedium),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                model.decreaseNumberOfTabele();
+                              },
+                              icon: Icon(
+                                Icons.remove,
+                                size: 32,
+                              )),
+                          Text("${model.numberOfTable}",
+                              style: Get.textTheme.titleLarge),
+                          IconButton(
+                              onPressed: () {
+                                model.increaseNumberOfTabele();
+                              },
+                              icon: Icon(
+                                Icons.add,
+                                size: 32,
+                              )),
+                        ],
+                      ),
+                    ],
                   ),
-                  Divider(
-                    thickness: 1,
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Máy in hoá đơn',
+                              style: Get.textTheme.titleMedium),
+                          Get.find<PrinterViewModel>().selectedBillPrinter !=
+                                  null
+                              ? Text(
+                                  Get.find<PrinterViewModel>()
+                                      .selectedBillPrinter!
+                                      .url,
+                                )
+                              : Text("Chưa kết nối thiết bị"),
+                        ],
+                      ),
+                      OutlinedButton(
+                          onPressed: () =>
+                              showPrinterConfigDialog(PrinterTypeEnum.bill),
+                          child: Text("Tuỳ chỉnh"))
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Máy in hoá đơn wifi',
-                                style: Get.textTheme.titleMedium),
-                            Get.find<PrinterViewModel>().selectedBillPrinter !=
-                                    null
-                                ? Text(
-                                    'Máy in hoá đơn: ${Get.find<PrinterViewModel>().selectedBillPrinter!.name}',
-                                  )
-                                : Text("Máy in hoá đơn: Chưa kết nối thiết bị"),
-                            Text("Máy in cho bếp: Chưa kết nối thiết bị")
-                          ],
-                        ),
-                        OutlinedButton(
-                            onPressed: () => showInputIpDialog(),
-                            child: Text("Tuỳ chỉnh"))
-                      ],
-                    ),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Máy in tem', style: Get.textTheme.titleMedium),
+                          Get.find<PrinterViewModel>().selectedProductPrinter !=
+                                  null
+                              ? Text(
+                                  Get.find<PrinterViewModel>()
+                                      .selectedProductPrinter!
+                                      .url,
+                                )
+                              : Text(" Chưa kết nối thiết bị"),
+                        ],
+                      ),
+                      OutlinedButton(
+                          onPressed: () =>
+                              showPrinterConfigDialog(PrinterTypeEnum.stamp),
+                          child: Text("Tuỳ chỉnh"))
+                    ],
                   ),
-                  Divider(
-                    thickness: 1,
-                  ),
-                ]),
-          ));
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+              ]));
         }));
   }
 

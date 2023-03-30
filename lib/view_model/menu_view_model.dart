@@ -22,25 +22,31 @@ class MenuViewModel extends BaseViewModel {
   }
 
   Future<void> getMenuOfStore() async {
-    setState(ViewStatus.Loading);
-    currentMenu = await menuData?.getMenuOfStore();
-    categories = currentMenu?.categories!
-        .where((element) => element.type == CategoryTypeEnum.Normal)
-        .toList();
-    normalProducts = currentMenu?.products!
-        .where((element) =>
-            element.type == ProductTypeEnum.SINGLE ||
-            element.type == ProductTypeEnum.PARENT)
-        .toList();
-    extraProducts = currentMenu?.products!
-        .where((element) => element.type == ProductTypeEnum.EXTRA)
-        .toList();
-    childProducts = currentMenu?.products!
-        .where((element) => element.type == ProductTypeEnum.CHILD)
-        .toList();
-    productsFilter = normalProducts;
-    Get.find<OrderViewModel>().getListPayment();
-    setState(ViewStatus.Completed);
+    try {
+      setState(ViewStatus.Loading);
+      currentMenu = await menuData?.getMenuOfStore();
+      categories = currentMenu?.categories!
+          .where((element) => element.type == CategoryTypeEnum.Normal)
+          .toList();
+      normalProducts = currentMenu?.products!
+          .where((element) =>
+              element.type == ProductTypeEnum.SINGLE ||
+              element.type == ProductTypeEnum.PARENT)
+          .toList();
+      extraProducts = currentMenu?.products!
+          .where((element) => element.type == ProductTypeEnum.EXTRA)
+          .toList();
+      childProducts = currentMenu?.products!
+          .where((element) => element.type == ProductTypeEnum.CHILD)
+          .toList();
+      productsFilter = normalProducts;
+      Get.find<OrderViewModel>().getListPayment();
+      Get.find<OrderViewModel>().getListOrder();
+
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
   }
 
   void handleChangeFilterProductByCategory(String? categoryId) {

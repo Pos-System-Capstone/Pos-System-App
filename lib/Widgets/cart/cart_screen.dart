@@ -78,7 +78,7 @@ class _CartScreenState extends State<CartScreen> {
                             child: OutlinedButton.icon(
                               onPressed: () => chooseDeliTypeDialog(),
                               icon: Icon(
-                                Icons.delivery_dining_outlined,
+                                Icons.store_mall_directory,
                                 size: 24,
                               ),
                               label: Text(
@@ -175,7 +175,7 @@ class _CartScreenState extends State<CartScreen> {
                         children: [
                           Text('Tổng tiền', style: Get.textTheme.titleMedium),
                           Text(formatPrice(model.totalAmount),
-                              style: Get.textTheme.titleMedium),
+                              style: Get.textTheme.titleLarge),
                         ],
                       ),
                     ),
@@ -222,7 +222,7 @@ class _CartScreenState extends State<CartScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   'Thanh toán',
-                                  style: Get.textTheme.titleMedium?.copyWith(
+                                  style: Get.textTheme.titleLarge?.copyWith(
                                       color: Get.theme.colorScheme.background),
                                 ),
                               ),
@@ -262,13 +262,13 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       Text(
                         item.product.name!,
-                        style: Get.textTheme.bodyMedium,
+                        style: Get.textTheme.bodyLarge,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
                       ),
                       Text(
                         formatPrice(item.product.sellingPrice!),
-                        style: Get.textTheme.bodySmall,
+                        style: Get.textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -281,7 +281,7 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       Text(
                         "${item.quantity}",
-                        style: Get.textTheme.bodyMedium,
+                        style: Get.textTheme.bodyLarge,
                       ),
                       // Text(
                       //   "Xóa",
@@ -297,7 +297,7 @@ class _CartScreenState extends State<CartScreen> {
                     alignment: AlignmentDirectional.centerEnd,
                     child: Text(
                       formatPrice(item.totalAmount!),
-                      style: Get.textTheme.bodyMedium,
+                      style: Get.textTheme.bodyLarge,
                     ),
                   ),
                 ),
@@ -318,7 +318,7 @@ class _CartScreenState extends State<CartScreen> {
                         flex: 6,
                         child: Text(
                           "+${item.extras![i].name!}",
-                          style: Get.textTheme.bodySmall,
+                          style: Get.textTheme.bodyMedium,
                         ),
                       ),
                       Expanded(
@@ -327,7 +327,7 @@ class _CartScreenState extends State<CartScreen> {
                           alignment: AlignmentDirectional.centerEnd,
                           child: Text(
                             formatPrice(item.extras![i].sellingPrice!),
-                            style: Get.textTheme.bodySmall,
+                            style: Get.textTheme.bodyMedium,
                           ),
                         ),
                       ),
@@ -342,7 +342,7 @@ class _CartScreenState extends State<CartScreen> {
                 child: Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(item.note!,
-                      style: Get.textTheme.bodySmall,
+                      style: Get.textTheme.bodyMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ),

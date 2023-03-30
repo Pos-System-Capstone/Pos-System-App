@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/Views/screens/home/orders.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
@@ -24,10 +25,8 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   List<Widget> views = [
     HomeScreen(),
+    OrdersScreen(),
     SettingsScreen(),
-    // Center(
-    //   child: Text('Lish su'),
-    // ),
     // ProfileScreen()
   ];
   List<BottomNavigationBarItem> items = const [
@@ -37,15 +36,16 @@ class _RootScreenState extends State<RootScreen> {
       label: 'Đặt món',
     ),
     BottomNavigationBarItem(
+      icon: Icon(Icons.receipt_long),
+      activeIcon: Icon(Icons.receipt_long_outlined),
+      label: 'Đơn hàng',
+    ),
+    BottomNavigationBarItem(
       icon: Icon(Icons.settings),
       activeIcon: Icon(Icons.settings_outlined),
       label: 'Thiết lập',
     ),
-    // BottomNavigationBarItem(
-    //   icon: Icon(Icons.history),
-    //   activeIcon: Icon(Icons.settings_outlined),
-    //   label: 'Lịch sử',
-    // ),
+
     // BottomNavigationBarItem(
     //   icon: Icon(Icons.account_circle),
     //   activeIcon: Icon(Icons.account_circle_outlined),
@@ -59,15 +59,16 @@ class _RootScreenState extends State<RootScreen> {
       label: Text('Đặt món'),
     ),
     NavigationRailDestination(
+      icon: Icon(Icons.receipt_long),
+      selectedIcon: Icon(Icons.receipt_long_outlined),
+      label: Text('Đơn hàng'),
+    ),
+    NavigationRailDestination(
       icon: Icon(Icons.settings),
       selectedIcon: Icon(Icons.settings_outlined),
       label: Text('Thiết lập'),
     ),
-    // NavigationRailDestination(
-    //   icon: Icon(Icons.history),
-    //   selectedIcon: Icon(Icons.history_outlined),
-    //   label: Text('Đơn hàng'),
-    // ),
+
     // NavigationRailDestination(
     //   icon: Icon(Icons.account_circle),
     //   selectedIcon: Icon(Icons.account_circle_outlined),
@@ -75,6 +76,12 @@ class _RootScreenState extends State<RootScreen> {
     // ),
   ];
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    Get.find<MenuViewModel>().getMenuOfStore();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (context.isPortrait) {
@@ -152,13 +159,15 @@ class _RootScreenState extends State<RootScreen> {
           children: [
             NavigationRail(
               leading: Icon(
-                Icons.coffee_outlined,
+                Icons.point_of_sale_outlined,
                 size: 56,
               ),
+
               // groupAlignment: -0.5,
               trailing: Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                       alignment: Alignment.bottomCenter,
@@ -166,18 +175,20 @@ class _RootScreenState extends State<RootScreen> {
                       onPressed: () =>
                           Get.find<MenuViewModel>().getMenuOfStore(),
                       icon: Icon(
-                        Icons.update,
+                        Icons.refresh,
                         size: 32,
                       ),
                     ),
                     Text(
-                      "Cập nhật ",
+                      "Cập nhật",
+                      style: Get.textTheme.labelMedium,
                     ),
                     Text(
                       "Menu ",
+                      style: Get.textTheme.labelMedium,
                     ),
                     SizedBox(
-                      height: 16,
+                      height: 8,
                     ),
                     IconButton(
                       alignment: Alignment.bottomCenter,
@@ -188,7 +199,10 @@ class _RootScreenState extends State<RootScreen> {
                         size: 32,
                       ),
                     ),
-                    Text("Đăng xuất"),
+                    Text(
+                      "Đăng xuất",
+                      style: Get.textTheme.labelMedium,
+                    ),
                     SizedBox(
                       height: 16,
                     ),

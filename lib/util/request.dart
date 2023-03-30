@@ -104,31 +104,11 @@ class MyRequest {
             content: e.response?.data["Error"],
           );
         } else if (e.response?.statusCode == 500) {
-          showAlertDialog(
+          Future<bool> res = showConfirmDialog(
             title: "Lỗi hệ thống",
-            content: e.response?.data["Error"],
+            content: "Vui long thử lại sau",
           );
-          Get.offAllNamed(RouteHandler.LOGIN);
-        } else if (e.response?.statusCode == 403) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-        } else if (e.response?.statusCode == 404) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-        } else if (e.response?.statusCode == 500) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-        } else if (e.response?.statusCode == 503) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
+          res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
         } else {
           showAlertDialog(
             title: "Lỗi",

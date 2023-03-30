@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/index.dart';
+import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/enums/index.dart';
 
@@ -40,5 +41,18 @@ class OrderAPI {
         await request.put('stores/$storeId/orders/$orderId', data: data);
     var json = res.data;
     return json;
+  }
+
+  Future<List<OrderInList>> getListOrderOfStore(String storeId) async {
+    var params = <String, dynamic>{'page': 1, 'size': 30};
+    final res =
+        await request.get('stores/$storeId/orders', queryParameters: params);
+    var jsonList = res.data['items'];
+    List<OrderInList> listOrder = [];
+    for (var item in jsonList) {
+      OrderInList orderResponse = OrderInList.fromJson(item);
+      listOrder.add(orderResponse);
+    }
+    return listOrder;
   }
 }

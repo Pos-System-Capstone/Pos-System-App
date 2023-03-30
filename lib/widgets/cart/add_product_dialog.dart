@@ -64,21 +64,21 @@ class _ProductDialogState extends State<ProductDialog> {
   Widget build(BuildContext context) {
     List<Tab> parentProductTab = [
       Tab(
-        child: Text("Kích cỡ", style: Get.textTheme.titleMedium),
+        child: Text("Kích cỡ", style: Get.textTheme.titleLarge),
       ),
       Tab(
-        child: Text("Món thêm", style: Get.textTheme.titleMedium),
+        child: Text("Món thêm", style: Get.textTheme.titleLarge),
       ),
       Tab(
-        child: Text("Ghi chú", style: Get.textTheme.titleMedium),
+        child: Text("Ghi chú", style: Get.textTheme.titleLarge),
       ),
     ];
     List<Tab> singleProductTab = [
       Tab(
-        child: Text("Món thêm", style: Get.textTheme.titleMedium),
+        child: Text("Món thêm", style: Get.textTheme.titleLarge),
       ),
       Tab(
-        child: Text("Ghi chú", style: Get.textTheme.titleMedium),
+        child: Text("Ghi chú", style: Get.textTheme.titleLarge),
       ),
     ];
     bool isPortrait = Get.context!.isPortrait;

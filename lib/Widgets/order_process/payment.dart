@@ -14,128 +14,179 @@ import '../../enums/order_enum.dart';
 import '../../data/model/index.dart';
 import '../../util/format.dart';
 import '../../view_model/order_view_model.dart';
+import '../Dialogs/other_dialogs/dialog.dart';
 import '../cart/cart_screen.dart';
 import '../orders/bill_screen.dart';
 import '../product_cart.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+  String orderId;
+  PaymentScreen(this.orderId, {super.key});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  OrderViewModel orderViewModel = Get.find<OrderViewModel>();
   @override
   void initState() {
+    orderViewModel.getOrderByStore(widget.orderId);
     super.initState();
-    Get.find<OrderViewModel>().getOrderByStore();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ScopedModel(
-        model: Get.find<OrderViewModel>(),
-        child: ScopedModelDescendant<OrderViewModel>(
-          builder: (context, child, model) {
-            if (model.status == ViewStatus.Loading) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Get.context!.isPortrait
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                            width: double.infinity,
-                            height: 300,
-                            child: orderConfig()),
+    return Container(
+      color: Get.theme.colorScheme.background,
+      child: ScopedModel(
+          model: Get.find<OrderViewModel>(),
+          child: Column(
+            children: [
+              ScopedModelDescendant<OrderViewModel>(
+                  builder: (context, build, model) {
+                if (model.status == ViewStatus.Loading ||
+                    model.currentOrder == null) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Đơn hàng: ${model.currentOrder?.invoiceId ?? ""}",
+                          style: Get.textTheme.titleMedium),
+                      IconButton(
+                          onPressed: () {
+                            model.clearOrder();
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            size: 32,
+                          )),
+                    ],
+                  ),
+                );
+              }),
+              Expanded(
+                child: Get.context!.isPortrait
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              width: double.infinity,
+                              height: 300,
+                              child: orderConfig()),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: BillScreen(),
+                            ),
+                          )
+                        ],
+                      )
+                    : Row(children: [
                         Expanded(
+                          flex: 2,
                           child: Padding(
                             padding: const EdgeInsets.all(4.0),
-                            child: BillScreen(),
+                            child: orderConfig(),
                           ),
-                        )
-                      ],
-                    )
-                  : Row(children: [
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: orderConfig(),
                         ),
-                      ),
-                      Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: BillScreen(),
-                          ))
-                    ]),
-            );
-          },
-        ),
-      ),
+                        Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: BillScreen(),
+                            ))
+                      ]),
+              ),
+            ],
+          )),
     );
   }
 }
 
 Widget orderConfig() {
-  return ScopedModel(
-    model: Get.find<OrderViewModel>(),
-    child:
-        ScopedModelDescendant<OrderViewModel>(builder: (context, child, model) {
-      List<Tab>? listPaymentTab = [
-        Tab(text: "Thanh toán", icon: Icon(Icons.payment)),
-        Tab(
-          text: "Khách hàng",
-          icon: Icon(Icons.person),
-        ),
-        Tab(
-          text: "Khuyến mãi",
-          icon: Icon(Icons.local_offer),
-        ),
-        // Tab(
-        //   text: "Đơn hàng",
-        //   icon: Icon(Icons.receipt),
-        // ),
-      ];
-      return DefaultTabController(
-        length: listPaymentTab.length,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TabBar(
-              indicatorColor: Get.theme.colorScheme.primary,
-              tabs: listPaymentTab,
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Expanded(
-                child: TabBarView(
-              children: [
-                paymentTypeSelect(model),
-                customerInfoSelect(model),
-                promotionTypeSelect(model),
-                // BillScreen(),
-              ],
-            ))
-          ],
-        ),
+  List<Tab>? listPaymentTab = [
+    Tab(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Icon(Icons.payment),
+          SizedBox(width: 8),
+          Text("Thanh toán"),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Icon(Icons.person),
+          SizedBox(width: 8),
+          Text("Khách hàng"),
+        ],
+      ),
+    ),
+    Tab(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Icon(Icons.local_offer),
+          SizedBox(width: 8),
+          Text("Khuyến mãi"),
+        ],
+      ),
+    ),
+    // Tab(
+    //   text: "Đơn hàng",
+    //   icon: Icon(Icons.receipt),
+    // ),
+  ];
+  return ScopedModelDescendant<OrderViewModel>(
+      builder: (context, build, model) {
+    if (model.status == ViewStatus.Loading || model.currentOrder == null) {
+      return Center(
+        child: CircularProgressIndicator(),
       );
-    }),
-  );
+    }
+    return DefaultTabController(
+      length: listPaymentTab.length,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TabBar(
+            indicatorColor: Get.theme.colorScheme.primary,
+            tabs: listPaymentTab,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Expanded(
+              child: TabBarView(
+            children: [
+              paymentTypeSelect(model),
+              customerInfoSelect(model),
+              promotionTypeSelect(model),
+              // BillScreen(),
+            ],
+          ))
+        ],
+      ),
+    );
+  });
 }
 
 Widget paymentTypeSelect(OrderViewModel model) {
-  return Expanded(
-      child: Container(
+  return Container(
     decoration: BoxDecoration(
       color: Get.theme.colorScheme.onInverseSurface,
       borderRadius: BorderRadius.circular(8),
@@ -158,7 +209,7 @@ Widget paymentTypeSelect(OrderViewModel model) {
                           model.selectPayment(e);
                         },
                         child: Card(
-                          color: model.selectedPaymentMethod == e
+                          color: model.selectedPaymentMethod!.id == e?.id
                               ? Get.theme.colorScheme.primary
                               : Get.theme.colorScheme.onInverseSurface,
                           child: Padding(
@@ -196,6 +247,7 @@ Widget paymentTypeSelect(OrderViewModel model) {
             child: ElevatedButton(
               onPressed: () {
                 model.updatePayment();
+                hideDialog();
               },
               child: Text("Thanh toán"),
             ),
@@ -203,7 +255,7 @@ Widget paymentTypeSelect(OrderViewModel model) {
         ),
       ],
     ),
-  ));
+  );
 }
 
 Widget customerInfoSelect(OrderViewModel model) {

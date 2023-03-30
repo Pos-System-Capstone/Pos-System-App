@@ -462,13 +462,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   login() async {
     if (_formKey.currentState!.validate()) {
-      Account? userData = await model.posLogin(userName, password);
-      if (userData != null) {
-        Get.find<MenuViewModel>().getMenuOfStore();
-        Get.offAndToNamed(RouteHandler.HOME);
-        final userInfo = await getUserInfo();
-        debugPrint("userInfo get tu sharepreference: ${userInfo}");
-      }
+      model.posLogin(userName, password);
     }
   }
 }

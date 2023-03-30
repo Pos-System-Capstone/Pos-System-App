@@ -30,12 +30,6 @@ class RouteHelper {
       transition: Transition.leftToRight,
       transitionDuration: Duration(milliseconds: 300),
     ),
-    GetPage(
-      name: payment,
-      page: () => PaymentScreen(),
-      transition: Transition.leftToRight,
-      transitionDuration: Duration(milliseconds: 300),
-    ),
   ];
 
   // static void openDialog(BuildContext context, Widget child,

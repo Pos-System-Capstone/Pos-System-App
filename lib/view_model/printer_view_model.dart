@@ -36,7 +36,7 @@ class PrinterViewModel extends BaseViewModel {
   void scanPrinter() {
     try {
       Printing.listPrinters().then((value) {
-        listDevice = value;
+        listDevice = value.where((element) => element.isAvailable).toList();
         print(listDevice);
         Future<String?> billPrinter = getBillPrinter();
         Future<String?> productPrinter = getProductPrinter();
@@ -105,10 +105,34 @@ class PrinterViewModel extends BaseViewModel {
         onLayout: (PdfPageFormat format) {
           return generateBillInvoice(format, orderResponse);
         });
+    if (orderResponse.productList != null) {
+      for (var product in orderResponse.productList!) {
+        for (var i = 1; i <= product.quantity!; i++) {
+          Printing.directPrintPdf(
+              printer: selectedProductPrinter!,
+              format: PdfPageFormat(
+                32 * PdfPageFormat.mm,
+                25 * PdfPageFormat.mm,
+              ),
+              onLayout: (PdfPageFormat format) {
+                return generateStampInvoice(format, product,
+                    orderResponse.checkInDate, orderResponse.invoiceId);
+              });
+        }
+      }
+    }
   }
 
-  bool isPrinterConnected(Printer printer) {
+  bool isBillPrinterConnected(Printer printer) {
     if (printer == selectedBillPrinter) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isStampPrinterConnected(Printer printer) {
+    if (printer == selectedProductPrinter) {
       return true;
     } else {
       return false;

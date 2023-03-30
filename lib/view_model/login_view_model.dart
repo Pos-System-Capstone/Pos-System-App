@@ -5,20 +5,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/api/index.dart';
 import '../data/model/account.dart';
+import '../enums/view_status.dart';
 import '../routes/routes_constrants.dart';
 import '../services/realtime_database.dart';
 
 class LoginViewModel extends BaseViewModel {
   AccountData dao = AccountData();
-  late Account userDTO;
+  Account? userDTO;
 
-  Future<Account?> posLogin(String userName, String password) async {
-    Account? userDTO = await dao.login(userName, password);
-    print(userDTO!.name);
-    if (userDTO != null) {
-      setUserInfo(userDTO);
+  void posLogin(String userName, String password) async {
+    try {
+      setState(ViewStatus.Loading);
+      userDTO = await dao.login(userName, password);
+      print(userDTO!.name);
+      if (userDTO != null) {
+        setUserInfo(userDTO!);
+        setState(ViewStatus.Completed);
+        Get.offAllNamed(RouteHandler.HOME);
+      }
+    } catch (e) {
+      setState(ViewStatus.Error);
     }
-    return userDTO;
   }
 
   Future<void> logout() async {
