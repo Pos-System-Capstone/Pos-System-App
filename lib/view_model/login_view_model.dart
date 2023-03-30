@@ -3,6 +3,7 @@ import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Widgets/Dialogs/other_dialogs/dialog.dart';
 import '../data/api/index.dart';
 import '../data/model/account.dart';
 import '../enums/view_status.dart';
@@ -16,11 +17,13 @@ class LoginViewModel extends BaseViewModel {
   void posLogin(String userName, String password) async {
     try {
       setState(ViewStatus.Loading);
+      showLoadingDialog();
       userDTO = await dao.login(userName, password);
       print(userDTO!.name);
       if (userDTO != null) {
         setUserInfo(userDTO!);
         setState(ViewStatus.Completed);
+        hideDialog();
         Get.offAllNamed(RouteHandler.HOME);
       }
     } catch (e) {
@@ -29,8 +32,7 @@ class LoginViewModel extends BaseViewModel {
   }
 
   Future<void> logout() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.clear();
+    deleteUserInfo();
     await Get.offAllNamed(RouteHandler.LOGIN);
   }
 }

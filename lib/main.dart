@@ -63,6 +63,7 @@ class _MyAppState extends State<MyApp> {
               navigatorKey: Get.key,
               defaultTransition: Transition.topLevel,
               transitionDuration: Duration(milliseconds: 500),
+              initialRoute: RouteHandler.WELCOME,
               onGenerateRoute: (settings) {
                 switch (settings.name) {
                   case RouteHandler.LOGIN:

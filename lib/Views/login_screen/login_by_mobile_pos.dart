@@ -237,7 +237,9 @@ class _LogInScreenState extends State<LogInScreen> {
                       height: 48,
                       child: FilledButton.tonal(
                         onPressed: () {
-                          login();
+                          if (_formKey.currentState!.validate()) {
+                            model.posLogin(userName, password);
+                          }
                         },
                         child:
                             Text("Đăng nhập", style: Get.textTheme.titleMedium),
@@ -435,7 +437,9 @@ class _LogInScreenState extends State<LogInScreen> {
                         height: 48,
                         child: FilledButton.tonal(
                           onPressed: () {
-                            login();
+                            if (_formKey.currentState!.validate()) {
+                              model.posLogin(userName, password);
+                            }
                           },
                           child: Text("Đăng nhập",
                               style: Get.textTheme.titleMedium),
@@ -458,11 +462,5 @@ class _LogInScreenState extends State<LogInScreen> {
         ],
       ),
     );
-  }
-
-  login() async {
-    if (_formKey.currentState!.validate()) {
-      model.posLogin(userName, password);
-    }
   }
 }
