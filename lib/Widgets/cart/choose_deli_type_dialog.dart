@@ -55,23 +55,25 @@ void chooseDeliTypeDialog() {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             deliveryOptionButton(
-                              "Giao hàng",
-                              Icons.delivery_dining,
-                              () => model.chooseDeliveryType(DeliType.DELIVERY),
-                              model.deliveryType == DeliType.DELIVERY,
+                              DeliType().delivery.label,
+                              DeliType().delivery.icon,
+                              () => model
+                                  .chooseDeliveryType(DeliType().delivery.type),
+                              model.deliveryType == DeliType().delivery.type,
                             ),
                             deliveryOptionButton(
-                              "Tại chỗ",
-                              Icons.store,
-                              () => model.chooseDeliveryType(DeliType.EAT_IN),
-                              model.deliveryType == DeliType.EAT_IN,
+                              DeliType().eatIn.label,
+                              DeliType().eatIn.icon,
+                              () => model
+                                  .chooseDeliveryType(DeliType().eatIn.type),
+                              model.deliveryType == DeliType().eatIn.type,
                             ),
                             deliveryOptionButton(
-                                "Mang về",
-                                Icons.coffee_maker_outlined,
-                                () => model
-                                    .chooseDeliveryType(DeliType.TAKE_AWAY),
-                                model.deliveryType == DeliType.TAKE_AWAY),
+                                DeliType().takeAway.label,
+                                DeliType().takeAway.icon,
+                                () => model.chooseDeliveryType(
+                                    DeliType().takeAway.type),
+                                model.deliveryType == DeliType().takeAway.type),
                           ],
                         ),
                       ),

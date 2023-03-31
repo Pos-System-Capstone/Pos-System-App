@@ -4,10 +4,6 @@ import 'package:pos_apps/widgets/cart/cart_screen.dart';
 
 void showCartDialog() {
   Get.dialog(Dialog.fullscreen(
-    // shape: RoundedRectangleBorder(
-    //   borderRadius: BorderRadius.circular(16),
-    // ),
-    // elevation: 0,
     backgroundColor: Colors.transparent,
     child: Container(
       width: Get.size.width,

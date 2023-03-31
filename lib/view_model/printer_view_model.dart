@@ -98,12 +98,12 @@ class PrinterViewModel extends BaseViewModel {
         });
   }
 
-  void printBill(OrderResponseModel orderResponse) {
+  void printBill(OrderResponseModel orderResponse, int table) {
     Printing.directPrintPdf(
         printer: selectedBillPrinter!,
         format: PdfPageFormat.roll57,
         onLayout: (PdfPageFormat format) {
-          return generateBillInvoice(format, orderResponse);
+          return generateBillInvoice(format, orderResponse, table);
         });
     if (orderResponse.productList != null) {
       for (var product in orderResponse.productList!) {

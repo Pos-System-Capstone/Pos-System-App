@@ -18,20 +18,32 @@ class LoginViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       showLoadingDialog();
-      userDTO = await dao.login(userName, password);
-      print(userDTO!.name);
-      if (userDTO != null) {
-        setUserInfo(userDTO!);
-        setState(ViewStatus.Completed);
-        hideDialog();
-        Get.offAllNamed(RouteHandler.HOME);
-      }
+      dao.login(userName, password).then((value) => {
+            userDTO = value,
+            if (userDTO == null)
+              {
+                setState(ViewStatus.Error),
+                hideDialog(),
+                showAlertDialog(
+                    title: "Login Failed",
+                    content: "Please check your username and password")
+              }
+            else
+              {
+                print(userDTO!.name),
+                setUserInfo(userDTO!),
+                setState(ViewStatus.Completed),
+                hideDialog(),
+                Get.offAllNamed(RouteHandler.HOME)
+              }
+          });
     } catch (e) {
       setState(ViewStatus.Error);
     }
   }
 
   Future<void> logout() async {
+    userDTO = null;
     deleteUserInfo();
     await Get.offAllNamed(RouteHandler.LOGIN);
   }

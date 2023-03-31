@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pos_apps/view_model/menu_view_model.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -6,38 +9,55 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          // Cover image
-          Container(
-            height: 200.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/cover.jpg'),
-                fit: BoxFit.cover,
+      body: ScopedModel(
+        model: Get.find<MenuViewModel>(),
+        child: ScopedModelDescendant<MenuViewModel>(
+            builder: (context, build, model) {
+          return Stack(
+            children: <Widget>[
+              // Cover image
+
+              // Profile image and name
+              Positioned(
+                top: 20.0,
+                left: 20.0,
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                        radius: 80.0,
+                        backgroundImage: NetworkImage(
+                          model.storeDetails.brandPicUrl ??
+                              "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash-register.png?alt=media&token=fb8b55e5-ce62-40a7-9099-b32c93e94532",
+                        )),
+                    SizedBox(width: 10.0),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            "${model.storeDetails.name}(${model.storeDetails.code})",
+                            style: Get.textTheme.titleLarge),
+                        Text(
+                          model.storeDetails.address ?? "Store Name",
+                          style: Get.textTheme.titleSmall,
+                        ),
+                        Text(
+                          model.storeDetails.phone ?? "Store Name",
+                          style: Get.textTheme.titleSmall,
+                        ),
+                        Text(
+                          model.storeDetails.email ?? "Store Name",
+                          style: Get.textTheme.titleSmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          // Profile image and name
-          Positioned(
-            top: 40.0,
-            left: 20.0,
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 40.0,
-                  backgroundImage: AssetImage('assets/profile.jpg'),
-                ),
-                SizedBox(width: 10.0),
-                Text(
-                  'John Doe',
-                  style: TextStyle(fontSize: 24.0),
-                ),
-              ],
-            ),
-          ),
-          // Other widgets
-        ],
+              // Other widgets
+            ],
+          );
+        }),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum OrderStateEnum {
   CHOOSE_ORDER_TYPE,
   BOOKING_TABLE,
@@ -11,9 +13,27 @@ enum DeliTypeEnum { TAKE_AWAY, IN_STORE, DELIVERY, NONE }
 enum PrinterTypeEnum { bill, stamp }
 
 class DeliType {
-  static const String TAKE_AWAY = 'TAKE_AWAY';
-  static const String EAT_IN = 'EAT_IN';
-  static const String DELIVERY = 'DELIVERY';
+  TakeAway takeAway = TakeAway();
+  EatIn eatIn = EatIn();
+  Delivery delivery = Delivery();
+}
+
+class TakeAway {
+  String type = 'TAKE_AWAY';
+  IconData icon = Icons.home;
+  String label = 'Mang đi';
+}
+
+class EatIn {
+  String type = 'EAT_IN';
+  IconData icon = Icons.store;
+  String label = 'Tại quán';
+}
+
+class Delivery {
+  String type = 'DELIVERY';
+  IconData icon = Icons.delivery_dining;
+  String label = 'Giao hàng';
 }
 
 class OrderState {
@@ -43,15 +63,15 @@ String showOrderStatus(String status) {
   }
 }
 
-String showOrderType(String type) {
-  switch (type) {
-    case DeliType.EAT_IN:
-      return 'Tai quán';
-    case DeliType.TAKE_AWAY:
-      return 'Mang đi';
-    case DeliType.DELIVERY:
-      return 'Giao hàng';
-    default:
-      return 'Tại quán';
+dynamic showOrderType(String type) {
+  DeliType deliType = DeliType();
+  if (type == deliType.takeAway.type) {
+    return deliType.takeAway;
+  } else if (type == deliType.eatIn.type) {
+    return deliType.eatIn;
+  } else if (type == deliType.delivery.type) {
+    return deliType.delivery;
+  } else {
+    return deliType.eatIn;
   }
 }

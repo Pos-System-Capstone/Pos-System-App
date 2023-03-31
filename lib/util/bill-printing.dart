@@ -7,7 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:tiengviet/tiengviet.dart';
 
 Future<Uint8List> generateBillInvoice(
-    PdfPageFormat format, OrderResponseModel order) async {
+    PdfPageFormat format, OrderResponseModel order, int table) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interBold();
   pdf.addPage(
@@ -58,7 +58,10 @@ Future<Uint8List> generateBillInvoice(
                     pw.Text(
                         formatTime(
                             order.checkInDate ?? DateTime.now().toString()),
-                        textAlign: pw.TextAlign.right,
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                    pw.Text("Bàn: $table",
+                        textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                   ],
                 ),

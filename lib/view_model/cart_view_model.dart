@@ -1,15 +1,16 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
+import 'package:pos_apps/data/api/payment_data.dart';
 import 'package:pos_apps/view_model/base_view_model.dart';
 
 import '../data/model/index.dart';
+import '../data/model/payment.dart';
 import 'index.dart';
 
 class CartViewModel extends BaseViewModel {
   List<CartItem> _cartList = [];
   num _finalAmount = 0;
-  bool _isCartUpdate = false;
   int? _peopleNumber;
   num _totalAmount = 0;
   num _discountAmount = 0;
@@ -18,7 +19,6 @@ class CartViewModel extends BaseViewModel {
   List<CartItem> get cartList => _cartList;
   num get finalAmount => _finalAmount;
   num get totalAmount => _totalAmount;
-  bool get isCartUpdate => _isCartUpdate;
   int? get peopleNumber => _peopleNumber;
   num? get discountAmount => _discountAmount;
   int? get quantity => _quantity;
@@ -44,15 +44,6 @@ class CartViewModel extends BaseViewModel {
         } else {
           return index;
         }
-      }
-    }
-    return -1;
-  }
-
-  int getCartIndex(int productID) {
-    for (int index = 0; index < _cartList.length; index++) {
-      if (_cartList[index].product.id == productID) {
-        return index;
       }
     }
     return -1;
@@ -152,5 +143,11 @@ class CartViewModel extends BaseViewModel {
     );
     Get.find<OrderViewModel>().placeOrder(order);
     clearCartData();
+  }
+
+  List<PaymentModel?> getListPayment() {
+    List<PaymentModel?> listPayment = [];
+    listPayment = Get.find<OrderViewModel>().listPayment;
+    return listPayment;
   }
 }

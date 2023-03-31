@@ -4,11 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/theme/app_theme.dart';
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/theme_view_model.dart';
+import 'package:pos_apps/views/not_found_screen.dart';
 import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/order_process/payment.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -22,9 +24,8 @@ import 'views/screens/home/root_view.dart';
 import 'views/startup.dart';
 
 void main() async {
-  if (!GetPlatform.isWeb) {
-    HttpOverrides.global = MyHttpOverrides();
-  }
+  HttpOverrides.global = MyHttpOverrides();
+
   WidgetsFlutterBinding.ensureInitialized();
   await deleteUserInfo();
   createRouteBindings();
@@ -47,6 +48,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return ScopedModel(
         model: ThemeViewModel(),
         child: ScopedModelDescendant<ThemeViewModel>(
@@ -57,13 +62,6 @@ class _MyAppState extends State<MyApp> {
               themeMode: model.isDarkMode ? ThemeMode.dark : ThemeMode.light,
               darkTheme: AppTheme.getThemeDark(model.colorIndex),
               theme: AppTheme.getThemeLight(model.colorIndex),
-              scrollBehavior: MaterialScrollBehavior().copyWith(
-                dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
-              ),
-              navigatorKey: Get.key,
-              defaultTransition: Transition.topLevel,
-              transitionDuration: Duration(milliseconds: 500),
-              initialRoute: RouteHandler.WELCOME,
               onGenerateRoute: (settings) {
                 switch (settings.name) {
                   case RouteHandler.LOGIN:
@@ -73,19 +71,11 @@ class _MyAppState extends State<MyApp> {
                   case RouteHandler.HOME:
                     return CupertinoPageRoute<bool>(
                         builder: (context) => RootScreen(), settings: settings);
-                  case RouteHandler.PROFILE:
-                    return CupertinoPageRoute<bool>(
-                        builder: (context) => ProfileScreen(),
-                        settings: settings);
                   case RouteHandler.NAV:
                     return CupertinoPageRoute(
-                        builder: (context) => HomeScreen(), settings: settings);
-                  case RouteHandler.LOADING:
-                    return CupertinoPageRoute<bool>(
-                        builder: (context) => LoadingScreen(
-                              title: settings.arguments.toString(),
-                            ),
+                        builder: (context) => NotFoundScreen(),
                         settings: settings);
+
                   case RouteHandler.WELCOME:
                     return CupertinoPageRoute<bool>(
                         builder: (context) => StartUpView(),
@@ -96,7 +86,7 @@ class _MyAppState extends State<MyApp> {
                   //       settings: settings);
                   default:
                     return CupertinoPageRoute(
-                        builder: (context) => StartUpView(),
+                        builder: (context) => NotFoundScreen(),
                         settings: settings);
                 }
               },

@@ -25,7 +25,7 @@ import '../routes/routes_constrants.dart';
 
 class OrderViewModel extends BaseViewModel {
   int selectedTable = 01;
-  String deliveryType = DeliType.EAT_IN;
+  String deliveryType = DeliType().eatIn.type;
   Cart? currentCart;
   late OrderAPI api = OrderAPI();
   String? currentOrderId;
@@ -44,6 +44,7 @@ class OrderViewModel extends BaseViewModel {
     setState(ViewStatus.Loading);
     paymentData!.getListPayment().then((value) {
       listPayment = value;
+      selectedPaymentMethod = listPayment[0];
     });
     setState(ViewStatus.Completed);
   }
@@ -70,9 +71,8 @@ class OrderViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
-      order.paymentId = listPayment[0]!.id;
+      order.paymentId = selectedPaymentMethod!.id;
       var res = api.placeOrder(order, userInfo!.storeId);
-
       res.then((value) =>
           {print(value.toString()), showPaymentBotomSheet(value.toString())});
       setState(ViewStatus.Completed);
@@ -142,7 +142,7 @@ class OrderViewModel extends BaseViewModel {
       setState(ViewStatus.Loading);
 
       if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
-        Get.find<PrinterViewModel>().printBill(currentOrder!);
+        Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable);
         api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
             selectedPaymentMethod!.id);
         setState(ViewStatus.Completed);
@@ -201,6 +201,7 @@ class OrderViewModel extends BaseViewModel {
     hideBottomSheet();
     currentOrderId = null;
     currentOrder = null;
+    selectedPaymentMethod = listPayment[0];
     setState(ViewStatus.Completed);
     getListOrder();
   }

@@ -115,9 +115,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                     Get.textTheme.titleSmall),
                                             Text(
                                                 showOrderType(model
-                                                        .listOrder[index]
-                                                        .orderType ??
-                                                    ''),
+                                                            .listOrder[index]
+                                                            .orderType ??
+                                                        '')
+                                                    .label,
                                                 style: Get.textTheme.titleSmall
                                                     ?.copyWith(
                                                         color: Get

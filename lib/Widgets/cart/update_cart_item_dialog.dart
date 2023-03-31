@@ -67,16 +67,10 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
       Tab(
         child: Text("Món thêm", style: Get.textTheme.titleMedium),
       ),
-      Tab(
-        child: Text("Ghi chú", style: Get.textTheme.titleMedium),
-      ),
     ];
     List<Tab> singleProductTab = [
       Tab(
         child: Text("Món thêm", style: Get.textTheme.titleMedium),
-      ),
-      Tab(
-        child: Text("Ghi chú", style: Get.textTheme.titleMedium),
       ),
     ];
     bool isPortrait = Get.context!.isPortrait;
@@ -119,8 +113,8 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                   child: DefaultTabController(
                     length:
                         widget.cartItem.product.type == ProductTypeEnum.CHILD
-                            ? 3
-                            : 2,
+                            ? 2
+                            : 1,
                     child: Column(
                       children: [
                         TabBar(
@@ -139,11 +133,9 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                   ? [
                                       productSize(model),
                                       addExtra(model),
-                                      productNotes(model),
                                     ]
                                   : [
                                       addExtra(model),
-                                      productNotes(model),
                                     ]),
                         )
                       ],
@@ -155,9 +147,31 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                   width: double.infinity,
                   child: Column(
                     children: [
+                      Container(
+                          padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              TextFormField(
+                                initialValue: model.notes,
+                                maxLines: 2,
+                                decoration: InputDecoration(
+                                  hintText: "Ghi chú",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onChanged: (value) {
+                                  model.setNotes(value);
+                                },
+                              ),
+                            ],
+                          )),
                       Row(
                         children: [
                           Expanded(
+                            flex: 1,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,6 +188,35 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                             ),
                           ),
                           Expanded(
+                            flex: 1,
+                            child: OutlinedButton(
+                                onPressed: () {
+                                  model.deleteCartItemInCart(widget.idx);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text("Xoá",
+                                      style: Get.textTheme.titleMedium),
+                                )),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            flex: 2,
+                            child: FilledButton(
+                                onPressed: () {
+                                  model.updateCartItemInCart(widget.idx);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text("Cập nhật ",
+                                      style: Get.textTheme.titleMedium
+                                          ?.copyWith(
+                                              color: Get.theme.colorScheme
+                                                  .background)),
+                                )),
+                          ),
+                          Expanded(
+                            flex: 1,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -183,7 +226,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                     },
                                     icon: Icon(
                                       Icons.remove,
-                                      size: 32,
+                                      size: 40,
                                     )),
                                 Text("${model.quantity}",
                                     style: Get.textTheme.titleLarge),
@@ -193,7 +236,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                     },
                                     icon: Icon(
                                       Icons.add,
-                                      size: 32,
+                                      size: 40,
                                     )),
                               ],
                             ),
@@ -202,45 +245,6 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                       ),
                       SizedBox(
                         height: 8,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: OutlinedButton(
-                                  onPressed: () {
-                                    model.deleteCartItemInCart(widget.idx);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Text("Xoá",
-                                        style: Get.textTheme.titleMedium),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: FilledButton(
-                                  onPressed: () {
-                                    model.updateCartItemInCart(widget.idx);
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Text("Cập nhật ",
-                                        style: Get.textTheme.titleMedium
-                                            ?.copyWith(
-                                                color: Get.theme.colorScheme
-                                                    .background)),
-                                  )),
-                            ),
-                          ],
-                        ),
                       ),
                     ],
                   ),

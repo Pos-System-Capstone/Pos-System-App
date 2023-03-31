@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/api/store_data.dart';
 import 'package:pos_apps/data/model/index.dart';
+import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
 
 import '../data/api/index.dart';
@@ -10,6 +12,8 @@ import '../enums/view_status.dart';
 class MenuViewModel extends BaseViewModel {
   late Menu? currentMenu;
   MenuData? menuData;
+  StoreData? storeData;
+  StoreModel storeDetails = StoreModel();
   List<Product>? normalProducts = [];
   List<Category>? categories = [];
   List<Product>? extraProducts = [];
@@ -18,6 +22,7 @@ class MenuViewModel extends BaseViewModel {
 
   MenuViewModel() {
     menuData = MenuData();
+    storeData = StoreData();
     currentMenu = Menu();
   }
 
@@ -40,9 +45,21 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == ProductTypeEnum.CHILD)
           .toList();
       productsFilter = normalProducts;
+      getStore();
       Get.find<OrderViewModel>().getListPayment();
       Get.find<OrderViewModel>().getListOrder();
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
 
+  void getStore() async {
+    try {
+      setState(ViewStatus.Loading);
+      storeData?.getStoreDetail().then((value) {
+        storeDetails = value!;
+      });
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());

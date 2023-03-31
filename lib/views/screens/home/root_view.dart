@@ -27,7 +27,7 @@ class _RootScreenState extends State<RootScreen> {
     HomeScreen(),
     OrdersScreen(),
     SettingsScreen(),
-    // ProfileScreen()
+    ProfileScreen()
   ];
   List<BottomNavigationBarItem> items = const [
     BottomNavigationBarItem(
@@ -45,12 +45,11 @@ class _RootScreenState extends State<RootScreen> {
       activeIcon: Icon(Icons.settings_outlined),
       label: 'Thiết lập',
     ),
-
-    // BottomNavigationBarItem(
-    //   icon: Icon(Icons.account_circle),
-    //   activeIcon: Icon(Icons.account_circle_outlined),
-    //   label: 'Tài khoản',
-    // ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.account_circle),
+      activeIcon: Icon(Icons.account_circle_outlined),
+      label: 'Tài khoản',
+    ),
   ];
   List<NavigationRailDestination> destinations = const [
     NavigationRailDestination(
@@ -68,12 +67,11 @@ class _RootScreenState extends State<RootScreen> {
       selectedIcon: Icon(Icons.settings_outlined),
       label: Text('Thiết lập'),
     ),
-
-    // NavigationRailDestination(
-    //   icon: Icon(Icons.account_circle),
-    //   selectedIcon: Icon(Icons.account_circle_outlined),
-    //   label: Text('Tài khoản'),
-    // ),
+    NavigationRailDestination(
+      icon: Icon(Icons.account_circle),
+      selectedIcon: Icon(Icons.account_circle_outlined),
+      label: Text('Tài khoản'),
+    ),
   ];
   int _selectedIndex = 0;
   @override

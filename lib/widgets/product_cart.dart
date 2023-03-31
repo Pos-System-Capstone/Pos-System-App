@@ -27,7 +27,7 @@ Widget productCard(Product product, List<Product>? childProducts) {
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: NetworkImage(product.picUrl ??
-                            "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash.png?alt=media&token=8425fef2-175d-4e26-9f74-f67644295f57"),
+                            "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fdownload.png?alt=media&token=d3d049e8-536e-4939-bb93-2704647445b4"),
                         fit: BoxFit.cover)),
               ),
             ),

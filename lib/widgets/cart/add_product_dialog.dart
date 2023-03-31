@@ -69,16 +69,10 @@ class _ProductDialogState extends State<ProductDialog> {
       Tab(
         child: Text("Món thêm", style: Get.textTheme.titleLarge),
       ),
-      Tab(
-        child: Text("Ghi chú", style: Get.textTheme.titleLarge),
-      ),
     ];
     List<Tab> singleProductTab = [
       Tab(
         child: Text("Món thêm", style: Get.textTheme.titleLarge),
-      ),
-      Tab(
-        child: Text("Ghi chú", style: Get.textTheme.titleLarge),
       ),
     ];
     bool isPortrait = Get.context!.isPortrait;
@@ -138,11 +132,9 @@ class _ProductDialogState extends State<ProductDialog> {
                                       ? [
                                           productSize(model),
                                           addExtra(model),
-                                          productNotes(model),
                                         ]
                                       : [
                                           addExtra(model),
-                                          productNotes(model),
                                         ]),
                         )
                       ],
@@ -154,9 +146,30 @@ class _ProductDialogState extends State<ProductDialog> {
                   width: double.infinity,
                   child: Column(
                     children: [
+                      Container(
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              TextFormField(
+                                maxLines: 2,
+                                decoration: InputDecoration(
+                                  hintText: "Ghi chú",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onChanged: (value) {
+                                  model.setNotes(value);
+                                },
+                              ),
+                            ],
+                          )),
                       Row(
                         children: [
                           Expanded(
+                            flex: 2,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,6 +186,22 @@ class _ProductDialogState extends State<ProductDialog> {
                             ),
                           ),
                           Expanded(
+                            flex: 3,
+                            child: FilledButton(
+                                onPressed: () {
+                                  model.addProductToCart();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Text("Thêm",
+                                      style: Get.textTheme.titleMedium
+                                          ?.copyWith(
+                                              color: Get.theme.colorScheme
+                                                  .background)),
+                                )),
+                          ),
+                          Expanded(
+                            flex: 2,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -182,7 +211,7 @@ class _ProductDialogState extends State<ProductDialog> {
                                     },
                                     icon: Icon(
                                       Icons.remove,
-                                      size: 32,
+                                      size: 40,
                                     )),
                                 Text("${model.quantity}",
                                     style: Get.textTheme.titleLarge),
@@ -192,7 +221,7 @@ class _ProductDialogState extends State<ProductDialog> {
                                     },
                                     icon: Icon(
                                       Icons.add,
-                                      size: 32,
+                                      size: 40,
                                     )),
                               ],
                             ),
@@ -201,18 +230,6 @@ class _ProductDialogState extends State<ProductDialog> {
                       ),
                       SizedBox(
                         height: 8,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: FilledButton.tonal(
-                            onPressed: () {
-                              model.addProductToCart();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Text("Thêm ",
-                                  style: Get.textTheme.titleLarge),
-                            )),
                       ),
                     ],
                   ),

@@ -11,6 +11,7 @@ import 'package:pos_apps/widgets/cart/choose_deli_type_dialog.dart';
 import 'package:pos_apps/widgets/cart/choose_table_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../../data/model/payment.dart';
 import '../../view_model/cart_view_model.dart';
 import 'update_cart_item_dialog.dart';
 
@@ -30,11 +31,11 @@ class _CartScreenState extends State<CartScreen> {
           builder: (context, child, model) {
         int selectedTable = Get.find<OrderViewModel>().selectedTable;
         String selectedDeliType = Get.find<OrderViewModel>().deliveryType;
-        String? selectedDeliTypeString = selectedDeliType == DeliType.EAT_IN
-            ? "Tại quán"
-            : selectedDeliType == DeliType.DELIVERY
-                ? "Giao hàng"
-                : "Mang về";
+        dynamic seletedDeliLable = showOrderType(selectedDeliType);
+        List<PaymentModel?> listPayment =
+            Get.find<OrderViewModel>().listPayment;
+        PaymentModel? selectedPayment =
+            Get.find<OrderViewModel>().selectedPaymentMethod;
         return Container(
           decoration: BoxDecoration(
             color: Get.theme.colorScheme.onInverseSurface,
@@ -78,11 +79,11 @@ class _CartScreenState extends State<CartScreen> {
                             child: OutlinedButton.icon(
                               onPressed: () => chooseDeliTypeDialog(),
                               icon: Icon(
-                                Icons.store_mall_directory,
+                                seletedDeliLable.icon,
                                 size: 24,
                               ),
                               label: Text(
-                                ' $selectedDeliTypeString',
+                                ' ${seletedDeliLable.label}',
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ),
@@ -208,7 +209,7 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           Expanded(
                             flex: 4,
-                            child: FilledButton.icon(
+                            child: FilledButton(
                               onPressed: () async {
                                 var result = await showConfirmDialog(
                                     title: 'Xác nhận',
@@ -217,8 +218,7 @@ class _CartScreenState extends State<CartScreen> {
                                   model.createOrder();
                                 }
                               },
-                              icon: Icon(Icons.payment),
-                              label: Padding(
+                              child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   'Thanh toán',
@@ -226,6 +226,33 @@ class _CartScreenState extends State<CartScreen> {
                                       color: Get.theme.colorScheme.background),
                                 ),
                               ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: PopupMenuButton<PaymentModel>(
+                              initialValue: selectedPayment,
+                              icon: Icon(Icons.payment),
+                              tooltip: 'Thanh toán',
+                              itemBuilder: (context) => [
+                                for (var item in listPayment)
+                                  PopupMenuItem(
+                                    value: item,
+                                    child: item?.id == selectedPayment?.id
+                                        ? Row(children: [
+                                            Icon(Icons.check),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(item?.name ?? ''),
+                                          ])
+                                        : Text(item?.name ?? ''),
+                                  ),
+                              ],
+                              onSelected: (value) {
+                                Get.find<OrderViewModel>().selectPayment(value);
+                                selectedPayment = value;
+                              },
                             ),
                           )
                         ],
@@ -283,11 +310,6 @@ class _CartScreenState extends State<CartScreen> {
                         "${item.quantity}",
                         style: Get.textTheme.bodyLarge,
                       ),
-                      // Text(
-                      //   "Xóa",
-                      //   style: Get.textTheme.bodyMedium,
-                      //   textAlign: TextAlign.right,
-                      // ),
                     ],
                   ),
                 ),
