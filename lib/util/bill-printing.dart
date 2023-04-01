@@ -1,7 +1,12 @@
 import 'dart:typed_data' show Uint8List;
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/util/format.dart';
+import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:tiengviet/tiengviet.dart';
@@ -10,6 +15,11 @@ Future<Uint8List> generateBillInvoice(
     PdfPageFormat format, OrderResponseModel order, int table) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interBold();
+
+  StoreModel storeInfo = Get.find<MenuViewModel>().storeDetails;
+  final provider =
+      await flutterImageProvider(NetworkImage(storeInfo!.brandPicUrl!));
+
   pdf.addPage(
     pw.Page(
       pageFormat: format,
@@ -17,18 +27,30 @@ Future<Uint8List> generateBillInvoice(
         return pw.SizedBox(
             width: double.infinity,
             child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
-                pw.Text("DEER COFFEE",
+                pw.Center(
+                  child: pw.Image(
+                    provider,
+                    width: 160,
+                    height: 160,
+                  ),
+                ),
+                pw.Text(storeInfo.name ?? "",
                     textAlign: pw.TextAlign.center,
                     style: pw.TextStyle(
                         font: font,
-                        fontSize: 18,
+                        fontSize: 10,
                         fontWeight: pw.FontWeight.bold)),
-                pw.SizedBox(height: 16),
-                pw.Text("S202 Vinhome GrandPark, TP Thu Duc, HCM",
+                pw.SizedBox(height: 8),
+                pw.Text(storeInfo.address ?? "",
                     textAlign: pw.TextAlign.center,
                     style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.Text("Hotline: 1234567890",
+                pw.Text("Hotline: ${storeInfo.phone ?? ""}",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(font: font, fontSize: 8)),
+                pw.Text("Email: ${storeInfo.email ?? ""}",
                     textAlign: pw.TextAlign.center,
                     style: pw.TextStyle(font: font, fontSize: 8)),
                 pw.SizedBox(height: 16),
@@ -61,7 +83,7 @@ Future<Uint8List> generateBillInvoice(
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                     pw.Text("Bàn: $table",
-                        textAlign: pw.TextAlign.left,
+                        textAlign: pw.TextAlign.right,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                   ],
                 ),
@@ -128,7 +150,7 @@ Future<Uint8List> generateBillInvoice(
                           children: [
                             pw.Expanded(
                               flex: 7,
-                              child: pw.Text(extra.name ?? '',
+                              child: pw.Text("+${extra.name}",
                                   textAlign: pw.TextAlign.left,
                                   style: pw.TextStyle(font: font, fontSize: 8)),
                             ),
@@ -141,6 +163,9 @@ Future<Uint8List> generateBillInvoice(
                             ),
                           ],
                         ),
+                    pw.Text(item.note ?? '',
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
                     pw.SizedBox(height: 8),
                   ]),
                 pw.Divider(
@@ -172,7 +197,7 @@ Future<Uint8List> generateBillInvoice(
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text("Phương thức TT:",
+                    pw.Text("Phương thức :",
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 9)),
                     pw.Text(order.payment!.name ?? '',
@@ -258,7 +283,7 @@ Future<Uint8List> generateStampInvoice(PdfPageFormat format,
                   pw.Text(" +${extra.name}",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-              pw.SizedBox(height: 8),
+              pw.SizedBox(height: 4),
               pw.Text(product.note ?? '',
                   textAlign: pw.TextAlign.left,
                   style: pw.TextStyle(font: font, fontSize: 8)),

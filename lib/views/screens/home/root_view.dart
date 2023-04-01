@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/Views/screens/home/orders.dart';
+import 'package:pos_apps/Views/screens/home/profile.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
-import 'package:pos_apps/views/profile.dart';
-import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:pos_apps/widgets/cart/cart_dialog.dart';
-import 'package:pos_apps/widgets/header_footer/header.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'dart:io' show Platform;
 
 import '../../../Views/setting.dart';
-import 'home.dart';
+import 'cart.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -24,7 +21,7 @@ class RootScreen extends StatefulWidget {
 
 class _RootScreenState extends State<RootScreen> {
   List<Widget> views = [
-    HomeScreen(),
+    AddToCartScreen(),
     OrdersScreen(),
     SettingsScreen(),
     ProfileScreen()
@@ -46,9 +43,9 @@ class _RootScreenState extends State<RootScreen> {
       label: 'Thiết lập',
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.account_circle),
-      activeIcon: Icon(Icons.account_circle_outlined),
-      label: 'Tài khoản',
+      icon: Icon(Icons.store),
+      activeIcon: Icon(Icons.store_outlined),
+      label: 'Cửa hàng',
     ),
   ];
   List<NavigationRailDestination> destinations = const [
@@ -68,9 +65,9 @@ class _RootScreenState extends State<RootScreen> {
       label: Text('Thiết lập'),
     ),
     NavigationRailDestination(
-      icon: Icon(Icons.account_circle),
-      selectedIcon: Icon(Icons.account_circle_outlined),
-      label: Text('Tài khoản'),
+      icon: Icon(Icons.store),
+      selectedIcon: Icon(Icons.store_outlined),
+      label: Text('Cửa hàng'),
     ),
   ];
   int _selectedIndex = 0;

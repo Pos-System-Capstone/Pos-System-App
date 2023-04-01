@@ -11,14 +11,12 @@ import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/theme_view_model.dart';
 import 'package:pos_apps/views/not_found_screen.dart';
-import 'package:pos_apps/views/profile.dart';
 import 'package:pos_apps/widgets/order_process/payment.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 import 'routes/routes_constrants.dart';
 import 'setup.dart';
-import 'views/screens/home/home.dart';
 import 'views/login_screen/login_by_mobile_pos.dart';
 import 'views/screens/home/root_view.dart';
 import 'views/startup.dart';
@@ -58,7 +56,7 @@ class _MyAppState extends State<MyApp> {
             builder: (context, builder, model) {
           return GetMaterialApp(
               debugShowCheckedModeBanner: false,
-              title: 'POS System',
+              title: 'Reso POS',
               themeMode: model.isDarkMode ? ThemeMode.dark : ThemeMode.light,
               darkTheme: AppTheme.getThemeDark(model.colorIndex),
               theme: AppTheme.getThemeLight(model.colorIndex),
@@ -80,10 +78,6 @@ class _MyAppState extends State<MyApp> {
                     return CupertinoPageRoute<bool>(
                         builder: (context) => StartUpView(),
                         settings: settings);
-                  // case RouteHandler.PAYMENT:
-                  //   return CupertinoPageRoute<bool>(
-                  //       builder: (context) => PaymentScreen(),
-                  //       settings: settings);
                   default:
                     return CupertinoPageRoute(
                         builder: (context) => NotFoundScreen(),

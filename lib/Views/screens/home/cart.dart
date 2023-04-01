@@ -9,12 +9,12 @@ import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/widgets/cart/add_product_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../../enums/order_enum.dart';
-import '../../data/model/index.dart';
-import '../../util/format.dart';
-import '../../view_model/order_view_model.dart';
-import '../cart/cart_screen.dart';
-import '../product_cart.dart';
+import '../../../enums/order_enum.dart';
+import '../../../data/model/index.dart';
+import '../../../util/format.dart';
+import '../../../view_model/order_view_model.dart';
+import '../../../Widgets/cart/cart_screen.dart';
+import '../../../Widgets/product_cart.dart';
 
 class AddToCartScreen extends StatefulWidget {
   const AddToCartScreen({super.key});
@@ -105,7 +105,7 @@ Widget orderProduct(bool isPortrait) {
                     scrollDirection: Axis.vertical,
                     mainAxisSpacing: 2,
                     crossAxisSpacing: 2,
-                    childAspectRatio: 2,
+                    childAspectRatio: 3,
                     crossAxisCount: ResponsiveHelper.isDesktop()
                         ? 3
                         : ResponsiveHelper.isTab()

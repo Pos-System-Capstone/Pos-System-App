@@ -31,7 +31,7 @@ class _CartScreenState extends State<CartScreen> {
           builder: (context, child, model) {
         int selectedTable = Get.find<OrderViewModel>().selectedTable;
         String selectedDeliType = Get.find<OrderViewModel>().deliveryType;
-        dynamic seletedDeliLable = showOrderType(selectedDeliType);
+        dynamic selectedDeliLable = showOrderType(selectedDeliType);
         List<PaymentModel?> listPayment =
             Get.find<OrderViewModel>().listPayment;
         PaymentModel? selectedPayment =
@@ -64,11 +64,11 @@ class _CartScreenState extends State<CartScreen> {
                               onPressed: () => chooseTableDialog(),
                               icon: Icon(
                                 Icons.table_bar,
-                                size: 24,
+                                size: 32,
                               ),
                               label: Text(
                                 'Bàn: $selectedTable',
-                                style: Get.textTheme.bodyMedium,
+                                style: Get.textTheme.bodyLarge,
                               ),
                             ),
                           ),
@@ -79,12 +79,12 @@ class _CartScreenState extends State<CartScreen> {
                             child: OutlinedButton.icon(
                               onPressed: () => chooseDeliTypeDialog(),
                               icon: Icon(
-                                seletedDeliLable.icon,
-                                size: 24,
+                                selectedDeliLable.icon,
+                                size: 32,
                               ),
                               label: Text(
-                                ' ${seletedDeliLable.label}',
-                                style: Get.textTheme.bodyMedium,
+                                ' ${selectedDeliLable.label}',
+                                style: Get.textTheme.bodyLarge,
                               ),
                             ),
                           ),
@@ -208,7 +208,7 @@ class _CartScreenState extends State<CartScreen> {
                                 )),
                           ),
                           Expanded(
-                            flex: 4,
+                            flex: 3,
                             child: FilledButton(
                               onPressed: () async {
                                 var result = await showConfirmDialog(
@@ -219,21 +219,30 @@ class _CartScreenState extends State<CartScreen> {
                                 }
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                                 child: Text(
                                   'Thanh toán',
-                                  style: Get.textTheme.titleLarge?.copyWith(
+                                  style: Get.textTheme.titleMedium?.copyWith(
                                       color: Get.theme.colorScheme.background),
                                 ),
                               ),
                             ),
                           ),
+                          SizedBox(
+                            width: 4,
+                          ),
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: PopupMenuButton<PaymentModel>(
                               initialValue: selectedPayment,
-                              icon: Icon(Icons.payment),
+                              // icon: Icon(Icons.payment),
                               tooltip: 'Thanh toán',
+                              child: Chip(
+                                label: Text(
+                                  selectedPayment?.name ?? '',
+                                  style: Get.textTheme.bodyLarge,
+                                ),
+                              ),
                               itemBuilder: (context) => [
                                 for (var item in listPayment)
                                   PopupMenuItem(

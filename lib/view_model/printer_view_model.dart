@@ -101,7 +101,9 @@ class PrinterViewModel extends BaseViewModel {
   void printBill(OrderResponseModel orderResponse, int table) {
     Printing.directPrintPdf(
         printer: selectedBillPrinter!,
-        format: PdfPageFormat.roll57,
+        // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
+        //     marginAll: 2 * PdfPageFormat.mm),
+        format: PdfPageFormat.roll80,
         onLayout: (PdfPageFormat format) {
           return generateBillInvoice(format, orderResponse, table);
         });
@@ -110,10 +112,8 @@ class PrinterViewModel extends BaseViewModel {
         for (var i = 1; i <= product.quantity!; i++) {
           Printing.directPrintPdf(
               printer: selectedProductPrinter!,
-              format: PdfPageFormat(
-                32 * PdfPageFormat.mm,
-                25 * PdfPageFormat.mm,
-              ),
+              format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
+                  marginAll: 2 * PdfPageFormat.mm),
               onLayout: (PdfPageFormat format) {
                 return generateStampInvoice(format, product,
                     orderResponse.checkInDate, orderResponse.invoiceId);

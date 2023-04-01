@@ -20,11 +20,12 @@ Widget productCard(Product product, List<Product>? childProducts) {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: Padding(
               padding: const EdgeInsets.all(4),
               child: Container(
                 decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                         image: NetworkImage(product.picUrl ??
                             "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fdownload.png?alt=media&token=d3d049e8-536e-4939-bb93-2704647445b4"),
@@ -33,7 +34,7 @@ Widget productCard(Product product, List<Product>? childProducts) {
             ),
           ),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Padding(
               padding: const EdgeInsets.all(4),
               child: Column(

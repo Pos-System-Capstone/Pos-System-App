@@ -110,36 +110,17 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                   ],
                 ),
                 Expanded(
-                  child: DefaultTabController(
-                    length:
-                        widget.cartItem.product.type == ProductTypeEnum.CHILD
-                            ? 2
-                            : 1,
+                  child: SingleChildScrollView(
                     child: Column(
-                      children: [
-                        TabBar(
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          tabs: widget.cartItem.product.type ==
-                                  ProductTypeEnum.CHILD
-                              ? parentProductTab
-                              : singleProductTab,
-                          isScrollable: true,
-                          indicatorColor: Get.theme.colorScheme.primary,
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                              children: widget.cartItem.product.type ==
-                                      ProductTypeEnum.CHILD
-                                  ? [
-                                      productSize(model),
-                                      addExtra(model),
-                                    ]
-                                  : [
-                                      addExtra(model),
-                                    ]),
-                        )
-                      ],
-                    ),
+                        children: widget.cartItem.product.type ==
+                                ProductTypeEnum.CHILD
+                            ? [
+                                productSize(model),
+                                addExtra(model),
+                              ]
+                            : [
+                                addExtra(model),
+                              ]),
                   ),
                 ),
                 Container(
@@ -258,40 +239,44 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   }
 
   Widget productSize(ProductViewModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: childProducts.length,
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, i) {
-            return RadioListTile(
-              contentPadding: EdgeInsets.all(8),
-              // dense: true,
-              visualDensity: VisualDensity(
-                horizontal: VisualDensity.maximumDensity,
-                vertical: VisualDensity.minimumDensity,
-              ),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Size ${childProducts[i].size!}"),
-                  Text(formatPrice(childProducts[i].sellingPrice!)),
-                ],
-              ),
-              value: childProducts[i].id,
-              groupValue: selectedSize,
-              selected: selectedSize == childProducts[i].id,
-              onChanged: (value) {
-                model.addProductToCartItem(childProducts[i]);
-                setSelectedRadio(value!);
-              },
-            );
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text("Kích cỡ", style: Get.textTheme.titleMedium),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: childProducts.length,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, i) {
+              return RadioListTile(
+                contentPadding: EdgeInsets.all(8),
+                // dense: true,
+                visualDensity: VisualDensity(
+                  horizontal: VisualDensity.maximumDensity,
+                  vertical: VisualDensity.minimumDensity,
+                ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Size ${childProducts[i].size!}"),
+                    Text(formatPrice(childProducts[i].sellingPrice!)),
+                  ],
+                ),
+                value: childProducts[i].id,
+                groupValue: selectedSize,
+                selected: selectedSize == childProducts[i].id,
+                onChanged: (value) {
+                  model.addProductToCartItem(childProducts[i]);
+                  setSelectedRadio(value!);
+                },
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
