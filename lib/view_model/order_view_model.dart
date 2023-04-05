@@ -81,11 +81,21 @@ class OrderViewModel extends BaseViewModel {
     }
   }
 
-  void getListOrder() async {
+  void getListOrder(
+      {bool isToday = true,
+      bool isYesterday = false,
+      int page = 1,
+      String? orderStatus,
+      String? orderType}) async {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
-      listOrder = await api.getListOrderOfStore(userInfo!.storeId);
+      listOrder = await api.getListOrderOfStore(userInfo!.storeId,
+          isToday: isToday,
+          isYesterday: isYesterday,
+          page: page,
+          orderStatus: orderStatus,
+          orderType: orderType);
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());

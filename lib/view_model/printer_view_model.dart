@@ -77,13 +77,13 @@ class PrinterViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void deleteBillPrinter() {
+  void removeBillPrinter() {
     selectedBillPrinter = null;
     deleteBillPrinter();
     notifyListeners();
   }
 
-  void deleteProductPrinter() {
+  void removeStampPrinter() {
     selectedProductPrinter = null;
     deleteProductPrinter();
     notifyListeners();

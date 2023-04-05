@@ -43,8 +43,32 @@ class OrderAPI {
     return json;
   }
 
-  Future<List<OrderInList>> getListOrderOfStore(String storeId) async {
-    var params = <String, dynamic>{'page': 1, 'size': 30};
+  Future<List<OrderInList>> getListOrderOfStore(String storeId,
+      {bool isToday = false,
+      bool isYesterday = false,
+      int page = 1,
+      String? orderType,
+      String? orderStatus}) async {
+    DateTime now = DateTime.now();
+    DateTime startDate = now;
+    DateTime endDate = now;
+    if (isToday == true) {
+      startDate = DateTime(now.year, now.month, now.day);
+      endDate = DateTime(now.year, now.month, now.day + 1);
+    } else if (isYesterday = true) {
+      startDate = DateTime(now.year, now.month, now.day - 1);
+      endDate = DateTime(now.year, now.month, now.day);
+    } else {
+      startDate = now.subtract(Duration(days: 7));
+      endDate = DateTime(now.year, now.month, now.day + 1);
+    }
+    var params = <String, dynamic>{
+      'page': page,
+      'size': 20,
+      'endDate': endDate.toIso8601String(),
+      'startDate': startDate.toIso8601String(),
+    };
+    print(params);
     final res =
         await request.get('stores/$storeId/orders', queryParameters: params);
     var jsonList = res.data['items'];

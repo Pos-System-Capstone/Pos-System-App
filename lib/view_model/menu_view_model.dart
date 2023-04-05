@@ -47,7 +47,6 @@ class MenuViewModel extends BaseViewModel {
       productsFilter = normalProducts;
       getStore();
       Get.find<OrderViewModel>().getListPayment();
-      Get.find<OrderViewModel>().getListOrder();
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());

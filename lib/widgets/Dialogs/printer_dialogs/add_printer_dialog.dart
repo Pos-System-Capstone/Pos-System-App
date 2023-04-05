@@ -63,7 +63,7 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                                             model.listDevice![index])
                                         ? TextButton(
                                             onPressed: () =>
-                                                model.deleteBillPrinter,
+                                                model.removeBillPrinter(),
                                             child: Text("Xoá  in hoa don"))
                                         : FilledButton(
                                             onPressed: () =>
@@ -75,7 +75,7 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                                             model.listDevice![index])
                                         ? TextButton(
                                             onPressed: () =>
-                                                model.deleteProductPrinter(),
+                                                model.removeStampPrinter(),
                                             child: Text("Xóa in tem"))
                                         : FilledButton(
                                             onPressed: () =>
