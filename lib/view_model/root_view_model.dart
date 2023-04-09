@@ -10,6 +10,9 @@ class RootViewModel extends BaseViewModel {
   int numberOfTable = 20;
   bool isDarkMode = false;
   int colorIndex = 0;
+  RootViewModel() {
+    getTableNumber().then((value) => numberOfTable = value ?? 20);
+  }
   void handleChangeTheme(bool isDarkMode) async {
     int index = await getThemeColor() ?? 0;
     if (isDarkMode) {
@@ -39,11 +42,13 @@ class RootViewModel extends BaseViewModel {
 
   void increaseNumberOfTabele() {
     numberOfTable++;
+    setTableNumber(numberOfTable);
     notifyListeners();
   }
 
   void decreaseNumberOfTabele() {
     numberOfTable--;
+    setTableNumber(numberOfTable);
     notifyListeners();
   }
 }

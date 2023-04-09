@@ -110,13 +110,17 @@ Future<void> deleteUserInfo() async {
 }
 
 Future<int?> getTableNumber() async {
-  int? number = -1;
+  int? number = 20;
   final SharedPreferences pref = await SharedPreferences.getInstance();
   if (pref.containsKey("numberOfTable")) {
     number = pref.getInt("numberOfTable");
   }
-
   return number;
+}
+
+Future<bool> setTableNumber(int num) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setInt("numberOfTable", num);
 }
 
 Future<bool> setBillPrinter(String url) async {

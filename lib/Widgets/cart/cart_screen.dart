@@ -36,6 +36,11 @@ class _CartScreenState extends State<CartScreen> {
             Get.find<OrderViewModel>().listPayment;
         PaymentModel? selectedPayment =
             Get.find<OrderViewModel>().selectedPaymentMethod;
+        if (model.status == ViewStatus.Loading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Container(
           decoration: BoxDecoration(
             color: Get.theme.colorScheme.onInverseSurface,
@@ -221,49 +226,49 @@ class _CartScreenState extends State<CartScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                                 child: Text(
-                                  'Thanh toán',
+                                  'Tạo đơn hàng',
                                   style: Get.textTheme.titleMedium?.copyWith(
                                       color: Get.theme.colorScheme.background),
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: PopupMenuButton<PaymentModel>(
-                              initialValue: selectedPayment,
-                              // icon: Icon(Icons.payment),
-                              tooltip: 'Thanh toán',
-                              child: Chip(
-                                label: Text(
-                                  selectedPayment?.name ?? '',
-                                  style: Get.textTheme.bodyLarge,
-                                ),
-                              ),
-                              itemBuilder: (context) => [
-                                for (var item in listPayment)
-                                  PopupMenuItem(
-                                    value: item,
-                                    child: item?.id == selectedPayment?.id
-                                        ? Row(children: [
-                                            Icon(Icons.check),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(item?.name ?? ''),
-                                          ])
-                                        : Text(item?.name ?? ''),
-                                  ),
-                              ],
-                              onSelected: (value) {
-                                Get.find<OrderViewModel>().selectPayment(value);
-                                selectedPayment = value;
-                              },
-                            ),
-                          )
+                          // SizedBox(
+                          //   width: 4,
+                          // ),
+                          // Expanded(
+                          //   flex: 2,
+                          //   child: PopupMenuButton<PaymentModel>(
+                          //     initialValue: selectedPayment,
+                          //     // icon: Icon(Icons.payment),
+                          //     tooltip: 'Thanh toán',
+                          //     child: Chip(
+                          //       label: Text(
+                          //         selectedPayment?.name ?? '',
+                          //         style: Get.textTheme.bodyLarge,
+                          //       ),
+                          //     ),
+                          //     itemBuilder: (context) => [
+                          //       for (var item in listPayment)
+                          //         PopupMenuItem(
+                          //           value: item,
+                          //           child: item?.id == selectedPayment?.id
+                          //               ? Row(children: [
+                          //                   Icon(Icons.check),
+                          //                   SizedBox(
+                          //                     width: 8,
+                          //                   ),
+                          //                   Text(item?.name ?? ''),
+                          //                 ])
+                          //               : Text(item?.name ?? ''),
+                          //         ),
+                          //     ],
+                          //     onSelected: (value) {
+                          //       Get.find<OrderViewModel>().selectPayment(value);
+                          //       selectedPayment = value;
+                          //     },
+                          //   ),
+                          // )
                         ],
                       ),
                     ),

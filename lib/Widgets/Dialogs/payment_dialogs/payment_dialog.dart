@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/Widgets/order_process/payment.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 import '../other_dialogs/dialog.dart';
 
@@ -11,4 +13,82 @@ void showPaymentBotomSheet(String orderId) {
       // isDismissible: true,
       isScrollControlled: true,
       PaymentScreen(orderId));
+}
+
+void scanQRCodeDialog(String qrCode, String paymentName) {
+  hideDialog();
+  Get.dialog(Dialog(
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+    child: Container(
+      width: Get.size.width * 0.8,
+      height: Get.size.height * 0.8,
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Get.theme.colorScheme.background,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Get.theme.colorScheme.shadow,
+            blurRadius: 10.0,
+            offset: Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Quét mã QR Code",
+                    style: Get.textTheme.titleMedium,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    paymentName,
+                    style: Get.textTheme.titleLarge,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    onPressed: () {
+                      hideDialog();
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: Get.theme.colorScheme.onBackground,
+                      size: 32,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color: Get.theme.colorScheme.onBackground,
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Expanded(child: CachedNetworkImage(imageUrl: qrCode)),
+        ],
+      ),
+    ),
+  ));
 }

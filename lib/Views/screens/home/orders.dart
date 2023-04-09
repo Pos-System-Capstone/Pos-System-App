@@ -7,6 +7,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../../../enums/order_enum.dart';
 import '../../../enums/view_status.dart';
+import '../../../widgets/Dialogs/other_dialogs/dialog.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -125,8 +126,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       return Column(
                         children: [
                           InkWell(
-                            onTap: () => showPaymentBotomSheet(
-                                model.listOrder[index].id!),
+                            onTap: () => {
+                              if (model.listOrder[index].status ==
+                                  OrderStatusEnum.PAID)
+                                {
+                                  orderInfoDialog(
+                                      model.listOrder[index].id ?? "")
+                                }
+                              else
+                                {
+                                  showPaymentBotomSheet(
+                                      model.listOrder[index].id!),
+                                }
+                            },
                             child: Container(
                               padding: EdgeInsets.only(left: 8, right: 8),
                               alignment: Alignment.centerLeft,

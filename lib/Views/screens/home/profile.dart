@@ -3,33 +3,47 @@ import 'package:get/get.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class ProfileScreen extends StatelessWidget {
+import '../../../util/format.dart';
+import '../../../widgets/Dialogs/other_dialogs/dialog.dart';
+
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  MenuViewModel menuViewModel = Get.find<MenuViewModel>();
+  @override
+  initState() {
+    menuViewModel.getStore();
+    menuViewModel.getListSession();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ScopedModel(
-        model: Get.find<MenuViewModel>(),
+        model: menuViewModel,
         child: ScopedModelDescendant<MenuViewModel>(
             builder: (context, build, model) {
-          return Stack(
-            children: <Widget>[
-              // Cover image
-
-              // Profile image and name
-              Positioned(
-                top: 20.0,
-                left: 20.0,
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                        radius: 80.0,
+                        radius: 60,
                         backgroundImage: NetworkImage(
                           model.storeDetails.brandPicUrl ??
                               "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash-register.png?alt=media&token=fb8b55e5-ce62-40a7-9099-b32c93e94532",
                         )),
-                    SizedBox(width: 10.0),
+                    SizedBox(width: 12.0),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +68,44 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              // Other widgets
+              Text("Ca làm việc", style: Get.textTheme.titleLarge),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Row(
+                    children: [
+                      for (var item in model.sessions!)
+                        Card(
+                          elevation: 2,
+                          child: InkWell(
+                            onTap: () => sessionDetailsDialog(item),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              width: 160,
+                              height: 120,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    item.name ?? '',
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    "${formatOnlyTime(item.startDateTime ?? '')} - ${formatOnlyTime(item.endDateTime ?? '')}",
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              )
             ],
           );
         }),

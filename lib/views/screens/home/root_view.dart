@@ -216,15 +216,7 @@ class _RootScreenState extends State<RootScreen> {
             VerticalDivider(thickness: 1, width: 1),
             // This is the main content.
             Expanded(
-              child: Column(
-                children: [
-                  // Platform.isWindows ? Header() : SizedBox(),
-                  Expanded(
-                    child: views.elementAt(_selectedIndex),
-                  ),
-                  // Footer(),
-                ],
-              ),
+              child: views.elementAt(_selectedIndex),
             )
           ],
         ),

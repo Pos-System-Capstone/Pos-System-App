@@ -88,6 +88,23 @@ class _BillScreenState extends State<BillScreen> {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Nhận món',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            showOrderType(model.currentOrder!.orderType!).label,
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
                     Divider(
                       color: Get.theme.colorScheme.onSurface,
                       thickness: 1,
@@ -104,23 +121,6 @@ class _BillScreenState extends State<BillScreen> {
                           ),
                           Text(
                             'Người dùng',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Thanh toán',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            model.currentOrder!.payment!.name!,
                             style: Get.textTheme.bodyMedium,
                           ),
                         ],
@@ -254,48 +254,48 @@ class _BillScreenState extends State<BillScreen> {
                         ],
                       ),
                     ),
-                    Divider(
-                      color: Get.theme.colorScheme.onSurface,
-                      thickness: 1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Khách đưa',
-                            style: Get.textTheme.titleMedium,
-                          ),
-                          Text(
-                            formatPrice(model.currentOrder!.finalAmount!),
-                            style: Get.textTheme.titleMedium,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      color: Get.theme.colorScheme.onSurface,
-                      thickness: 1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Trả lại',
-                            style: Get.textTheme.titleMedium,
-                          ),
-                          Text(
-                            formatPrice(model.currentOrder!.finalAmount!),
-                            style: Get.textTheme.titleMedium,
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Divider(
+                    //   color: Get.theme.colorScheme.onSurface,
+                    //   thickness: 1,
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       Text(
+                    //         'Khách đưa',
+                    //         style: Get.textTheme.titleMedium,
+                    //       ),
+                    //       Text(
+                    //         formatPrice(model.currentOrder!.finalAmount!),
+                    //         style: Get.textTheme.titleMedium,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   color: Get.theme.colorScheme.onSurface,
+                    //   thickness: 1,
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       Text(
+                    //         'Trả lại',
+                    //         style: Get.textTheme.titleMedium,
+                    //       ),
+                    //       Text(
+                    //         formatPrice(model.currentOrder!.finalAmount!),
+                    //         style: Get.textTheme.titleMedium,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

@@ -1,23 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/enums/index.dart';
-import 'package:pos_apps/enums/product_enum.dart';
-import 'package:pos_apps/view_model/menu_view_model.dart';
-import 'package:pos_apps/widgets/cart/add_product_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
-import '../../enums/order_enum.dart';
-import '../../data/model/index.dart';
-import '../../util/format.dart';
 import '../../view_model/order_view_model.dart';
-import '../Dialogs/other_dialogs/dialog.dart';
-import '../cart/cart_screen.dart';
+import '../Dialogs/payment_dialogs/payment_dialog.dart';
 import '../orders/bill_screen.dart';
-import '../product_cart.dart';
 
 class PaymentScreen extends StatefulWidget {
   String orderId;
@@ -207,9 +198,18 @@ Widget paymentTypeSelect(OrderViewModel model) {
                       child: InkWell(
                         onTap: () {
                           model.selectPayment(e);
+                          if (e.name != "Tiền mặt") {
+                            scanQRCodeDialog(
+                                e.name == "Momo"
+                                    ? "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2FIMG_0428.jpeg?alt=media&token=ffac0e03-9083-4f65-aeaa-0ecb2e8aad91"
+                                    : e.name == "VN PAY"
+                                        ? "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2FIMG_0429.jpeg?alt=media&token=c222ea8e-65a0-4be6-b973-2f2b3b3ef87a"
+                                        : "",
+                                e.name ?? "");
+                          }
                         },
                         child: Card(
-                          color: model.selectedPaymentMethod!.id == e?.id
+                          color: model.selectedPaymentMethod == e
                               ? Get.theme.colorScheme.primary
                               : Get.theme.colorScheme.onInverseSurface,
                           child: Padding(
@@ -236,20 +236,6 @@ Widget paymentTypeSelect(OrderViewModel model) {
                     ),
                   )
                   .toList(),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () {
-                model.updatePayment();
-                hideDialog();
-              },
-              child: Text("Thanh toán"),
             ),
           ),
         ),

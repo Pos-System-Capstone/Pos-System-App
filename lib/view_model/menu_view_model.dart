@@ -6,6 +6,8 @@ import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
 
 import '../data/api/index.dart';
+import '../data/api/session_data.dart';
+import '../data/model/response/sessions.dart';
 import '../enums/product_enum.dart';
 import '../enums/view_status.dart';
 
@@ -19,11 +21,14 @@ class MenuViewModel extends BaseViewModel {
   List<Product>? extraProducts = [];
   List<Product>? childProducts = [];
   List<Product>? productsFilter = [];
+  List<Session>? sessions = [];
+  SessionAPI? sessionAPI;
 
   MenuViewModel() {
     menuData = MenuData();
     storeData = StoreData();
     currentMenu = Menu();
+    sessionAPI = SessionAPI();
   }
 
   Future<void> getMenuOfStore() async {
@@ -45,7 +50,6 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == ProductTypeEnum.CHILD)
           .toList();
       productsFilter = normalProducts;
-      getStore();
       Get.find<OrderViewModel>().getListPayment();
       setState(ViewStatus.Completed);
     } catch (e) {
@@ -56,8 +60,20 @@ class MenuViewModel extends BaseViewModel {
   void getStore() async {
     try {
       setState(ViewStatus.Loading);
-      storeData?.getStoreDetail().then((value) {
+      await storeData?.getStoreDetail().then((value) {
         storeDetails = value!;
+      });
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
+
+  void getListSession() async {
+    try {
+      setState(ViewStatus.Loading);
+      await sessionAPI?.getListSessionOfStore().then((value) {
+        sessions = value;
       });
       setState(ViewStatus.Completed);
     } catch (e) {

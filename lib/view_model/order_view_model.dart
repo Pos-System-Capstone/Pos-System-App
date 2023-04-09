@@ -40,9 +40,9 @@ class OrderViewModel extends BaseViewModel {
     paymentData = PaymentData();
   }
 
-  void getListPayment() {
+  void getListPayment() async {
     setState(ViewStatus.Loading);
-    paymentData!.getListPayment().then((value) {
+    await paymentData!.getListPayment().then((value) {
       listPayment = value;
       selectedPaymentMethod = listPayment[0];
     });
@@ -71,6 +71,7 @@ class OrderViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
+      selectedPaymentMethod ??= listPayment[0];
       order.paymentId = selectedPaymentMethod!.id;
       var res = api.placeOrder(order, userInfo!.storeId);
       res.then((value) =>
@@ -150,7 +151,13 @@ class OrderViewModel extends BaseViewModel {
     try {
       Account? userInfo = await getUserInfo();
       setState(ViewStatus.Loading);
-
+      if (selectedPaymentMethod == null) {
+        showAlertDialog(
+            title: "Lỗi thanh toán",
+            content: "Vui lòng chọn phương thức thanh toán");
+        setState(ViewStatus.Completed);
+        return;
+      }
       if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
         Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable);
         api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
