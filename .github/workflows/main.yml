@@ -1,63 +1,93 @@
 on: push
 name: Flutter action
 jobs:
-  build_web:
-    name: Build Flutter (Web)
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: subosito/flutter-action@v2
-      with:
-          flutter-version: '3.3.5'
-    - run: flutter pub get
-    - run: flutter config --enable-web
-    - run: flutter build web
-    - name: Archive Production Artifact
-      uses: actions/upload-artifact@master
-      with:
-        name: web-build
-        path: build/web
-  
+  # build_web:
+  #   name: Build Flutter (Web)
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: subosito/flutter-action@v2
+  #     with:
+  #         flutter-version: '3.3.5'
+  #   - run: flutter pub get
+  #   - run: flutter config --enable-web
+  #   - run: flutter build web
+  #   - name: Archive Production Artifact
+  #     uses: actions/upload-artifact@master
+  #     with:
+  #       name: web-build
+  #       path: build/web
+
   build_ios:
     name: Build Flutter (IOS)
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: subosito/flutter-action@v2
-      with:
-        java-version: '12.x'
-    - uses: subosito/flutter-action@v1
-      with:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
           # channel: 'dev'
           architecture: x64
-    - run: flutter pub get
-    - run: flutter clean
-    - run: flutter build ios --release --no-codesign
-    - name: Upload iPA
-      uses: actions/upload-artifact@master
-      with:
-        name: ios-build
-        path: build/ios/iphoneos
+      - run: flutter pub get
+      - run: flutter clean
+      - run: flutter build ios --release --no-codesign
+      - name: Upload iPA
+        uses: actions/upload-artifact@master
+        with:
+          name: ios-build
+          path: build/ios/iphoneos
 
   build_apk:
     name: Build Flutter (Android)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v2
-      with:
-        # channel: 'dev'
-        distribution: 'zulu'
-        java-version: '11'
-    - uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.3.5'
-    - run: flutter pub get
-    - run: flutter build apk
-    - name: Upload APK
-      uses: actions/upload-artifact@master
-      with:
-        name: apk-build
-        path: build/app/outputs/apk/release
-  
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
+        with:
+          # channel: 'dev'
+          distribution: "zulu"
+          java-version: "11"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.7.10"
+      - run: flutter pub get
+      - run: flutter build apk
+      - name: Upload APK
+        uses: actions/upload-artifact@master
+        with:
+          name: apk-build
+          path: build/app/outputs/apk/release
 
+  build_windows:
+    name: Build Flutter (Windows)
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+          flutter-version: "3.7.10"
+      - name: Install project dependencies
+        run: flutter pub get
+      - name: Generate intermediates
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Enable windows build
+        run: flutter config --enable-windows-desktop
+      - name: Build artifacts
+        run: flutter build windows --release
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: "zip"
+          filename: MacRecoveryX-${{github.ref_name}}-windows.zip
+          directory: build/windows/runner/Release
+      - name: Windows Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: build/windows/runner/Release/MacRecoveryX-${{github.ref_name}}-windows.zip
