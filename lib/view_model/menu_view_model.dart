@@ -4,12 +4,17 @@ import 'package:pos_apps/data/api/store_data.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/view_model/printer_view_model.dart';
 
+import '../Widgets/Dialogs/other_dialogs/dialog.dart';
+import '../Widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 import '../data/api/index.dart';
 import '../data/api/session_data.dart';
 import '../data/model/response/sessions.dart';
+import '../enums/order_enum.dart';
 import '../enums/product_enum.dart';
 import '../enums/view_status.dart';
+import '../util/share_pref.dart';
 
 class MenuViewModel extends BaseViewModel {
   late Menu? currentMenu;
@@ -51,6 +56,7 @@ class MenuViewModel extends BaseViewModel {
           .toList();
       productsFilter = normalProducts;
       Get.find<OrderViewModel>().getListPayment();
+      getStore();
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
@@ -76,6 +82,33 @@ class MenuViewModel extends BaseViewModel {
         sessions = value;
       });
       setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
+
+  void printCloseSessionInvoice(Session session) async {
+    try {
+      setState(ViewStatus.Loading);
+      Account? userInfo = await getUserInfo();
+      if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
+        Get.find<PrinterViewModel>()
+            .printCloseSessionInvoice(session, storeDetails, userInfo!);
+        hideDialog();
+        setState(ViewStatus.Completed);
+        showAlertDialog(
+            title: "Hoàn thành", content: "In biên lai thành công ");
+      } else {
+        bool result = await showConfirmDialog(
+          title: "Lỗi in hóa đơn",
+          content: "Vui lòng chọn máy in hóa đơn",
+          confirmText: "Tiếp tục hoàn thành đơn hàng",
+          cancelText: "Chọn máy in",
+        );
+        showPrinterConfigDialog(PrinterTypeEnum.bill);
+        setState(ViewStatus.Completed);
+        return;
+      }
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }

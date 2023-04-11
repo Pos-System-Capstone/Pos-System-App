@@ -9,9 +9,11 @@ import 'base_view_model.dart';
 class RootViewModel extends BaseViewModel {
   int numberOfTable = 20;
   bool isDarkMode = false;
+  int defaultCashboxMoney = 1000000;
   int colorIndex = 0;
   RootViewModel() {
     getTableNumber().then((value) => numberOfTable = value ?? 20);
+    getCashboxMonney().then((value) => defaultCashboxMoney = value ?? 1000000);
   }
   void handleChangeTheme(bool isDarkMode) async {
     int index = await getThemeColor() ?? 0;
@@ -37,6 +39,12 @@ class RootViewModel extends BaseViewModel {
     //     : AppTheme.getThemeLight(value));
 
     colorIndex = value;
+    notifyListeners();
+  }
+
+  void setCashboxMonney(int value) {
+    defaultCashboxMoney = value;
+    setCashboxMonney(defaultCashboxMoney);
     notifyListeners();
   }
 

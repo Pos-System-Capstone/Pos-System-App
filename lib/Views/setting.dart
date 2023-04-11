@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart' hide Image;
 import 'package:get/get.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
@@ -17,20 +19,23 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  TextEditingController portController = TextEditingController(text: '9100');
-  TextEditingController ipController = TextEditingController();
-
+  RootViewModel rootViewModel = Get.find<RootViewModel>();
+  TextEditingController moneyController = TextEditingController();
   @override
   void initState() {
     super.initState();
+    moneyController = TextEditingController(
+        text: rootViewModel.defaultCashboxMoney.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModel(
-        model: Get.find<RootViewModel>(),
+        model: rootViewModel,
         child: ScopedModelDescendant<RootViewModel>(
             builder: (context, child, model) {
+          TextEditingController? controller;
+          controller?.text = model.defaultCashboxMoney.toString();
           return Scaffold(
               body: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -72,6 +77,44 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 size: 32,
                               )),
                         ],
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: Text('Số tiền hiện có',
+                              style: Get.textTheme.titleMedium)),
+                      SizedBox(
+                        width: 160,
+                        height: 48,
+                        child: TextField(
+                          controller: moneyController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: "Nhập số tiền",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      SizedBox(
+                        child: OutlinedButton(
+                            onPressed: () {
+                              model.setCashboxMonney(
+                                  int.parse(moneyController.text));
+                            },
+                            child: Text("Cập nhật")),
                       ),
                     ],
                   ),

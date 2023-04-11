@@ -43,6 +43,20 @@ class OrderAPI {
     return json;
   }
 
+  Future makePayment(OrderResponseModel order) async {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['orderId'] = order.orderId;
+    data['invoiceId'] = order.invoiceId;
+    data['orderType'] = order.orderType;
+    data['amount'] = order.finalAmount;
+    data['orderDescription'] = "Thanh toán đơn hàng";
+    data['name'] = "Deer Coffee";
+    print(data);
+    final res = await paymentRequest.post('payments', data: data);
+    var json = res.data;
+    return json;
+  }
+
   Future<List<OrderInList>> getListOrderOfStore(String storeId,
       {bool isToday = false,
       bool isYesterday = false,

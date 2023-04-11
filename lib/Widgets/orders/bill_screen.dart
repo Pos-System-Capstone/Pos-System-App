@@ -302,41 +302,41 @@ class _BillScreenState extends State<BillScreen> {
             ),
             Container(
               width: double.infinity,
-              height: 140,
+              height: 80,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        child: OutlinedButton.icon(
-                          onPressed: () async {
-                            var result = await showConfirmDialog(
-                                title: 'Xác nhận',
-                                content: 'Xác nhận huỷ đơn hàng');
-                            if (result) {
-                              model.cancleOrder(
-                                  model.currentOrder!.orderId!, 'CASH');
-                            }
-                          },
-                          icon: Icon(Icons.cancel_outlined),
-                          label: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Huỷ đơn hàng',
-                              style: Get.textTheme.titleMedium,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: Get.theme.colorScheme.onSurface,
-                      thickness: 1,
-                    ),
+                    // Expanded(
+                    //   child: Container(
+                    //     width: double.infinity,
+                    //     child: OutlinedButton.icon(
+                    //       onPressed: () async {
+                    //         var result = await showConfirmDialog(
+                    //             title: 'Xác nhận',
+                    //             content: 'Xác nhận huỷ đơn hàng');
+                    //         if (result) {
+                    //           model.cancleOrder(
+                    //               model.currentOrder!.orderId!, 'CASH');
+                    //         }
+                    //       },
+                    //       icon: Icon(Icons.cancel_outlined),
+                    //       label: Padding(
+                    //         padding: const EdgeInsets.all(8.0),
+                    //         child: Text(
+                    //           'Huỷ đơn hàng',
+                    //           style: Get.textTheme.titleMedium,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   color: Get.theme.colorScheme.onSurface,
+                    //   thickness: 1,
+                    // ),
                     Expanded(
                       child: SizedBox(
                         width: double.infinity,

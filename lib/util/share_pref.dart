@@ -118,9 +118,23 @@ Future<int?> getTableNumber() async {
   return number;
 }
 
+Future<int?> getCashboxMonney() async {
+  int? number;
+  final SharedPreferences pref = await SharedPreferences.getInstance();
+  if (pref.containsKey("numberOfTable")) {
+    number = pref.getInt("cashboxMoney");
+  }
+  return number;
+}
+
 Future<bool> setTableNumber(int num) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.setInt("numberOfTable", num);
+}
+
+Future<bool> setCashboxMonney(int num) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setInt("cashboxMoney", num);
 }
 
 Future<bool> setBillPrinter(String url) async {

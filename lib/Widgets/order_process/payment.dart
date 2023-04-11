@@ -198,15 +198,16 @@ Widget paymentTypeSelect(OrderViewModel model) {
                       child: InkWell(
                         onTap: () {
                           model.selectPayment(e);
-                          if (e.name != "Tiền mặt") {
+                          if (e.name == "VN PAY") {
+                            model.makePayment();
+                          } else if (e.name != "Tiền mặt") {
                             scanQRCodeDialog(
-                                e.name == "Momo"
+                                (e.name == "Momo"
                                     ? "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2FIMG_0428.jpeg?alt=media&token=ffac0e03-9083-4f65-aeaa-0ecb2e8aad91"
-                                    : e.name == "VN PAY"
-                                        ? "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2FIMG_0429.jpeg?alt=media&token=c222ea8e-65a0-4be6-b973-2f2b3b3ef87a"
-                                        : "",
-                                e.name ?? "");
+                                    : ""),
+                                e.name!);
                           }
+                          // model.launchInWebViewOrVC();
                         },
                         child: Card(
                           color: model.selectedPaymentMethod == e

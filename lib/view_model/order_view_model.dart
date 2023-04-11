@@ -15,6 +15,7 @@ import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pos_apps/widgets/cart/choose_table_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 import '../data/api/order_api.dart';
@@ -44,7 +45,6 @@ class OrderViewModel extends BaseViewModel {
     setState(ViewStatus.Loading);
     await paymentData!.getListPayment().then((value) {
       listPayment = value;
-      selectedPaymentMethod = listPayment[0];
     });
     setState(ViewStatus.Completed);
   }
@@ -71,11 +71,29 @@ class OrderViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
-      selectedPaymentMethod ??= listPayment[0];
-      order.paymentId = selectedPaymentMethod!.id;
+      order.paymentId = listPayment[0]!.id;
       var res = api.placeOrder(order, userInfo!.storeId);
       res.then((value) =>
           {print(value.toString()), showPaymentBotomSheet(value.toString())});
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
+
+  void makePayment() async {
+    try {
+      setState(ViewStatus.Loading);
+      Account? userInfo = await getUserInfo();
+      if (currentOrder == null) {
+        showAlertDialog(
+            title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
+        setState(ViewStatus.Completed);
+        return;
+      }
+      String url = await api.makePayment(currentOrder!);
+      print(url);
+      launchInBrowser(url);
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
@@ -109,38 +127,10 @@ class OrderViewModel extends BaseViewModel {
       Account? userInfo = await getUserInfo();
       // OrderResponseModel orderRes =
       //     await api.getOrderOfStore(userInfo!.storeId, orderId);
-      api.getOrderOfStore(userInfo!.storeId, orderId).then((value) => {
-            currentOrder = value,
-            selectedPaymentMethod = currentOrder!.payment,
-            setState(ViewStatus.Completed)
-          });
+      api.getOrderOfStore(userInfo!.storeId, orderId).then(
+          (value) => {currentOrder = value, setState(ViewStatus.Completed)});
     } catch (e) {
       showAlertDialog(title: "Lỗi đơn hàng", content: e.toString());
-      setState(ViewStatus.Error);
-    }
-  }
-
-  Future<void> updatePayment() async {
-    try {
-      Account? userInfo = await getUserInfo();
-      setState(ViewStatus.Loading);
-      api
-          .updateOrder(userInfo!.storeId, currentOrder!.orderId!,
-              currentOrder?.orderStatus, selectedPaymentMethod?.id)
-          .then((value) => {
-                currentOrderId = value,
-              });
-      if (currentOrderId != null) {
-        showAlertDialog(
-            title: "Cập nhật thanh toán",
-            content: "Cập nhật thanh toán thành công");
-        getOrderByStore(currentOrderId!);
-      }
-      setState(ViewStatus.Completed);
-    } catch (e, stacktrace) {
-      showAlertDialog(
-          title: "Lỗi cập nhật đơn hàng",
-          content: e.toString() + stacktrace.toString());
       setState(ViewStatus.Error);
     }
   }
@@ -159,11 +149,12 @@ class OrderViewModel extends BaseViewModel {
         return;
       }
       if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
-        Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable);
         api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
             selectedPaymentMethod!.id);
-        setState(ViewStatus.Completed);
+        Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
+            selectedPaymentMethod!.name ?? "Tiền mặt");
         clearOrder();
+        setState(ViewStatus.Completed);
         showAlertDialog(
             title: "Hoàn thành đơn hàng",
             content: "Hoàn thành đơn hàng thành công");
@@ -182,10 +173,10 @@ class OrderViewModel extends BaseViewModel {
           api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
               selectedPaymentMethod!.id);
           setState(ViewStatus.Completed);
-          clearOrder();
           showAlertDialog(
               title: "Hoàn thành đơn hàng",
               content: "Hoàn thành đơn hàng thành công");
+          clearOrder();
         }
       }
     } catch (e) {
@@ -214,12 +205,32 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void clearOrder() {
-    setState(ViewStatus.Loading);
     hideBottomSheet();
     currentOrderId = null;
     currentOrder = null;
-    selectedPaymentMethod = listPayment[0];
-    setState(ViewStatus.Completed);
+    selectedPaymentMethod = null;
     getListOrder();
+  }
+
+  Future<void> launchInWebViewOrVC() async {
+    Uri url = Uri.parse('https://www.google.com/');
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(
+          headers: <String, String>{'my_header_key': 'my_header_value'}),
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Future<void> launchInBrowser(String value) async {
+    Uri url = Uri.parse(value);
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+    )) {
+      throw Exception('Could not launch $url');
+    }
   }
 }

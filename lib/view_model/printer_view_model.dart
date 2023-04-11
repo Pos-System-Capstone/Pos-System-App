@@ -17,9 +17,12 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 import 'package:network_tools/network_tools.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/sessions.dart';
+import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:printing/printing.dart';
+import '../data/model/account.dart';
 import '../util/bill-printing.dart';
 import '../widgets/Dialogs/other_dialogs/dialog.dart';
 import 'base_view_model.dart';
@@ -98,14 +101,15 @@ class PrinterViewModel extends BaseViewModel {
         });
   }
 
-  void printBill(OrderResponseModel orderResponse, int table) {
+  void printBill(
+      OrderResponseModel orderResponse, int table, String paymentName) {
     Printing.directPrintPdf(
         printer: selectedBillPrinter!,
         // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
         //     marginAll: 2 * PdfPageFormat.mm),
         format: PdfPageFormat.roll80,
         onLayout: (PdfPageFormat format) {
-          return generateBillInvoice(format, orderResponse, table);
+          return generateBillInvoice(format, orderResponse, table, paymentName);
         });
     if (orderResponse.productList != null) {
       for (var product in orderResponse.productList!) {
@@ -116,11 +120,24 @@ class PrinterViewModel extends BaseViewModel {
                   marginAll: 2 * PdfPageFormat.mm),
               onLayout: (PdfPageFormat format) {
                 return generateStampInvoice(format, product,
-                    orderResponse.checkInDate, orderResponse.invoiceId);
+                    orderResponse.checkInDate, orderResponse.invoiceId, table);
               });
         }
       }
     }
+  }
+
+  void printCloseSessionInvoice(
+      Session session, StoreModel storeModel, Account account) {
+    Printing.directPrintPdf(
+        printer: selectedBillPrinter!,
+        // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
+        //     marginAll: 2 * PdfPageFormat.mm),
+        format: PdfPageFormat.roll57,
+        onLayout: (PdfPageFormat format) {
+          return generateClostSessionInvoice(
+              format, session, storeModel, account);
+        });
   }
 
   bool isBillPrinterConnected(Printer printer) {

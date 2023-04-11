@@ -99,9 +99,10 @@ class MyRequest {
       onError: (e, handler) async {
         print(e.response?.statusCode);
         if (e.response?.statusCode == 400) {
+          print(e.response?.data);
           showAlertDialog(
             title: "Lỗi",
-            content: e.response?.data["Error"],
+            content: e.response?.data,
           );
         } else if (e.response?.statusCode == 500) {
           Future<bool> res = showConfirmDialog(
@@ -130,8 +131,64 @@ class MyRequest {
   }
 }
 
+class PaymentRequest {
+  static BaseOptions options = BaseOptions(
+      // baseUrl: 'https://api.pos-tech.systems/api/v1/',
+      baseUrl: 'https://payment.endy.bio/api/v1/',
+      headers: {
+        Headers.contentTypeHeader: "application/json",
+        Headers.acceptHeader: "text/plain"
+      },
+      sendTimeout: Duration(seconds: 15),
+      receiveTimeout: Duration(seconds: 5));
+  late Dio _inner;
+
+  PaymentRequest() {
+    _inner = Dio(options);
+    _inner.interceptors.add(CustomInterceptors());
+    _inner.interceptors.add(InterceptorsWrapper(
+      onResponse: (e, handler) {
+        return handler.next(e); // continue
+      },
+      onError: (e, handler) async {
+        print(e.response?.statusCode);
+        if (e.response?.statusCode == 400) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
+        } else if (e.response?.statusCode == 500) {
+          Future<bool> res = showConfirmDialog(
+            title: "Lỗi hệ thống",
+            content: "Vui long thử lại sau",
+          );
+          res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
+        } else {
+          showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["Error"],
+          );
+        }
+        print(e.response?.data["Error"]);
+        handler.next(e);
+      },
+    ));
+  }
+
+  Dio get paymentRequest {
+    return _inner;
+  }
+
+  set setToken(token) {
+    options.headers["Authorization"] = "Bearer $token";
+  }
+}
+
 final requestObj = MyRequest();
 final request = requestObj.request;
+
+final paymentRequestObj = PaymentRequest();
+final paymentRequest = paymentRequestObj.paymentRequest;
 
 class MyHttpOverrides extends HttpOverrides {
   @override

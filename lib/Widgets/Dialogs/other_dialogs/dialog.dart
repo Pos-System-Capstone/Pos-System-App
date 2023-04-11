@@ -8,6 +8,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../../../data/model/response/sessions.dart';
 import '../../../enums/index.dart';
+import '../../../view_model/menu_view_model.dart';
 
 Future<bool> showAlertDialog(
     {String title = "Thông báo",
@@ -297,7 +298,7 @@ void sessionDetailsDialog(Session session) {
             children: [
               OutlinedButton(
                 onPressed: () {
-                  hideDialog();
+                  Get.find<MenuViewModel>().printCloseSessionInvoice(session);
                 },
                 child: Text(
                   "Kết Ca",
