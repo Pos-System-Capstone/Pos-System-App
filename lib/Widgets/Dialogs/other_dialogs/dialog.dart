@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
@@ -220,41 +221,28 @@ void sessionDetailsDialog(Session session) {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${formatOnlyTime(session.startDateTime ?? '')} - ${formatOnlyTime(session.endDateTime ?? '')} ${formatOnlyDate(session.endDateTime ?? '')}",
-                    style: Get.textTheme.titleMedium,
-                  ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  session.name ?? '',
+                  style: Get.textTheme.titleLarge,
                 ),
               ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    session.name ?? '',
-                    style: Get.textTheme.titleLarge,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      hideDialog();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: Get.theme.colorScheme.onBackground,
-                      size: 32,
-                    ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  onPressed: () {
+                    hideDialog();
+                  },
+                  icon: Icon(
+                    Icons.close,
+                    color: Get.theme.colorScheme.onBackground,
+                    size: 32,
                   ),
                 ),
               ),
@@ -263,36 +251,39 @@ void sessionDetailsDialog(Session session) {
           Divider(
             color: Get.theme.colorScheme.onBackground,
           ),
-          SizedBox(
-            height: 16,
+          Text(
+            "${formatOnlyTime(session.startDateTime ?? '')} - ${formatOnlyTime(session.endDateTime ?? '')} ${formatOnlyDate(session.endDateTime ?? '')}",
+            style: Get.textTheme.titleMedium,
           ),
           Expanded(
-              child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: dashboardCard(
-                      title: "Tổng số đơn hàng",
-                      value: session.numberOfOrders.toString(),
+            child: SingleChildScrollView(
+                child: Column(
+              children: [
+                Wrap(
+                  children: [
+                    Expanded(
+                      child: dashboardCard(
+                        title: "Tổng số đơn hàng",
+                        value: session.numberOfOrders.toString(),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: dashboardCard(
-                      title: "Tổng doanh thu",
-                      value: formatPrice(session.totalFinalAmount ?? 0),
+                    Expanded(
+                      child: dashboardCard(
+                        title: "Tổng doanh thu",
+                        value: formatPrice(session.totalFinalAmount ?? 0),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: dashboardCard(
-                      title: "Tổng tiền trong két",
-                      value: formatPrice(session.currentCashInVault ?? 0),
+                    Expanded(
+                      child: dashboardCard(
+                        title: "Tổng tiền trong két",
+                        value: formatPrice(session.currentCashInVault ?? 0),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          )),
+                  ],
+                ),
+              ],
+            )),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -301,7 +292,7 @@ void sessionDetailsDialog(Session session) {
                   Get.find<MenuViewModel>().printCloseSessionInvoice(session);
                 },
                 child: Text(
-                  "Kết Ca",
+                  "In biên lai",
                 ),
               ),
             ],
@@ -418,7 +409,7 @@ void orderInfoDialog(String orderId) {
           return Container(
               width: Get.size.width * 0.6,
               height: Get.size.height * 0.8,
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Get.theme.colorScheme.background,
                 shape: BoxShape.rectangle,
@@ -441,31 +432,24 @@ void orderInfoDialog(String orderId) {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                          child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Icon(Icons.receipt_long_outlined),
-                      )),
-                      Expanded(
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
                             "Thông tin đơn hàng",
-                            style: Get.textTheme.titleLarge,
+                            style: Get.textTheme.titleMedium,
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            onPressed: () {
-                              hideDialog();
-                            },
-                            icon: Icon(
-                              Icons.close,
-                              color: Get.theme.colorScheme.onBackground,
-                              size: 32,
-                            ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          onPressed: () {
+                            hideDialog();
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            color: Get.theme.colorScheme.onBackground,
+                            size: 32,
                           ),
                         ),
                       ),
@@ -474,24 +458,10 @@ void orderInfoDialog(String orderId) {
                   Divider(
                     color: Get.theme.colorScheme.onBackground,
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Sản phẩm',
-                              style: Get.textTheme.titleMedium,
-                            ),
-                          ),
-                          Divider(
-                            color: Get.theme.colorScheme.onSurface,
-                            thickness: 1,
-                          ),
                           Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
@@ -554,219 +524,179 @@ void orderInfoDialog(String orderId) {
                                   model.currentOrder!.productList![i]);
                             },
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Thông tin thanh toán',
-                              style: Get.textTheme.titleMedium,
-                            ),
+                          Divider(
+                            color: Get.theme.colorScheme.onSurface,
+                            thickness: 1,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Mã',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                model.currentOrder!.invoiceId ?? "",
+                                style: Get.textTheme.bodyMedium,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Nhận món',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                showOrderType(model.currentOrder!.orderType!)
+                                    .label,
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
                           Divider(
                             color: Get.theme.colorScheme.onSurface,
                             thickness: 1,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Mã đơn',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  model.currentOrder!.invoiceId ?? "",
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Khách hàng',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                'Người dùng',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Nhận món',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  showOrderType(model.currentOrder!.orderType!)
-                                      .label,
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Trạng thái',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                showOrderStatus(
+                                    model.currentOrder!.orderStatus ?? ""),
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
-                          Divider(
-                            color: Get.theme.colorScheme.onSurface,
-                            thickness: 1,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Phuong thức',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                model.currentOrder!.payment!.name ?? "",
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Khách hàng',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  'Người dùng',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Trạng thái',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  showOrderStatus(
-                                      model.currentOrder!.orderStatus ?? ""),
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Phuong thức thanh toán',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  model.currentOrder!.payment!.name ?? "",
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Thời gian',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  formatTime(
-                                      model.currentOrder!.checkInDate ?? ""),
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Thời gian',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                formatTime(
+                                    model.currentOrder!.checkInDate ?? ""),
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
                           Divider(
                             color: Get.theme.colorScheme.onSurface,
                             thickness: 1,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Tạm tính',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  formatPrice(model.currentOrder!.totalAmount!),
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Tạm tính',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                formatPrice(model.currentOrder!.totalAmount!),
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Giảm giá',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  " - ${formatPrice(model.currentOrder!.discount!)}",
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Giảm giá',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                " - ${formatPrice(model.currentOrder!.discount!)}",
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '%VAT',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  percentCalculation(model.currentOrder!.vat!),
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '%VAT',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                percentCalculation(model.currentOrder!.vat!),
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'VAT',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  formatPrice(
-                                      model.currentOrder!.vatAmount ?? 0),
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'VAT',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                formatPrice(model.currentOrder!.vatAmount ?? 0),
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
                           Divider(
                             color: Get.theme.colorScheme.onSurface,
                             thickness: 1,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Tổng tiền',
-                                  style: Get.textTheme.titleMedium,
-                                ),
-                                Text(
-                                  formatPrice(model.currentOrder!.finalAmount!),
-                                  style: Get.textTheme.titleMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Tổng tiền',
+                                style: Get.textTheme.titleMedium,
+                              ),
+                              Text(
+                                formatPrice(model.currentOrder!.finalAmount!),
+                                style: Get.textTheme.titleMedium,
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -901,4 +831,36 @@ void hideBottomSheet() {
   if (Get.isBottomSheetOpen ?? false) {
     Get.back();
   }
+}
+
+Future<String?> inputDialog(String title, String hint, String? value,
+    {bool isNum = false}) async {
+  hideDialog();
+  String? result;
+  await Get.dialog(AlertDialog(
+    title: Text(title),
+    content: TextField(
+      keyboardType: isNum ? TextInputType.number : TextInputType.text,
+      inputFormatters:
+          isNum ? [FilteringTextInputFormatter.digitsOnly] : null, // Only numb
+      controller: TextEditingController(text: value),
+      decoration: InputDecoration(hintText: hint),
+      onChanged: (value) {
+        result = value;
+      },
+    ),
+    actions: [
+      TextButton(
+          onPressed: () {
+            Get.back(result: result);
+          },
+          child: Text('Cập nhật')),
+      TextButton(
+          onPressed: () {
+            Get.back(result: value);
+          },
+          child: Text('Huỷ')),
+    ],
+  ));
+  return result;
 }

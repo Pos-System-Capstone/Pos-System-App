@@ -124,108 +124,112 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.all(16),
+                  margin: EdgeInsets.all(4),
                   width: double.infinity,
                   child: Column(
                     children: [
                       Container(
-                          padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                initialValue: model.notes,
-                                maxLines: 2,
-                                decoration: InputDecoration(
-                                  hintText: "Ghi chú",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  model.setNotes(value);
-                                },
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            initialValue: model.notes,
+                            maxLines: 2,
+                            decoration: InputDecoration(
+                              hintText: "Ghi chú",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            ],
-                          )),
+                            ),
+                            onChanged: (value) {
+                              model.setNotes(value);
+                            },
+                          ),
+                        ],
+                      )),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Row(
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Tổng tiền",
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                                Text(
-                                  formatPrice(model.totalAmount!),
-                                  style: Get.textTheme.titleMedium,
-                                ),
-                              ],
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    model.decreaseQuantity();
+                                  },
+                                  icon: Icon(
+                                    Icons.remove,
+                                    size: 32,
+                                  )),
+                              Text("${model.quantity}",
+                                  style: Get.textTheme.titleLarge),
+                              IconButton(
+                                  onPressed: () {
+                                    model.increaseQuantity();
+                                  },
+                                  icon: Icon(
+                                    Icons.add,
+                                    size: 32,
+                                  )),
+                            ],
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: OutlinedButton(
-                                onPressed: () {
-                                  model.deleteCartItemInCart(widget.idx);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text("Xoá",
-                                      style: Get.textTheme.titleMedium),
-                                )),
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            flex: 2,
-                            child: FilledButton(
-                                onPressed: () {
-                                  model.updateCartItemInCart(widget.idx);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text("Cập nhật ",
-                                      style: Get.textTheme.titleMedium
-                                          ?.copyWith(
-                                              color: Get.theme.colorScheme
-                                                  .background)),
-                                )),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      model.decreaseQuantity();
-                                    },
-                                    icon: Icon(
-                                      Icons.remove,
-                                      size: 40,
-                                    )),
-                                Text("${model.quantity}",
-                                    style: Get.textTheme.titleLarge),
-                                IconButton(
-                                    onPressed: () {
-                                      model.increaseQuantity();
-                                    },
-                                    icon: Icon(
-                                      Icons.add,
-                                      size: 40,
-                                    )),
-                              ],
-                            ),
-                          )
+                          model.quantity == 0
+                              ? Expanded(
+                                  child: FilledButton(
+                                      onPressed: () {
+                                        model.deleteCartItemInCart(widget.idx);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 8, 0, 8),
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text("Xóa",
+                                              style: Get.textTheme.titleMedium
+                                                  ?.copyWith(
+                                                      color: Get
+                                                          .theme
+                                                          .colorScheme
+                                                          .background)),
+                                        ),
+                                      )),
+                                )
+                              : Expanded(
+                                  child: FilledButton(
+                                      onPressed: () {
+                                        model.updateCartItemInCart(widget.idx);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 8, 0, 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text("Cập nhật ",
+                                                style: Get.textTheme.titleMedium
+                                                    ?.copyWith(
+                                                        color: Get
+                                                            .theme
+                                                            .colorScheme
+                                                            .background)),
+                                            Text(
+                                              formatPrice(model.totalAmount!),
+                                              style: Get.textTheme.titleMedium
+                                                  ?.copyWith(
+                                                      color: Get
+                                                          .theme
+                                                          .colorScheme
+                                                          .background),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                )
                         ],
-                      ),
-                      SizedBox(
-                        height: 8,
                       ),
                     ],
                   ),
@@ -239,117 +243,87 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   }
 
   Widget productSize(ProductViewModel model) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text("Kích cỡ", style: Get.textTheme.titleMedium),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: childProducts.length,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, i) {
-              return RadioListTile(
-                contentPadding: EdgeInsets.all(8),
-                // dense: true,
-                visualDensity: VisualDensity(
-                  horizontal: VisualDensity.maximumDensity,
-                  vertical: VisualDensity.minimumDensity,
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Size ${childProducts[i].size!}"),
-                    Text(formatPrice(childProducts[i].sellingPrice!)),
-                  ],
-                ),
-                value: childProducts[i].id,
-                groupValue: selectedSize,
-                selected: selectedSize == childProducts[i].id,
-                onChanged: (value) {
-                  model.addProductToCartItem(childProducts[i]);
-                  setSelectedRadio(value!);
-                },
-              );
-            },
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text("Kích cỡ", style: Get.textTheme.titleMedium),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: childProducts.length,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (context, i) {
+            return RadioListTile(
+              contentPadding: EdgeInsets.all(8),
+              // dense: true,
+              visualDensity: VisualDensity(
+                horizontal: VisualDensity.maximumDensity,
+                vertical: VisualDensity.minimumDensity,
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Size ${childProducts[i].size!}"),
+                  Text(formatPrice(childProducts[i].sellingPrice!)),
+                ],
+              ),
+              value: childProducts[i].id,
+              groupValue: selectedSize,
+              selected: selectedSize == childProducts[i].id,
+              onChanged: (value) {
+                model.addProductToCartItem(childProducts[i]);
+                setSelectedRadio(value!);
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 
   Widget addExtra(ProductViewModel model) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: extraCategory.map((e) {
-              List<Product> extraProduct =
-                  menuViewModel.getProductsByCategory(e.id);
-              return Column(
-                children: [
-                  Text(e.name!, style: Get.textTheme.titleMedium),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: extraProduct.length,
-                    physics: ScrollPhysics(),
-                    itemBuilder: (context, i) {
-                      return CheckboxListTile(
-                        contentPadding: EdgeInsets.all(8),
-                        // dense: true,
-                        visualDensity: VisualDensity(
-                          horizontal: VisualDensity.minimumDensity,
-                          vertical: VisualDensity.minimumDensity,
-                        ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(extraProduct[i].name!),
-                            Text(
-                                "+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
-                          ],
-                        ),
-
-                        value: model.isExtraExist(extraProduct[i]),
-                        selected: model.isExtraExist(extraProduct[i]),
-                        onChanged: (value) {
-                          model.addOrRemoveExtra(extraProduct[i]);
-                        },
-                      );
-                    },
-                  ),
-                ],
-              );
-            }).toList()),
-      ),
-    );
-  }
-
-  Widget productNotes(ProductViewModel model) {
-    return Container(
-        padding: EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            TextFormField(
-              initialValue: model.notes,
-              maxLines: 2,
-              decoration: InputDecoration(
-                hintText: "Ghi chú",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+          children: extraCategory.map((e) {
+            List<Product> extraProduct =
+                menuViewModel.getProductsByCategory(e.id);
+            return Column(
+              children: [
+                Text(e.name!, style: Get.textTheme.titleMedium),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: extraProduct.length,
+                  physics: ScrollPhysics(),
+                  itemBuilder: (context, i) {
+                    return CheckboxListTile(
+                      contentPadding: EdgeInsets.all(8),
+                      // dense: true,
+                      visualDensity: VisualDensity(
+                        horizontal: VisualDensity.minimumDensity,
+                        vertical: VisualDensity.minimumDensity,
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(extraProduct[i].name!),
+                          Text(
+                              "+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
+                        ],
+                      ),
+
+                      value: model.isExtraExist(extraProduct[i]),
+                      selected: model.isExtraExist(extraProduct[i]),
+                      onChanged: (value) {
+                        model.addOrRemoveExtra(extraProduct[i]);
+                      },
+                    );
+                  },
                 ),
-              ),
-              onChanged: (value) {
-                model.setNotes(value);
-              },
-            ),
-          ],
-        ));
+              ],
+            );
+          }).toList()),
+    );
   }
 }

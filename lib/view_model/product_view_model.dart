@@ -39,7 +39,7 @@ class ProductViewModel extends BaseViewModel {
   }
 
   void decreaseQuantity() {
-    if (quantity == 1) {
+    if (quantity == 0) {
       return;
     }
     quantity -= 1;

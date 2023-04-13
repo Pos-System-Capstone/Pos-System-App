@@ -32,80 +32,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                        radius: 60,
+                        radius: 48,
                         backgroundImage: NetworkImage(
                           model.storeDetails.brandPicUrl ??
                               "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash-register.png?alt=media&token=fb8b55e5-ce62-40a7-9099-b32c93e94532",
                         )),
                     SizedBox(width: 12.0),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             "${model.storeDetails.name}(${model.storeDetails.code})",
-                            style: Get.textTheme.titleLarge),
-                        Text(
-                          model.storeDetails.address ?? "Store Name",
-                          style: Get.textTheme.titleSmall,
-                        ),
-                        Text(
-                          model.storeDetails.phone ?? "Store Name",
-                          style: Get.textTheme.titleSmall,
-                        ),
-                        Text(
-                          model.storeDetails.email ?? "Store Name",
-                          style: Get.textTheme.titleSmall,
-                        ),
-                      ],
+                            style: Get.textTheme.titleMedium,
+                          ),
+                          Text(
+                            model.storeDetails.address ?? "Store Name",
+                            style: Get.textTheme.titleSmall,
+                          ),
+                          Text(
+                            model.storeDetails.phone ?? "Store Name",
+                            style: Get.textTheme.titleSmall,
+                          ),
+                          Text(
+                            model.storeDetails.email ?? "Store Name",
+                            style: Get.textTheme.titleSmall,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
               Text("Ca làm việc", style: Get.textTheme.titleLarge),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Row(
-                    children: [
-                      for (var item in model.sessions!)
-                        Card(
-                          elevation: 2,
-                          child: InkWell(
-                            onTap: () => sessionDetailsDialog(item),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              width: 160,
-                              height: 120,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    item.name ?? '',
-                                    style: Get.textTheme.titleMedium,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    "${formatOnlyTime(item.startDateTime ?? '')} - ${formatOnlyTime(item.endDateTime ?? '')}",
-                                    style: Get.textTheme.titleMedium,
-                                  ),
-                                ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Wrap(
+                      children: [
+                        for (var item in model.sessions!)
+                          Card(
+                            elevation: 2,
+                            child: InkWell(
+                              onTap: () => sessionDetailsDialog(item),
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                width: 160,
+                                height: 100,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      item.name ?? '',
+                                      style: Get.textTheme.titleMedium,
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      "${formatOnlyTime(item.startDateTime ?? '')} - ${formatOnlyTime(item.endDateTime ?? '')}",
+                                      style: Get.textTheme.titleMedium,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                    ],
+                          )
+                      ],
+                    ),
                   ),
                 ),
-              )
+              ),
             ],
           );
         }),

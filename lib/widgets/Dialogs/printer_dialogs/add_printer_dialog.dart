@@ -27,14 +27,20 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                     style: Get.textTheme.titleLarge,
                   ),
                 ),
-                FilledButton(
-                    onPressed: () => model.scanPrinter(),
-                    child: model.status == ViewStatus.Loading
-                        ? Text('Dang tìm kiếm...')
-                        : Text('Tìm kiếm')),
-                SizedBox(height: 15),
-                Text(
-                  'Tìm thấy: ${model.listDevice?.length} thiết bị',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FilledButton(
+                        onPressed: () => model.scanPrinter(),
+                        child: model.status == ViewStatus.Loading
+                            ? Text('Dang tìm kiếm...')
+                            : Text('Tìm kiếm')),
+                    SizedBox(width: 8),
+                    Text(
+                      'Tìm thấy: ${model.listDevice?.length} thiết bị',
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -64,25 +70,25 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                                         ? TextButton(
                                             onPressed: () =>
                                                 model.removeBillPrinter(),
-                                            child: Text("Xoá  in hoa don"))
+                                            child: Text("Xoá"))
                                         : FilledButton(
                                             onPressed: () =>
                                                 model.selectBillPrinter(
                                                   model.listDevice![index],
                                                 ),
-                                            child: Text("Ket noi in hoa don"))
+                                            child: Text("Kết nối"))
                                     : model.isStampPrinterConnected(
                                             model.listDevice![index])
                                         ? TextButton(
                                             onPressed: () =>
                                                 model.removeStampPrinter(),
-                                            child: Text("Xóa in tem"))
+                                            child: Text("Xóa"))
                                         : FilledButton(
                                             onPressed: () =>
                                                 model.selectProductPrinter(
                                                   model.listDevice![index],
                                                 ),
-                                            child: Text("Ket noi in tem")),
+                                            child: Text("Kết nối")),
                                 SizedBox(width: 8),
                                 OutlinedButton(
                                     onPressed: () => model

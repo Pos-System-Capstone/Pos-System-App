@@ -45,7 +45,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             return Column(
               children: [
                 SizedBox(
-                  height: 60,
+                  height: 40,
                   child: Row(
                     children: [
                       OutlinedButton(
@@ -63,10 +63,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     isYesterday: isYesterday,
                                     page: page)
                               },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Hôm nay"),
-                          )),
+                          child: Text("Hôm nay")),
                       SizedBox(width: 8),
                       OutlinedButton(
                           style: ButtonStyle(
@@ -84,38 +81,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     isYesterday: isYesterday,
                                     page: page)
                               },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Hôm qua"),
-                          )),
+                          child: Text("Hôm qua")),
                       Spacer(),
-                      Text(
-                        "Trang:",
-                        style: Get.textTheme.titleMedium,
-                      ),
-                      for (var i = 1; i < 6; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: OutlinedButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      page == i
-                                          ? Get.theme.colorScheme.surfaceVariant
-                                          : Get.theme.colorScheme.background)),
-                              onPressed: () => {
-                                    setState(() {
-                                      page = i;
-                                    }),
-                                    model.getListOrder(
-                                        isToday: isToday,
-                                        isYesterday: isYesterday,
-                                        page: page)
-                                  },
-                              child: Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Text(i.toString()),
-                              )),
-                        )
                     ],
                   ),
                 ),
@@ -141,45 +108,31 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             },
                             child: Container(
                               padding: EdgeInsets.only(left: 8, right: 8),
-                              alignment: Alignment.centerLeft,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Icon(Icons.receipt_long_outlined),
-                                  SizedBox(width: 16),
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
+                                        Text(
+                                            model.listOrder[index].invoiceId
+                                                .toString(),
+                                            style: Get.textTheme.titleSmall),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Text(
-                                                model.listOrder[index].invoiceId
-                                                    .toString(),
-                                                style:
-                                                    Get.textTheme.titleSmall),
                                             Text(
                                               formatTime(model.listOrder[index]
                                                       .endDate ??
                                                   DateTime.now().toString()),
                                             ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                                "Nhân viên: ${model.listOrder[index].staffName}",
-                                                style:
-                                                    Get.textTheme.titleSmall),
                                             Text(
                                                 showOrderStatus(model
                                                         .listOrder[index]
@@ -200,7 +153,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                                "Thanh toán: ${formatPrice(model.listOrder[index].finalAmount ?? 0)}",
+                                                model.listOrder[index]
+                                                        .staffName ??
+                                                    '',
                                                 style:
                                                     Get.textTheme.titleSmall),
                                             Text(
@@ -228,6 +183,44 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         ],
                       );
                     },
+                  ),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    height: 40,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Trang:",
+                          style: Get.textTheme.titleMedium,
+                        ),
+                        for (var i = 1; i < 7; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: OutlinedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        page == i
+                                            ? Get.theme.colorScheme
+                                                .surfaceVariant
+                                            : Get
+                                                .theme.colorScheme.background)),
+                                onPressed: () => {
+                                      setState(() {
+                                        page = i;
+                                      }),
+                                      model.getListOrder(
+                                          isToday: isToday,
+                                          isYesterday: isYesterday,
+                                          page: page)
+                                    },
+                                child: Text(i.toString())),
+                          )
+                      ],
+                    ),
                   ),
                 ),
               ],

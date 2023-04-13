@@ -302,7 +302,7 @@ class _BillScreenState extends State<BillScreen> {
             ),
             Container(
               width: double.infinity,
-              height: 80,
+              height: 100,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -338,26 +338,29 @@ class _BillScreenState extends State<BillScreen> {
                     //   thickness: 1,
                     // ),
                     Expanded(
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: FilledButton.icon(
-                          onPressed: () async {
-                            var result = await showConfirmDialog(
-                                title: 'Xác nhận',
-                                content: 'Xác nhận hoàn thành đơn hàng');
-                            if (result) {
-                              model.completeOrder(
-                                model.currentOrder!.orderId!,
-                              );
-                            }
-                          },
-                          icon: Icon(Icons.check),
-                          label: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Hoàn thành',
-                              style: Get.textTheme.titleMedium?.copyWith(
-                                  color: Get.theme.colorScheme.background),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            onPressed: () async {
+                              var result = await showConfirmDialog(
+                                  title: 'Xác nhận',
+                                  content: 'Xác nhận hoàn thành đơn hàng');
+                              if (result) {
+                                model.completeOrder(
+                                  model.currentOrder!.orderId!,
+                                );
+                              }
+                            },
+                            icon: Icon(Icons.check),
+                            label: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Hoàn thành',
+                                style: Get.textTheme.titleMedium?.copyWith(
+                                    color: Get.theme.colorScheme.background),
+                              ),
                             ),
                           ),
                         ),

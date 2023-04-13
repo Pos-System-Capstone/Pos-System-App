@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/theme/app_theme.dart';
 import 'package:pos_apps/util/share_pref.dart';
 
@@ -42,10 +43,11 @@ class RootViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void setCashboxMonney(int value) {
+  void setCashboxMoney(int value) {
+    setState(ViewStatus.Loading);
     defaultCashboxMoney = value;
-    setCashboxMonney(defaultCashboxMoney);
-    notifyListeners();
+    setCashboxMonney(value);
+    setState(ViewStatus.Completed);
   }
 
   void increaseNumberOfTabele() {

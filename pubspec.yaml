@@ -56,6 +56,7 @@ dependencies:
   printing: ^5.10.2
   simple_barcode_scanner: ^0.0.8
   url_launcher: ^6.1.10
+  pretty_qr_code: ^2.0.3
 
 dev_dependencies:
   flutter_test:

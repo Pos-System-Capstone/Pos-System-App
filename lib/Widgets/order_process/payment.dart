@@ -43,7 +43,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   );
                 }
                 return Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -63,21 +63,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
               }),
               Expanded(
                 child: Get.context!.isPortrait
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                              width: double.infinity,
-                              height: 300,
-                              child: orderConfig()),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: BillScreen(),
-                            ),
-                          )
-                        ],
+                    ? SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                width: double.infinity,
+                                height: Get.height * 0.3,
+                                child: orderConfig()),
+                            SizedBox(
+                                width: Get.width,
+                                height: Get.height * 0.65,
+                                child: BillScreen())
+                          ],
+                        ),
                       )
                     : Row(children: [
                         Expanded(
@@ -114,28 +114,28 @@ Widget orderConfig() {
         ],
       ),
     ),
-    Tab(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          Icon(Icons.person),
-          SizedBox(width: 8),
-          Text("Khách hàng"),
-        ],
-      ),
-    ),
-    Tab(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          Icon(Icons.local_offer),
-          SizedBox(width: 8),
-          Text("Khuyến mãi"),
-        ],
-      ),
-    ),
+    // Tab(
+    //   child: Row(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: const [
+    //       Icon(Icons.person),
+    //       SizedBox(width: 8),
+    //       Text("Khách hàng"),
+    //     ],
+    //   ),
+    // ),
+    // Tab(
+    //   child: Row(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: const [
+    //       Icon(Icons.local_offer),
+    //       SizedBox(width: 8),
+    //       Text("Khuyến mãi"),
+    //     ],
+    //   ),
+    // ),
     // Tab(
     //   text: "Đơn hàng",
     //   icon: Icon(Icons.receipt),
@@ -165,8 +165,8 @@ Widget orderConfig() {
               child: TabBarView(
             children: [
               paymentTypeSelect(model),
-              customerInfoSelect(model),
-              promotionTypeSelect(model),
+              // customerInfoSelect(model),
+              // promotionTypeSelect(model),
               // BillScreen(),
             ],
           ))
@@ -182,61 +182,65 @@ Widget paymentTypeSelect(OrderViewModel model) {
       color: Get.theme.colorScheme.onInverseSurface,
       borderRadius: BorderRadius.circular(8),
     ),
-    width: double.infinity,
-    height: double.infinity,
     child: Column(
       children: [
         Expanded(
-          child: Center(
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              alignment: WrapAlignment.center,
-              children: model.listPayment
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: InkWell(
-                        onTap: () {
-                          model.selectPayment(e);
-                          if (e.name == "VN PAY") {
-                            model.makePayment();
-                          } else if (e.name != "Tiền mặt") {
-                            scanQRCodeDialog(
-                                (e.name == "Momo"
-                                    ? "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2FIMG_0428.jpeg?alt=media&token=ffac0e03-9083-4f65-aeaa-0ecb2e8aad91"
-                                    : ""),
-                                e.name!);
-                          }
-                          // model.launchInWebViewOrVC();
-                        },
-                        child: Card(
-                          color: model.selectedPaymentMethod == e
-                              ? Get.theme.colorScheme.primary
-                              : Get.theme.colorScheme.onInverseSurface,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Image.network(
-                                  e!.picUrl!,
-                                  width: 120,
-                                  height: 120,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: Text(
-                                    e.name!,
-                                    style: Get.textTheme.titleLarge,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Center(
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.center,
+                children: model.listPayment
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: InkWell(
+                          onTap: () {
+                            model.selectPayment(e);
+                            if (e.name == "VN PAY") {
+                              model.makePayment();
+                            } else if (e.name != "Tiền mặt") {
+                              scanQRCodeDialog(
+                                  (e.name == "Momo"
+                                      ? "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2FIMG_0428.jpeg?alt=media&token=ffac0e03-9083-4f65-aeaa-0ecb2e8aad91"
+                                      : ""),
+                                  e.name!);
+                            }
+                            showQRCodeDialog(
+                                "00020101021238550010A000000727012500069704230111042059331010208QRIBFTTA5303704540410005802VN62220818Ung Ho Quy Vac Xin63046ED7",
+                                e.name!,
+                                model.currentOrder!.orderId!);
+                          },
+                          child: Card(
+                            color: model.selectedPaymentMethod == e
+                                ? Get.theme.colorScheme.primary
+                                : Get.theme.colorScheme.onInverseSurface,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Image.network(
+                                    e!.picUrl!,
+                                    width: 120,
+                                    height: 120,
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: Text(
+                                      e.name!,
+                                      style: Get.textTheme.titleLarge,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  )
-                  .toList(),
+                    )
+                    .toList(),
+              ),
             ),
           ),
         ),

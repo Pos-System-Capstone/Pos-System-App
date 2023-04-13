@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/Views/screens/home/orders.dart';
 import 'package:pos_apps/Views/screens/home/profile.dart';
+import 'package:pos_apps/Widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
@@ -23,8 +24,8 @@ class _RootScreenState extends State<RootScreen> {
   List<Widget> views = [
     AddToCartScreen(),
     OrdersScreen(),
+    ProfileScreen(),
     SettingsScreen(),
-    ProfileScreen()
   ];
   List<BottomNavigationBarItem> items = const [
     BottomNavigationBarItem(
@@ -38,14 +39,14 @@ class _RootScreenState extends State<RootScreen> {
       label: 'Đơn hàng',
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.settings),
-      activeIcon: Icon(Icons.settings_outlined),
-      label: 'Thiết lập',
-    ),
-    BottomNavigationBarItem(
       icon: Icon(Icons.store),
       activeIcon: Icon(Icons.store_outlined),
       label: 'Cửa hàng',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.settings),
+      activeIcon: Icon(Icons.settings_outlined),
+      label: 'Thiết lập',
     ),
   ];
   List<NavigationRailDestination> destinations = const [
@@ -60,14 +61,14 @@ class _RootScreenState extends State<RootScreen> {
       label: Text('Đơn hàng'),
     ),
     NavigationRailDestination(
-      icon: Icon(Icons.settings),
-      selectedIcon: Icon(Icons.settings_outlined),
-      label: Text('Thiết lập'),
-    ),
-    NavigationRailDestination(
       icon: Icon(Icons.store),
       selectedIcon: Icon(Icons.store_outlined),
       label: Text('Cửa hàng'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.settings),
+      selectedIcon: Icon(Icons.settings_outlined),
+      label: Text('Thiết lập'),
     ),
   ];
   int _selectedIndex = 0;
@@ -170,7 +171,7 @@ class _RootScreenState extends State<RootScreen> {
                       onPressed: () =>
                           Get.find<MenuViewModel>().getMenuOfStore(),
                       icon: Icon(
-                        Icons.refresh,
+                        Icons.browser_updated,
                         size: 32,
                       ),
                     ),
@@ -188,7 +189,14 @@ class _RootScreenState extends State<RootScreen> {
                     IconButton(
                       alignment: Alignment.bottomCenter,
                       tooltip: "Đăng xuất",
-                      onPressed: () => Get.find<LoginViewModel>().logout(),
+                      onPressed: () => {
+                        showConfirmDialog(
+                          title: "Đăng xuất",
+                          content: "Bạn có muốn đăng xuất không?",
+                        ).then((value) => {
+                              if (value) Get.find<LoginViewModel>().logout(),
+                            })
+                      },
                       icon: Icon(
                         Icons.logout,
                         size: 32,
