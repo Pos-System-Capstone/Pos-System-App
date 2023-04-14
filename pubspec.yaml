@@ -42,14 +42,7 @@ dependencies:
   google_fonts: ^4.0.3
   intl: ^0.18.0
   image: ^4.0.02
-  connectivity_plus: ^3.0.3
-  lottie: ^2.3.0
-  url_strategy: ^0.2.0
-  network_tools: ^3.2.0
-  dart_ping_ios: ^3.0.0
-  tiengviet: ^0.5.0
   cached_network_image: ^3.2.3
-  desktop_multi_window: ^0.2.0
   firebase_database: ^10.0.16
   firebase_core: ^2.8.0
   flutter_barcode_listener: ^0.1.3

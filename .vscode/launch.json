@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "pos_apps",
+      "name": "Reso POS",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "pos_apps (profile mode)",
+      "name": "Reso POS (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "pos_apps (release mode)",
+      "name": "Reso POS (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

@@ -154,11 +154,11 @@ class _RootScreenState extends State<RootScreen> {
         body: Row(
           children: [
             NavigationRail(
-              leading: Icon(
-                Icons.point_of_sale_outlined,
-                size: 56,
+              leading: Image.asset(
+                "assets/images/logo.png",
+                width: 60,
+                height: 60,
               ),
-
               // groupAlignment: -0.5,
               trailing: Expanded(
                 child: Column(

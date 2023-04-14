@@ -12,7 +12,6 @@ import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
-import 'package:tiengviet/tiengviet.dart';
 
 import '../data/model/account.dart';
 
@@ -514,6 +513,35 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                   ],
                 ),
+              ),
+            ]);
+      }));
+  return pdf.save();
+}
+
+Future<Uint8List> generateQRCode(
+  PdfPageFormat format,
+  String? code,
+  String? paymentMethod,
+) async {
+  final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+  final font = await PdfGoogleFonts.interBold();
+  pdf.addPage(pw.Page(
+      pageFormat: format,
+      orientation: pw.PageOrientation.natural,
+      build: (pw.Context context) {
+        return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(paymentMethod ?? '',
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(font: font, fontSize: 10)),
+              pw.SizedBox(height: 10),
+              pw.BarcodeWidget(
+                barcode: pw.Barcode.qrCode(),
+                data: code ?? '',
+                width: 200,
+                height: 200,
               ),
             ]);
       }));

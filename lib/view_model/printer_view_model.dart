@@ -7,15 +7,10 @@
  */
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data' show Uint8List;
-import 'package:dart_ping_ios/dart_ping_ios.dart';
 import 'package:get/get.dart';
-import 'package:image/image.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:intl/intl.dart';
-import 'package:network_tools/network_tools.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/sessions.dart';
 import 'package:pos_apps/data/model/response/store.dart';
@@ -24,7 +19,6 @@ import 'package:pos_apps/util/share_pref.dart';
 import 'package:printing/printing.dart';
 import '../data/model/account.dart';
 import '../util/bill-printing.dart';
-import '../widgets/Dialogs/other_dialogs/dialog.dart';
 import 'base_view_model.dart';
 
 /// Network Printer
@@ -137,6 +131,17 @@ class PrinterViewModel extends BaseViewModel {
         onLayout: (PdfPageFormat format) {
           return generateClostSessionInvoice(
               format, session, storeModel, account);
+        });
+  }
+
+  void printQRCode(String payment, String code) {
+    Printing.directPrintPdf(
+        printer: selectedBillPrinter!,
+        // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
+        //     marginAll: 2 * PdfPageFormat.mm),
+        format: PdfPageFormat.roll57,
+        onLayout: (PdfPageFormat format) {
+          return generateQRCode(format, code, payment);
         });
   }
 

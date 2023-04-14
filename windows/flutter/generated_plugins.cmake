@@ -4,8 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
-  connectivity_plus
-  desktop_multi_window
   permission_handler_windows
   printing
   url_launcher_windows

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/Widgets/order_process/payment.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -85,15 +86,23 @@ void showQRCodeDialog(String qrCode, String paymentName, String orderId) {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      hideDialog();
-                    },
-                    child: Text("Hoàn thành"),
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.find<PrinterViewModel>()
+                        .printQRCode(qrCode, paymentName);
+                  },
+                  child: Text("In ma QR"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    hideDialog();
+                  },
+                  child: Text("Hoàn thành"),
                 ),
               ),
             ],
