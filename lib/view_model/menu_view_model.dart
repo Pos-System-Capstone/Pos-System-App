@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/api/store_data.dart';
 import 'package:pos_apps/data/model/index.dart';
+import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
@@ -88,7 +89,20 @@ class MenuViewModel extends BaseViewModel {
     }
   }
 
-  void printCloseSessionInvoice(Session session) async {
+  Future<SessionDetails?> getSessionDetail(String sessionId) async {
+    try {
+      setState(ViewStatus.Loading);
+      SessionDetails? sessionDetails =
+          await sessionAPI?.getSessionDetails(sessionId);
+      setState(ViewStatus.Completed);
+      return sessionDetails!;
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+      return null;
+    }
+  }
+
+  void printCloseSessionInvoice(SessionDetails session) async {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
@@ -103,10 +117,13 @@ class MenuViewModel extends BaseViewModel {
         bool result = await showConfirmDialog(
           title: "Lỗi in hóa đơn",
           content: "Vui lòng chọn máy in hóa đơn",
-          confirmText: "Tiếp tục hoàn thành đơn hàng",
-          cancelText: "Chọn máy in",
+          cancelText: "Bỏ qua",
+          confirmText: "Chọn máy in",
         );
-        showPrinterConfigDialog(PrinterTypeEnum.bill);
+        if (result) {
+          showPrinterConfigDialog(PrinterTypeEnum.bill);
+          setState(ViewStatus.Completed);
+        }
         setState(ViewStatus.Completed);
         return;
       }

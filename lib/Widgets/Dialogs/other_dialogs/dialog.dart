@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -196,109 +197,195 @@ showLoadingDialog() {
   ));
 }
 
-void sessionDetailsDialog(Session session) {
-  hideDialog();
+void sessionDetailsDialog(String sessionId) {
+  MenuViewModel menuViewModel = Get.find<MenuViewModel>();
+  SessionDetails? sessionDetails;
+  menuViewModel.getSessionDetail(sessionId).then((value) {
+    sessionDetails = value;
+  });
   Get.dialog(Dialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
-    child: Container(
-      width: Get.size.width * 0.8,
-      height: Get.size.height * 0.8,
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Get.theme.colorScheme.shadow,
-            blurRadius: 10.0,
-            offset: Offset(0.0, 10.0),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  session.name ?? '',
-                  style: Get.textTheme.titleLarge,
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  onPressed: () {
-                    hideDialog();
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    color: Get.theme.colorScheme.onBackground,
-                    size: 32,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Divider(
-            color: Get.theme.colorScheme.onBackground,
-          ),
-          Text(
-            "${formatOnlyTime(session.startDateTime ?? '')} - ${formatOnlyTime(session.endDateTime ?? '')} ${formatOnlyDate(session.endDateTime ?? '')}",
-            style: Get.textTheme.titleMedium,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-                child: Column(
-              children: [
-                Wrap(
-                  children: [
-                    Expanded(
-                      child: dashboardCard(
-                        title: "Tổng số đơn hàng",
-                        value: session.numberOfOrders.toString(),
-                      ),
-                    ),
-                    Expanded(
-                      child: dashboardCard(
-                        title: "Tổng doanh thu",
-                        value: formatPrice(session.totalFinalAmount ?? 0),
-                      ),
-                    ),
-                    Expanded(
-                      child: dashboardCard(
-                        title: "Tổng tiền trong két",
-                        value: formatPrice(session.currentCashInVault ?? 0),
-                      ),
-                    ),
-                  ],
+    child: ScopedModel(
+      model: menuViewModel,
+      child: ScopedModelDescendant<MenuViewModel>(
+          builder: (context, build, model) {
+        if (model.status == ViewStatus.Loading) {
+          return Container(
+            width: Get.size.width * 0.8,
+            height: Get.size.height * 0.8,
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Get.theme.colorScheme.background,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Get.theme.colorScheme.shadow,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0),
                 ),
               ],
-            )),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              OutlinedButton(
-                onPressed: () {
-                  Get.find<MenuViewModel>().printCloseSessionInvoice(session);
-                },
-                child: Text(
-                  "In biên lai",
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(
+                  height: 10,
                 ),
+                Text(
+                  "Đang tải...",
+                  style: Get.textTheme.titleLarge,
+                ),
+              ],
+            ),
+          );
+        } else if (sessionDetails == null) {
+          return Container(
+            width: Get.size.width * 0.8,
+            height: Get.size.height * 0.8,
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Get.theme.colorScheme.background,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Get.theme.colorScheme.shadow,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Không tìm thấy thông tin ca",
+                  style: Get.textTheme.titleLarge,
+                ),
+              ],
+            ),
+          );
+        }
+        return Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Get.theme.colorScheme.background,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Get.theme.colorScheme.shadow,
+                blurRadius: 10.0,
+                offset: Offset(0.0, 10.0),
               ),
             ],
           ),
-        ],
-      ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      sessionDetails?.name ?? "",
+                      style: Get.textTheme.titleLarge,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: () {
+                        hideDialog();
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: Get.theme.colorScheme.onBackground,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Divider(
+                color: Get.theme.colorScheme.onBackground,
+              ),
+              Text(
+                "${formatOnlyTime(sessionDetails?.startDateTime ?? '')} - ${formatOnlyTime(sessionDetails?.endDateTime ?? '')} ${formatOnlyDate(sessionDetails?.endDateTime ?? '')}",
+                style: Get.textTheme.titleMedium,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                    child: Column(
+                  children: [
+                    Wrap(
+                      children: [
+                        dashboardCard(
+                          title: "Tổng số đơn hàng",
+                          value: sessionDetails!.numberOfOrders.toString(),
+                        ),
+                        dashboardCard(
+                          title: "Tổng doanh thu",
+                          value: formatPrice(sessionDetails?.totalAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Tổng khuyến mãi",
+                          value: formatPrice(
+                              sessionDetails?.totalDiscountAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Tổng giảm giá",
+                          value:
+                              formatPrice(sessionDetails?.totalPromotion ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Tổng doanh thu sau khuyến mãi",
+                          value: formatPrice(sessionDetails?.profitAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Số tiền hiện có trong két",
+                          value: formatPrice(
+                              sessionDetails?.currentCashInVault ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Số tiền khởi tạo trong két",
+                          value:
+                              formatPrice(sessionDetails?.initCashInVault ?? 0),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  OutlinedButton(
+                    onPressed: () {
+                      Get.find<MenuViewModel>()
+                          .printCloseSessionInvoice(sessionDetails!);
+                    },
+                    child: Text(
+                      "In biên lai",
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      }),
     ),
   ));
 }
@@ -307,15 +394,20 @@ Widget dashboardCard({required String title, required String value}) {
   return Card(
     child: Container(
       padding: EdgeInsets.all(16),
-      height: 120,
+      height: 160,
+      width: 240,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: Get.textTheme.titleMedium,
+          Expanded(
+            child: Center(
+              child: Text(
+                title,
+                style: Get.textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
           Divider(
             color: Get.theme.colorScheme.onBackground,
@@ -596,7 +688,7 @@ void orderInfoDialog(String orderId) {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Phuong thức',
+                                'Phuơng thức',
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(

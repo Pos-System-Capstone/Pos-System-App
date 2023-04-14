@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/sessions.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/index.dart';
@@ -318,7 +319,7 @@ Future<Uint8List> generateStampInvoice(
 }
 
 Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
-    Session session, StoreModel store, Account account) async {
+    SessionDetails session, StoreModel store, Account account) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interBold();
 
@@ -438,10 +439,10 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Tỏng doanh thu",
+                  pw.Text("Tổng doanh thu",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.totalFinalAmount ?? 0),
+                  pw.Text(formatPrice(session.totalAmount ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],
@@ -449,10 +450,54 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Tỏng tiền trong két",
+                  pw.Text("Tổng tiền giảm giá",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(session.totalDiscountAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Tổng tiền khuyến mãi",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(session.totalPromotion ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Tổng doanh thu sau giảm giá",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(session.profitAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Tổng tiền trong két",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                   pw.Text(formatPrice(session.currentCashInVault ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Số tiền đầu ca",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(session.initCashInVault ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],

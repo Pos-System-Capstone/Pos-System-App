@@ -81,18 +81,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Card(
                             elevation: 2,
                             child: InkWell(
-                              onTap: () => sessionDetailsDialog(item),
+                              onTap: () => sessionDetailsDialog(item.id ?? ''),
                               child: Container(
                                 padding: const EdgeInsets.all(16),
-                                width: 180,
-                                height: 120,
+                                width: 240,
+                                height: 160,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       item.name ?? '',
-                                      style: Get.textTheme.titleMedium,
+                                      style: Get.textTheme.titleLarge,
                                     ),
                                     SizedBox(height: 8),
                                     Text(

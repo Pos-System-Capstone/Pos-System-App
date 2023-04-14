@@ -1,11 +1,6 @@
 PODS:
   - bitsdojo_window_macos (0.0.1):
     - FlutterMacOS
-  - connectivity_plus (0.0.1):
-    - FlutterMacOS
-    - ReachabilitySwift
-  - desktop_multi_window (0.0.1):
-    - FlutterMacOS
   - Firebase/CoreOnly (10.6.0):
     - FirebaseCore (= 10.6.0)
   - Firebase/Database (10.6.0):
@@ -44,7 +39,6 @@ PODS:
   - printing (1.0.0):
     - FlutterMacOS
   - PromisesObjC (2.2.0)
-  - ReachabilitySwift (5.0.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -56,8 +50,6 @@ PODS:
 
 DEPENDENCIES:
   - bitsdojo_window_macos (from `Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos`)
-  - connectivity_plus (from `Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos`)
-  - desktop_multi_window (from `Flutter/ephemeral/.symlinks/plugins/desktop_multi_window/macos`)
   - firebase_core (from `Flutter/ephemeral/.symlinks/plugins/firebase_core/macos`)
   - firebase_database (from `Flutter/ephemeral/.symlinks/plugins/firebase_database/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
@@ -77,15 +69,10 @@ SPEC REPOS:
     - GoogleUtilities
     - leveldb-library
     - PromisesObjC
-    - ReachabilitySwift
 
 EXTERNAL SOURCES:
   bitsdojo_window_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos
-  connectivity_plus:
-    :path: Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos
-  desktop_multi_window:
-    :path: Flutter/ephemeral/.symlinks/plugins/desktop_multi_window/macos
   firebase_core:
     :path: Flutter/ephemeral/.symlinks/plugins/firebase_core/macos
   firebase_database:
@@ -105,8 +92,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   bitsdojo_window_macos: 44e3b8fe3dd463820e0321f6256c5b1c16bb6a00
-  connectivity_plus: 18d3c32514c886e046de60e9c13895109866c747
-  desktop_multi_window: 566489c048b501134f9d7fb6a2354c60a9126486
   Firebase: f13680471b021937f2230ea8503c7809d8c29806
   firebase_core: 7cad6afc6d420690c239021131b133b3920d092e
   firebase_database: 4c48bbe12a378bd83fff1ad96342e48c4f60a80b
@@ -120,7 +105,6 @@ SPEC CHECKSUMS:
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   printing: 1dd6a1fce2209ec240698e2439a4adbb9b427637
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
-  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   sqflite: a5789cceda41d54d23f31d6de539d65bb14100ea
   url_launcher_macos: 5335912b679c073563f29d89d33d10d459f95451

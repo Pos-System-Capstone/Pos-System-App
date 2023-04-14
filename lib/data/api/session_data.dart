@@ -1,3 +1,4 @@
+import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/sessions.dart';
 
 import '../../util/request.dart';
@@ -27,5 +28,14 @@ class SessionAPI {
       listSession.add(orderResponse);
     }
     return listSession;
+  }
+
+  Future<SessionDetails> getSessionDetails(String sessionId) async {
+    Account? userInfo = await getUserInfo();
+    final res =
+        await request.get('stores/${userInfo!.storeId}/sessions/$sessionId');
+    var json = res.data;
+    SessionDetails sessionDetails = SessionDetails.fromJson(json);
+    return sessionDetails;
   }
 }

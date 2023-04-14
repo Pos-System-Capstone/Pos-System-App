@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/sessions.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/view_status.dart';
@@ -122,7 +123,7 @@ class PrinterViewModel extends BaseViewModel {
   }
 
   void printCloseSessionInvoice(
-      Session session, StoreModel storeModel, Account account) {
+      SessionDetails session, StoreModel storeModel, Account account) {
     Printing.directPrintPdf(
         printer: selectedBillPrinter!,
         // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,

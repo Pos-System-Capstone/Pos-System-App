@@ -88,35 +88,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Tiền mặt trong quầy',
-                                style: Get.textTheme.titleMedium)),
-                        OutlinedButton.icon(
-                            onPressed: () async {
-                              String? money = await inputDialog(
-                                  "Nhập số tiền",
-                                  "Vui long nhập số tiền",
-                                  model.defaultCashboxMoney.toString(),
-                                  isNum: true);
-                              if (money != null) {
-                                model.setCashboxMoney(int.parse(money));
-                              }
-                            },
-                            icon: Icon(Icons.change_circle_outlined),
-                            label:
-                                Text(formatPrice(model.defaultCashboxMoney))),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: [
+                  //       Expanded(
+                  //           child: Text('Tiền mặt trong quầy',
+                  //               style: Get.textTheme.titleMedium)),
+                  //       OutlinedButton.icon(
+                  //           onPressed: () async {
+                  //             String? money = await inputDialog(
+                  //                 "Nhập số tiền",
+                  //                 "Vui long nhập số tiền",
+                  //                 model.defaultCashboxMoney.toString(),
+                  //                 isNum: true);
+                  //             if (money != null) {
+                  //               model.setCashboxMoney(int.parse(money));
+                  //             }
+                  //           },
+                  //           icon: Icon(Icons.change_circle_outlined),
+                  //           label:
+                  //               Text(formatPrice(model.defaultCashboxMoney))),
+                  //     ],
+                  //   ),
+                  // ),
+                  // Divider(
+                  //   thickness: 1,
+                  // ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
