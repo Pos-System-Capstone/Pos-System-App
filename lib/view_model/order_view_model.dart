@@ -142,15 +142,15 @@ class OrderViewModel extends BaseViewModel {
   ) async {
     try {
       Account? userInfo = await getUserInfo();
-      setState(ViewStatus.Loading);
       if (selectedPaymentMethod == null) {
         showAlertDialog(
             title: "Lỗi thanh toán",
             content: "Vui lòng chọn phương thức thanh toán");
-        setState(ViewStatus.Completed);
         return;
       }
+
       if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
+        setState(ViewStatus.Loading);
         api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
             selectedPaymentMethod!.id);
         Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
@@ -164,44 +164,26 @@ class OrderViewModel extends BaseViewModel {
         bool result = await showConfirmDialog(
           title: "Lỗi in hóa đơn",
           content: "Vui lòng chọn máy in hóa đơn",
-          confirmText: "Tiếp tục hoàn thành đơn hàng",
+          confirmText: "Bỏ qua",
           cancelText: "Chọn máy in",
         );
         if (!result) {
           showPrinterConfigDialog(PrinterTypeEnum.bill);
-          setState(ViewStatus.Completed);
+
           return;
         } else {
+          setState(ViewStatus.Loading);
           api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
               selectedPaymentMethod!.id);
+          clearOrder();
           setState(ViewStatus.Completed);
           showAlertDialog(
               title: "Hoàn thành đơn hàng",
               content: "Hoàn thành đơn hàng thành công");
-          clearOrder();
         }
       }
     } catch (e) {
       showAlertDialog(title: "Lỗi hoàn thành đơn hàng", content: e.toString());
-      setState(ViewStatus.Error);
-    }
-  }
-
-  Future<void> cancleOrder(
-    String orderId,
-    String payment,
-  ) async {
-    try {
-      Account? userInfo = await getUserInfo();
-      setState(ViewStatus.Loading);
-      api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.CANCELED,
-          currentOrder?.payment!.id!);
-      clearOrder();
-      showAlertDialog(
-          title: "Huỷ đơn hàng", content: "Huỷ đơn hàng thành công");
-      setState(ViewStatus.Completed);
-    } catch (e) {
-      showAlertDialog(title: "Lỗi huỷ đơn hàng", content: e.toString());
       setState(ViewStatus.Error);
     }
   }

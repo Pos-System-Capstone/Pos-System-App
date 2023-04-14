@@ -84,8 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onTap: () => sessionDetailsDialog(item),
                               child: Container(
                                 padding: const EdgeInsets.all(16),
-                                width: 160,
-                                height: 100,
+                                width: 180,
+                                height: 120,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,

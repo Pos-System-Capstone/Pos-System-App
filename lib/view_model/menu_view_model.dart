@@ -40,6 +40,8 @@ class MenuViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       currentMenu = await menuData?.getMenuOfStore();
+      Get.find<OrderViewModel>().getListPayment();
+      await getStore();
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
           .toList();
@@ -55,15 +57,14 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == ProductTypeEnum.CHILD)
           .toList();
       productsFilter = normalProducts;
-      Get.find<OrderViewModel>().getListPayment();
-      getStore();
+
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }
   }
 
-  void getStore() async {
+  Future<void> getStore() async {
     try {
       setState(ViewStatus.Loading);
       await storeData?.getStoreDetail().then((value) {

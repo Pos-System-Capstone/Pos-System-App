@@ -28,12 +28,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Get.theme.colorScheme.background,
-      child: ScopedModel(
+    return Scaffold(
+      body: ScopedModel(
           model: Get.find<OrderViewModel>(),
           child: Column(
             children: [
+              SizedBox(height: 16),
               ScopedModelDescendant<OrderViewModel>(
                   builder: (context, build, model) {
                 if (model.status == ViewStatus.Loading ||
@@ -46,8 +46,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Đơn hàng: ${model.currentOrder?.invoiceId ?? ""}",
+                      Text(model.currentOrder?.invoiceId ?? "",
                           style: Get.textTheme.titleMedium),
                       IconButton(
                           onPressed: () {
@@ -74,7 +75,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 child: orderConfig()),
                             SizedBox(
                                 width: Get.width,
-                                height: Get.height * 0.65,
+                                height: Get.height * 0.6,
                                 child: BillScreen())
                           ],
                         ),
@@ -222,14 +223,14 @@ Widget paymentTypeSelect(OrderViewModel model) {
                                 children: [
                                   Image.network(
                                     e!.picUrl!,
-                                    width: 120,
-                                    height: 120,
+                                    width: 80,
+                                    height: 80,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(4),
                                     child: Text(
                                       e.name!,
-                                      style: Get.textTheme.titleLarge,
+                                      style: Get.textTheme.titleMedium,
                                     ),
                                   ),
                                 ],
