@@ -133,7 +133,7 @@ class MyRequest {
 
 class PaymentRequest {
   static BaseOptions options = BaseOptions(
-      // baseUrl: 'https://api.pos-tech.systems/api/v1/',
+      // baseUrl: 'https://localhost:7102/api/v1/',
       baseUrl: 'https://payment.endy.bio/api/v1/',
       headers: {
         Headers.contentTypeHeader: "application/json",

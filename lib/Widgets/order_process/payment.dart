@@ -199,19 +199,9 @@ Widget paymentTypeSelect(OrderViewModel model) {
                         child: InkWell(
                           onTap: () {
                             model.selectPayment(e);
-                            if (e.name == "VN PAY") {
-                              model.makePayment();
-                            } else if (e.name != "Tiền mặt") {
-                              scanQRCodeDialog(
-                                  (e.name == "Momo"
-                                      ? "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2FIMG_0428.jpeg?alt=media&token=ffac0e03-9083-4f65-aeaa-0ecb2e8aad91"
-                                      : ""),
-                                  e.name!);
+                            if (e.type == "ONLINE") {
+                              model.makePayment(e!);
                             }
-                            showQRCodeDialog(
-                                "00020101021238550010A000000727012500069704230111042059331010208QRIBFTTA5303704540410005802VN62220818Ung Ho Quy Vac Xin63046ED7",
-                                e.name!,
-                                model.currentOrder!.orderId!);
                           },
                           child: Card(
                             color: model.selectedPaymentMethod == e

@@ -32,10 +32,6 @@ class _CartScreenState extends State<CartScreen> {
         int selectedTable = Get.find<OrderViewModel>().selectedTable;
         String selectedDeliType = Get.find<OrderViewModel>().deliveryType;
         dynamic selectedDeliLable = showOrderType(selectedDeliType);
-        List<PaymentModel?> listPayment =
-            Get.find<OrderViewModel>().listPayment;
-        PaymentModel? selectedPayment =
-            Get.find<OrderViewModel>().selectedPaymentMethod;
         if (model.status == ViewStatus.Loading) {
           return Center(
             child: CircularProgressIndicator(),

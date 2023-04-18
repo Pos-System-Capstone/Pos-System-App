@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:get/get.dart';
 import 'package:pos_apps/data/api/payment_data.dart';
+import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/view_model/base_view_model.dart';
 
 import '../data/model/index.dart';
@@ -145,8 +146,8 @@ class CartViewModel extends BaseViewModel {
     clearCartData();
   }
 
-  List<PaymentModel?> getListPayment() {
-    List<PaymentModel?> listPayment = [];
+  List<PaymentProvider?> getListPayment() {
+    List<PaymentProvider?> listPayment = [];
     listPayment = Get.find<OrderViewModel>().listPayment;
     return listPayment;
   }

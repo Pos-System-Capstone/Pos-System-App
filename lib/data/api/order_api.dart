@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/index.dart';
+import 'package:pos_apps/data/model/response/make_payment_response.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/enums/index.dart';
+import 'package:pos_apps/util/share_pref.dart';
 
 import '../../util/request.dart';
 
@@ -43,18 +45,23 @@ class OrderAPI {
     return json;
   }
 
-  Future makePayment(OrderResponseModel order) async {
+  Future<MakePaymentResponse> makePayment(
+      OrderResponseModel order, String paymentId) async {
+    Account? user = await getUserInfo();
     final Map<String, dynamic> data = <String, dynamic>{};
     data['orderId'] = order.orderId;
     data['invoiceId'] = order.invoiceId;
-    data['orderType'] = order.orderType;
+    data['storeId'] = user?.storeId;
+    data['accountId'] = user?.id;
+    data['paymentId'] = paymentId;
     data['amount'] = order.finalAmount;
-    data['orderDescription'] = "Thanh toán đơn hàng";
-    data['name'] = "Deer Coffee";
+    data['orderDescription'] = "Thanh toán đơn hàng ${order.invoiceId} ";
     print(data);
     final res = await paymentRequest.post('payments', data: data);
     var json = res.data;
-    return json;
+    MakePaymentResponse makePaymentResponse =
+        MakePaymentResponse.fromJson(json);
+    return makePaymentResponse;
   }
 
   Future<List<OrderInList>> getListOrderOfStore(String storeId,

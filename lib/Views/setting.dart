@@ -214,6 +214,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
+                            child: Text('Hiển thị Thực đơn',
+                                style: Get.textTheme.titleMedium)),
+                        IconButton(
+                          alignment: Alignment.bottomCenter,
+                          tooltip: "Mở",
+                          onPressed: () => Get.find<OrderViewModel>()
+                              .launchInBrowser(
+                                  'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmenu-deer.jpg?alt=media&token=cfba9091-79c7-4a19-9f62-fd948768f64e'),
+                          icon: Icon(
+                            Icons.menu_book_outlined,
+                            size: 32,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
                             child: Text('Đăng xuất',
                                 style: Get.textTheme.titleMedium)),
                         IconButton(
