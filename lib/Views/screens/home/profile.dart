@@ -17,8 +17,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   MenuViewModel menuViewModel = Get.find<MenuViewModel>();
   @override
   initState() {
-    menuViewModel.getStore();
-    menuViewModel.getListSession();
     super.initState();
   }
 

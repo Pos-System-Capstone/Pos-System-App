@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:pos_apps/data/model/product_attribute.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -165,4 +166,20 @@ Future<void> deleteBillPrinter() async {
 Future<void> deleteProductPrinter() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.remove("productPrinter");
+}
+
+Future<void> setAttributes(List<Attribute> attribute) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString(
+      'ATTRIBUTES', jsonEncode(attribute.map((e) => e.toJson()).toList()));
+}
+
+Future<List<Attribute>?> getAttributes() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? encodedCart = prefs.getString('ATTRIBUTES');
+  if (encodedCart != null) {
+    List<Attribute> attributes = Attribute.fromList(jsonDecode(encodedCart));
+    return attributes;
+  }
+  return null;
 }

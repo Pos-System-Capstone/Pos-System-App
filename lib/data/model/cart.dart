@@ -22,7 +22,14 @@ class CartItem {
   String? note;
   List<Product>? extras;
   num totalAmount = 0;
+  List<ProductAttribute>? attributes = [];
 
   CartItem(this.product, this.quantity, this.totalAmount,
-      {this.note, this.extras});
+      {this.note, this.extras, this.attributes});
+}
+
+class ProductAttribute {
+  String name;
+  String value;
+  ProductAttribute(this.name, this.value);
 }

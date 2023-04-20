@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:get/get.dart';
@@ -130,7 +131,9 @@ class CartViewModel extends BaseViewModel {
         productInMenuId: cart.product.menuProductId,
         quantity: cart.quantity,
         sellingPrice: cart.product.sellingPrice,
-        note: cart.note,
+        note: cart.attributes != null
+            ? ("${cart.attributes!.map((e) => e.value).join(" ")} ${cart.note}")
+            : cart.note ?? "",
         extras: extraList,
       );
       productList.add(product);
@@ -142,8 +145,11 @@ class CartViewModel extends BaseViewModel {
       discountAmount: _discountAmount,
       finalAmount: _finalAmount,
     );
-    Get.find<OrderViewModel>().placeOrder(order);
-    clearCartData();
+    bool res = false;
+    Get.find<OrderViewModel>().placeOrder(order).then((value) => res = value);
+    if (res) {
+      clearCartData();
+    }
   }
 
   List<PaymentProvider?> getListPayment() {

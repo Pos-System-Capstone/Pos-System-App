@@ -139,8 +139,8 @@ Future<bool> showConfirmDialog(
               ),
               FilledButton(
                 onPressed: () {
-                  result = true;
                   hideDialog();
+                  result = true;
                 },
                 child: Text(
                   confirmText,
@@ -199,10 +199,15 @@ showLoadingDialog() {
 
 void sessionDetailsDialog(String sessionId) {
   MenuViewModel menuViewModel = Get.find<MenuViewModel>();
+  RootViewModel rootViewModel = Get.find<RootViewModel>();
   SessionDetails? sessionDetails;
   menuViewModel.getSessionDetail(sessionId).then((value) {
     sessionDetails = value;
+    sessionDetails!.initCashInVault = rootViewModel.defaultCashboxMoney;
+    sessionDetails!.currentCashInVault =
+        rootViewModel.defaultCashboxMoney + sessionDetails!.totalAmount!;
   });
+
   Get.dialog(Dialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),

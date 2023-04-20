@@ -8,6 +8,7 @@ import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pos_apps/view_model/theme_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/views/screens/home/settings/product_atrribute_bottom_sheet.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../Widgets/Dialogs/printer_dialogs/add_printer_dialog.dart';
 import '../enums/order_enum.dart';
@@ -88,35 +89,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     children: [
-                  //       Expanded(
-                  //           child: Text('Tiền mặt trong quầy',
-                  //               style: Get.textTheme.titleMedium)),
-                  //       OutlinedButton.icon(
-                  //           onPressed: () async {
-                  //             String? money = await inputDialog(
-                  //                 "Nhập số tiền",
-                  //                 "Vui long nhập số tiền",
-                  //                 model.defaultCashboxMoney.toString(),
-                  //                 isNum: true);
-                  //             if (money != null) {
-                  //               model.setCashboxMoney(int.parse(money));
-                  //             }
-                  //           },
-                  //           icon: Icon(Icons.change_circle_outlined),
-                  //           label:
-                  //               Text(formatPrice(model.defaultCashboxMoney))),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   thickness: 1,
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            child: Text('Tiền mặt trong quầy',
+                                style: Get.textTheme.titleMedium)),
+                        OutlinedButton(
+                            onPressed: () async {
+                              String? money = await inputDialog(
+                                  "Nhập số tiền",
+                                  "Vui long nhập số tiền",
+                                  model.defaultCashboxMoney.toString(),
+                                  isNum: true);
+                              if (money != null) {
+                                model.setCashboxMoney(int.parse(money));
+                              }
+                            },
+                            child:
+                                Text(formatPrice(model.defaultCashboxMoney))),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                     child: Row(
@@ -224,6 +224,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmenu-deer.jpg?alt=media&token=cfba9091-79c7-4a19-9f62-fd948768f64e'),
                           icon: Icon(
                             Icons.menu_book_outlined,
+                            size: 32,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            child: Text('Thuộc tính sản phẩm',
+                                style: Get.textTheme.titleMedium)),
+                        IconButton(
+                          alignment: Alignment.bottomCenter,
+                          tooltip: "Mở",
+                          onPressed: () => showProductAttributesBottomSheet(),
+                          icon: Icon(
+                            Icons.edit_attributes_outlined,
                             size: 32,
                           ),
                         ),

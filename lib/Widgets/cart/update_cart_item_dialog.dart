@@ -9,6 +9,7 @@ import 'package:pos_apps/widgets/cart/cart_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../data/model/index.dart';
+import '../../data/model/product_attribute.dart';
 import '../product_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -39,6 +40,8 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   List<Product> childProducts = [];
   List<Category> extraCategory = [];
   String? selectedSize;
+  List<Attribute> listAttribute = [];
+  List<ProductAttribute> selectedAttributes = [];
   @override
   void initState() {
     super.initState();
@@ -50,6 +53,8 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
           productViewModel.productInCart!.parentProductId!)!;
       selectedSize = productViewModel.productInCart!.id;
     }
+    listAttribute = productViewModel.listAttribute;
+    selectedAttributes = widget.cartItem.attributes!;
   }
 
   setSelectedRadio(String val) {
@@ -58,21 +63,20 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
     });
   }
 
+  setAttributes(int idx, String val) {
+    setState(() {
+      selectedAttributes[idx].value = val;
+    });
+  }
+
+  removeAttributes(int idx) {
+    setState(() {
+      selectedAttributes[idx].value = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Tab> parentProductTab = [
-      Tab(
-        child: Text("Kích cỡ", style: Get.textTheme.titleMedium),
-      ),
-      Tab(
-        child: Text("Món thêm", style: Get.textTheme.titleMedium),
-      ),
-    ];
-    List<Tab> singleProductTab = [
-      Tab(
-        child: Text("Món thêm", style: Get.textTheme.titleMedium),
-      ),
-    ];
     bool isPortrait = Get.context!.isPortrait;
     return Dialog(
         child: ScopedModel<ProductViewModel>(
@@ -117,10 +121,9 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                             ? [
                                 productSize(model),
                                 addExtra(model),
+                                productAttributes(model)
                               ]
-                            : [
-                                addExtra(model),
-                              ]),
+                            : [addExtra(model), productAttributes(model)]),
                   ),
                 ),
                 Container(
@@ -324,6 +327,52 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
               ],
             );
           }).toList()),
+    );
+  }
+
+  Widget productAttributes(ProductViewModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Wrap(
+          children: [
+            for (int i = 0; i < listAttribute.length; i++)
+              Column(
+                children: [
+                  Text(listAttribute[i].name, style: Get.textTheme.titleMedium),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: listAttribute[i].options.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, idx) {
+                      return RadioListTile(
+                        visualDensity: VisualDensity(
+                          horizontal: VisualDensity.maximumDensity,
+                          vertical: VisualDensity.minimumDensity,
+                        ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(listAttribute[i].options[idx]),
+                          ],
+                        ),
+                        value: listAttribute[i].options[idx],
+                        groupValue: selectedAttributes[i].value,
+                        selected: selectedAttributes[i].value ==
+                            listAttribute[i].options[idx],
+                        onChanged: (value) {
+                          setAttributes(i, value!);
+                          model.setAttributes(selectedAttributes[i]);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

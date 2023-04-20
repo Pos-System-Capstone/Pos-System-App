@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pos_apps/data/model/product_attribute.dart';
 import 'package:pos_apps/enums/product_enum.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
@@ -12,6 +13,13 @@ class ProductViewModel extends BaseViewModel {
   int quantity = 1;
   List<Product> extras = [];
   String? notes;
+  List<ProductAttribute> currentAttributes = [];
+  List<Attribute> listAttribute = Get.find<RootViewModel>().listAttribute;
+  ProductViewModel() {
+    for (var attribute in listAttribute) {
+      currentAttributes.add(ProductAttribute(attribute.name, ""));
+    }
+  }
   void addProductToCartItem(Product product) {
     productInCart = product;
     print(productInCart!.name);
@@ -27,9 +35,17 @@ class ProductViewModel extends BaseViewModel {
       totalAmount!,
       note: notes,
       extras: extras,
+      attributes: currentAttributes,
     );
     Get.find<CartViewModel>().addToCart(cartItem);
     Get.back();
+  }
+
+  void setAttributes(ProductAttribute attribute) {
+    currentAttributes
+        .firstWhere((element) => element.name == attribute.name)
+        .value = attribute.value;
+    notifyListeners();
   }
 
   void increaseQuantity() {
@@ -95,6 +111,7 @@ class ProductViewModel extends BaseViewModel {
     extras = cartItem.extras!;
     // notes = cartItem.note;
     totalAmount = cartItem.totalAmount;
+    currentAttributes = cartItem.attributes!;
     // countAmount();
     notifyListeners();
   }
@@ -106,6 +123,7 @@ class ProductViewModel extends BaseViewModel {
       totalAmount!,
       note: notes,
       extras: extras,
+      attributes: currentAttributes,
     );
     Get.find<CartViewModel>().updateCart(cartItem, idx);
     Get.back();

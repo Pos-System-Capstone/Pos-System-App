@@ -212,12 +212,13 @@ class _CartScreenState extends State<CartScreen> {
                             flex: 3,
                             child: FilledButton(
                               onPressed: () async {
-                                var result = await showConfirmDialog(
-                                    title: 'Xác nhận',
-                                    content: 'Xác nhận tạo đơn hàng');
-                                if (result) {
-                                  model.createOrder();
-                                }
+                                // var result = await showConfirmDialog(
+                                //     title: 'Xác nhận',
+                                //     content: 'Xác nhận tạo đơn hàng');
+                                // if (result) {
+                                //   model.createOrder();
+                                // }
+                                model.createOrder();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
@@ -328,7 +329,7 @@ class _CartScreenState extends State<CartScreen> {
                   child: Align(
                     alignment: AlignmentDirectional.centerEnd,
                     child: Text(
-                      formatPrice(item.totalAmount!),
+                      formatPrice(item.totalAmount),
                       style: Get.textTheme.bodyLarge,
                     ),
                   ),
@@ -368,21 +369,26 @@ class _CartScreenState extends State<CartScreen> {
                 );
               },
             ),
-            if (item.note != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(item.note!,
-                      style: Get.textTheme.bodyMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Row(
+                  children: [
+                    if (item.attributes != null)
+                      for (int i = 0; i < item.attributes!.length; i++)
+                        Text("${item.attributes![i].value} ",
+                            style: Get.textTheme.bodyMedium,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                    Text(item.note ?? '',
+                        style: Get.textTheme.bodyMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
+                  ],
                 ),
               ),
-            Divider(
-              color: Get.theme.colorScheme.onSurface,
-              thickness: 0.5,
-            )
+            ),
           ],
         ),
       ),

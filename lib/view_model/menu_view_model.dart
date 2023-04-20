@@ -40,6 +40,8 @@ class MenuViewModel extends BaseViewModel {
   Future<void> getMenuOfStore() async {
     try {
       setState(ViewStatus.Loading);
+      getStore();
+      getListSession();
       currentMenu = await menuData?.getMenuOfStore();
       Get.find<OrderViewModel>().getListPayment();
       await getStore();

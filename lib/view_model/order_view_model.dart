@@ -27,6 +27,7 @@ import '../data/api/payment_data.dart';
 import '../data/model/index.dart';
 import '../data/model/payment.dart';
 import '../routes/routes_constrants.dart';
+import '../widgets/Dialogs/payment_dialogs/check_payment_status_dialog.dart';
 
 class OrderViewModel extends BaseViewModel {
   int selectedTable = 01;
@@ -39,6 +40,7 @@ class OrderViewModel extends BaseViewModel {
   PaymentProvider? selectedPaymentMethod;
   PaymentData? paymentData;
   List<OrderInList> listOrder = [];
+  PaymentStatusResponse? paymentStatus;
 
   OrderViewModel() {
     api = OrderAPI();
@@ -71,17 +73,18 @@ class OrderViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void placeOrder(OrderModel order) async {
+  Future<bool> placeOrder(OrderModel order) async {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
       order.paymentId = listPayment[0]!.id;
       var res = api.placeOrder(order, userInfo!.storeId);
-      res.then((value) =>
-          {print(value.toString()), showPaymentBotomSheet(value.toString())});
+      res.then((value) => {showPaymentBotomSheet(value.toString())});
       setState(ViewStatus.Completed);
+      return true;
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
+      return false;
     }
   }
 
@@ -97,8 +100,12 @@ class OrderViewModel extends BaseViewModel {
       MakePaymentResponse makePaymentResponse =
           await api.makePayment(currentOrder!, payment.id ?? '');
       if (makePaymentResponse.displayType == "Url") {
+        paymentStatusDialog(
+            currentOrder!.orderId ?? '', makePaymentResponse.message ?? '');
         launchInBrowser(makePaymentResponse.url ?? '');
       } else if (makePaymentResponse.displayType == "Qr") {
+        paymentStatusDialog(
+            currentOrder!.orderId ?? '', makePaymentResponse.message ?? '');
         launchQrCode(makePaymentResponse.url ?? '');
         // showQRCodeDialog(makePaymentResponse.url ?? '', payment.name ?? '',
         //     currentOrder?.invoiceId ?? "");
@@ -111,6 +118,17 @@ class OrderViewModel extends BaseViewModel {
       setState(ViewStatus.Error, e.toString());
       showAlertDialog(
           title: "Lỗi thanh toán", content: e.toString() ?? "Lỗi thanh toán");
+    }
+  }
+
+  Future<String> checkPaymentStatus(String orderId) async {
+    api.checkPayment(orderId).then((value) => paymentStatus = value);
+    if (paymentStatus != null) {
+      Duration(seconds: 3);
+      hideDialog();
+      return paymentStatus!.message ?? '';
+    } else {
+      return 'Đợi thanh toán';
     }
   }
 

@@ -199,9 +199,7 @@ Widget paymentTypeSelect(OrderViewModel model) {
                         child: InkWell(
                           onTap: () {
                             model.selectPayment(e);
-                            if (e.type == "ONLINE") {
-                              model.makePayment(e!);
-                            }
+                            model.makePayment(e);
                           },
                           child: Card(
                             color: model.selectedPaymentMethod == e

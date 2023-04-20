@@ -4,12 +4,12 @@ class SessionDetails {
   String? endDateTime;
   String? name;
   int? numberOfOrders;
-  int? totalAmount;
-  int? totalPromotion;
-  int? currentCashInVault;
-  int? initCashInVault;
-  int? profitAmount;
-  int? totalDiscountAmount;
+  num? totalAmount;
+  num? totalPromotion;
+  num? currentCashInVault;
+  num? initCashInVault;
+  num? profitAmount;
+  num? totalDiscountAmount;
 
   SessionDetails(
       {this.sessionId,

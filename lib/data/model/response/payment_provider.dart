@@ -27,3 +27,15 @@ class PaymentProvider {
     return list.map((map) => PaymentProvider.fromJson(map)).toList();
   }
 }
+
+class PaymentStatusResponse {
+  String? id;
+  String? message;
+  PaymentStatusResponse({this.id, this.message});
+  factory PaymentStatusResponse.fromJson(Map<String, dynamic> json) {
+    return PaymentStatusResponse(
+      id: json['id'],
+      message: json['transactionStatus'],
+    );
+  }
+}

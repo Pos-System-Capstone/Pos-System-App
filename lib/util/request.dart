@@ -97,17 +97,15 @@ class MyRequest {
         return handler.next(e); // continue
       },
       onError: (e, handler) async {
-        print(e.response?.statusCode);
         if (e.response?.statusCode == 400) {
-          print(e.response?.data);
           showAlertDialog(
             title: "Lỗi",
-            content: e.response?.data,
+            content: e.response?.data["Error"],
           );
         } else if (e.response?.statusCode == 500) {
           Future<bool> res = showConfirmDialog(
             title: "Lỗi hệ thống",
-            content: "Vui long thử lại sau",
+            content: "Vui lòng đăng nhập lại",
           );
           res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
         } else {
@@ -116,7 +114,6 @@ class MyRequest {
             content: e.response?.data["Error"],
           );
         }
-        print(e.response?.data["Error"]);
         handler.next(e);
       },
     ));
@@ -160,7 +157,7 @@ class PaymentRequest {
         } else if (e.response?.statusCode == 500) {
           Future<bool> res = showConfirmDialog(
             title: "Lỗi hệ thống",
-            content: "Vui long thử lại sau",
+            content: "Vui lòng đăng nhập lại",
           );
           res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
         } else {
@@ -169,7 +166,6 @@ class PaymentRequest {
             content: e.response?.data["Error"],
           );
         }
-        print(e.response?.data["Error"]);
         handler.next(e);
       },
     ));

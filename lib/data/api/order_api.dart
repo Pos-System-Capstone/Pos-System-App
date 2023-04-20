@@ -6,6 +6,7 @@ import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/make_payment_response.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/share_pref.dart';
 
@@ -14,10 +15,8 @@ import '../../util/request.dart';
 class OrderAPI {
   Future placeOrder(OrderModel order, String storeId) async {
     var dataJson = order.toJson();
-    print(dataJson);
     final res = await request.post('stores/$storeId/orders', data: dataJson);
     var jsonList = res.data;
-    print(jsonList);
     return jsonList;
   }
 
@@ -62,6 +61,19 @@ class OrderAPI {
     MakePaymentResponse makePaymentResponse =
         MakePaymentResponse.fromJson(json);
     return makePaymentResponse;
+  }
+
+  Future<PaymentStatusResponse?> checkPayment(String orderId) async {
+    final res = await paymentRequest.get(
+      'check-transaction-status',
+      queryParameters: {'orderId': orderId},
+    );
+    if (res.statusCode == 200) {
+      var jsonList = res.data;
+      return PaymentStatusResponse.fromJson(jsonList);
+    } else {
+      return null;
+    }
   }
 
   Future<List<OrderInList>> getListOrderOfStore(String storeId,
