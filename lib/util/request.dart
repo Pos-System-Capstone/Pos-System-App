@@ -156,8 +156,8 @@ class PaymentRequest {
           );
         } else if (e.response?.statusCode == 500) {
           Future<bool> res = showConfirmDialog(
-            title: "Lỗi hệ thống",
-            content: "Vui lòng đăng nhập lại",
+            title: "Lỗi hệ thống " + e.response?.data["StatusCode"],
+            content: e.response?.data["Error"] + "/n Vui lòng đăng nhập lại",
           );
           res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
         } else {
@@ -166,7 +166,7 @@ class PaymentRequest {
             content: e.response?.data["Error"],
           );
         }
-        handler.next(e);
+        // handler.next(e);
       },
     ));
   }

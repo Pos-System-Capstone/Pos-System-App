@@ -89,35 +89,27 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void makePayment(PaymentProvider payment) async {
-    try {
-      Account? userInfo = await getUserInfo();
-      if (currentOrder == null) {
-        showAlertDialog(
-            title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
-        setState(ViewStatus.Completed);
-        return;
-      }
-      MakePaymentResponse makePaymentResponse =
-          await api.makePayment(currentOrder!, payment.id ?? '');
-      if (makePaymentResponse.displayType == "Url") {
-        paymentStatusDialog(
-            currentOrder!.orderId ?? '', makePaymentResponse.message ?? '');
-        launchInBrowser(makePaymentResponse.url ?? '');
-      } else if (makePaymentResponse.displayType == "Qr") {
-        paymentStatusDialog(
-            currentOrder!.orderId ?? '', makePaymentResponse.message ?? '');
-        launchQrCode(makePaymentResponse.url ?? '');
-        // showQRCodeDialog(makePaymentResponse.url ?? '', payment.name ?? '',
-        //     currentOrder?.invoiceId ?? "");
-      } else {
-        showAlertDialog(
-            title: "Lỗi thanh toán",
-            content: makePaymentResponse.message ?? "Lỗi thanh toán");
-      }
-    } catch (e) {
-      setState(ViewStatus.Error, e.toString());
+    if (currentOrder == null) {
       showAlertDialog(
-          title: "Lỗi thanh toán", content: e.toString() ?? "Lỗi thanh toán");
+          title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
+
+      return;
+    }
+    MakePaymentResponse makePaymentResponse =
+        await api.makePayment(currentOrder!, payment.id ?? '');
+    if (makePaymentResponse.displayType == "Url") {
+      paymentStatusDialog(
+          currentOrder!.orderId ?? '', makePaymentResponse.message ?? '');
+      launchInBrowser(makePaymentResponse.url ?? '');
+    } else if (makePaymentResponse.displayType == "Qr") {
+      paymentStatusDialog(
+          currentOrder!.orderId ?? '', makePaymentResponse.message ?? '');
+      launchQrCode(makePaymentResponse.url ?? '');
+      // showQRCodeDialog(makePaymentResponse.url ?? '', payment.name ?? '',
+      //     currentOrder?.invoiceId ?? "");
+    } else {
+      paymentStatusDialog(
+          currentOrder!.orderId ?? '', makePaymentResponse.message ?? '');
     }
   }
 
@@ -199,12 +191,11 @@ class OrderViewModel extends BaseViewModel {
         );
         if (!result) {
           showPrinterConfigDialog(PrinterTypeEnum.bill);
-
           return;
         } else {
           setState(ViewStatus.Loading);
-          var res = api.updateOrder(userInfo!.storeId, orderId,
-              OrderStatusEnum.PAID, selectedPaymentMethod!.id);
+          api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
+              selectedPaymentMethod!.id);
           clearOrder();
           setState(ViewStatus.Completed);
           showAlertDialog(
