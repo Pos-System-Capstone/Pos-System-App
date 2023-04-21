@@ -63,12 +63,12 @@ class Payment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['paymentTypeId'] = this.paymentTypeId;
-    data['paymentType'] = this.paymentType;
-    data['picUrl'] = this.picUrl;
-    data['paidAmount'] = this.paidAmount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['paymentTypeId'] = paymentTypeId;
+    data['paymentType'] = paymentType;
+    data['picUrl'] = picUrl;
+    data['paidAmount'] = paidAmount;
     return data;
   }
 }

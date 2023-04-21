@@ -1,13 +1,8 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/make_payment_response.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
-import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/share_pref.dart';
 
 import '../../util/request.dart';
@@ -37,7 +32,6 @@ class OrderAPI {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['paymentId'] = paymentId;
-    print(data);
     final res =
         await request.put('stores/$storeId/orders/$orderId', data: data);
     var json = res.data;
@@ -55,7 +49,6 @@ class OrderAPI {
     data['paymentId'] = paymentId;
     data['amount'] = order.finalAmount;
     data['orderDescription'] = "Thanh toán đơn hàng ${order.invoiceId} ";
-    print(data);
     final res = await paymentRequest.post('payments', data: data);
     var json = res.data;
     MakePaymentResponse makePaymentResponse =
@@ -72,7 +65,7 @@ class OrderAPI {
       var jsonList = res.data;
       return PaymentStatusResponse.fromJson(jsonList);
     } else {
-      return null;
+      return PaymentStatusResponse(id: orderId, message: 'Pending');
     }
   }
 
@@ -97,11 +90,10 @@ class OrderAPI {
     }
     var params = <String, dynamic>{
       'page': page,
-      'size': 20,
+      'size': 10,
       'endDate': endDate.toIso8601String(),
       'startDate': startDate.toIso8601String(),
     };
-    print(params);
     final res =
         await request.get('stores/$storeId/orders', queryParameters: params);
     var jsonList = res.data['items'];

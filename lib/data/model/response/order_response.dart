@@ -95,7 +95,7 @@ class Payment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['paymentTypeId'] = paymentTypeId;
     data['paymentType'] = paymentType;
@@ -142,7 +142,7 @@ class ProductList {
     if (json['extras'] != null) {
       extras = <Extras>[];
       json['extras'].forEach((v) {
-        extras!.add(new Extras.fromJson(v));
+        extras!.add(Extras.fromJson(v));
       });
     }
   }
@@ -194,7 +194,7 @@ class Extras {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['productInMenuId'] = productInMenuId;
     data['sellingPrice'] = sellingPrice;
     data['quantity'] = quantity;

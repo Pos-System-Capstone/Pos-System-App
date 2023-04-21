@@ -30,15 +30,15 @@ class OrderInList {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['invoiceId'] = this.invoiceId;
-    data['staffName'] = this.staffName;
-    data['startDate'] = this.startDate;
-    data['endDate'] = this.endDate;
-    data['finalAmount'] = this.finalAmount;
-    data['orderType'] = this.orderType;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['invoiceId'] = invoiceId;
+    data['staffName'] = staffName;
+    data['startDate'] = startDate;
+    data['endDate'] = endDate;
+    data['finalAmount'] = finalAmount;
+    data['orderType'] = orderType;
+    data['status'] = status;
     return data;
   }
 }

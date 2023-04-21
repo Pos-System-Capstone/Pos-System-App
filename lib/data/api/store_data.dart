@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/util/request.dart';
 
@@ -16,7 +17,10 @@ class StoreData {
         throw Exception('Failed to load data!');
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
+    return null;
   }
 }

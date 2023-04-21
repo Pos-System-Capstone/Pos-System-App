@@ -36,17 +36,17 @@ class StoreModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phone'] = this.phone;
-    data['code'] = this.code;
-    data['brandPicUrl'] = this.brandPicUrl;
-    data['id'] = this.id;
-    data['brandId'] = this.brandId;
-    data['name'] = this.name;
-    data['shortName'] = this.shortName;
-    data['email'] = this.email;
-    data['address'] = this.address;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['phone'] = phone;
+    data['code'] = code;
+    data['brandPicUrl'] = brandPicUrl;
+    data['id'] = id;
+    data['brandId'] = brandId;
+    data['name'] = name;
+    data['shortName'] = shortName;
+    data['email'] = email;
+    data['address'] = address;
+    data['status'] = status;
     return data;
   }
 }

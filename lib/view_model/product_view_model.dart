@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/product_attribute.dart';
-import 'package:pos_apps/enums/product_enum.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/view_model/menu_view_model.dart';
 
 import '../data/model/index.dart';
 import 'cart_view_model.dart';

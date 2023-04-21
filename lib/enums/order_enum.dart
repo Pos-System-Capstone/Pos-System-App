@@ -1,12 +1,6 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: constant_identifier_names
 
-enum OrderStateEnum {
-  CHOOSE_ORDER_TYPE,
-  BOOKING_TABLE,
-  ORDER_PRODUCT,
-  PAYMENT,
-  COMPLETE_ORDER
-}
+import 'package:flutter/material.dart';
 
 enum DeliTypeEnum { TAKE_AWAY, IN_STORE, DELIVERY, NONE }
 
@@ -34,14 +28,6 @@ class Delivery {
   String type = 'DELIVERY';
   IconData icon = Icons.delivery_dining;
   String label = 'Giao hàng';
-}
-
-class OrderState {
-  static const String CHOOSE_ORDER_TYPE = ' CHOOSE_ORDER_TYPE';
-  static const String BOOKING_TABLE = 'BOOKING_TABLE';
-  static const String DELIORDER_PRODUCTVERY = 'ORDER_PRODUCT';
-  static const String PAYMENT = 'PAYMENT';
-  static const String COMPLETE_ORDER = 'COMPLETE_ORDER';
 }
 
 class OrderStatusEnum {

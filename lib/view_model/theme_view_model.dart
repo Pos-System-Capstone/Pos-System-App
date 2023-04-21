@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/widgets/Dialogs/other_dialogs/dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../theme/app_theme.dart';
-import '../util/app_constants.dart';
 import '../util/share_pref.dart';
+import '../views/widgets/other_dialogs/dialog.dart';
 
 class ThemeViewModel extends BaseViewModel {
   SharedPreferences? sharedPreferences;
@@ -36,8 +33,8 @@ class ThemeViewModel extends BaseViewModel {
 
     notifyListeners();
     showAlertDialog(
-      title: 'Change Theme',
-      content: 'Please restart app to apply new theme',
+      title: 'Đổi chủ đề thành công',
+      content: 'Vui lòng khởi động lại ứng dụng để thay đổi chủ đề',
     );
   }
 }

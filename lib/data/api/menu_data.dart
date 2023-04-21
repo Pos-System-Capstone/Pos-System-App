@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:pos_apps/data/model/index.dart';
 
 import '../../util/request.dart';

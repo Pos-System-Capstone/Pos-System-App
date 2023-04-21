@@ -5,3 +5,5 @@ export 'menu.dart';
 export 'cart.dart';
 export 'order.dart';
 export 'account.dart';
+export 'product_attribute.dart';
+export 'payment.dart';

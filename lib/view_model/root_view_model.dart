@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/product_attribute.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/theme/app_theme.dart';
 import 'package:pos_apps/util/share_pref.dart';
 
-import '../theme/theme_color.dart';
 import 'base_view_model.dart';
 
 class RootViewModel extends BaseViewModel {
@@ -23,7 +21,6 @@ class RootViewModel extends BaseViewModel {
   void handleChangeTheme(bool isDarkMode) async {
     int index = await getThemeColor() ?? 0;
     if (isDarkMode) {
-      print(isDarkMode);
       Get.changeTheme(AppTheme.getThemeLight(index));
       // Get.changeThemeMode(ThemeMode.light);
     } else {
@@ -35,22 +32,17 @@ class RootViewModel extends BaseViewModel {
     String name,
   ) {
     addAttributes.name = name;
-    print(addAttributes.name);
-    print(addAttributes.options);
+
     notifyListeners();
   }
 
   void setCurrentAttributeOption(String value) {
-    addAttributes.options?.add(value);
-    print(addAttributes.name);
-    print(addAttributes.options);
+    addAttributes.options.add(value);
     notifyListeners();
   }
 
   void removeCurrentAttributeOption(String value) {
-    addAttributes.options?.remove(value);
-    print(addAttributes.name);
-    print(addAttributes.options);
+    addAttributes.options.remove(value);
     notifyListeners();
   }
 
@@ -71,7 +63,7 @@ class RootViewModel extends BaseViewModel {
     listAttribute
         .firstWhere((element) => element.name == value.name)
         .options
-        ?.remove(option);
+        .remove(option);
     setAttributes(listAttribute);
     notifyListeners();
   }

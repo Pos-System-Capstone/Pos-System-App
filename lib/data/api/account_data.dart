@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
-
 import '../model/index.dart';
-import 'base_data.dart';
 
 class AccountData {
   Future<Account?> login(String username, String password) async {
@@ -26,8 +25,11 @@ class AccountData {
         return null;
       }
     } catch (e) {
-      print('Error login (account_dao): ${e.toString()}');
+      if (kDebugMode) {
+        print('Error login (account_dao): ${e.toString()}');
+      }
     }
+    return null;
   }
 
   Future<bool> isUserLoggedIn() async {

@@ -1,14 +1,11 @@
 import 'package:get/get.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../Widgets/Dialogs/other_dialogs/dialog.dart';
 import '../data/api/index.dart';
 import '../data/model/account.dart';
 import '../enums/view_status.dart';
 import '../routes/routes_constrants.dart';
-import '../services/realtime_database.dart';
+import '../views/widgets/other_dialogs/dialog.dart';
 
 class LoginViewModel extends BaseViewModel {
   AccountData dao = AccountData();
@@ -25,12 +22,11 @@ class LoginViewModel extends BaseViewModel {
                 setState(ViewStatus.Error),
                 hideDialog(),
                 showAlertDialog(
-                    title: "Login Failed",
-                    content: "Please check your username and password")
+                    title: "Đăng nhập thất bại",
+                    content: "Vui lòng kiểm tra lại tài khoản và mật khẩu")
               }
             else
               {
-                print(userDTO!.name),
                 setUserInfo(userDTO!),
                 setState(ViewStatus.Completed),
                 hideDialog(),
@@ -44,7 +40,7 @@ class LoginViewModel extends BaseViewModel {
 
   Future<void> logout() async {
     userDTO = null;
-    deleteUserInfo();
+    await deleteUserInfo();
     await Get.offAllNamed(RouteHandler.LOGIN);
   }
 }

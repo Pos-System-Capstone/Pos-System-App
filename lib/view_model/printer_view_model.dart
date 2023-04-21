@@ -1,10 +1,4 @@
-/*
- * esc_pos_printer
- * Created by Andrey Ushakov
- * 
- * Copyright (c) 2019-2020. All rights reserved.
- * See LICENSE for distribution and usage details.
- */
+// ignore_for_file: depend_on_referenced_packages
 
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
@@ -13,7 +7,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
-import 'package:pos_apps/data/model/response/sessions.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/util/share_pref.dart';
@@ -35,25 +28,24 @@ class PrinterViewModel extends BaseViewModel {
     try {
       Printing.listPrinters().then((value) {
         listDevice = value.where((element) => element.isAvailable).toList();
-        print(listDevice);
         Future<String?> billPrinter = getBillPrinter();
         Future<String?> productPrinter = getProductPrinter();
         billPrinter.then((value) {
           if (value != null) {
-            listDevice!.forEach((element) {
+            for (var element in listDevice!) {
               if (element.url == value) {
                 selectedBillPrinter = element;
               }
-            });
+            }
           }
         });
         productPrinter.then((value) {
           if (value != null) {
-            listDevice!.forEach((element) {
+            for (var element in listDevice!) {
               if (element.url == value) {
                 selectedProductPrinter = element;
               }
-            });
+            }
           }
         });
       });

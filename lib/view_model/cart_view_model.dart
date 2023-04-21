@@ -1,13 +1,9 @@
-import 'dart:ffi';
-import 'dart:math';
-
+// ignore_for_file: unnecessary_import
 import 'package:get/get.dart';
-import 'package:pos_apps/data/api/payment_data.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/view_model/base_view_model.dart';
 
 import '../data/model/index.dart';
-import '../data/model/payment.dart';
 import 'index.dart';
 
 class CartViewModel extends BaseViewModel {
@@ -146,10 +142,10 @@ class CartViewModel extends BaseViewModel {
       finalAmount: _finalAmount,
     );
     bool res = false;
-    Get.find<OrderViewModel>().placeOrder(order).then((value) => res = value);
-    if (res) {
-      clearCartData();
-    }
+    Get.find<OrderViewModel>().placeOrder(order).then((value) => {
+          res = value,
+          if (res == true) {clearCartData()}
+        });
   }
 
   List<PaymentProvider?> getListPayment() {

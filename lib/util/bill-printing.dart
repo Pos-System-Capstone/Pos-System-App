@@ -1,14 +1,14 @@
+// ignore_for_file: file_names, depend_on_referenced_packages
+
 import 'dart:typed_data' show Uint8List;
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
-import 'package:pos_apps/data/model/response/sessions.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/format.dart';
-import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:printing/printing.dart';
@@ -21,11 +21,10 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interBold();
 
-  String deliType =
-      Get.find<OrderViewModel>().deliveryType ?? DeliType().eatIn.type;
+  String deliType = Get.find<OrderViewModel>().deliveryType;
   StoreModel storeInfo = Get.find<MenuViewModel>().storeDetails;
   final provider =
-      await flutterImageProvider(NetworkImage(storeInfo!.brandPicUrl!));
+      await flutterImageProvider(NetworkImage(storeInfo.brandPicUrl!));
 
   pdf.addPage(
     pw.Page(
@@ -210,7 +209,7 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                     pw.Text("Phương thức :",
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 9)),
-                    pw.Text(payment ?? '',
+                    pw.Text(payment,
                         textAlign: pw.TextAlign.right,
                         style: pw.TextStyle(font: font, fontSize: 9)),
                   ],
@@ -340,7 +339,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Text("Vào lúc:${formatTime(DateTime.now().toString())}",
                   textAlign: pw.TextAlign.right,
                   style: pw.TextStyle(font: font, fontSize: 7)),
-              pw.Text("BIÊN BẢN GIAO CA" ?? '',
+              pw.Text("BIÊN BẢN GIAO CA",
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(font: font, fontSize: 8)),
               pw.Divider(
@@ -372,7 +371,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
                           font: font,
                           fontSize: 7,
                           fontWeight: pw.FontWeight.bold)),
-                  pw.Text(account!.name ?? '',
+                  pw.Text(account.name,
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(
                           font: font,

@@ -69,7 +69,7 @@ class ProductInOrder {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['productInMenuId'] = productInMenuId;
     data['quantity'] = quantity;
     data['sellingPrice'] = sellingPrice;
@@ -95,7 +95,7 @@ class ExtraInOrder {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['productInMenuId'] = productInMenuId;
     data['quantity'] = quantity;
     data['sellingPrice'] = sellingPrice;
