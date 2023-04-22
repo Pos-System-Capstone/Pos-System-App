@@ -7,10 +7,10 @@ import '../views/widgets/other_dialogs/dialog.dart';
 
 class ThemeViewModel extends BaseViewModel {
   SharedPreferences? sharedPreferences;
-  int colorIndex = 0;
+  int? colorIndex;
   bool isDarkMode = false;
   ThemeViewModel() {
-    _loadCurrentTheme();
+    loadCurrentTheme();
   }
   void toggleTheme() {
     Get.changeThemeMode(Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
@@ -19,8 +19,8 @@ class ThemeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void _loadCurrentTheme() async {
-    colorIndex = await getThemeColor() ?? 0;
+  void loadCurrentTheme() async {
+    colorIndex = await getThemeColor() ?? 2;
     isDarkMode = await getThemeMode() ?? false;
 
     notifyListeners();

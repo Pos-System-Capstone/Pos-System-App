@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/index.dart';
 import 'bill_screen.dart';
@@ -15,6 +16,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   OrderViewModel orderViewModel = Get.find<OrderViewModel>();
+  bool isQrCodeOpen = false;
   @override
   void initState() {
     orderViewModel.getOrderByStore(widget.orderId);
@@ -66,7 +68,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           children: [
                             SizedBox(
                                 width: double.infinity,
-                                height: Get.height * 0.6,
+                                height: Get.height * 0.8,
                                 child: orderConfig()),
                             SizedBox(
                                 width: Get.width,
@@ -182,8 +184,25 @@ Widget paymentTypeSelect() {
       ),
       child: Column(
         children: [
+          model.qrCodeData != null
+              ? Container(
+                  color: Colors.white,
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(16),
+                  child: PrettyQr(
+                    image: NetworkImage(
+                      model.selectedPaymentMethod?.picUrl ?? "",
+                    ),
+                    typeNumber: null,
+                    size: 300,
+                    elementColor: Colors.black,
+                    data: model.qrCodeData!,
+                    errorCorrectLevel: QrErrorCorrectLevel.M,
+                    roundEdges: true,
+                  ),
+                )
+              : SizedBox(),
           Expanded(
-            flex: 4,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Center(
@@ -233,51 +252,45 @@ Widget paymentTypeSelect() {
             "Trạng thái thanh toán: ${model.currentPaymentStatusMessage}",
             style: Get.textTheme.titleMedium,
           ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 80,
-                    padding: const EdgeInsets.all(8.0),
-                    child: FilledButton(
-                      onPressed: () {
-                        model.makePayment(model.selectedPaymentMethod!);
-                      },
-                      child: Text("Thực hiện thanh toán"),
-                    ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 80,
+                  padding: const EdgeInsets.all(8.0),
+                  child: FilledButton(
+                    onPressed: () {
+                      model.makePayment(model.selectedPaymentMethod!);
+                    },
+                    child: Text("Thực hiện thanh toán"),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                      height: 80,
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          model
-                              .checkPaymentStatus(model.currentOrder!.orderId!);
-                        },
-                        child: model.isCheckingPaymentStatus
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              Container(
+                  height: 80,
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      model.checkPaymentStatus(model.currentOrder!.orderId!);
+                    },
+                    child: model.isCheckingPaymentStatus
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
 
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: [
-                                  const Text(
-                                    'Đang kiểm tra...',
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  const CircularProgressIndicator(),
-                                ],
-                              )
-                            : Text('Kiểm tra thanh toán'),
-                      )),
-                ),
-              ],
-            ),
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Text(
+                                'Đang kiểm tra...',
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const CircularProgressIndicator(),
+                            ],
+                          )
+                        : Text('Kiểm tra thanh toán'),
+                  )),
+            ],
           ),
         ],
       ),

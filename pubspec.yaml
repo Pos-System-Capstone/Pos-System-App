@@ -47,6 +47,7 @@ dependencies:
   printing: ^5.10.2
   url_launcher: ^6.1.10
   pretty_qr_code: ^2.0.3
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:

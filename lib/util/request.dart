@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' hide Response;
-import '../routes/routes_constrants.dart';
+import '../routes/routes_constraints.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
 
 Map<String, dynamic> convertToQueryParams(
@@ -144,7 +144,7 @@ class PaymentRequest {
       baseUrl: 'https://payment.endy.bio/api/v1/',
       headers: {
         Headers.contentTypeHeader: "application/json",
-        Headers.acceptHeader: "text/plain"
+        Headers.acceptHeader: "text/plain",
       },
       sendTimeout: Duration(seconds: 15),
       receiveTimeout: Duration(seconds: 5));

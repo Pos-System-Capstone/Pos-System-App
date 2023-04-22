@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
-import 'package:pos_apps/data/model/product_attribute.dart';
 import 'package:pos_apps/view_model/index.dart';
-
 import '../data/model/index.dart';
-import 'cart_view_model.dart';
 
 class ProductViewModel extends BaseViewModel {
   num? totalAmount;
@@ -20,9 +17,7 @@ class ProductViewModel extends BaseViewModel {
   }
   void addProductToCartItem(Product product) {
     productInCart = product;
-    print(productInCart!.name);
     countAmount();
-    print(totalAmount);
     notifyListeners();
   }
 
@@ -62,7 +57,6 @@ class ProductViewModel extends BaseViewModel {
   }
 
   void addOrRemoveExtra(Product extra) {
-    print(isExtraExist(extra).toString());
     if (isExtraExist(extra)) {
       extras.removeWhere((element) => element.id == extra.id);
       countAmount();

@@ -5,6 +5,7 @@ import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/login_view_model.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
+import 'package:pos_apps/views/screens/home/cart/cart_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../widgets/other_dialogs/dialog.dart';
 import 'home/cart/dialog/cart_dialog.dart';
@@ -27,11 +28,24 @@ class _RootScreenState extends State<RootScreen> {
     ProfileScreen(),
     SettingsScreen(),
   ];
+
+  List<Widget> portraitViews = [
+    AddToCartScreen(),
+    CartScreen(),
+    OrdersScreen(),
+    ProfileScreen(),
+    SettingsScreen(),
+  ];
   List<BottomNavigationBarItem> items = const [
     BottomNavigationBarItem(
       icon: Icon(Icons.home),
       activeIcon: Icon(Icons.home_outlined),
       label: 'Đặt món',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.shopping_cart),
+      activeIcon: Icon(Icons.shopping_cart_outlined),
+      label: 'Giỏ hàng',
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.receipt_long),
@@ -87,55 +101,55 @@ class _RootScreenState extends State<RootScreen> {
         child: ScopedModelDescendant(
             builder: (context, child, OrderViewModel model) {
           return Scaffold(
-              floatingActionButton: ScopedModel<CartViewModel>(
-                model: Get.find<CartViewModel>(),
-                child: ScopedModelDescendant(
-                    builder: (context, child, CartViewModel model) {
-                  if (model.quantity == 0) {
-                    return FloatingActionButton(
-                      // Your actual Fab
-                      onPressed: () => showCartDialog(),
-                      child: Icon(Icons.shopping_cart),
-                    );
-                  }
-                  return FittedBox(
-                    child: Stack(
-                      alignment: Alignment(1.4, -1.5),
-                      children: [
-                        FloatingActionButton(
-                          // Your actual Fab
-                          onPressed: () => showCartDialog(),
-                          child: Icon(Icons.shopping_cart),
-                        ),
-                        Container(
-                          // This is your Badge
-                          padding: EdgeInsets.all(8),
-                          constraints:
-                              BoxConstraints(minHeight: 32, minWidth: 32),
-                          decoration: BoxDecoration(
-                            // This controls the shadow
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                  color: Colors.black.withAlpha(50))
-                            ],
-                            borderRadius: BorderRadius.circular(16),
-                            color: Get.theme.colorScheme
-                                .secondary, // This would be color of the Badge
-                          ),
-                          // This is your Badge
-                          child: Center(
-                            // Here you can put whatever content you want inside your Badge
-                            child: Text(model.quantity.toString(),
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
+              // floatingActionButton: ScopedModel<CartViewModel>(
+              //   model: Get.find<CartViewModel>(),
+              //   child: ScopedModelDescendant(
+              //       builder: (context, child, CartViewModel model) {
+              //     if (model.quantity == 0) {
+              //       return FloatingActionButton(
+              //         // Your actual Fab
+              //         onPressed: () => showCartDialog(),
+              //         child: Icon(Icons.shopping_cart),
+              //       );
+              //     }
+              //     return FittedBox(
+              //       child: Stack(
+              //         alignment: Alignment(1.4, -1.5),
+              //         children: [
+              //           FloatingActionButton(
+              //             // Your actual Fab
+              //             onPressed: () => showCartDialog(),
+              //             child: Icon(Icons.shopping_cart),
+              //           ),
+              //           Container(
+              //             // This is your Badge
+              //             padding: EdgeInsets.all(8),
+              //             constraints:
+              //                 BoxConstraints(minHeight: 32, minWidth: 32),
+              //             decoration: BoxDecoration(
+              //               // This controls the shadow
+              //               boxShadow: [
+              //                 BoxShadow(
+              //                     spreadRadius: 1,
+              //                     blurRadius: 5,
+              //                     color: Colors.black.withAlpha(50))
+              //               ],
+              //               borderRadius: BorderRadius.circular(16),
+              //               color: Get.theme.colorScheme
+              //                   .secondary, // This would be color of the Badge
+              //             ),
+              //             // This is your Badge
+              //             child: Center(
+              //               // Here you can put whatever content you want inside your Badge
+              //               child: Text(model.quantity.toString(),
+              //                   style: TextStyle(color: Colors.white)),
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     );
+              //   }),
+              // ),
               bottomNavigationBar: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
                   currentIndex: _selectedIndex,
@@ -145,7 +159,7 @@ class _RootScreenState extends State<RootScreen> {
                     });
                   },
                   items: items),
-              body: views[_selectedIndex]);
+              body: portraitViews[_selectedIndex]);
         }),
       ));
     }

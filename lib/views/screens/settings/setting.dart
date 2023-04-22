@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
-import 'package:pos_apps/view_model/theme_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../theme/theme_color.dart';
@@ -114,178 +113,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Máy in hoá đơn',
-                                style: Get.textTheme.titleMedium),
-                            Get.find<PrinterViewModel>().selectedBillPrinter !=
-                                    null
-                                ? Text(
-                                    Get.find<PrinterViewModel>()
-                                        .selectedBillPrinter!
-                                        .url,
-                                  )
-                                : Text("Chưa kết nối thiết bị"),
-                          ],
-                        ),
-                        OutlinedButton(
-                            onPressed: () =>
-                                showPrinterConfigDialog(PrinterTypeEnum.bill),
-                            child: Text("Tuỳ chỉnh"))
-                      ],
-                    ),
-                  ),
+                  billPrinterSetting(),
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Máy in tem',
-                                style: Get.textTheme.titleMedium),
-                            Get.find<PrinterViewModel>()
-                                        .selectedProductPrinter !=
-                                    null
-                                ? Text(
-                                    Get.find<PrinterViewModel>()
-                                        .selectedProductPrinter!
-                                        .url,
-                                  )
-                                : Text(" Chưa kết nối thiết bị"),
-                          ],
-                        ),
-                        OutlinedButton(
-                            onPressed: () =>
-                                showPrinterConfigDialog(PrinterTypeEnum.stamp),
-                            child: Text("Tuỳ chỉnh"))
-                      ],
-                    ),
-                  ),
+                  stampPrinterSetting(),
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Cập nhật dữ liệu',
-                                style: Get.textTheme.titleMedium)),
-                        IconButton(
-                          alignment: Alignment.bottomCenter,
-                          tooltip: "Cập nhật",
-                          onPressed: () =>
-                              Get.find<MenuViewModel>().getMenuOfStore(),
-                          icon: Icon(
-                            Icons.browser_updated,
-                            size: 32,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  updateMenu(),
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Hiển thị Thực đơn',
-                                style: Get.textTheme.titleMedium)),
-                        IconButton(
-                          alignment: Alignment.bottomCenter,
-                          tooltip: "Mở",
-                          onPressed: () => Get.find<OrderViewModel>()
-                              .launchInBrowser(
-                                  'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmenu-deer.jpg?alt=media&token=cfba9091-79c7-4a19-9f62-fd948768f64e'),
-                          icon: Icon(
-                            Icons.menu_book_outlined,
-                            size: 32,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  productAttributesSetting(),
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Thuộc tính sản phẩm',
-                                style: Get.textTheme.titleMedium)),
-                        IconButton(
-                          alignment: Alignment.bottomCenter,
-                          tooltip: "Mở",
-                          onPressed: () => showProductAttributesBottomSheet(),
-                          icon: Icon(
-                            Icons.edit_attributes_outlined,
-                            size: 32,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  displayMenu(),
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Đăng xuất',
-                                style: Get.textTheme.titleMedium)),
-                        IconButton(
-                          alignment: Alignment.bottomCenter,
-                          tooltip: "Đăng xuất",
-                          onPressed: () => {
-                            showConfirmDialog(
-                              title: "Đăng xuất",
-                              content: "Bạn có muốn đăng xuất không?",
-                            ).then((value) => {
-                                  if (value)
-                                    Get.find<LoginViewModel>().logout(),
-                                })
-                          },
-                          icon: Icon(
-                            Icons.logout,
-                            size: 32,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  logoutSetting(),
                   Divider(
                     thickness: 1,
                   ),
+                  // Padding(
+                  //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  //   child: InkWell(
+                  //     onTap: () =>
+                  //         Get.find<PrinterViewModel>().testPrinterMobile(),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         Expanded(
+                  //             child: Text('Test print mobile',
+                  //                 style: Get.textTheme.titleMedium)),
+                  //         IconButton(
+                  //           alignment: Alignment.bottomCenter,
+                  //           tooltip: "Đăng xuất",
+                  //           onPressed: () => {
+                  //             showConfirmDialog(
+                  //               title: "Đăng xuất",
+                  //               content: "Bạn có muốn đăng xuất không?",
+                  //             ).then((value) => {
+                  //                   if (value)
+                  //                     Get.find<PrinterViewModel>()
+                  //                         .testPrinterMobile(),
+                  //                 })
+                  //           },
+                  //           icon: Icon(
+                  //             Icons.logout,
+                  //             size: 32,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ]),
           ));
         }));
@@ -360,5 +245,217 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           );
         }));
+  }
+
+  Widget billPrinterSetting() {
+    return InkWell(
+      onTap: () => showPrinterConfigDialog(PrinterTypeEnum.bill),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Máy in hoá đơn', style: Get.textTheme.titleMedium),
+                  Get.find<PrinterViewModel>().selectedBillPrinter != null
+                      ? Text(
+                          Get.find<PrinterViewModel>().selectedBillPrinter!.url,
+                        )
+                      : Text("Chưa kết nối thiết bị"),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.print,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget stampPrinterSetting() {
+    return InkWell(
+      onTap: () => showPrinterConfigDialog(PrinterTypeEnum.stamp),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Máy in tem', style: Get.textTheme.titleMedium),
+                  Get.find<PrinterViewModel>().selectedProductPrinter != null
+                      ? Text(
+                          Get.find<PrinterViewModel>()
+                              .selectedProductPrinter!
+                              .url,
+                        )
+                      : Text(" Chưa kết nối thiết bị"),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.print_outlined,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget updateMenu() {
+    return InkWell(
+      onTap: () => Get.find<MenuViewModel>().getMenuOfStore(),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Cập nhật menu', style: Get.textTheme.titleMedium),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.update,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget productAttributesSetting() {
+    return InkWell(
+      onTap: () => showProductAttributesBottomSheet(),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Thuộc tính sản phẩm', style: Get.textTheme.titleMedium),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.edit_attributes,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget logoutSetting() {
+    return InkWell(
+      onTap: () => {
+        showConfirmDialog(
+          title: "Đăng xuất",
+          content: "Bạn có muốn đăng xuất không?",
+        ).then((value) => {
+              if (value) Get.find<LoginViewModel>().logout(),
+            })
+      },
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Đăng xuất', style: Get.textTheme.titleMedium),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.logout,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget displayMenu() {
+    return InkWell(
+      onTap: () => Get.find<OrderViewModel>().launchInBrowser(
+          'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmenu-deer.jpg?alt=media&token=cfba9091-79c7-4a19-9f62-fd948768f64e'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Hiển thị menu', style: Get.textTheme.titleMedium),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.menu_book,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "pos_apps",
-    "short_name": "pos_apps",
+    "name": "Reso POS",
+    "short_name": "Reso POS",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

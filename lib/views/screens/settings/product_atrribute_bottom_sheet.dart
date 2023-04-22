@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'product_attrubutes.dart';
+import 'product_attributes.dart';
 
 void showProductAttributesBottomSheet() {
   Get.bottomSheet(

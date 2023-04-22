@@ -88,10 +88,18 @@ class PrinterViewModel extends BaseViewModel {
         });
   }
 
+  void testPrinterMobile() {
+    Printing.layoutPdf(
+        format: PdfPageFormat.roll57,
+        onLayout: (PdfPageFormat format) {
+          return _generatePdf(format, "test");
+        });
+  }
+
   void printBill(
       OrderResponseModel orderResponse, int table, String paymentName) {
-    Printing.directPrintPdf(
-        printer: selectedBillPrinter!,
+    Printing.layoutPdf(
+        // printer: selectedBillPrinter!,
         // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
         //     marginAll: 2 * PdfPageFormat.mm),
         format: PdfPageFormat.roll80,
@@ -103,6 +111,27 @@ class PrinterViewModel extends BaseViewModel {
         for (var i = 1; i <= product.quantity!; i++) {
           Printing.directPrintPdf(
               printer: selectedProductPrinter!,
+              format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
+                  marginAll: 2 * PdfPageFormat.mm),
+              onLayout: (PdfPageFormat format) {
+                return generateStampInvoice(format, product,
+                    orderResponse.checkInDate, orderResponse.invoiceId, table);
+              });
+        }
+      }
+    }
+  }
+
+  void printBillMobile(
+      OrderResponseModel orderResponse, int table, String paymentName) {
+    Printing.layoutPdf(
+        format: PdfPageFormat.roll80,
+        onLayout: (PdfPageFormat format) async =>
+            generateBillInvoice(format, orderResponse, table, paymentName));
+    if (orderResponse.productList != null) {
+      for (var product in orderResponse.productList!) {
+        for (var i = 1; i <= product.quantity!; i++) {
+          Printing.layoutPdf(
               format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
                   marginAll: 2 * PdfPageFormat.mm),
               onLayout: (PdfPageFormat format) {

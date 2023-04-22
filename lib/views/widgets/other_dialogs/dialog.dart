@@ -10,7 +10,6 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../../../enums/order_enum.dart';
 import '../../../enums/view_status.dart';
-import '../../../view_model/menu_view_model.dart';
 
 Future<bool> showAlertDialog(
     {String title = "Thông báo",

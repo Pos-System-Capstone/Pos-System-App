@@ -4,7 +4,7 @@ import 'package:pos_apps/view_model/index.dart';
 import '../data/api/index.dart';
 import '../data/model/account.dart';
 import '../enums/view_status.dart';
-import '../routes/routes_constrants.dart';
+import '../routes/routes_constraints.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
 
 class LoginViewModel extends BaseViewModel {

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../routes/routes_constrants.dart';
+import '../routes/routes_constraints.dart';
 import 'index.dart';
 
 class StartUpViewModel extends BaseViewModel {
@@ -8,7 +8,7 @@ class StartUpViewModel extends BaseViewModel {
     handleStartUpLogic();
   }
   Future handleStartUpLogic() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 2));
     Get.offNamed(RouteHandler.LOGIN);
   }
 }

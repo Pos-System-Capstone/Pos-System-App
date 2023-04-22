@@ -30,6 +30,7 @@ class OrderViewModel extends BaseViewModel {
   PaymentStatusResponse? paymentStatus;
   String currentPaymentStatusMessage = "Chưa thanh toán";
   bool isCheckingPaymentStatus = false;
+  String? qrCodeData;
 
   OrderViewModel() {
     api = OrderAPI();
@@ -45,6 +46,7 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void selectPayment(PaymentProvider payment) {
+    qrCodeData = null;
     selectedPaymentMethod = payment;
     currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
     notifyListeners();
@@ -82,6 +84,7 @@ class OrderViewModel extends BaseViewModel {
 
   void makePayment(PaymentProvider payment) async {
     isCheckingPaymentStatus = true;
+    qrCodeData = null;
     if (currentOrder == null) {
       showAlertDialog(
           title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
@@ -99,8 +102,8 @@ class OrderViewModel extends BaseViewModel {
     } else if (makePaymentResponse.displayType == "Qr") {
       currentPaymentStatusMessage =
           makePaymentResponse.message ?? "Đợi thanh toán";
-      await launchQrCode(makePaymentResponse.url ?? '');
-
+      qrCodeData = makePaymentResponse.url;
+      // await launchQrCode(makePaymentResponse.url ?? '');
       isCheckingPaymentStatus = false;
       notifyListeners();
     } else {
@@ -170,6 +173,7 @@ class OrderViewModel extends BaseViewModel {
   void getOrderByStore(String orderId) async {
     try {
       setState(ViewStatus.Loading);
+      qrCodeData = null;
       Account? userInfo = await getUserInfo();
 
       await api.getOrderOfStore(userInfo!.storeId, orderId).then((value) => {
