@@ -129,10 +129,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  displayMenu(),
-                  Divider(
-                    thickness: 1,
-                  ),
+                  // displayMenu(),
+                  // Divider(
+                  //   thickness: 1,
+                  // ),
                   logoutSetting(),
                   Divider(
                     thickness: 1,

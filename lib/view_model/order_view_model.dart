@@ -222,8 +222,8 @@ class OrderViewModel extends BaseViewModel {
     await showAlertDialog(
         title: "Thanh toán thành công",
         content: "Đơn hàng thanh toán thành công");
-    Duration(seconds: 2);
-    await launchStoreLogo();
+    // Duration(seconds: 2);
+    // await launchStoreLogo();
   }
 
   clearOrder() {
