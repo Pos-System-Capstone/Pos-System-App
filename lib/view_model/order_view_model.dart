@@ -201,10 +201,16 @@ class OrderViewModel extends BaseViewModel {
         name: "Tiền mặt",
         type: "CASH",
       );
+      paymentCheckingStatus = PaymentStatusEnum.PAID;
     }
     if (selectedPaymentMethod == null) {
       await showAlertDialog(
           title: "Thông báo", content: "Vui lòng chọn phương thức thanh toán");
+      return;
+    }
+    if (paymentCheckingStatus != PaymentStatusEnum.PAID) {
+      await showAlertDialog(
+          title: "Thông báo", content: "Vui lòng kiểm tra lại thanh toán");
       return;
     }
     await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
@@ -213,9 +219,11 @@ class OrderViewModel extends BaseViewModel {
         selectedPaymentMethod!.name ?? "Tiền mặt");
 
     clearOrder();
-    showAlertDialog(
+    await showAlertDialog(
         title: "Thanh toán thành công",
         content: "Đơn hàng thanh toán thành công");
+    Duration(seconds: 2);
+    await launchStoreLogo();
   }
 
   clearOrder() {
@@ -252,6 +260,18 @@ class OrderViewModel extends BaseViewModel {
         'https://quickchart.io/qr?text=$qrCode&ecLevel=H&margin=8&size=350');
     if (!await launchUrl(
       url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Future<void> launchStoreLogo() async {
+    String? url = Get.find<MenuViewModel>().storeDetails.brandPicUrl;
+    Uri uri = Uri.parse(url ??
+        "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Flogo.png?alt=media&token=423dceec-a73b-4313-83ed-9b56f8f3996c");
+    if (!await launchUrl(
+      uri,
       mode: LaunchMode.externalApplication,
     )) {
       throw Exception('Could not launch $url');
