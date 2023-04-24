@@ -76,7 +76,6 @@ class OrderViewModel extends BaseViewModel {
 
       return true;
     } catch (e) {
-      showAlertDialog(title: "Lỗi đặt hàng", content: e.toString());
       return false;
     }
   }
