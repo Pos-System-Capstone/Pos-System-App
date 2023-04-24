@@ -120,13 +120,14 @@ class OrderViewModel extends BaseViewModel {
         if (paymentStatus!.transactionStatus == PaymentStatusEnum.PAID) {
           currentPaymentStatusMessage = "Thanh toán thành công";
           paymentCheckingStatus = PaymentStatusEnum.PAID;
-          Get.snackbar("Thanh toán thành công",
-              "Đơn hàng đã được thanh toán thành công");
           break;
         } else if (paymentStatus!.transactionStatus == PaymentStatusEnum.FAIL) {
           currentPaymentStatusMessage = "Thanh toán thất bại";
           paymentCheckingStatus = PaymentStatusEnum.FAIL;
-          Get.snackbar("Thanh toán thất bại", "Đơn hàng thanh toán  thất bại");
+          showAlertDialog(
+              title: "Thanh toán thất bại",
+              content:
+                  "Đơn hàng thanh toán thanh toán thất bại, vui lòng thử lại");
           break;
         } else {
           currentPaymentStatusMessage = "Đang kiểm tra thanh toán";
@@ -136,6 +137,9 @@ class OrderViewModel extends BaseViewModel {
         currentPaymentStatusMessage = "Vui lòng kiểm tra lại";
         paymentCheckingStatus = PaymentStatusEnum.CANCELED;
       }
+    }
+    if (paymentCheckingStatus == PaymentStatusEnum.PAID) {
+      await completeOrder(orderId);
     }
     notifyListeners();
   }
@@ -209,7 +213,9 @@ class OrderViewModel extends BaseViewModel {
         selectedPaymentMethod!.name ?? "Tiền mặt");
 
     clearOrder();
-    Get.snackbar("Hoàn thành đơn hàng", "Hoàn thành đơn hàng thành công");
+    showAlertDialog(
+        title: "Thanh toán thành công",
+        content: "Đơn hàng thanh toán thành công");
   }
 
   clearOrder() {
