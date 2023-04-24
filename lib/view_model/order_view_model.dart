@@ -100,7 +100,7 @@ class OrderViewModel extends BaseViewModel {
       currentPaymentStatusMessage =
           makePaymentResponse.message ?? "Đợi thanh toán";
       qrCodeData = makePaymentResponse.url;
-      // await launchQrCode(makePaymentResponse.url ?? '');
+      await launchQrCode(makePaymentResponse.url ?? '');
     } else {
       currentPaymentStatusMessage =
           makePaymentResponse.message ?? "Đợi thanh toán";
