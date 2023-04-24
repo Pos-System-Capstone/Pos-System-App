@@ -96,42 +96,60 @@ class PrinterViewModel extends BaseViewModel {
         });
   }
 
-  void printBill(
-      OrderResponseModel orderResponse, int table, String paymentName) {
-    Printing.layoutPdf(
-        // printer: selectedBillPrinter!,
-        // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
-        //     marginAll: 2 * PdfPageFormat.mm),
-        format: PdfPageFormat.roll80,
-        onLayout: (PdfPageFormat format) {
-          return generateBillInvoice(format, orderResponse, table, paymentName);
-        });
-    if (orderResponse.productList != null) {
-      for (var product in orderResponse.productList!) {
-        for (var i = 1; i <= product.quantity!; i++) {
-          Printing.directPrintPdf(
-              printer: selectedProductPrinter!,
-              format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
-                  marginAll: 2 * PdfPageFormat.mm),
-              onLayout: (PdfPageFormat format) {
-                return generateStampInvoice(format, product,
-                    orderResponse.checkInDate, orderResponse.invoiceId, table);
-              });
+  Future<void> printBill(
+      OrderResponseModel orderResponse, int table, String paymentName) async {
+    if (selectedBillPrinter == null) {
+      return;
+    } else {
+      bool res = await Printing.directPrintPdf(
+          printer: selectedBillPrinter!,
+          format: PdfPageFormat.roll80,
+          onLayout: (PdfPageFormat format) {
+            return generateBillInvoice(
+                format, orderResponse, table, paymentName);
+          });
+      if (res) {
+        Get.snackbar("In hoá đơn", "In hoá đơn thành công",
+            duration: Duration(seconds: 4));
+      } else {
+        Get.snackbar("In hoá đơn", "In hoá đơn thất bại",
+            duration: Duration(seconds: 4));
+      }
+    }
+    if (selectedBillPrinter == null) {
+      return;
+    } else {
+      if (orderResponse.productList != null) {
+        for (var product in orderResponse.productList!) {
+          for (var i = 1; i <= product.quantity!; i++) {
+            await Printing.directPrintPdf(
+                printer: selectedProductPrinter!,
+                format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
+                    marginAll: 2 * PdfPageFormat.mm),
+                onLayout: (PdfPageFormat format) {
+                  return generateStampInvoice(
+                      format,
+                      product,
+                      orderResponse.checkInDate,
+                      orderResponse.invoiceId,
+                      table);
+                });
+          }
         }
       }
     }
   }
 
-  void printBillMobile(
-      OrderResponseModel orderResponse, int table, String paymentName) {
-    Printing.layoutPdf(
+  Future<void> printBillMobile(
+      OrderResponseModel orderResponse, int table, String paymentName) async {
+    await Printing.layoutPdf(
         format: PdfPageFormat.roll80,
         onLayout: (PdfPageFormat format) async =>
             generateBillInvoice(format, orderResponse, table, paymentName));
     if (orderResponse.productList != null) {
       for (var product in orderResponse.productList!) {
         for (var i = 1; i <= product.quantity!; i++) {
-          Printing.layoutPdf(
+          await Printing.layoutPdf(
               format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
                   marginAll: 2 * PdfPageFormat.mm),
               onLayout: (PdfPageFormat format) {
@@ -185,7 +203,7 @@ class PrinterViewModel extends BaseViewModel {
 
   Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
     final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-    final font = await PdfGoogleFonts.inconsolataRegular();
+    final font = await PdfGoogleFonts.interBold();
 
     pdf.addPage(
       pw.Page(
@@ -200,7 +218,6 @@ class PrinterViewModel extends BaseViewModel {
                 ),
               ),
               pw.SizedBox(height: 20),
-              pw.Flexible(child: pw.FlutterLogo())
             ],
           );
         },

@@ -30,12 +30,12 @@ class PaymentProvider {
 
 class PaymentStatusResponse {
   String? id;
-  String? message;
-  PaymentStatusResponse({this.id, this.message});
+  String? transactionStatus;
+  PaymentStatusResponse({this.id, this.transactionStatus});
   factory PaymentStatusResponse.fromJson(Map<String, dynamic> json) {
     return PaymentStatusResponse(
       id: json['id'],
-      message: json['transactionStatus'],
+      transactionStatus: json['transactionStatus'],
     );
   }
 }

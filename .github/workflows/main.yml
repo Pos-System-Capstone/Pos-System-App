@@ -1,21 +1,8 @@
 ---
 jobs:
-  build_apk:
-    name: Build Flutter (Android)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - run: flutter --version
-      - run: flutter pub get
-      - run: flutter build apk
-      - name: Upload APK
-        uses: actions/upload-artifact@master
-        with:
-          name: apk-build
-          path: build/app/outputs/apk/release
+  #       with:
+  #         name: apk-build
+  #         path: build/app/outputs/apk/release
   build_ios:
     name: Build Flutter (IOS)
     runs-on: macos-latest
@@ -36,15 +23,28 @@ jobs:
         with:
           name: ios-build
           path: build/ios/iphoneos
-  build_windows:
-    name: Build Flutter (Windows)
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - run: flutter config --enable-windows-desktop
-      - run: flutter build windows
+  # build_windows:
+  #   name: Build Flutter (Windows)
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #         channel: stable
+  #     - run: flutter --version
+  #     - run: flutter pub get
+  #     - run: flutter build apk
+  #     - name: Upload APK
+  #       uses: actions/upload-artifact@master
+  #       with:
+  # build_apk:
+  #   name: Build Flutter (Android)
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: stable
+  #     - run: flutter config --enable-windows-desktop
+  #     - run: flutter build windows
 name: Flutter action
 'on': push

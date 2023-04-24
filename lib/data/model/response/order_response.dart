@@ -11,22 +11,23 @@ class OrderResponseModel {
   String? orderStatus;
   String? orderType;
   String? checkInDate;
-  PaymentModel? payment;
   List<ProductList>? productList;
+  PaymentMethod? paymentMethod;
 
-  OrderResponseModel(
-      {this.orderId,
-      this.invoiceId,
-      this.totalAmount,
-      this.finalAmount,
-      this.vat,
-      this.vatAmount,
-      this.discount,
-      this.orderStatus,
-      this.orderType,
-      this.checkInDate,
-      this.payment,
-      this.productList});
+  OrderResponseModel({
+    this.orderId,
+    this.invoiceId,
+    this.totalAmount,
+    this.finalAmount,
+    this.vat,
+    this.vatAmount,
+    this.discount,
+    this.orderStatus,
+    this.orderType,
+    this.checkInDate,
+    this.productList,
+    this.paymentMethod,
+  });
 
   OrderResponseModel.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
@@ -39,8 +40,6 @@ class OrderResponseModel {
     orderStatus = json['orderStatus'];
     orderType = json['orderType'];
     checkInDate = json['checkInDate'];
-    payment =
-        json['payment'] != null ? PaymentModel.fromJson(json['payment']) : null;
     if (json['productList'] != null) {
       productList = <ProductList>[];
       json['productList'].forEach((v) {
@@ -61,46 +60,9 @@ class OrderResponseModel {
     data['orderStatus'] = orderStatus;
     data['orderType'] = orderType;
     data['checkInDate'] = checkInDate;
-    if (payment != null) {
-      data['payment'] = payment!.toJson();
-    }
     if (productList != null) {
       data['productList'] = productList!.map((v) => v.toJson()).toList();
     }
-    return data;
-  }
-}
-
-class Payment {
-  String? id;
-  String? paymentTypeId;
-  String? paymentType;
-  String? picUrl;
-  int? paidAmount;
-
-  Payment(
-      {this.id,
-      this.paymentTypeId,
-      this.paymentType,
-      this.picUrl,
-      this.paidAmount,
-      required bool isSelected});
-
-  Payment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    paymentTypeId = json['paymentTypeId'];
-    paymentType = json['paymentType'];
-    picUrl = json['picUrl'];
-    paidAmount = json['paidAmount'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['paymentTypeId'] = paymentTypeId;
-    data['paymentType'] = paymentType;
-    data['picUrl'] = picUrl;
-    data['paidAmount'] = paidAmount;
     return data;
   }
 }
@@ -202,6 +164,28 @@ class Extras {
     data['finalAmount'] = finalAmount;
     data['discount'] = discount;
     data['name'] = name;
+    return data;
+  }
+}
+
+class PaymentMethod {
+  String? paymentProviderId;
+  String? paymentProviderName;
+  String? picUrl;
+
+  PaymentMethod(
+      {this.paymentProviderId, this.paymentProviderName, this.picUrl});
+
+  PaymentMethod.fromJson(Map<String, dynamic> json) {
+    paymentProviderId = json['paymentProviderId'];
+    paymentProviderName = json['paymentProviderName'];
+    picUrl = json['picUrl'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['paymentProviderId'] = paymentProviderId;
+    data['paymentProviderName'] = paymentProviderName;
+    data['picUrl'] = picUrl;
     return data;
   }
 }

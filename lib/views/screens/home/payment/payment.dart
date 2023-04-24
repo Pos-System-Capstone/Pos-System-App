@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
@@ -177,6 +178,17 @@ Widget orderConfig() {
 Widget paymentTypeSelect() {
   return ScopedModelDescendant<OrderViewModel>(
       builder: (context, build, model) {
+    if (model.listPayment.isEmpty) {
+      return Container(
+        height: Get.height * 0.8,
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.onInverseSurface,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child:
+            Center(child: Text("Phương thức thanh toán mặc định là tiền mặt")),
+      );
+    }
     return Container(
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.onInverseSurface,
@@ -255,6 +267,7 @@ Widget paymentTypeSelect() {
           Row(
             children: [
               Expanded(
+                flex: 1,
                 child: Container(
                   height: 80,
                   padding: const EdgeInsets.all(8.0),
@@ -266,30 +279,60 @@ Widget paymentTypeSelect() {
                   ),
                 ),
               ),
-              Container(
-                  height: 80,
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      model.checkPaymentStatus(model.currentOrder!.orderId!);
-                    },
-                    child: model.isCheckingPaymentStatus
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+              Expanded(
+                flex: 1,
+                child: Container(
+                    height: 80,
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        if (model.paymentCheckingStatus ==
+                                PaymentStatusEnum.CANCELED &&
+                            model.selectedPaymentMethod != null) {
+                          model
+                              .checkPaymentStatus(model.currentOrder!.orderId!);
+                        } else if (model.selectedPaymentMethod == null) {
+                          Get.snackbar(
+                              "Lỗi", "Vui lòng tiền hành thanh toán trước");
+                        } else {
+                          null;
+                        }
+                      },
+                      label: model.paymentCheckingStatus ==
+                              PaymentStatusEnum.PENDING
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
 
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              const Text(
-                                'Đang kiểm tra...',
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              const CircularProgressIndicator(),
-                            ],
-                          )
-                        : Text('Kiểm tra thanh toán'),
-                  )),
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                const Text(
+                                  'Đang kiểm tra...',
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const CircularProgressIndicator(),
+                              ],
+                            )
+                          : model.paymentCheckingStatus ==
+                                  PaymentStatusEnum.PAID
+                              ? Text('Thanh toán thành công')
+                              : model.paymentCheckingStatus ==
+                                      PaymentStatusEnum.FAIL
+                                  ? Text('Thanh toán thất bại')
+                                  : Text('Kiểm tra thanh toán'),
+                      icon: model.paymentCheckingStatus ==
+                              PaymentStatusEnum.PENDING
+                          ? Icon(CupertinoIcons.refresh_circled)
+                          : model.paymentCheckingStatus ==
+                                  PaymentStatusEnum.PAID
+                              ? Icon(CupertinoIcons.check_mark_circled)
+                              : model.paymentCheckingStatus ==
+                                      PaymentStatusEnum.FAIL
+                                  ? Icon(CupertinoIcons.xmark_circle)
+                                  : Icon(CupertinoIcons.search_circle),
+                    )),
+              ),
             ],
           ),
         ],

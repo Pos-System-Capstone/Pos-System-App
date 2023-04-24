@@ -40,6 +40,7 @@ class LoginViewModel extends BaseViewModel {
 
   Future<void> logout() async {
     userDTO = null;
+    Get.snackbar("Đăng xuất", "Đăng xuất thành công");
     await deleteUserInfo();
     await Get.offAllNamed(RouteHandler.LOGIN);
   }

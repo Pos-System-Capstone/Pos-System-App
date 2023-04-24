@@ -118,6 +118,12 @@ class MyRequest {
             content: "Vui lòng đăng nhập lại",
           );
           res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
+        } else if (e.response?.statusCode == 401) {
+          await showAlertDialog(
+            title: "Lỗi",
+            content: e.response?.data["error"],
+          );
+          Get.offAllNamed(RouteHandler.LOGIN);
         } else {
           showAlertDialog(
             title: "Lỗi",

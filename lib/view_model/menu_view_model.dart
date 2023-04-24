@@ -58,7 +58,6 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == ProductTypeEnum.CHILD)
           .toList();
       productsFilter = normalProducts;
-
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());

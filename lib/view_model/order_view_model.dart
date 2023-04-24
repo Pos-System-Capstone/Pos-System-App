@@ -29,7 +29,7 @@ class OrderViewModel extends BaseViewModel {
   List<OrderInList> listOrder = [];
   PaymentStatusResponse? paymentStatus;
   String currentPaymentStatusMessage = "Chưa thanh toán";
-  bool isCheckingPaymentStatus = false;
+  String paymentCheckingStatus = PaymentStatusEnum.CANCELED;
   String? qrCodeData;
 
   OrderViewModel() {
@@ -69,7 +69,6 @@ class OrderViewModel extends BaseViewModel {
     try {
       showLoadingDialog();
       Account? userInfo = await getUserInfo();
-      order.paymentId = listPayment[0]!.id;
       await api.placeOrder(order, userInfo!.storeId).then((value) => {
             hideDialog(),
             showPaymentBotomSheet(value),
@@ -83,7 +82,7 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void makePayment(PaymentProvider payment) async {
-    isCheckingPaymentStatus = true;
+    paymentCheckingStatus = PaymentStatusEnum.PENDING;
     qrCodeData = null;
     if (currentOrder == null) {
       showAlertDialog(
@@ -97,55 +96,47 @@ class OrderViewModel extends BaseViewModel {
       currentPaymentStatusMessage =
           makePaymentResponse.message ?? "Đợi thanh toán";
       await launchInBrowser(makePaymentResponse.url ?? '');
-      isCheckingPaymentStatus = false;
-      notifyListeners();
     } else if (makePaymentResponse.displayType == "Qr") {
       currentPaymentStatusMessage =
           makePaymentResponse.message ?? "Đợi thanh toán";
       qrCodeData = makePaymentResponse.url;
       // await launchQrCode(makePaymentResponse.url ?? '');
-      isCheckingPaymentStatus = false;
-      notifyListeners();
     } else {
       currentPaymentStatusMessage =
           makePaymentResponse.message ?? "Đợi thanh toán";
-      isCheckingPaymentStatus = false;
-      notifyListeners();
     }
+    checkPaymentStatus(currentOrder!.orderId ?? '');
+    notifyListeners();
   }
 
   void checkPaymentStatus(String orderId) async {
-    isCheckingPaymentStatus = true;
-    for (int i = 0; i < 10; i++) {
-      await Future.delayed(Duration(seconds: 2));
-      await api.checkPayment(orderId).then((value) => paymentStatus = value);
+    paymentCheckingStatus = PaymentStatusEnum.PENDING;
+    for (int i = 0; i < 30; i++) {
+      await Future.delayed(Duration(seconds: 3));
+      await paymentData?.checkPayment(orderId).then((value) => {
+            paymentStatus = value,
+          });
       if (paymentStatus != null) {
-        if (paymentStatus!.message == "Paid") {
+        if (paymentStatus!.transactionStatus == PaymentStatusEnum.PAID) {
           currentPaymentStatusMessage = "Thanh toán thành công";
-          isCheckingPaymentStatus = false;
-          notifyListeners();
-          showAlertDialog(
-              title: "Thanh toán thành công",
-              content: "Đơn hàng đã được thanh toán thành công");
+          paymentCheckingStatus = PaymentStatusEnum.PAID;
+          Get.snackbar("Thanh toán thành công",
+              "Đơn hàng đã được thanh toán thành công");
           break;
-        } else if (paymentStatus!.message == "Fail") {
+        } else if (paymentStatus!.transactionStatus == PaymentStatusEnum.FAIL) {
           currentPaymentStatusMessage = "Thanh toán thất bại";
-          isCheckingPaymentStatus = false;
-          notifyListeners();
-          showAlertDialog(
-              title: "Thanh toán thất bại",
-              content: "Đơn hàng thanh toán  thất bại");
+          paymentCheckingStatus = PaymentStatusEnum.FAIL;
+          Get.snackbar("Thanh toán thất bại", "Đơn hàng thanh toán  thất bại");
           break;
-        } else if (paymentStatus!.message == "Pending") {
-          currentPaymentStatusMessage = "Đang kiểm tra thanh toán";
-          notifyListeners();
         } else {
-          isCheckingPaymentStatus = true;
-          notifyListeners();
+          currentPaymentStatusMessage = "Đang kiểm tra thanh toán";
+          paymentCheckingStatus = PaymentStatusEnum.PENDING;
         }
+      } else {
+        currentPaymentStatusMessage = "Vui lòng kiểm tra lại";
+        paymentCheckingStatus = PaymentStatusEnum.CANCELED;
       }
     }
-    isCheckingPaymentStatus = false;
     notifyListeners();
   }
 
@@ -166,7 +157,8 @@ class OrderViewModel extends BaseViewModel {
           orderType: orderType);
       setState(ViewStatus.Completed);
     } catch (e) {
-      setState(ViewStatus.Error, e.toString());
+      setState(ViewStatus.Completed);
+      showAlertDialog(title: "Lỗi đơn hàng", content: e.toString());
     }
   }
 
@@ -184,6 +176,12 @@ class OrderViewModel extends BaseViewModel {
                 : "Chưa thanh toán",
             setState(ViewStatus.Completed)
           });
+      await paymentData?.getPaymentProviderOfOrder(orderId).then((value) => {
+            currentOrder?.paymentMethod = value,
+            // ignore: avoid_print
+          });
+      paymentCheckingStatus = PaymentStatusEnum.CANCELED;
+      setState(ViewStatus.Completed);
     } catch (e) {
       showAlertDialog(title: "Lỗi đơn hàng", content: e.toString());
       setState(ViewStatus.Error);
@@ -194,49 +192,31 @@ class OrderViewModel extends BaseViewModel {
     String orderId,
   ) async {
     Account? userInfo = await getUserInfo();
+    if (listPayment.isEmpty) {
+      selectedPaymentMethod = PaymentProvider(
+        name: "Tiền mặt",
+        type: "CASH",
+      );
+    }
     if (selectedPaymentMethod == null) {
-      showAlertDialog(
-          title: "Lỗi thanh toán",
-          content: "Vui lòng chọn phương thức thanh toán");
+      await showAlertDialog(
+          title: "Thông báo", content: "Vui lòng chọn phương thức thanh toán");
       return;
     }
+    await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
+        selectedPaymentMethod!.type);
+    await Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
+        selectedPaymentMethod!.name ?? "Tiền mặt");
 
-    if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
-      await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
-          selectedPaymentMethod!.id);
-      Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
-          selectedPaymentMethod!.name ?? "Tiền mặt");
-      clearOrder();
-      await showAlertDialog(
-          title: "Hoàn thành đơn hàng",
-          content: "Hoàn thành đơn hàng thành công");
-    } else {
-      bool result = await showConfirmDialog(
-        title: "Lỗi in hóa đơn",
-        content: "Vui lòng chọn máy in hóa đơn",
-        confirmText: "Bỏ qua",
-        cancelText: "Chọn máy in",
-      );
-      if (!result) {
-        showPrinterConfigDialog(PrinterTypeEnum.bill);
-        return;
-      } else {
-        await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
-            selectedPaymentMethod!.id);
-        clearOrder();
-        await showAlertDialog(
-            title: "Hoàn thành đơn hàng",
-            content: "Hoàn thành đơn hàng thành công");
-      }
-    }
+    clearOrder();
+    Get.snackbar("Hoàn thành đơn hàng", "Hoàn thành đơn hàng thành công");
   }
 
-  void clearOrder() {
-    hideBottomSheet();
+  clearOrder() {
     currentOrderId = null;
     currentOrder = null;
     selectedPaymentMethod = null;
-    getListOrder();
+    hideBottomSheet();
   }
 
   Future<void> launchInWebViewOrVC() async {

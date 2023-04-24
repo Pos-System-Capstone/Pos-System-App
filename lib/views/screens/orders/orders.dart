@@ -5,8 +5,8 @@ import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../enums/order_enum.dart';
 import '../../../enums/view_status.dart';
-import '../../widgets/other_dialogs/dialog.dart';
 import '../home/payment/payment_dialogs/payment_dialog.dart';
+import 'dialogs/order_info_dailog.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -25,6 +25,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
     orderViewModel.getListOrder(
         isToday: isToday, isYesterday: isYesterday, page: page);
     super.initState();
+  }
+
+  fetchOrder() {
+    orderViewModel.getListOrder(
+        isToday: isToday, isYesterday: isYesterday, page: page);
   }
 
   @override
@@ -82,6 +87,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               },
                           child: Text("Hôm qua")),
                       Spacer(),
+                      IconButton(
+                          onPressed: () => {
+                                fetchOrder(),
+                              },
+                          icon: Icon(Icons.replay_outlined)),
                     ],
                   ),
                 ),

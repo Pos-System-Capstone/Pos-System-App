@@ -1,7 +1,7 @@
 class OrderModel {
   String? orderType;
-  String? paymentId;
   List<ProductInOrder>? productsList;
+
   num? totalAmount;
   num? discountAmount;
   num? finalAmount;
@@ -15,7 +15,6 @@ class OrderModel {
 
   OrderModel.fromJson(Map<String, dynamic> json) {
     orderType = json['orderType'];
-    paymentId = json['paymentId'];
     if (json['productsList'] != null) {
       productsList = <ProductInOrder>[];
       json['productsList'].forEach((v) {
@@ -30,7 +29,6 @@ class OrderModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['orderType'] = orderType;
-    data['paymentId'] = paymentId;
     if (productsList != null) {
       data['productsList'] = productsList!.map((v) => v.toJson()).toList();
     }

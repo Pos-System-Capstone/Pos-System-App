@@ -27,11 +27,12 @@ class OrderAPI {
     String storeId,
     String orderId,
     String? status,
-    String? paymentId,
+    String? paymentType,
   ) async {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
-    data['paymentId'] = paymentId;
+    data['paymentType'] = paymentType;
+    print(data);
     final res =
         await request.put('stores/$storeId/orders/$orderId', data: data);
     var json = res.data;
@@ -54,19 +55,6 @@ class OrderAPI {
     MakePaymentResponse makePaymentResponse =
         MakePaymentResponse.fromJson(json);
     return makePaymentResponse;
-  }
-
-  Future<PaymentStatusResponse?> checkPayment(String orderId) async {
-    final res = await paymentRequest.get(
-      'check-transaction-status',
-      queryParameters: {'orderId': orderId},
-    );
-    if (res.statusCode == 200) {
-      var jsonList = res.data;
-      return PaymentStatusResponse.fromJson(jsonList);
-    } else {
-      return PaymentStatusResponse(id: orderId, message: 'Pending');
-    }
   }
 
   Future<List<OrderInList>> getListOrderOfStore(String storeId,

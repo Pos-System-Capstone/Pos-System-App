@@ -61,3 +61,10 @@ dynamic showOrderType(String type) {
     return deliType.eatIn;
   }
 }
+
+class PaymentStatusEnum {
+  static const String FAIL = 'Fail';
+  static const String PAID = 'Paid';
+  static const String PENDING = 'Pending';
+  static const String CANCELED = 'Canceled';
+}
