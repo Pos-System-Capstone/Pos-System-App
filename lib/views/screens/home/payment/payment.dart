@@ -178,17 +178,6 @@ Widget orderConfig() {
 Widget paymentTypeSelect() {
   return ScopedModelDescendant<OrderViewModel>(
       builder: (context, build, model) {
-    if (model.listPayment.isEmpty) {
-      return Container(
-        height: Get.height * 0.8,
-        decoration: BoxDecoration(
-          color: Get.theme.colorScheme.onInverseSurface,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child:
-            Center(child: Text("Phương thức thanh toán mặc định là tiền mặt")),
-      );
-    }
     return Container(
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.onInverseSurface,
@@ -214,54 +203,60 @@ Widget paymentTypeSelect() {
                   ),
                 )
               : SizedBox(),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Center(
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  alignment: WrapAlignment.center,
-                  children: model.listPayment
-                      .map(
-                        (e) => Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: InkWell(
-                            onTap: () {
-                              model.selectPayment(e);
-                            },
-                            child: Card(
-                              color: model.selectedPaymentMethod == e
-                                  ? Get.theme.colorScheme.primaryContainer
-                                  : Get.theme.colorScheme.background,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Image.network(
-                                      e!.picUrl!,
-                                      width: 80,
-                                      height: 80,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4),
-                                      child: Text(
-                                        e.name!,
+          model.listPayment.isEmpty
+              ? Expanded(
+                  child: Center(
+                  child: Text("Phương thức thanh toán mặc định là tiền mặt",
+                      style: Get.textTheme.titleMedium),
+                ))
+              : Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Center(
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        alignment: WrapAlignment.center,
+                        children: model.listPayment
+                            .map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: InkWell(
+                                  onTap: () {
+                                    model.selectPayment(e);
+                                  },
+                                  child: Card(
+                                    color: model.selectedPaymentMethod == e
+                                        ? Get.theme.colorScheme.primaryContainer
+                                        : Get.theme.colorScheme.background,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        children: [
+                                          Image.network(
+                                            e!.picUrl!,
+                                            width: 80,
+                                            height: 80,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(4),
+                                            child: Text(
+                                              e.name!,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
           Text(
-            "Trạng thái thanh toán: ${model.currentPaymentStatusMessage}",
+            "Trạng thái: ${model.currentPaymentStatusMessage}",
             style: Get.textTheme.titleMedium,
           ),
           Row(

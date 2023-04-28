@@ -127,9 +127,9 @@ class CartViewModel extends BaseViewModel {
         productInMenuId: cart.product.menuProductId,
         quantity: cart.quantity,
         sellingPrice: cart.product.sellingPrice,
-        note: cart.attributes != null
-            ? ("${cart.attributes!.map((e) => e.value).join(" ")} ${cart.note}")
-            : cart.note ?? "",
+        note: cart.attributes == null && cart.note == null
+            ? null
+            : ("${cart.attributes!.map((e) => e.value).join(" ")} ${cart.note ?? ''}"),
         extras: extraList,
       );
       productList.add(product);

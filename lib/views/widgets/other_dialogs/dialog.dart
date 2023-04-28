@@ -517,16 +517,12 @@ Widget productItem(ProductList item) {
             padding: const EdgeInsets.only(left: 8.0),
             child: Align(
               alignment: AlignmentDirectional.centerStart,
-              child: Text(item.note!,
+              child: Text(item.note ?? '',
                   style: Get.textTheme.bodyMedium,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis),
             ),
           ),
-        Divider(
-          color: Get.theme.colorScheme.onSurface,
-          thickness: 0.5,
-        )
       ],
     ),
   );

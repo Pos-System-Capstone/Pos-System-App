@@ -83,30 +83,35 @@ class OrderViewModel extends BaseViewModel {
 
   void makePayment(PaymentProvider payment) async {
     paymentCheckingStatus = PaymentStatusEnum.PENDING;
-    qrCodeData = null;
-    if (currentOrder == null) {
-      showAlertDialog(
-          title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
-
-      return;
-    }
-    MakePaymentResponse makePaymentResponse =
-        await api.makePayment(currentOrder!, payment.id ?? '');
-    if (makePaymentResponse.displayType == "Url") {
-      currentPaymentStatusMessage =
-          makePaymentResponse.message ?? "Đợi thanh toán";
-      await launchInBrowser(makePaymentResponse.url ?? '');
-    } else if (makePaymentResponse.displayType == "Qr") {
-      currentPaymentStatusMessage =
-          makePaymentResponse.message ?? "Đợi thanh toán";
-      qrCodeData = makePaymentResponse.url;
-      await launchQrCode(makePaymentResponse.url ?? '');
+    if (listPayment.isEmpty) {
+      paymentCheckingStatus = PaymentStatusEnum.PAID;
+      await completeOrder(currentOrder!.orderId ?? '');
     } else {
-      currentPaymentStatusMessage =
-          makePaymentResponse.message ?? "Đợi thanh toán";
+      qrCodeData = null;
+      if (currentOrder == null) {
+        showAlertDialog(
+            title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
+
+        return;
+      }
+      MakePaymentResponse makePaymentResponse =
+          await api.makePayment(currentOrder!, payment.id ?? '');
+      if (makePaymentResponse.displayType == "Url") {
+        currentPaymentStatusMessage =
+            makePaymentResponse.message ?? "Đợi thanh toán";
+        await launchInBrowser(makePaymentResponse.url ?? '');
+      } else if (makePaymentResponse.displayType == "Qr") {
+        currentPaymentStatusMessage =
+            makePaymentResponse.message ?? "Đợi thanh toán";
+        qrCodeData = makePaymentResponse.url;
+        await launchQrCode(makePaymentResponse.url ?? '');
+      } else {
+        currentPaymentStatusMessage =
+            makePaymentResponse.message ?? "Đợi thanh toán";
+      }
+      checkPaymentStatus(currentOrder!.orderId ?? '');
+      notifyListeners();
     }
-    checkPaymentStatus(currentOrder!.orderId ?? '');
-    notifyListeners();
   }
 
   void checkPaymentStatus(String orderId) async {
@@ -184,6 +189,14 @@ class OrderViewModel extends BaseViewModel {
             currentOrder?.paymentMethod = value,
             // ignore: avoid_print
           });
+
+      if (listPayment.isEmpty) {
+        selectedPaymentMethod = PaymentProvider(
+          name: "Tiền mặt",
+          type: "CASH",
+        );
+        currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
+      }
       paymentCheckingStatus = PaymentStatusEnum.CANCELED;
       setState(ViewStatus.Completed);
     } catch (e) {
@@ -196,13 +209,6 @@ class OrderViewModel extends BaseViewModel {
     String orderId,
   ) async {
     Account? userInfo = await getUserInfo();
-    if (listPayment.isEmpty) {
-      selectedPaymentMethod = PaymentProvider(
-        name: "Tiền mặt",
-        type: "CASH",
-      );
-      paymentCheckingStatus = PaymentStatusEnum.PAID;
-    }
     if (selectedPaymentMethod == null) {
       await showAlertDialog(
           title: "Thông báo", content: "Vui lòng chọn phương thức thanh toán");

@@ -299,29 +299,29 @@ class _BillScreenState extends State<BillScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              width: double.infinity,
-              height: 64,
-              child: FilledButton.icon(
-                onPressed: () async {
-                  var result = await showConfirmDialog(
-                      title: 'Xác nhận',
-                      content: 'Xác nhận hoàn thành đơn hàng');
-                  if (result) {
-                    model.completeOrder(
-                      model.currentOrder!.orderId!,
-                    );
-                  }
-                },
-                icon: Icon(Icons.check),
-                label: Text(
-                  'Hoàn thành',
-                  style: Get.textTheme.titleMedium
-                      ?.copyWith(color: Get.theme.colorScheme.background),
-                ),
-              ),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.all(8.0),
+            //   width: double.infinity,
+            //   height: 64,
+            //   child: FilledButton.icon(
+            //     onPressed: () async {
+            //       var result = await showConfirmDialog(
+            //           title: 'Xác nhận',
+            //           content: 'Xác nhận hoàn thành đơn hàng');
+            //       if (result) {
+            //         model.completeOrder(
+            //           model.currentOrder!.orderId!,
+            //         );
+            //       }
+            //     },
+            //     icon: Icon(Icons.check),
+            //     label: Text(
+            //       'Hoàn thành',
+            //       style: Get.textTheme.titleMedium
+            //           ?.copyWith(color: Get.theme.colorScheme.background),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       );
