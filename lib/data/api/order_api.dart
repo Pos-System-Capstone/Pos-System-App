@@ -32,7 +32,6 @@ class OrderAPI {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['paymentType'] = paymentType;
-    print(data);
     final res =
         await request.put('stores/$storeId/orders/$orderId', data: data);
     var json = res.data;

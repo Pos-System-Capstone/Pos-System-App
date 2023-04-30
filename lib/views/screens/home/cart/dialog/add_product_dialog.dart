@@ -25,6 +25,7 @@ class _ProductDialogState extends State<ProductDialog> {
   String? selectedSize;
   List<Attribute> listAttribute = [];
   List<ProductAttribute> selectedAttributes = [];
+  List<GroupProducts> groupProducts = [];
 
   @override
   void initState() {
@@ -40,6 +41,10 @@ class _ProductDialogState extends State<ProductDialog> {
         selectedSize = childProducts[0].id;
       }
       productViewModel.addProductToCartItem(childProducts[0]);
+    }
+    if (widget.product.type == ProductTypeEnum.COMBO) {
+      groupProducts =
+          menuViewModel.getGroupProductByComboProduct(widget.product.id!)!;
     }
     listAttribute = productViewModel.listAttribute;
     selectedAttributes = productViewModel.currentAttributes;
@@ -110,10 +115,16 @@ class _ProductDialogState extends State<ProductDialog> {
                                 addExtra(model),
                                 productAttributes(model),
                               ]
-                            : [
-                                addExtra(model),
-                                productAttributes(model),
-                              ]),
+                            : widget.product.type == ProductTypeEnum.COMBO
+                                ? [
+                                    comboProduct(model),
+                                    addExtra(model),
+                                    productAttributes(model),
+                                  ]
+                                : [
+                                    addExtra(model),
+                                    productAttributes(model),
+                                  ]),
                   ),
                 ),
                 Container(
@@ -133,15 +144,20 @@ class _ProductDialogState extends State<ProductDialog> {
                           model.setNotes(value);
                         },
                       ),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Row(
                         children: [
                           IconButton(
                               onPressed: () {
-                                model.decreaseQuantity();
+                                if (model.quantity > 1) {
+                                  model.decreaseQuantity();
+                                }
                               },
                               icon: Icon(
                                 Icons.remove,
-                                size: 32,
+                                size: 40,
                               )),
                           Text("${model.quantity}",
                               style: Get.textTheme.titleLarge),
@@ -151,32 +167,22 @@ class _ProductDialogState extends State<ProductDialog> {
                               },
                               icon: Icon(
                                 Icons.add,
-                                size: 32,
+                                size: 40,
                               )),
                           Expanded(
-                            flex: 3,
                             child: FilledButton(
                                 onPressed: () {
                                   model.addProductToCart();
                                 },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text("Thêm",
-                                        style: Get.textTheme.titleMedium
-                                            ?.copyWith(
-                                                color: Get.theme.colorScheme
-                                                    .background)),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      formatPrice(model.totalAmount!),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(4, 16, 4, 16),
+                                  child: Text(
+                                      "Thêm ${formatPrice(model.totalAmount!)}",
                                       style: Get.textTheme.titleMedium
                                           ?.copyWith(
                                               color: Get.theme.colorScheme
-                                                  .background),
-                                    ),
-                                  ],
+                                                  .background)),
                                 )),
                           ),
                         ],
@@ -260,10 +266,65 @@ class _ProductDialogState extends State<ProductDialog> {
                         ],
                       ),
 
-                      value: model.isExtraExist(extraProduct[i]),
-                      selected: model.isExtraExist(extraProduct[i]),
+                      value: model.isExtraExist(extraProduct[i].id ?? ""),
+                      selected: model.isExtraExist(extraProduct[i].id ?? ""),
                       onChanged: (value) {
                         model.addOrRemoveExtra(extraProduct[i]);
+                      },
+                    );
+                  },
+                ),
+              ],
+            );
+          }).toList()),
+    );
+  }
+
+  Widget comboProduct(ProductViewModel model) {
+    return SingleChildScrollView(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: groupProducts.map((e) {
+            List<ProductsInGroup> productInGroup =
+                menuViewModel.getListProductInGroup(e.id);
+            return Column(
+              children: [
+                Text("${e.name!} (Tối đa ${e.quantity} sản phẩm)",
+                    style: Get.textTheme.titleMedium),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: productInGroup.length,
+                  physics: ScrollPhysics(),
+                  itemBuilder: (context, i) {
+                    Product currentProduct = menuViewModel
+                        .getProductById(productInGroup[i].productId!);
+                    return CheckboxListTile(
+                      visualDensity: VisualDensity(
+                        horizontal: VisualDensity.maximumDensity,
+                        vertical: VisualDensity.maximumDensity,
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            currentProduct.name!,
+                            maxLines: 2,
+                          ),
+                          Text(
+                              "+ ${formatPrice(productInGroup[i].additionalPrice!)}"),
+                        ],
+                      ),
+                      value: model.isExtraExist(currentProduct.id ?? ""),
+                      selected: model.isExtraExist(currentProduct.id ?? ""),
+                      enabled:
+                          (model.countProductInGroupInExtra(productInGroup) <
+                                  e.quantity! ||
+                              model.isExtraExist(currentProduct.id ?? "")),
+                      onChanged: (value) => {
+                        currentProduct.sellingPrice =
+                            productInGroup[i].additionalPrice,
+                        model.addOrRemoveExtra(currentProduct)
                       },
                     );
                   },
@@ -293,13 +354,10 @@ class _ProductDialogState extends State<ProductDialog> {
                       return RadioListTile(
                         visualDensity: VisualDensity(
                           horizontal: VisualDensity.maximumDensity,
-                          vertical: VisualDensity.minimumDensity,
+                          vertical: VisualDensity.maximumDensity,
                         ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(listAttribute[i].options[idx]),
-                          ],
+                        title: Text(
+                          listAttribute[i].options[idx],
                         ),
                         value: listAttribute[i].options[idx],
                         groupValue: selectedAttributes[i].value,

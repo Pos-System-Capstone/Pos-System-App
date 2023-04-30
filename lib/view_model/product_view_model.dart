@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/view_model/index.dart';
 import '../data/model/index.dart';
@@ -57,14 +58,13 @@ class ProductViewModel extends BaseViewModel {
   }
 
   void addOrRemoveExtra(Product extra) {
-    if (isExtraExist(extra)) {
+    if (isExtraExist(extra.id!)) {
       extras.removeWhere((element) => element.id == extra.id);
       countAmount();
     } else {
       extras.add(extra);
       countAmount();
     }
-    print(extras.length);
     notifyListeners();
   }
 
@@ -82,17 +82,15 @@ class ProductViewModel extends BaseViewModel {
 
   void setNotes(String note) {
     notes = note;
-    print(notes);
     notifyListeners();
   }
 
-  bool isExtraExist(Product extra) {
+  bool isExtraExist(String id) {
     for (int index = 0; index < extras.length; index++) {
-      if (extras[index].id == extra.id) {
+      if (extras[index].id == id) {
         return true;
       }
     }
-
     return false;
   }
 
@@ -124,5 +122,17 @@ class ProductViewModel extends BaseViewModel {
   void deleteCartItemInCart(int idx) {
     Get.find<CartViewModel>().removeFromCart(idx);
     Get.back();
+  }
+
+  int countProductInGroupInExtra(List<ProductsInGroup> productInGroup) {
+    int count = 0;
+    for (int index = 0; index < extras.length; index++) {
+      for (int i = 0; i < productInGroup.length; i++) {
+        if (extras[index].id == productInGroup[i].productId) {
+          count += 1;
+        }
+      }
+    }
+    return count;
   }
 }

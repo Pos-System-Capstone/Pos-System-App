@@ -46,10 +46,12 @@ class MenuViewModel extends BaseViewModel {
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
           .toList();
+      categories?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
       normalProducts = currentMenu?.products!
           .where((element) =>
               element.type == ProductTypeEnum.SINGLE ||
-              element.type == ProductTypeEnum.PARENT)
+              element.type == ProductTypeEnum.PARENT ||
+              element.type == ProductTypeEnum.COMBO)
           .toList();
       extraProducts = currentMenu?.products!
           .where((element) => element.type == ProductTypeEnum.EXTRA)
@@ -58,6 +60,8 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == ProductTypeEnum.CHILD)
           .toList();
       productsFilter = normalProducts;
+      productsFilter
+          ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
@@ -134,11 +138,15 @@ class MenuViewModel extends BaseViewModel {
   void handleChangeFilterProductByCategory(String? categoryId) {
     if (categoryId == null) {
       productsFilter = normalProducts;
+      productsFilter
+          ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
       notifyListeners();
     } else {
       productsFilter = normalProducts
           ?.where((element) => element.categoryId == categoryId)
           .toList();
+      productsFilter
+          ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
       notifyListeners();
     }
   }
@@ -167,6 +175,21 @@ class MenuViewModel extends BaseViewModel {
     return listChildsSorted;
   }
 
+  List<GroupProducts>? getGroupProductByComboProduct(String productId) {
+    List<GroupProducts> listGroupProducts = [];
+    if (currentMenu?.groupProducts == null) {
+      return [];
+    } else {
+      for (GroupProducts item in currentMenu!.groupProducts!) {
+        if (item.comboProductId == productId) {
+          listGroupProducts.add(item);
+        }
+      }
+      listGroupProducts.sort((a, b) => b.priority!.compareTo(a.priority!));
+      return listGroupProducts;
+    }
+  }
+
   List<Product>? getExtraProductByNormalProduct(Product product) {
     return extraProducts
         ?.where(
@@ -188,5 +211,23 @@ class MenuViewModel extends BaseViewModel {
     return extraProducts!
         .where((element) => element.categoryId == categoryId)
         .toList();
+  }
+
+  List<ProductsInGroup> getListProductInGroup(String? groupId) {
+    List<ProductsInGroup> listProductInGroup = [];
+    if (currentMenu!.productsInGroup == null) {
+      return [];
+    } else {
+      for (ProductsInGroup item in currentMenu!.productsInGroup!) {
+        if (item.groupProductId == groupId) {
+          listProductInGroup.add(item);
+        }
+      }
+      return listProductInGroup;
+    }
+  }
+
+  Product getProductById(String id) {
+    return currentMenu!.products!.firstWhere((element) => element.id == id);
   }
 }

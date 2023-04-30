@@ -26,6 +26,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   String? selectedSize;
   List<Attribute> listAttribute = [];
   List<ProductAttribute> selectedAttributes = [];
+  List<GroupProducts> groupProducts = [];
   @override
   void initState() {
     super.initState();
@@ -36,6 +37,10 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
       childProducts = menuViewModel.getChildProductByParentProduct(
           productViewModel.productInCart!.parentProductId!)!;
       selectedSize = productViewModel.productInCart!.id;
+    }
+    if (widget.cartItem.product.type == ProductTypeEnum.COMBO) {
+      groupProducts = menuViewModel
+          .getGroupProductByComboProduct(widget.cartItem.product.id!)!;
     }
     listAttribute = productViewModel.listAttribute;
     selectedAttributes = widget.cartItem.attributes!;
@@ -107,7 +112,14 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                 addExtra(model),
                                 productAttributes(model)
                               ]
-                            : [addExtra(model), productAttributes(model)]),
+                            : widget.cartItem.product.type ==
+                                    ProductTypeEnum.COMBO
+                                ? [
+                                    comboProduct(model),
+                                    addExtra(model),
+                                    productAttributes(model),
+                                  ]
+                                : [addExtra(model), productAttributes(model)]),
                   ),
                 ),
                 Container(
@@ -149,7 +161,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                   },
                                   icon: Icon(
                                     Icons.remove,
-                                    size: 32,
+                                    size: 40,
                                   )),
                               Text("${model.quantity}",
                                   style: Get.textTheme.titleLarge),
@@ -159,7 +171,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                   },
                                   icon: Icon(
                                     Icons.add,
-                                    size: 32,
+                                    size: 40,
                                   )),
                             ],
                           ),
@@ -191,29 +203,13 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            0, 8, 0, 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text("Cập nhật ",
-                                                style: Get.textTheme.titleMedium
-                                                    ?.copyWith(
-                                                        color: Get
-                                                            .theme
-                                                            .colorScheme
-                                                            .background)),
-                                            Text(
-                                              formatPrice(model.totalAmount!),
-                                              style: Get.textTheme.titleMedium
-                                                  ?.copyWith(
-                                                      color: Get
-                                                          .theme
-                                                          .colorScheme
-                                                          .background),
-                                            ),
-                                          ],
-                                        ),
+                                            4, 16, 4, 16),
+                                        child: Text(
+                                            "Cập nhật ${formatPrice(model.totalAmount!)}",
+                                            style: Get.textTheme.titleMedium
+                                                ?.copyWith(
+                                                    color: Get.theme.colorScheme
+                                                        .background)),
                                       )),
                                 )
                         ],
@@ -300,10 +296,62 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                         ],
                       ),
 
-                      value: model.isExtraExist(extraProduct[i]),
-                      selected: model.isExtraExist(extraProduct[i]),
+                      value: model.isExtraExist(extraProduct[i].id ?? ""),
+                      selected: model.isExtraExist(extraProduct[i].id ?? ""),
                       onChanged: (value) {
                         model.addOrRemoveExtra(extraProduct[i]);
+                      },
+                    );
+                  },
+                ),
+              ],
+            );
+          }).toList()),
+    );
+  }
+
+  Widget comboProduct(ProductViewModel model) {
+    return SingleChildScrollView(
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: groupProducts.map((e) {
+            List<ProductsInGroup> productInGroup =
+                menuViewModel.getListProductInGroup(e.id);
+            return Column(
+              children: [
+                Text(e.name!, style: Get.textTheme.titleMedium),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: productInGroup.length,
+                  physics: ScrollPhysics(),
+                  itemBuilder: (context, i) {
+                    Product currentProduct = menuViewModel
+                        .getProductById(productInGroup[i].productId!);
+                    return CheckboxListTile(
+                      // dense: true,
+                      visualDensity: VisualDensity(
+                        horizontal: VisualDensity.minimumDensity,
+                        vertical: VisualDensity.minimumDensity,
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(currentProduct.name!),
+                          Text(
+                              "+ ${formatPrice(productInGroup[i].additionalPrice!)}"),
+                        ],
+                      ),
+                      enabled:
+                          (model.countProductInGroupInExtra(productInGroup) <
+                                  e.quantity! ||
+                              model.isExtraExist(currentProduct.id ?? "")),
+                      value: model.isExtraExist(currentProduct.id ?? ""),
+                      selected: model.isExtraExist(currentProduct.id ?? ""),
+                      onChanged: (value) => {
+                        currentProduct.sellingPrice =
+                            productInGroup[i].additionalPrice,
+                        model.addOrRemoveExtra(currentProduct)
                       },
                     );
                   },

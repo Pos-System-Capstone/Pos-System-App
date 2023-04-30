@@ -24,3 +24,6 @@ This project is a starting point for a Flutter application.
 
 **Foldername**: lowercase, use "_" between letter
   - Ex: home_screen
+
+**Build Web** : flutter build web --release --web-renderer html
+**Build windows** : flutter build windows --release

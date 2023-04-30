@@ -70,7 +70,6 @@ class RootViewModel extends BaseViewModel {
 
   void handleColorSelect(bool isDarkMode, int value) {
     setThemeColor(value);
-    print(value);
     if (isDarkMode) {
       Get.changeTheme(AppTheme.getThemeDark(value));
     } else {
