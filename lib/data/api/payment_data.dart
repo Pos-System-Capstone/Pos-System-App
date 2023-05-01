@@ -41,4 +41,20 @@ class PaymentData {
       return paymentStatusResponse;
     }
   }
+
+  Future<String?> updatePayment(String orderId, String status) async {
+    Map<String, dynamic> body = {
+      'orderId': orderId,
+      'transactionStatus': status,
+    };
+    final res = await paymentRequest.post(
+      'payments/vietqr',
+      data: body,
+    );
+    if (res.data == null) {
+      return null;
+    } else {
+      return res.data.toString();
+    }
+  }
 }

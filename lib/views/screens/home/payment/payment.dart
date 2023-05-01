@@ -46,15 +46,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(model.currentOrder?.invoiceId ?? "",
-                          style: Get.textTheme.titleMedium),
+                      Expanded(
+                        child: Center(
+                          child: Text(model.currentOrder?.invoiceId ?? "",
+                              style: Get.textTheme.titleMedium),
+                        ),
+                      ),
                       IconButton(
                           onPressed: () {
                             model.clearOrder();
                           },
                           icon: Icon(
                             Icons.close,
-                            size: 32,
+                            size: 40,
                           )),
                     ],
                   ),
@@ -67,14 +71,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            Container(
+                                padding: EdgeInsets.all(8),
                                 width: double.infinity,
-                                height: Get.height * 0.8,
+                                height: Get.height * 0.9,
                                 child: orderConfig()),
-                            SizedBox(
-                                width: Get.width,
-                                height: Get.height * 0.6,
-                                child: BillScreen())
+                            Container(
+                                padding: EdgeInsets.all(8),
+                                width: double.infinity,
+                                height: Get.height,
+                                child: BillScreen()),
                           ],
                         ),
                       )
@@ -102,17 +108,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
 Widget orderConfig() {
   List<Tab>? listPaymentTab = [
-    Tab(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          Icon(Icons.payment),
-          SizedBox(width: 8),
-          Text("Thanh toán"),
-        ],
-      ),
-    ),
+    // Tab(
+    //   child: Row(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: const [
+    //       Icon(Icons.payment),
+    //       SizedBox(width: 8),
+    //       Text("Thanh toán"),
+    //     ],
+    //   ),
+    // ),
     // Tab(
     //   child: Row(
     //     mainAxisAlignment: MainAxisAlignment.center,
@@ -153,13 +159,13 @@ Widget orderConfig() {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TabBar(
-            indicatorColor: Get.theme.colorScheme.primary,
-            tabs: listPaymentTab,
-          ),
-          SizedBox(
-            height: 8,
-          ),
+          // TabBar(
+          //   indicatorColor: Get.theme.colorScheme.primary,
+          //   tabs: listPaymentTab,
+          // ),
+          // SizedBox(
+          //   height: 8,
+          // ),
           Expanded(
               child: TabBarView(
             children: [
@@ -184,7 +190,17 @@ Widget paymentTypeSelect() {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Thanh toán", style: Get.textTheme.titleLarge),
+          ),
+          Divider(
+            thickness: 1,
+            color: Get.theme.colorScheme.onBackground,
+          ),
           model.qrCodeData != null
               ? Container(
                   color: Colors.white,
@@ -195,7 +211,7 @@ Widget paymentTypeSelect() {
                       model.selectedPaymentMethod?.picUrl ?? "",
                     ),
                     typeNumber: null,
-                    size: 300,
+                    size: 280,
                     elementColor: Colors.black,
                     data: model.qrCodeData!,
                     errorCorrectLevel: QrErrorCorrectLevel.M,
@@ -259,6 +275,22 @@ Widget paymentTypeSelect() {
             "Trạng thái: ${model.currentPaymentStatusMessage}",
             style: Get.textTheme.titleMedium,
           ),
+          SizedBox(
+            height: 8,
+          ),
+          model.selectedPaymentMethod?.type == "VIETQR" &&
+                  model.paymentCheckingStatus == PaymentStatusEnum.PENDING
+              ? OutlinedButton(
+                  onPressed: () {
+                    model.updatePaymentStatus(PaymentStatusEnum.PAID);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Đã thanh toán"),
+                  ))
+              : SizedBox(
+                  height: 8,
+                ),
           Row(
             children: [
               Expanded(

@@ -132,30 +132,27 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               Expanded(
-                  flex: 7,
                   child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: model.cartList.length,
-                    physics: ScrollPhysics(),
-                    itemBuilder: (context, i) {
-                      return cartItem(model.cartList[i], i);
-                    },
-                  )),
-              Container(
+                shrinkWrap: true,
+                itemCount: model.cartList.length,
+                physics: ScrollPhysics(),
+                itemBuilder: (context, i) {
+                  return cartItem(model.cartList[i], i);
+                },
+              )),
+              SizedBox(
                 width: double.infinity,
-                height: 140,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8)),
-                  color: Get.theme.colorScheme.onInverseSurface,
-                ),
+                height: 160,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Divider(
+                      thickness: 1,
+                      color: Get.theme.colorScheme.onSurface,
+                    ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -178,6 +175,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     Divider(
                       thickness: 1,
+                      color: Get.theme.colorScheme.onSurface,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -185,8 +183,8 @@ class _CartScreenState extends State<CartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
-                            flex: 1,
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                             child: IconButton(
                                 onPressed: () async {
                                   var result = await showConfirmDialog(
@@ -200,23 +198,17 @@ class _CartScreenState extends State<CartScreen> {
                                 },
                                 icon: Icon(
                                   Icons.delete_outlined,
-                                  size: 32,
+                                  size: 40,
                                 )),
                           ),
                           Expanded(
-                            flex: 3,
                             child: FilledButton(
                               onPressed: () async {
-                                // var result = await showConfirmDialog(
-                                //     title: 'Xác nhận',
-                                //     content: 'Xác nhận tạo đơn hàng');
-                                // if (result) {
-                                //   model.createOrder();
-                                // }
                                 model.createOrder();
                               },
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
                                 child: Text(
                                   'Tạo đơn hàng',
                                   style: Get.textTheme.titleMedium?.copyWith(

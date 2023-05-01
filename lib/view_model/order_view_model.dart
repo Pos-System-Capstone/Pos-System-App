@@ -99,6 +99,7 @@ class OrderViewModel extends BaseViewModel {
       if (makePaymentResponse.displayType == "Url") {
         currentPaymentStatusMessage =
             makePaymentResponse.message ?? "Đợi thanh toán";
+        // qrCodeData = payment.type != "VNPAY" ? makePaymentResponse.url : null;
         await launchInBrowser(makePaymentResponse.url ?? '');
       } else if (makePaymentResponse.displayType == "Qr") {
         currentPaymentStatusMessage =
@@ -112,6 +113,22 @@ class OrderViewModel extends BaseViewModel {
       checkPaymentStatus(currentOrder!.orderId ?? '');
       notifyListeners();
     }
+  }
+
+  void updatePaymentStatus(String status) {
+    paymentData
+        ?.updatePayment(currentOrder!.orderId ?? '', status)
+        .then((value) => {
+              if (value != null)
+                {
+                  Get.snackbar("Cập nhật trạng thái thanh toán", value),
+                }
+              else
+                {
+                  Get.snackbar(
+                      "Cập nhật trạng thái thanh toán", "Thanh toan that bai"),
+                }
+            });
   }
 
   void checkPaymentStatus(String orderId) async {
@@ -129,10 +146,8 @@ class OrderViewModel extends BaseViewModel {
         } else if (paymentStatus!.transactionStatus == PaymentStatusEnum.FAIL) {
           currentPaymentStatusMessage = "Thanh toán thất bại";
           paymentCheckingStatus = PaymentStatusEnum.FAIL;
-          showAlertDialog(
-              title: "Thanh toán thất bại",
-              content:
-                  "Đơn hàng thanh toán thanh toán thất bại, vui lòng thử lại");
+          Get.snackbar("Thanh toán thất bại",
+              "Đơn hàng thanh toán thanh toán thất bại, vui lòng thử lại");
           break;
         } else {
           currentPaymentStatusMessage = "Đang kiểm tra thanh toán";
