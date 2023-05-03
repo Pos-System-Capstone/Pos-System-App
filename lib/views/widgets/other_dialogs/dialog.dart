@@ -8,7 +8,6 @@ import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../../../enums/order_enum.dart';
 import '../../../enums/view_status.dart';
 
 Future<bool> showAlertDialog(

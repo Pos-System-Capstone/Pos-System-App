@@ -2,7 +2,6 @@ import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/make_payment_response.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
-import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/util/share_pref.dart';
 
 import '../../util/request.dart';

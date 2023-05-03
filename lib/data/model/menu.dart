@@ -60,13 +60,13 @@ class Menu {
     if (json['groupProducts'] != null) {
       groupProducts = <GroupProducts>[];
       json['groupProducts'].forEach((v) {
-        groupProducts!.add(new GroupProducts.fromJson(v));
+        groupProducts!.add(GroupProducts.fromJson(v));
       });
     }
     if (json['productsInGroup'] != null) {
       productsInGroup = <ProductsInGroup>[];
       json['productsInGroup'].forEach((v) {
-        productsInGroup!.add(new ProductsInGroup.fromJson(v));
+        productsInGroup!.add(ProductsInGroup.fromJson(v));
       });
     }
   }

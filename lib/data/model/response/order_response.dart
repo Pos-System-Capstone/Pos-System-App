@@ -1,5 +1,3 @@
-import 'package:pos_apps/data/model/payment.dart';
-
 class OrderResponseModel {
   String? orderId;
   String? invoiceId;
@@ -182,7 +180,7 @@ class PaymentMethod {
     picUrl = json['picUrl'];
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['paymentProviderId'] = paymentProviderId;
     data['paymentProviderName'] = paymentProviderName;
     data['picUrl'] = picUrl;

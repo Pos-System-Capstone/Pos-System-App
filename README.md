@@ -23,7 +23,8 @@ This project is a starting point for a Flutter application.
  - Ex: BASE_URL 
 
 **Foldername**: lowercase, use "_" between letter
-  - Ex: home_screen
+
+- Ex: home_screen
 
 **Build Web** : flutter build web --release --web-renderer html
 **Build windows** : flutter build windows --release

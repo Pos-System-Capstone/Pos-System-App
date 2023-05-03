@@ -6,7 +6,6 @@ import 'package:scoped_model/scoped_model.dart';
 import '../../../../enums/order_enum.dart';
 import '../../../../enums/view_status.dart';
 import '../../../../util/format.dart';
-import '../../../../view_model/order_view_model.dart';
 import '../../../widgets/other_dialogs/dialog.dart';
 
 void orderInfoDialog(String orderId) {

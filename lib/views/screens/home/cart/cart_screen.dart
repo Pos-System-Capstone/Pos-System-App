@@ -194,7 +194,6 @@ class _CartScreenState extends State<CartScreen> {
                                   if (result) {
                                     model.clearCartData();
                                   }
-                                  Get.back();
                                 },
                                 icon: Icon(
                                   Icons.delete_outlined,

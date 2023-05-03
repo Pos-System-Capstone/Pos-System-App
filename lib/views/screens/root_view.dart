@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:pos_apps/view_model/cart_view_model.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/view_model/login_view_model.dart';
-import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/views/screens/home/cart/cart_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../widgets/other_dialogs/dialog.dart';
-import 'home/cart/dialog/cart_dialog.dart';
 import 'home/cart/cart.dart';
 import 'orders/orders.dart';
 import 'profile/profile.dart';

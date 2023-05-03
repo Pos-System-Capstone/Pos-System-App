@@ -7,7 +7,6 @@ import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/api/order_api.dart';
 import '../data/api/payment_data.dart';
