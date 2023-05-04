@@ -424,9 +424,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget displayMenu() {
+    String? brandLogo = Get.find<MenuViewModel>().storeDetails.brandPicUrl;
     return InkWell(
-      onTap: () => Get.find<OrderViewModel>().launchInBrowser(
-          'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmenu-deer.jpg?alt=media&token=cfba9091-79c7-4a19-9f62-fd948768f64e'),
+      onTap: () => Get.find<OrderViewModel>().launchInBrowser(brandLogo ?? ""),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(
@@ -438,12 +438,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hiển thị menu', style: Get.textTheme.titleMedium),
+                  Text('Hiển thị logo', style: Get.textTheme.titleMedium),
                 ],
               ),
             ),
             Icon(
-              Icons.menu_book,
+              Icons.open_in_browser_rounded,
               size: 32,
             ),
             Icon(
