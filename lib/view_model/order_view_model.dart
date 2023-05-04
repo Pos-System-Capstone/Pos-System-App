@@ -235,9 +235,8 @@ class OrderViewModel extends BaseViewModel {
     }
     await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
         selectedPaymentMethod!.type);
-    await Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
+    Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
         selectedPaymentMethod!.name ?? "Tiền mặt");
-
     clearOrder();
     await showAlertDialog(
         title: "Thanh toán thành công",

@@ -437,7 +437,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Tổng doanh thu",
+                  pw.Text("Doanh thu",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                   pw.Text(formatPrice(session.totalAmount ?? 0),
@@ -448,7 +448,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Tổng tiền giảm giá",
+                  pw.Text("Giảm giá",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                   pw.Text(formatPrice(session.totalDiscountAmount ?? 0),
@@ -459,7 +459,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Tổng tiền khuyến mãi",
+                  pw.Text("Khuyến mãi",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                   pw.Text(formatPrice(session.totalPromotion ?? 0),
@@ -470,7 +470,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Tổng doanh thu sau giảm giá",
+                  pw.Text("Tổng",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                   pw.Text(formatPrice(session.profitAmount ?? 0),
@@ -481,7 +481,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Tổng tiền trong két",
+                  pw.Text("Tiền mặt trong két",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                   pw.Text(formatPrice(session.currentCashInVault ?? 0),
@@ -492,7 +492,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Số tiền đầu ca",
+                  pw.Text("Tiền mặt đầu ca",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                   pw.Text(formatPrice(session.initCashInVault ?? 0),

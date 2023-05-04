@@ -121,7 +121,7 @@ class MyRequest {
         } else if (e.response?.statusCode == 401) {
           await showAlertDialog(
             title: "Lỗi",
-            content: e.response?.data["error"],
+            content: e.response?.data["Error"],
           );
           Get.offAllNamed(RouteHandler.LOGIN);
         } else {

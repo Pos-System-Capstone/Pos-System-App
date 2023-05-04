@@ -84,12 +84,13 @@ class PrinterViewModel extends BaseViewModel {
         printer: printer,
         format: PdfPageFormat.roll57,
         onLayout: (PdfPageFormat format) {
-          return _generatePdf(format, "test");
+          return _generatePdf(format, "Test");
         });
   }
 
   void testPrinterMobile() {
     Printing.layoutPdf(
+        usePrinterSettings: true,
         format: PdfPageFormat.roll57,
         onLayout: (PdfPageFormat format) {
           return _generatePdf(format, "test");
@@ -101,20 +102,13 @@ class PrinterViewModel extends BaseViewModel {
     if (selectedBillPrinter == null) {
       return;
     } else {
-      bool res = await Printing.directPrintPdf(
+      await Printing.directPrintPdf(
           printer: selectedBillPrinter!,
           format: PdfPageFormat.roll80,
           onLayout: (PdfPageFormat format) {
             return generateBillInvoice(
                 format, orderResponse, table, paymentName);
           });
-      if (res) {
-        Get.snackbar("In hoá đơn", "In hoá đơn thành công",
-            duration: Duration(seconds: 4));
-      } else {
-        Get.snackbar("In hoá đơn", "In hoá đơn thất bại",
-            duration: Duration(seconds: 4));
-      }
     }
     if (selectedBillPrinter == null) {
       return;
