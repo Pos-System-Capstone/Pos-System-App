@@ -199,7 +199,7 @@ void sessionDetailsDialog(String sessionId) {
     sessionDetails = value;
     sessionDetails!.initCashInVault = rootViewModel.defaultCashboxMoney;
     sessionDetails!.currentCashInVault =
-        rootViewModel.defaultCashboxMoney + sessionDetails!.totalAmount!;
+        rootViewModel.defaultCashboxMoney + sessionDetails!.currentCashInVault!;
   });
 
   Get.dialog(Dialog(

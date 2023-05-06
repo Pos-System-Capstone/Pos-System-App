@@ -22,8 +22,8 @@ class _LogInScreenState extends State<LogInScreen> {
   String userName = "deerstaff";
   String password = "123456";
   bool _passwordVisible = false;
-  final _formUserNameFieldController = TextEditingController(text: "deerstaff");
-  final _formPasswordFieldController = TextEditingController(text: "123456");
+  final _formUserNameFieldController = TextEditingController();
+  final _formPasswordFieldController = TextEditingController();
 
   @override
   void initState() {

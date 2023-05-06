@@ -110,26 +110,17 @@ class PrinterViewModel extends BaseViewModel {
                 format, orderResponse, table, paymentName);
           });
     }
-    if (selectedBillPrinter == null) {
+    if (selectedProductPrinter == null) {
       return;
     } else {
       if (orderResponse.productList != null) {
-        for (var product in orderResponse.productList!) {
-          for (var i = 1; i <= product.quantity!; i++) {
-            await Printing.directPrintPdf(
-                printer: selectedProductPrinter!,
-                format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
-                    marginAll: 2 * PdfPageFormat.mm),
-                onLayout: (PdfPageFormat format) {
-                  return generateStampInvoice(
-                      format,
-                      product,
-                      orderResponse.checkInDate,
-                      orderResponse.invoiceId,
-                      table);
-                });
-          }
-        }
+        await Printing.directPrintPdf(
+            printer: selectedBillPrinter!,
+            format: PdfPageFormat.roll80,
+            onLayout: (PdfPageFormat format) {
+              return generateKitchenInvoice(
+                  format, orderResponse, table, paymentName);
+            });
       }
     }
   }

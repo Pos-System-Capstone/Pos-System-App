@@ -18,7 +18,7 @@ import '../data/model/account.dart';
 Future<Uint8List> generateBillInvoice(PdfPageFormat format,
     OrderResponseModel order, int table, String payment) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-  final font = await PdfGoogleFonts.interBold();
+  final font = await PdfGoogleFonts.interMedium();
 
   String deliType = Get.find<OrderViewModel>().deliveryType;
   StoreModel storeInfo = Get.find<MenuViewModel>().storeDetails;
@@ -32,51 +32,243 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
         return pw.SizedBox(
             width: double.infinity,
             child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
               mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
-                pw.Center(
-                  child: pw.Image(
+                pw.Row(children: [
+                  pw.Image(
                     provider,
-                    width: 160,
-                    height: 160,
+                    width: 80,
+                    height: 80,
                   ),
-                ),
-                pw.Text(storeInfo.name ?? "",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(
-                        font: font,
-                        fontSize: 10,
-                        fontWeight: pw.FontWeight.bold)),
-                pw.SizedBox(height: 8),
-                pw.Text(storeInfo.address ?? "",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.Text("Hotline: ${storeInfo.phone ?? ""}",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.Text("Email: ${storeInfo.email ?? ""}",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.SizedBox(height: 16),
+                  pw.Column(children: [
+                    pw.Text(storeInfo.address ?? "",
+                        textAlign: pw.TextAlign.center,
+                        style: pw.TextStyle(font: font, fontSize: 7)),
+                    pw.Text("Hotline:${storeInfo.phone ?? ""}",
+                        textAlign: pw.TextAlign.center,
+                        style: pw.TextStyle(font: font, fontSize: 7)),
+                  ]),
+                ]),
                 pw.FittedBox(
                   child: pw.Text("HÓA ĐƠN THANH TOÁN",
                       textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(font: font, fontSize: 12)),
+                      style: pw.TextStyle(font: font, fontSize: 11)),
                 ),
-                pw.SizedBox(height: 16),
-                pw.Text(order.invoiceId ?? "",
-                    textAlign: pw.TextAlign.right,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(order.invoiceId ?? "",
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text("Ngày:",
+                    pw.Text(
+                        "Ngày: ${formatTime(order.checkInDate ?? DateTime.now().toString())}",
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 8)),
+                    pw.Text("Bàn: $table",
+                        textAlign: pw.TextAlign.right,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Expanded(
+                      flex: 6,
+                      child: pw.Text("Tên món",
+                          textAlign: pw.TextAlign.left,
+                          style: pw.TextStyle(font: font, fontSize: 7)),
+                    ),
+                    pw.Expanded(
+                      flex: 1,
+                      child: pw.Text("SL",
+                          textAlign: pw.TextAlign.left,
+                          style: pw.TextStyle(font: font, fontSize: 7)),
+                    ),
+                    pw.Expanded(
+                      flex: 2,
+                      child: pw.Text("Tổng",
+                          textAlign: pw.TextAlign.right,
+                          style: pw.TextStyle(font: font, fontSize: 7)),
+                    ),
+                  ],
+                ),
+                pw.Divider(
+                  color: PdfColors.black,
+                  thickness: 1,
+                ),
+                for (ProductList item in order.productList!)
+                  pw.Column(children: [
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Expanded(
+                          flex: 6,
+                          child: pw.Text(item.name ?? '',
+                              textAlign: pw.TextAlign.left,
+                              style: pw.TextStyle(font: font, fontSize: 7)),
+                        ),
+                        pw.Expanded(
+                          flex: 1,
+                          child: pw.Text(item.quantity.toString(),
+                              textAlign: pw.TextAlign.left,
+                              style: pw.TextStyle(font: font, fontSize: 7)),
+                        ),
+                        pw.Expanded(
+                          flex: 2,
+                          child: pw.Text(formatPrice(item.finalAmount ?? 0),
+                              textAlign: pw.TextAlign.right,
+                              style: pw.TextStyle(font: font, fontSize: 7)),
+                        ),
+                      ],
+                    ),
+                    if (item.extras != null)
+                      for (Extras extra in item.extras!)
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Expanded(
+                              flex: 7,
+                              child: pw.Text("+${extra.name}",
+                                  textAlign: pw.TextAlign.left,
+                                  style: pw.TextStyle(font: font, fontSize: 7)),
+                            ),
+                            pw.Expanded(
+                              flex: 2,
+                              child: pw.Text(
+                                  formatPrice(extra.finalAmount ?? 0),
+                                  textAlign: pw.TextAlign.right,
+                                  style: pw.TextStyle(font: font, fontSize: 7)),
+                            ),
+                          ],
+                        ),
+                    pw.Text(item.note ?? '',
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 7)),
+                    pw.SizedBox(height: 8),
+                  ]),
+                pw.Divider(
+                  color: PdfColors.black,
+                  thickness: 1,
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text("Tổng cộng:",
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                    pw.Text(formatPrice(order.totalAmount ?? 0),
+                        textAlign: pw.TextAlign.right,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text("Giảm giá:",
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 7)),
+                    pw.Text(formatPrice(order.discount ?? 0),
+                        textAlign: pw.TextAlign.right,
+                        style: pw.TextStyle(font: font, fontSize: 7)),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text("Nhận món :",
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                    pw.Text(showOrderType(deliType).label ?? '',
+                        textAlign: pw.TextAlign.right,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                  ],
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text("Phương thức :",
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                    pw.Text(payment,
+                        textAlign: pw.TextAlign.right,
+                        style: pw.TextStyle(font: font, fontSize: 8)),
+                  ],
+                ),
+                pw.Divider(
+                  color: PdfColors.black,
+                  thickness: 0.5,
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text("Thanh toán:",
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(
+                            font: font,
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold)),
+                    pw.Text(formatPrice(order.finalAmount ?? 0),
+                        textAlign: pw.TextAlign.right,
+                        style: pw.TextStyle(
+                            font: font,
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold)),
+                  ],
+                ),
+                pw.Divider(
+                  color: PdfColors.black,
+                  thickness: 1,
+                ),
+                pw.Text("Xin cảm ơn và hẹn gặp lại",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(font: font, fontSize: 7)),
+                pw.Text("Wifi: Deer Coffee  Pass: 12345678",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(font: font, fontSize: 7)),
+              ],
+            ));
+      },
+    ),
+  );
+
+  return pdf.save();
+}
+
+Future<Uint8List> generateKitchenInvoice(PdfPageFormat format,
+    OrderResponseModel order, int table, String payment) async {
+  final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+  final font = await PdfGoogleFonts.interMedium();
+
+  String deliType = Get.find<OrderViewModel>().deliveryType;
+  StoreModel storeInfo = Get.find<MenuViewModel>().storeDetails;
+  final provider =
+      await flutterImageProvider(NetworkImage(storeInfo.brandPicUrl!));
+
+  pdf.addPage(
+    pw.Page(
+      pageFormat: format,
+      build: (context) {
+        return pw.SizedBox(
+            width: double.infinity,
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              mainAxisAlignment: pw.MainAxisAlignment.start,
+              children: [
+                pw.Align(
+                  alignment: pw.Alignment.centerLeft,
+                  child: pw.Text(order.invoiceId ?? "",
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
                     pw.Text(
-                        formatTime(
-                            order.checkInDate ?? DateTime.now().toString()),
+                        "Ngày: ${formatTime(order.checkInDate ?? DateTime.now().toString())}",
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                     pw.Text("Bàn: $table",
@@ -163,97 +355,7 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                     pw.Text(item.note ?? '',
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 8)),
-                    pw.SizedBox(height: 8),
                   ]),
-                pw.Divider(
-                  color: PdfColors.black,
-                  thickness: 1,
-                ),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text("Tổng cộng:",
-                        textAlign: pw.TextAlign.left,
-                        style: pw.TextStyle(font: font, fontSize: 10)),
-                    pw.Text(formatPrice(order.totalAmount ?? 0),
-                        textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(font: font, fontSize: 10)),
-                  ],
-                ),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text("Giảm giá:",
-                        textAlign: pw.TextAlign.left,
-                        style: pw.TextStyle(font: font, fontSize: 9)),
-                    pw.Text(formatPrice(order.discount ?? 0),
-                        textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(font: font, fontSize: 9)),
-                  ],
-                ),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text("Nhận món :",
-                        textAlign: pw.TextAlign.left,
-                        style: pw.TextStyle(font: font, fontSize: 9)),
-                    pw.Text(showOrderType(deliType).label ?? '',
-                        textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(font: font, fontSize: 9)),
-                  ],
-                ),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text("Phương thức :",
-                        textAlign: pw.TextAlign.left,
-                        style: pw.TextStyle(font: font, fontSize: 9)),
-                    pw.Text(payment,
-                        textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(font: font, fontSize: 9)),
-                  ],
-                ),
-                pw.Divider(
-                  color: PdfColors.black,
-                  thickness: 0.5,
-                ),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text("Thanh toán:",
-                        textAlign: pw.TextAlign.left,
-                        style: pw.TextStyle(
-                            font: font,
-                            fontSize: 12,
-                            fontWeight: pw.FontWeight.bold)),
-                    pw.Text(formatPrice(order.finalAmount ?? 0),
-                        textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(
-                            font: font,
-                            fontSize: 12,
-                            fontWeight: pw.FontWeight.bold)),
-                  ],
-                ),
-                pw.Divider(
-                  color: PdfColors.black,
-                  thickness: 1,
-                ),
-                pw.SizedBox(height: 16),
-                pw.Text("Xin cảm ơn và hẹn gặp lại",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.Text("Wifi: DeerCoffe  Pass: 12345678",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.Text(
-                    "Biên lai tính tiền có giá trị xuất hóa đơn GTGT trong ngày",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.Text(
-                    "Hóa đơn đã bao gồm thuế GTGT  ${percentCalculation(order.vat ?? 0)})",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.SizedBox(height: 16),
               ],
             ));
       },
