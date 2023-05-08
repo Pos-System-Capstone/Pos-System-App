@@ -1,7 +1,14 @@
 import 'package:intl/intl.dart';
 
-String formatPrice(num price) {
+String formatPrice(num price, {num discount = 0}) {
+  price = price - discount;
   return NumberFormat.simpleCurrency(locale: 'vi').format(price);
+}
+
+String convertPrice(num price, {num discount = 0}) {
+  price = price - discount;
+  return '\$'
+      '${(price).toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}';
 }
 
 String formatPriceWithoutUnit(num price) {

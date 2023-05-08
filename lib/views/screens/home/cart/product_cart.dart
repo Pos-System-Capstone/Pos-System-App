@@ -61,7 +61,8 @@ Widget productCard(Product product, List<Product>? childProducts) {
                       (childProducts != null &&
                               product.type == ProductTypeEnum.PARENT)
                           ? ""
-                          : formatPrice(product.sellingPrice!),
+                          : formatPrice(product.sellingPrice!,
+                              discount: product.discountPrice ?? 0),
                       style: Get.theme.textTheme.bodyLarge,
                     ),
                   ),

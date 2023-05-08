@@ -1,7 +1,9 @@
 // ignore_for_file: unnecessary_import
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
+import 'package:pos_apps/data/model/response/promotion.dart';
 import 'package:pos_apps/view_model/base_view_model.dart';
+import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 
 import '../data/model/index.dart';
 import 'index.dart';
@@ -13,6 +15,7 @@ class CartViewModel extends BaseViewModel {
   num _totalAmount = 0;
   num _discountAmount = 0;
   int _quantity = 0;
+  Promotion? selectedPromotion;
 
   List<CartItem> get cartList => _cartList;
   num get finalAmount => _finalAmount;
@@ -56,6 +59,7 @@ class CartViewModel extends BaseViewModel {
 
   void updateCart(CartItem cartModel, int cartIndex) {
     _cartList[cartIndex] = cartModel;
+    checkAvaileblePromotion();
     countCartAmount();
     countCartQuantity();
     notifyListeners();
@@ -81,6 +85,7 @@ class CartViewModel extends BaseViewModel {
   void removeFromCart(int idx) {
     _totalAmount = _totalAmount - (_cartList[idx].totalAmount);
     _cartList.remove(_cartList[idx]);
+    checkAvaileblePromotion();
     countCartAmount();
     countCartQuantity();
     notifyListeners();
@@ -92,6 +97,7 @@ class CartViewModel extends BaseViewModel {
     _totalAmount = 0;
     _discountAmount = 0;
     _quantity = 0;
+    selectedPromotion = null;
     notifyListeners();
   }
 
@@ -108,6 +114,94 @@ class CartViewModel extends BaseViewModel {
       cartItem.totalAmount += cartItem.extras![index].sellingPrice!;
     }
     return cartItem;
+  }
+
+  void checkPromotion(Promotion promotion) {
+    switch (promotion.type) {
+      case "Amount":
+        if (promotion.minConditionAmount! <= _totalAmount) {
+          _discountAmount = promotion.discountAmount!;
+          selectedPromotion = promotion;
+          countCartAmount();
+          hideDialog();
+        } else {
+          showAlertDialog(
+            title: "Lỗi",
+            content: "Khuyến mãi không hợp lệ",
+          );
+        }
+        break;
+      case "Percent":
+        if (promotion.minConditionAmount! <= _totalAmount) {
+          _discountAmount = (_totalAmount * promotion.discountPercent!);
+          if (_discountAmount > promotion.maxDiscount!) {
+            _discountAmount = promotion.maxDiscount!;
+          }
+          selectedPromotion = promotion;
+          countCartAmount();
+          hideDialog();
+        } else {
+          showAlertDialog(
+            title: "Lỗi",
+            content: "Khuyến mãi không hợp lệ",
+          );
+        }
+        break;
+      default:
+        showAlertDialog(
+          title: "Lỗi",
+          content: "Khuyến mãi không hợp lệ",
+        );
+        break;
+    }
+    notifyListeners();
+  }
+
+  void removePromotion() {
+    _discountAmount = 0;
+    selectedPromotion = null;
+    countCartAmount();
+    hideDialog();
+    notifyListeners();
+  }
+
+  void checkAvaileblePromotion() {
+    if (selectedPromotion == null) {
+      return;
+    }
+    countCartAmount();
+    switch (selectedPromotion?.type) {
+      case "Amount":
+        if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
+          return;
+        } else {
+          _discountAmount = 0;
+          selectedPromotion = null;
+        }
+        break;
+      case "Percent":
+        if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
+          _discountAmount =
+              (_totalAmount * selectedPromotion!.discountPercent!);
+          if (_discountAmount > selectedPromotion!.maxDiscount!) {
+            _discountAmount = selectedPromotion!.maxDiscount!;
+          }
+          countCartAmount();
+        } else {
+          _discountAmount = 0;
+          selectedPromotion = null;
+        }
+        break;
+      default:
+        showAlertDialog(
+          title: "Thông báo",
+          content: "Khuyến mãi đã bị xoá",
+        );
+        _discountAmount = 0;
+        selectedPromotion = null;
+        break;
+    }
+    notifyListeners();
   }
 
   Future<void> createOrder() async {
@@ -140,6 +234,7 @@ class CartViewModel extends BaseViewModel {
       totalAmount: _totalAmount,
       discountAmount: _discountAmount,
       finalAmount: _finalAmount,
+      promotionId: selectedPromotion == null ? null : selectedPromotion?.id,
     );
     bool res = false;
     Get.find<OrderViewModel>().placeOrder(order).then((value) => {

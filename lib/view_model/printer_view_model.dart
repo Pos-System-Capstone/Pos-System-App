@@ -2,14 +2,17 @@
 
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/util/share_pref.dart';
+import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 import 'package:printing/printing.dart';
 import '../data/model/account.dart';
 import '../util/bill-printing.dart';
@@ -152,11 +155,31 @@ class PrinterViewModel extends BaseViewModel {
         printer: selectedBillPrinter!,
         // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
         //     marginAll: 2 * PdfPageFormat.mm),
-        format: PdfPageFormat.roll57,
+        format: PdfPageFormat.roll80,
         onLayout: (PdfPageFormat format) {
           return generateClostSessionInvoice(
               format, session, storeModel, account);
         });
+  }
+
+  void printEndDayStoreReport(StoreEndDayReport report, String title) {
+    // Printing.directPrintPdf(
+    //     printer: selectedBillPrinter!,
+    //     // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
+    //     //     marginAll: 2 * PdfPageFormat.mm),
+    //     format: PdfPageFormat.roll80,
+    //     onLayout: (PdfPageFormat format) {
+    //       return generateEndDayReport(format, report);
+    //     });
+    Get.dialog(Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: PdfPreview(
+        build: (PdfPageFormat format) =>
+            generateEndDayReport(format, report, title),
+      ),
+    ));
   }
 
   void printQRCode(String payment, String code) {

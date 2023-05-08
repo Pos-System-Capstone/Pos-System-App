@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/index.dart';
@@ -8,6 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../../../widgets/other_dialogs/dialog.dart';
 import 'dialog/choose_deli_type_dialog.dart';
 import 'dialog/choose_table_dialog.dart';
+import 'dialog/select_promotion_dialog.dart';
 import 'dialog/update_cart_item_dialog.dart';
 
 class CartScreen extends StatefulWidget {
@@ -56,34 +58,56 @@ class _CartScreenState extends State<CartScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: OutlinedButton.icon(
+                            child: OutlinedButton(
                               onPressed: () => chooseTableDialog(),
-                              icon: Icon(
-                                Icons.table_bar,
-                                size: 32,
-                              ),
-                              label: Text(
-                                'Bàn: $selectedTable',
-                                style: Get.textTheme.bodyLarge,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                                child: Text(
+                                  'Bàn: $selectedTable',
+                                  style: Get.textTheme.bodyLarge,
+                                ),
                               ),
                             ),
                           ),
                           SizedBox(
-                            width: 8,
+                            width: 4,
                           ),
                           Expanded(
                             child: OutlinedButton.icon(
                               onPressed: () => chooseDeliTypeDialog(),
                               icon: Icon(
                                 selectedDeliLable.icon,
-                                size: 32,
+                                size: 24,
                               ),
-                              label: Text(
-                                ' ${selectedDeliLable.label}',
-                                style: Get.textTheme.bodyLarge,
+                              label: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                                child: Text(
+                                  ' ${selectedDeliLable.label}',
+                                  style: Get.textTheme.bodyLarge,
+                                ),
                               ),
                             ),
                           ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () async {
+                                selectPromotionDialog();
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                                child: Text(
+                                  'Khuyến mãi',
+                                  style: Get.textTheme.bodyLarge,
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -142,7 +166,6 @@ class _CartScreenState extends State<CartScreen> {
               )),
               SizedBox(
                 width: double.infinity,
-                height: 160,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -167,9 +190,35 @@ class _CartScreenState extends State<CartScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Text('Tạm tính', style: Get.textTheme.titleMedium),
+                          Text(formatPrice(model.totalAmount ?? 0),
+                              style: Get.textTheme.titleMedium),
+                        ],
+                      ),
+                    ),
+                    model.discountAmount! > 0
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(model.selectedPromotion?.name ?? "",
+                                    style: Get.textTheme.titleMedium),
+                                Text(
+                                    "-${formatPrice(model.discountAmount ?? 0)}",
+                                    style: Get.textTheme.titleMedium),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Text('Tổng tiền', style: Get.textTheme.titleMedium),
-                          Text(formatPrice(model.totalAmount),
-                              style: Get.textTheme.titleLarge),
+                          Text(formatPrice(model.finalAmount),
+                              style: Get.textTheme.titleMedium),
                         ],
                       ),
                     ),
@@ -203,7 +252,15 @@ class _CartScreenState extends State<CartScreen> {
                           Expanded(
                             child: FilledButton(
                               onPressed: () async {
-                                model.createOrder();
+                                if (model.quantity == 0) {
+                                  showAlertDialog(
+                                    title: 'Thông báo',
+                                    content: 'Giỏ hàng trống',
+                                  );
+                                  return;
+                                } else {
+                                  model.createOrder();
+                                }
                               },
                               child: Padding(
                                 padding:
@@ -216,42 +273,9 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                             ),
                           ),
-                          // SizedBox(
-                          //   width: 4,
-                          // ),
-                          // Expanded(
-                          //   flex: 2,
-                          //   child: PopupMenuButton<PaymentModel>(
-                          //     initialValue: selectedPayment,
-                          //     // icon: Icon(Icons.payment),
-                          //     tooltip: 'Thanh toán',
-                          //     child: Chip(
-                          //       label: Text(
-                          //         selectedPayment?.name ?? '',
-                          //         style: Get.textTheme.bodyLarge,
-                          //       ),
-                          //     ),
-                          //     itemBuilder: (context) => [
-                          //       for (var item in listPayment)
-                          //         PopupMenuItem(
-                          //           value: item,
-                          //           child: item?.id == selectedPayment?.id
-                          //               ? Row(children: [
-                          //                   Icon(Icons.check),
-                          //                   SizedBox(
-                          //                     width: 8,
-                          //                   ),
-                          //                   Text(item?.name ?? ''),
-                          //                 ])
-                          //               : Text(item?.name ?? ''),
-                          //         ),
-                          //     ],
-                          //     onSelected: (value) {
-                          //       Get.find<OrderViewModel>().selectPayment(value);
-                          //       selectedPayment = value;
-                          //     },
-                          //   ),
-                          // )
+                          SizedBox(
+                            width: 4,
+                          ),
                         ],
                       ),
                     ),

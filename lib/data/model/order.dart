@@ -5,13 +5,15 @@ class OrderModel {
   num? totalAmount;
   num? discountAmount;
   num? finalAmount;
+  String? promotionId;
 
   OrderModel(
       {this.orderType,
       this.productsList,
       this.totalAmount,
       this.discountAmount,
-      this.finalAmount});
+      this.finalAmount,
+      this.promotionId});
 
   OrderModel.fromJson(Map<String, dynamic> json) {
     orderType = json['orderType'];
@@ -24,6 +26,7 @@ class OrderModel {
     totalAmount = json['totalAmount'];
     discountAmount = json['discountAmount'];
     finalAmount = json['finalAmount'];
+    promotionId = json['promotionId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,6 +38,7 @@ class OrderModel {
     data['totalAmount'] = totalAmount;
     data['discountAmount'] = discountAmount;
     data['finalAmount'] = finalAmount;
+    data['promotionId'] = promotionId;
     return data;
   }
 }

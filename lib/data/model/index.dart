@@ -7,3 +7,4 @@ export 'order.dart';
 export 'account.dart';
 export 'product_attribute.dart';
 export 'payment.dart';
+export 'response/end_day_report.dart';

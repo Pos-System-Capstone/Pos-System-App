@@ -4,6 +4,7 @@ import 'package:pos_apps/enums/product_enum.dart';
 import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/helper/responsive_helper.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
+import 'package:pos_apps/views/screens/home/cart/dialog/choose_deli_type_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/order_view_model.dart';
 import 'cart_screen.dart';
@@ -17,6 +18,11 @@ class AddToCartScreen extends StatefulWidget {
 }
 
 class _AddToCartScreenState extends State<AddToCartScreen> {
+  @override
+  initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModel(

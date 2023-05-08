@@ -1,11 +1,14 @@
 import 'package:get/get.dart';
+import 'package:pos_apps/data/api/promotion_data.dart';
 import 'package:pos_apps/data/api/store_data.dart';
 import 'package:pos_apps/data/model/index.dart';
+import 'package:pos_apps/data/model/response/promotion.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
 import '../data/api/index.dart';
+import '../data/api/report_data.dart';
 import '../data/api/session_data.dart';
 import '../data/model/response/sessions.dart';
 import '../enums/order_enum.dart';
@@ -26,23 +29,29 @@ class MenuViewModel extends BaseViewModel {
   List<Product>? childProducts = [];
   List<Product>? productsFilter = [];
   List<Session>? sessions = [];
+  List<Promotion>? promotions = [];
   SessionAPI? sessionAPI;
+  ReportData? reportData;
+  PromotionData? promotionData;
+  Promotion? selectedPromotion;
 
   MenuViewModel() {
     menuData = MenuData();
     storeData = StoreData();
     currentMenu = Menu();
     sessionAPI = SessionAPI();
+    reportData = ReportData();
+    promotionData = PromotionData();
   }
 
   Future<void> getMenuOfStore() async {
     try {
       setState(ViewStatus.Loading);
-      getStore();
-      getListSession();
+      await getStore();
       currentMenu = await menuData?.getMenuOfStore();
       Get.find<OrderViewModel>().getListPayment();
-      await getStore();
+      getListSession();
+      getListPromotion();
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
           .toList();
@@ -102,6 +111,18 @@ class MenuViewModel extends BaseViewModel {
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
       return null;
+    }
+  }
+
+  void getListPromotion() async {
+    try {
+      setState(ViewStatus.Loading);
+      await promotionData?.getListPromotionOfStore().then((value) {
+        promotions = value;
+      });
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
     }
   }
 
@@ -229,5 +250,20 @@ class MenuViewModel extends BaseViewModel {
 
   Product getProductById(String id) {
     return currentMenu!.products!.firstWhere((element) => element.id == id);
+  }
+
+  Future getStoreEndDayReport(DateTime startDate, DateTime endDate) async {
+    try {
+      setState(ViewStatus.Loading);
+      StoreEndDayReport storeEndDayReport = StoreEndDayReport();
+      await reportData
+          ?.getStoreEndDayReport(startDate, endDate)
+          .then((value) => storeEndDayReport = value);
+      setState(ViewStatus.Completed);
+      return storeEndDayReport;
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+    return null;
   }
 }
