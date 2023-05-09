@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
+import 'package:pos_apps/views/screens/home/payment/payment_dialogs/input_customer_monney_dialog.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/index.dart';
@@ -153,31 +154,7 @@ Widget orderConfig() {
         child: CircularProgressIndicator(),
       );
     }
-    return DefaultTabController(
-      length: listPaymentTab.length,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // TabBar(
-          //   indicatorColor: Get.theme.colorScheme.primary,
-          //   tabs: listPaymentTab,
-          // ),
-          // SizedBox(
-          //   height: 8,
-          // ),
-          Expanded(
-              child: TabBarView(
-            children: [
-              paymentTypeSelect(),
-              // customerInfoSelect(model),
-              // promotionTypeSelect(model),
-              // BillScreen(),
-            ],
-          ))
-        ],
-      ),
-    );
+    return Expanded(child: paymentTypeSelect());
   });
 }
 
@@ -237,7 +214,13 @@ Widget paymentTypeSelect() {
                               (e) => Padding(
                                 padding: const EdgeInsets.all(16),
                                 child: InkWell(
-                                  onTap: () {
+                                  onTap: () async {
+                                    if (e.type == PaymentTypeEnums.CASH) {
+                                      num money = await inputMonneyDialog();
+                                      model.setCustomerMoney(money);
+                                    } else {
+                                      model.setCustomerMoney(0);
+                                    }
                                     model.selectPayment(e);
                                   },
                                   child: Card(

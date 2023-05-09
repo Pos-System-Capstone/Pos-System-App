@@ -147,6 +147,24 @@ class CartViewModel extends BaseViewModel {
           );
         }
         break;
+      case "Product":
+        for (var item in _cartList) {
+          for (var product in promotion.listProductApply!) {
+            if (item.product.id == product.productId) {
+              _discountAmount = promotion.discountAmount!;
+              selectedPromotion = promotion;
+              countCartAmount();
+              hideDialog();
+              break;
+            }
+          }
+        }
+        showAlertDialog(
+          title: "Lỗi",
+          content: "Khuyến mãi không hợp lệ",
+        );
+
+        break;
       default:
         showAlertDialog(
           title: "Lỗi",
@@ -191,6 +209,17 @@ class CartViewModel extends BaseViewModel {
           _discountAmount = 0;
           selectedPromotion = null;
         }
+        break;
+      case "Product":
+        for (var item in _cartList) {
+          for (var product in selectedPromotion!.listProductApply!) {
+            if (item.product.id == product.productId) {
+              return;
+            }
+          }
+        }
+        _discountAmount = 0;
+        selectedPromotion = null;
         break;
       default:
         showAlertDialog(

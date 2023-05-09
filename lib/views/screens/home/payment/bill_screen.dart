@@ -100,7 +100,6 @@ class _BillScreenState extends State<BillScreen> {
                               model.currentOrder!.productList![i]);
                         },
                       ),
-
                       Divider(
                         color: Get.theme.colorScheme.onSurface,
                         thickness: 1,
@@ -306,48 +305,50 @@ class _BillScreenState extends State<BillScreen> {
                           ],
                         ),
                       ),
-                      // Divider(
-                      //   color: Get.theme.colorScheme.onSurface,
-                      //   thickness: 1,
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     children: [
-                      //       Text(
-                      //         'Khách đưa',
-                      //         style: Get.textTheme.titleMedium,
-                      //       ),
-                      //       Text(
-                      //         formatPrice(model.currentOrder!.finalAmount!),
-                      //         style: Get.textTheme.titleMedium,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      // Divider(
-                      //   color: Get.theme.colorScheme.onSurface,
-                      //   thickness: 1,
-                      // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     children: [
-                      //       Text(
-                      //         'Trả lại',
-                      //         style: Get.textTheme.titleMedium,
-                      //       ),
-                      //       Text(
-                      //         formatPrice(model.currentOrder!.finalAmount!),
-                      //         style: Get.textTheme.titleMedium,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                      Divider(
+                        color: Get.theme.colorScheme.onSurface,
+                        thickness: 1,
+                      ),
+                      model.customerMoney > 0
+                          ? Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Khách đưa',
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                  Text(
+                                    formatPrice(model.customerMoney),
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : SizedBox(),
+                      model.customerMoney >= model.currentOrder!.finalAmount!
+                          ? Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Trả lại',
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                  Text(
+                                    formatPrice(model.returnMoney),
+                                    style: Get.textTheme.titleMedium,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),

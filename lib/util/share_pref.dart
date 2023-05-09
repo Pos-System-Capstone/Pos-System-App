@@ -183,3 +183,14 @@ Future<List<Attribute>?> getAttributes() async {
   }
   return null;
 }
+
+Future<void> setPromotions(List<String> promotion) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // await prefs.setString('PROMOTIONS', jsonEncode(promotion));
+  await prefs.setStringList('PROMOTIONS', promotion);
+}
+
+Future<List<String>?> getPromotions() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getStringList('PROMOTIONS') ?? [];
+}

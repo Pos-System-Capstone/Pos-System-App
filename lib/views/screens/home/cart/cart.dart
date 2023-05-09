@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/product_enum.dart';
@@ -5,6 +7,7 @@ import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/helper/responsive_helper.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_deli_type_dialog.dart';
+import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/order_view_model.dart';
 import 'cart_screen.dart';
@@ -21,6 +24,7 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
   @override
   initState() {
     super.initState();
+    Timer.run(chooseTableDialog);
   }
 
   @override

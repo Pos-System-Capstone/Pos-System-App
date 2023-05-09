@@ -56,15 +56,13 @@ Widget productCard(Product product, List<Product>? childProducts) {
                     ),
                   ),
                   Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      (childProducts != null &&
-                              product.type == ProductTypeEnum.PARENT)
-                          ? ""
-                          : formatPrice(product.sellingPrice!,
-                              discount: product.discountPrice ?? 0),
-                      style: Get.theme.textTheme.bodyLarge,
-                    ),
+                    alignment: Alignment.bottomRight,
+                    child: (childProducts != null &&
+                            product.type == ProductTypeEnum.PARENT)
+                        ? Text("")
+                        : priceWidget(
+                            product.sellingPrice!, Get.textTheme.bodyLarge,
+                            discount: product.discountPrice ?? 0),
                   ),
                 ],
               ),

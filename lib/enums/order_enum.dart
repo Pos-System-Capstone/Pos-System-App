@@ -68,3 +68,14 @@ class PaymentStatusEnum {
   static const String PENDING = 'Pending';
   static const String CANCELED = 'Canceled';
 }
+
+class PaymentTypeEnums {
+  static const String CASH = 'CASH';
+  static const String VIETQR = 'VIETQR';
+  static const String ZALOPAY = 'ZALOPAY';
+  static const String VNPAY = 'VNPAY';
+}
+
+enum PaymentTypeEnum { CASH, VIETQR, ZALOPAY, VNPAY }
+
+var a = PaymentTypeEnum.CASH.toString();

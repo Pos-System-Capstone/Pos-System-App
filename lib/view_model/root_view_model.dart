@@ -12,11 +12,13 @@ class RootViewModel extends BaseViewModel {
   num defaultCashboxMoney = 1000000;
   int colorIndex = 0;
   List<Attribute> listAttribute = [];
+  List<String> promotions = [];
   Attribute addAttributes = Attribute("", []);
   RootViewModel() {
     getTableNumber().then((value) => numberOfTable = value ?? 20);
     getCashboxMonney().then((value) => defaultCashboxMoney = value ?? 1000000);
     getAttributes().then((value) => listAttribute = value ?? []);
+    getPromotions().then((value) => promotions = value ?? []);
   }
   void handleChangeTheme(bool isDarkMode) async {
     int index = await getThemeColor() ?? 0;
@@ -33,6 +35,24 @@ class RootViewModel extends BaseViewModel {
   ) {
     addAttributes.name = name;
 
+    notifyListeners();
+  }
+
+  void setPromotion(
+    String name,
+  ) {
+    promotions.add(name);
+    print(promotions);
+    setPromotions(promotions);
+
+    notifyListeners();
+  }
+
+  void removePromotion(
+    String name,
+  ) {
+    promotions.remove(name);
+    setPromotions(promotions);
     notifyListeners();
   }
 

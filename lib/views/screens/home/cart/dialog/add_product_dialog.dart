@@ -157,7 +157,7 @@ class _ProductDialogState extends State<ProductDialog> {
                               },
                               icon: Icon(
                                 Icons.remove,
-                                size: 40,
+                                size: 48,
                               )),
                           Text("${model.quantity}",
                               style: Get.textTheme.titleLarge),
@@ -167,7 +167,7 @@ class _ProductDialogState extends State<ProductDialog> {
                               },
                               icon: Icon(
                                 Icons.add,
-                                size: 40,
+                                size: 48,
                               )),
                           Expanded(
                             child: FilledButton(

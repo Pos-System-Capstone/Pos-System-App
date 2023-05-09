@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/views/screens/settings/promotion_setting_bottom_sheet.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../theme/theme_color.dart';
 import '../../../../util/share_pref.dart';
@@ -123,6 +124,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     thickness: 1,
                   ),
                   productAttributesSetting(),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  promotionSetting(),
                   Divider(
                     thickness: 1,
                   ),
@@ -372,6 +377,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Icon(
               Icons.edit_attributes,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget promotionSetting() {
+    return InkWell(
+      onTap: () => showPromotionConfigBottomSheet(),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Tuỳ chỉnh khuyến mãi',
+                      style: Get.textTheme.titleMedium),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.card_giftcard,
               size: 32,
             ),
             Icon(

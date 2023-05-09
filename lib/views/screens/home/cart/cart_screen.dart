@@ -47,113 +47,43 @@ class _CartScreenState extends State<CartScreen> {
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8)),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => chooseTableDialog(),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
-                                child: Text(
-                                  'Bàn: $selectedTable',
-                                  style: Get.textTheme.bodyLarge,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: () => chooseDeliTypeDialog(),
-                              icon: Icon(
-                                selectedDeliLable.icon,
-                                size: 24,
-                              ),
-                              label: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
-                                child: Text(
-                                  ' ${selectedDeliLable.label}',
-                                  style: Get.textTheme.bodyLarge,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () async {
-                                selectPromotionDialog();
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
-                                child: Text(
-                                  'Khuyến mãi',
-                                  style: Get.textTheme.bodyLarge,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 7,
+                        child: Text(
+                          'Tên',
+                          style: Get.textTheme.titleMedium,
+                        ),
                       ),
-                    ),
-                    Divider(
-                      color: Get.theme.colorScheme.onSurface,
-                      thickness: 1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 7,
-                            child: Text(
-                              'Tên',
-                              style: Get.textTheme.bodyMedium,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              'SL',
-                              style: Get.textTheme.bodyMedium,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Tổng',
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'SL',
+                          style: Get.textTheme.titleMedium,
+                        ),
                       ),
-                    ),
-                    Divider(
-                      color: Get.theme.colorScheme.onSurface,
-                      thickness: 1,
-                    ),
-                  ],
+                      Expanded(
+                        flex: 3,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Tổng',
+                            style: Get.textTheme.titleMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+              Divider(
+                color: Get.theme.colorScheme.onSurface,
+                thickness: 1,
               ),
               Expanded(
                   child: ListView.builder(
@@ -216,9 +146,69 @@ class _CartScreenState extends State<CartScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Tổng tiền', style: Get.textTheme.titleMedium),
+                          Text('Tổng tiền', style: Get.textTheme.titleLarge),
                           Text(formatPrice(model.finalAmount),
-                              style: Get.textTheme.titleMedium),
+                              style: Get.textTheme.titleLarge),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      color: Get.theme.colorScheme.onSurface,
+                      thickness: 1,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: FilledButton.tonal(
+                              onPressed: () => chooseTableDialog(),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                child: Text(
+                                  'Bàn: $selectedTable',
+                                  style: Get.textTheme.bodyLarge,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: FilledButton.tonal(
+                              onPressed: () => chooseDeliTypeDialog(),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                child: Text(
+                                  ' ${selectedDeliLable.label}',
+                                  style: Get.textTheme.bodyLarge,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: FilledButton.tonal(
+                              onPressed: () async {
+                                selectPromotionDialog();
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                child: Text(
+                                  'Khuyến mãi',
+                                  style: Get.textTheme.bodyLarge,
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -314,9 +304,11 @@ class _CartScreenState extends State<CartScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.clip,
                       ),
-                      Text(
-                        formatPrice(item.product.sellingPrice!),
-                        style: Get.textTheme.bodyMedium,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: priceWidget(item.product.sellingPrice!,
+                            Get.textTheme.bodyMedium,
+                            discount: item.product.discountPrice ?? 0),
                       ),
                     ],
                   ),
@@ -337,7 +329,7 @@ class _CartScreenState extends State<CartScreen> {
                 Expanded(
                   flex: 3,
                   child: Align(
-                    alignment: AlignmentDirectional.centerEnd,
+                    alignment: AlignmentDirectional.topEnd,
                     child: Text(
                       formatPrice(item.totalAmount),
                       style: Get.textTheme.bodyLarge,
@@ -368,10 +360,9 @@ class _CartScreenState extends State<CartScreen> {
                         flex: 2,
                         child: Align(
                           alignment: AlignmentDirectional.centerEnd,
-                          child: Text(
-                            formatPrice(item.extras![i].sellingPrice!),
-                            style: Get.textTheme.bodyMedium,
-                          ),
+                          child: priceWidget(item.extras![i].sellingPrice!,
+                              Get.textTheme.bodyMedium,
+                              discount: item.extras![i].discountPrice ?? 0),
                         ),
                       ),
                     ],

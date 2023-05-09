@@ -56,23 +56,32 @@ void selectPromotionDialog() {
                                 ? Get.theme.colorScheme.primaryContainer
                                 : Get.theme.colorScheme.background,
                             child: SizedBox(
-                              width: 200,
-                              height: 160,
+                              width: 240,
+                              height: 200,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Text(
-                                        item.name ?? '',
-                                        style: Get.textTheme.titleMedium,
+                                  Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          item.name ?? '',
+                                          style: Get.textTheme.titleMedium,
+                                        ),
                                       ),
                                     ),
                                   ),
                                   Divider(),
-                                  Text(item.description ?? ''),
+                                  Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(item.description ?? ''),
+                                      )),
                                 ],
                               ),
                             ),

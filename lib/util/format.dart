@@ -1,8 +1,30 @@
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 String formatPrice(num price, {num discount = 0}) {
   price = price - discount;
   return NumberFormat.simpleCurrency(locale: 'vi').format(price);
+}
+
+Widget priceWidget(num price, TextStyle? style, {num discount = 0}) {
+  if (discount == 0) {
+    return Text(formatPrice(price, discount: discount), style: style);
+  } else {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text("(${formatPrice(price)})",
+            style: style?.copyWith(decoration: TextDecoration.lineThrough)),
+        SizedBox(width: 2),
+        Text(
+          formatPrice(price, discount: discount),
+          style: style,
+        ),
+      ],
+    );
+  }
 }
 
 String convertPrice(num price, {num discount = 0}) {

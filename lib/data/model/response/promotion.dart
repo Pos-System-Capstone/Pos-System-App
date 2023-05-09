@@ -8,6 +8,7 @@ class Promotion {
   num? minConditionAmount;
   num? discountAmount;
   num? discountPercent;
+  List<ListProductApply>? listProductApply;
   String? status;
 
   Promotion(
@@ -20,6 +21,7 @@ class Promotion {
       this.minConditionAmount,
       this.discountAmount,
       this.discountPercent,
+      this.listProductApply,
       this.status});
 
   Promotion.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,12 @@ class Promotion {
     minConditionAmount = json['minConditionAmount'];
     discountAmount = json['discountAmount'];
     discountPercent = json['discountPercent'];
+    if (json['listProductApply'] != null) {
+      listProductApply = <ListProductApply>[];
+      json['listProductApply'].forEach((v) {
+        listProductApply!.add(new ListProductApply.fromJson(v));
+      });
+    }
     status = json['status'];
   }
 
@@ -46,7 +54,27 @@ class Promotion {
     data['minConditionAmount'] = minConditionAmount;
     data['discountAmount'] = discountAmount;
     data['discountPercent'] = discountPercent;
+    if (listProductApply != null) {
+      data['listProductApply'] =
+          listProductApply!.map((v) => v.toJson()).toList();
+    }
     data['status'] = status;
+    return data;
+  }
+}
+
+class ListProductApply {
+  String? productId;
+
+  ListProductApply({this.productId});
+
+  ListProductApply.fromJson(Map<String, dynamic> json) {
+    productId = json['productId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['productId'] = productId;
     return data;
   }
 }

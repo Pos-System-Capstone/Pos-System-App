@@ -15,35 +15,34 @@ void chooseDeliTypeDialog() {
     elevation: 0,
     backgroundColor: Colors.transparent,
     child: Container(
-      width: Get.size.width,
+      width: Get.width * 0.8,
+      height: Get.height * 0.9,
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.onInverseSurface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.delivery_dining_outlined, size: 32),
-              ),
-              Expanded(
-                  child: Center(
-                      child: Text("Chọn phương thức giao hàng",
-                          style: Get.textTheme.titleLarge))),
-              IconButton(
-                  iconSize: 40,
-                  onPressed: () => Get.back(),
-                  icon: Icon(Icons.close))
-            ],
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Align(
+                alignment: Alignment.center,
+                child: Text("Chọn phương thức nhận đơn",
+                    style: Get.textTheme.titleLarge)),
+          ),
+          Divider(
+            height: 1,
+            color: Get.theme.colorScheme.onSurface,
+          ),
+          SizedBox(
+            height: 16,
           ),
           Expanded(
               child: ScopedModel(
             model: Get.find<OrderViewModel>(),
             child: ScopedModelDescendant<OrderViewModel>(
                 builder: (context, child, model) {
+              List<String> listPromotion = Get.find<RootViewModel>().promotions;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +75,31 @@ void chooseDeliTypeDialog() {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(
+                      height: 240,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          listPromotion.isNotEmpty
+                              ? Expanded(
+                                  child: ListView.builder(
+                                    itemCount: listPromotion.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        title: Text(
+                                          listPromotion[index],
+                                          style: Get.textTheme.titleMedium,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ))
                 ],
               );
             }),

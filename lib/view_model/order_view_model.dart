@@ -7,6 +7,7 @@ import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/api/order_api.dart';
 import '../data/api/payment_data.dart';
@@ -21,6 +22,8 @@ class OrderViewModel extends BaseViewModel {
   Cart? currentCart;
   late OrderAPI api = OrderAPI();
   String? currentOrderId;
+  num customerMoney = 0;
+  num returnMoney = 0;
   OrderResponseModel? currentOrder;
   List<PaymentProvider?> listPayment = [];
   PaymentProvider? selectedPaymentMethod;
@@ -64,20 +67,20 @@ class OrderViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<bool> placeOrder(OrderModel order) async {
-    try {
-      showLoadingDialog();
-      Account? userInfo = await getUserInfo();
-      await api.placeOrder(order, userInfo!.storeId).then((value) => {
-            hideDialog(),
-            showPaymentBotomSheet(value),
-          });
+  void setCustomerMoney(num money) {
+    customerMoney = money;
+    returnMoney = customerMoney - currentOrder!.totalAmount!;
+    notifyListeners();
+  }
 
-      return true;
-    } catch (e) {
-      showAlertDialog(title: "Lỗi đặt hàng", content: e.toString());
-      return false;
-    }
+  Future<bool> placeOrder(OrderModel order) async {
+    showLoadingDialog();
+    Account? userInfo = await getUserInfo();
+    await api.placeOrder(order, userInfo!.storeId).then((value) => {
+          hideDialog(),
+          showPaymentBotomSheet(value),
+        });
+    return true;
   }
 
   void makePayment(PaymentProvider payment) async {
@@ -241,6 +244,7 @@ class OrderViewModel extends BaseViewModel {
     await showAlertDialog(
         title: "Thanh toán thành công",
         content: "Đơn hàng thanh toán thành công");
+    chooseTableDialog();
     // Duration(seconds: 2);
     // await launchStoreLogo();
   }

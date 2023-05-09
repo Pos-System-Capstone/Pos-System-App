@@ -73,7 +73,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
       child: ScopedModelDescendant(
         builder: (context, child, ProductViewModel model) {
           return Container(
-            width: isPortrait ? Get.size.width : Get.size.width * 0.7,
+            width: isPortrait ? Get.size.width : Get.size.width * 0.6,
             decoration: BoxDecoration(
               color: Get.theme.colorScheme.onInverseSurface,
               borderRadius: BorderRadius.all(
@@ -161,7 +161,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                   },
                                   icon: Icon(
                                     Icons.remove,
-                                    size: 40,
+                                    size: 48,
                                   )),
                               Text("${model.quantity}",
                                   style: Get.textTheme.titleLarge),
@@ -171,7 +171,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                   },
                                   icon: Icon(
                                     Icons.add,
-                                    size: 40,
+                                    size: 48,
                                   )),
                             ],
                           ),
@@ -183,17 +183,12 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            0, 8, 0, 8),
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text("Xóa",
-                                              style: Get.textTheme.titleMedium
-                                                  ?.copyWith(
-                                                      color: Get
-                                                          .theme
-                                                          .colorScheme
-                                                          .background)),
-                                        ),
+                                            4, 16, 4, 16),
+                                        child: Text("Xóa",
+                                            style: Get.textTheme.titleMedium
+                                                ?.copyWith(
+                                                    color: Get.theme.colorScheme
+                                                        .background)),
                                       )),
                                 )
                               : Expanded(
