@@ -59,7 +59,7 @@ double calculation(double amount, double discount, String type, int quantity) {
 }
 
 String percentCalculation(num amount) {
-  return '${amount * 100}%';
+  return '${(amount * 100).toStringAsFixed(0)}%';
 }
 
 String percentageCalculation(

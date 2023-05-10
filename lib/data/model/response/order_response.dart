@@ -9,6 +9,7 @@ class OrderResponseModel {
   String? orderStatus;
   String? orderType;
   String? checkInDate;
+  String? discountName;
   List<ProductList>? productList;
   PaymentMethod? paymentMethod;
 
@@ -23,6 +24,7 @@ class OrderResponseModel {
     this.orderStatus,
     this.orderType,
     this.checkInDate,
+    this.discountName,
     this.productList,
     this.paymentMethod,
   });
@@ -38,6 +40,7 @@ class OrderResponseModel {
     orderStatus = json['orderStatus'];
     orderType = json['orderType'];
     checkInDate = json['checkInDate'];
+    discountName = json['discountName'];
     if (json['productList'] != null) {
       productList = <ProductList>[];
       json['productList'].forEach((v) {
@@ -58,6 +61,7 @@ class OrderResponseModel {
     data['orderStatus'] = orderStatus;
     data['orderType'] = orderType;
     data['checkInDate'] = checkInDate;
+    data['discountName'] = discountName;
     if (productList != null) {
       data['productList'] = productList!.map((v) => v.toJson()).toList();
     }

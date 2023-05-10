@@ -5,6 +5,8 @@ class StoreEndDayReport {
   num? totalDiscount;
   num? vatAmount;
   num? finalAmount;
+  num? productCosAmount;
+  num? totalRevenue;
   num? inStoreAmount;
   num? deliAmount;
   num? takeAwayAmount;
@@ -22,6 +24,8 @@ class StoreEndDayReport {
       this.totalDiscount,
       this.vatAmount,
       this.finalAmount,
+      this.productCosAmount,
+      this.totalRevenue,
       this.inStoreAmount,
       this.deliAmount,
       this.takeAwayAmount,
@@ -44,6 +48,8 @@ class StoreEndDayReport {
     totalDiscount = json['totalDiscount'];
     vatAmount = json['vatAmount'];
     finalAmount = json['finalAmount'];
+    productCosAmount = json['productCosAmount'];
+    totalRevenue = json['totalRevenue'];
     inStoreAmount = json['inStoreAmount'];
     deliAmount = json['deliAmount'];
     takeAwayAmount = json['takeAwayAmount'];
@@ -66,6 +72,8 @@ class StoreEndDayReport {
     data['totalDiscount'] = totalDiscount;
     data['vatAmount'] = vatAmount;
     data['finalAmount'] = finalAmount;
+    data['productCosAmount'] = productCosAmount;
+    data['totalRevenue'] = totalRevenue;
     data['inStoreAmount'] = inStoreAmount;
     data['deliAmount'] = deliAmount;
     data['takeAwayAmount'] = takeAwayAmount;

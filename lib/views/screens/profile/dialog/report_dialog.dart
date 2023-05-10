@@ -90,8 +90,8 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
           );
         }
         return Container(
-          width: Get.size.width * 0.4,
-          height: Get.size.height * 0.9,
+          width: Get.size.width * 0.5,
+          height: Get.size.height,
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Get.theme.colorScheme.background,
@@ -194,8 +194,12 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         itemCount: reportDetails?.categoryReports?.length,
                         physics: ScrollPhysics(),
                         itemBuilder: (context, i) {
-                          return categoryReportItem(
-                              reportDetails!.categoryReports![i]);
+                          return reportDetails!
+                                      .categoryReports![i].totalProduct ==
+                                  0
+                              ? SizedBox()
+                              : categoryReportItem(
+                                  reportDetails!.categoryReports![i]);
                         },
                       ),
                       Divider(
@@ -254,11 +258,53 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Tổng thuế VAT',
+                            'Chi phí sản phẩm(4)',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.productCosAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Lợi nhuận (5)=(3)-(4)',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.totalRevenue ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Tổng thuế VAT(3.1)',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
                             formatPrice(reportDetails?.vatAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Bình quân hoá đơn (7)=(3)/(6)',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.averageBill ?? 0),
                             style: Get.textTheme.bodyMedium,
                           ),
                         ],
@@ -350,7 +396,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Tổng số đơn hoàn thành',
+                            'Tổng số đơn hoàn thành (6)',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
@@ -519,19 +565,13 @@ Widget categoryReportItem(CategoryReports item) {
             ),
           ],
         ),
-        Divider(
-          color: Get.theme.colorScheme.onSurface,
-          thickness: 0.5,
-          indent: 32,
-          endIndent: 32,
-        ),
         ListView.builder(
           shrinkWrap: true,
           itemCount: item.productReports?.length,
           physics: ScrollPhysics(),
           itemBuilder: (context, i) {
             return Padding(
-              padding: const EdgeInsets.fromLTRB(4, 4, 0, 4),
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -539,7 +579,7 @@ Widget categoryReportItem(CategoryReports item) {
                   Expanded(
                     flex: 7,
                     child: Text(
-                      "${item.productReports![i].name!}",
+                      "- ${item.productReports![i].name}",
                       style: Get.textTheme.bodyMedium,
                     ),
                   ),

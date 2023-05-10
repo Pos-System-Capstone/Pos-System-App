@@ -5,6 +5,7 @@ import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/enums/index.dart';
+import 'package:pos_apps/routes/routes_constraints.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
@@ -192,6 +193,7 @@ class OrderViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       qrCodeData = null;
+      customerMoney = 0;
       Account? userInfo = await getUserInfo();
 
       await api.getOrderOfStore(userInfo!.storeId, orderId).then((value) => {
@@ -244,6 +246,7 @@ class OrderViewModel extends BaseViewModel {
     await showAlertDialog(
         title: "Thanh toán thành công",
         content: "Đơn hàng thanh toán thành công");
+    Duration(seconds: 2);
     chooseTableDialog();
     // Duration(seconds: 2);
     // await launchStoreLogo();

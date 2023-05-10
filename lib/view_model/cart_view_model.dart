@@ -159,11 +159,12 @@ class CartViewModel extends BaseViewModel {
             }
           }
         }
-        showAlertDialog(
-          title: "Lỗi",
-          content: "Khuyến mãi không hợp lệ",
-        );
-
+        if (selectedPromotion?.type != "Product") {
+          showAlertDialog(
+            title: "Lỗi",
+            content: "Khuyến mãi không hợp lệ",
+          );
+        }
         break;
       default:
         showAlertDialog(

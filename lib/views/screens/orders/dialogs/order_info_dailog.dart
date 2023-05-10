@@ -320,7 +320,7 @@ void orderInfoDialog(String orderId) {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Giảm giá',
+                                model.currentOrder?.discountName ?? "",
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
@@ -334,21 +334,7 @@ void orderInfoDialog(String orderId) {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                '%VAT',
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                              Text(
-                                percentCalculation(model.currentOrder!.vat!),
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'VAT',
+                                'VAT(${percentCalculation(model.currentOrder!.vat!)})',
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
