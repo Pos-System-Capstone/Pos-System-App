@@ -174,7 +174,17 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                                     ),
                                   ),
                                   Expanded(
-                                    flex: 3,
+                                    flex: 2,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        'Giảm giá',
+                                        style: Get.textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
@@ -230,11 +240,41 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Giảm giá (2)',
+                            'Giảm giá (2)=(2.1)+(2.2)',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
                             formatPrice(reportDetails?.totalDiscount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Chương trình khuyến mãi(2.1)',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(
+                                reportDetails?.totalPromotionDiscount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Giảm giá sản phẩm(2.2)',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(
+                                reportDetails?.totalProductDiscount ?? 0),
                             style: Get.textTheme.bodyMedium,
                           ),
                         ],
@@ -526,7 +566,7 @@ Widget categoryReportItem(CategoryReports item) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: 7,
+              flex: 8,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -554,7 +594,17 @@ Widget categoryReportItem(CategoryReports item) {
               ),
             ),
             Expanded(
-              flex: 3,
+              flex: 2,
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: Text(
+                  formatPrice(item.totalDiscount!),
+                  style: Get.textTheme.bodyLarge,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
               child: Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: Text(
@@ -577,7 +627,7 @@ Widget categoryReportItem(CategoryReports item) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 7,
+                    flex: 8,
                     child: Text(
                       "- ${item.productReports![i].name}",
                       style: Get.textTheme.bodyMedium,
@@ -597,7 +647,17 @@ Widget categoryReportItem(CategoryReports item) {
                     ),
                   ),
                   Expanded(
-                    flex: 3,
+                    flex: 2,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Text(
+                        formatPrice(item.productReports![i].totalDiscount ?? 0),
+                        style: Get.textTheme.bodyLarge,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
                     child: Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: Text(

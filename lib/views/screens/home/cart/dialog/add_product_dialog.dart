@@ -218,7 +218,10 @@ class _ProductDialogState extends State<ProductDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("Size ${childProducts[i].size!}"),
-                  Text(formatPrice(childProducts[i].sellingPrice!)),
+                  priceWidget(
+                      childProducts[i].sellingPrice!, Get.textTheme.titleMedium,
+                      discount: childProducts[i].discountPrice!),
+                  // Text(formatPrice(childProducts[i].sellingPrice!)),
                 ],
               ),
               value: childProducts[i].id,

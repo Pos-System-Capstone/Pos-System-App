@@ -6,6 +6,8 @@ class OrderResponseModel {
   num? vat;
   num? vatAmount;
   num? discount;
+  num? discountProduct = 0;
+  num? discountPromotion = 0;
   String? orderStatus;
   String? orderType;
   String? checkInDate;
@@ -21,6 +23,8 @@ class OrderResponseModel {
     this.vat,
     this.vatAmount,
     this.discount,
+    this.discountProduct,
+    this.discountPromotion,
     this.orderStatus,
     this.orderType,
     this.checkInDate,
@@ -72,12 +76,12 @@ class OrderResponseModel {
 class ProductList {
   String? productInMenuId;
   String? orderDetailId;
-  int? sellingPrice;
+  num? sellingPrice;
   int? quantity;
   String? name;
-  int? totalAmount;
-  int? finalAmount;
-  int? discount;
+  num? totalAmount;
+  num? finalAmount;
+  num? discount;
   String? note;
   List<Extras>? extras;
 
@@ -131,11 +135,11 @@ class ProductList {
 
 class Extras {
   String? productInMenuId;
-  int? sellingPrice;
+  num? sellingPrice;
   int? quantity;
-  int? totalAmount;
-  int? finalAmount;
-  int? discount;
+  num? totalAmount;
+  num? finalAmount;
+  num? discount;
   String? name;
 
   Extras(

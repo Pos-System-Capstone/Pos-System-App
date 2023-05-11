@@ -148,8 +148,6 @@ class _LogInScreenState extends State<LogInScreen> {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Password must not be empty!";
-                              } else if (value.length < 6) {
-                                return "Password must be at least 6 characters";
                               } else if (value.length > 50) {
                                 return "Password's max length is 50 characters";
                               } else {
@@ -347,8 +345,6 @@ class _LogInScreenState extends State<LogInScreen> {
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Password must not be empty!";
-                                } else if (value.length < 6) {
-                                  return "Password must be at least 6 characters";
                                 } else if (value.length > 50) {
                                   return "Password's max length is 50 characters";
                                 } else {

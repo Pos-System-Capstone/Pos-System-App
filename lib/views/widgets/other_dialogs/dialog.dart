@@ -446,10 +446,8 @@ Widget productItem(ProductList item) {
                     maxLines: 2,
                     overflow: TextOverflow.clip,
                   ),
-                  Text(
-                    formatPrice(item.sellingPrice!),
-                    style: Get.textTheme.bodyMedium,
-                  ),
+                  priceWidget(item.sellingPrice ?? 0, Get.textTheme.bodyMedium,
+                      discount: item.discount ?? 0),
                 ],
               ),
             ),
@@ -470,9 +468,19 @@ Widget productItem(ProductList item) {
               flex: 3,
               child: Align(
                 alignment: AlignmentDirectional.centerEnd,
-                child: Text(
-                  formatPrice(item.totalAmount!),
-                  style: Get.textTheme.bodyLarge,
+                child: Column(
+                  children: [
+                    Text(
+                      formatPrice(item.totalAmount!),
+                      style: Get.textTheme.bodyLarge,
+                    ),
+                    item.discount != 0
+                        ? Text(
+                            "-${formatPrice(item.discount!)}",
+                            style: Get.textTheme.bodyMedium,
+                          )
+                        : SizedBox(),
+                  ],
                 ),
               ),
             ),

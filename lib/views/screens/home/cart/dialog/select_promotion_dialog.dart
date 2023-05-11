@@ -56,14 +56,14 @@ void selectPromotionDialog() {
                                 ? Get.theme.colorScheme.primaryContainer
                                 : Get.theme.colorScheme.background,
                             child: SizedBox(
-                              width: 240,
-                              height: 200,
+                              width: 320,
+                              height: 240,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
-                                    flex: 2,
+                                    flex: 1,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Align(
@@ -77,7 +77,7 @@ void selectPromotionDialog() {
                                   ),
                                   Divider(),
                                   Expanded(
-                                      flex: 3,
+                                      flex: 2,
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(item.description ?? ''),

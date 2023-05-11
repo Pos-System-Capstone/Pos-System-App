@@ -8,10 +8,10 @@ import '../../../../widgets/other_dialogs/dialog.dart';
 import '../payment.dart';
 
 void showPaymentBotomSheet(String orderId) {
-  Get.bottomSheet(
-      // isDismissible: true,
-      isScrollControlled: true,
-      PaymentScreen(orderId));
+  Get.dialog(Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16))),
+      child: PaymentScreen(orderId)));
 }
 
 void showQRCodeDialog(String qrCode, String paymentName, String orderId) {

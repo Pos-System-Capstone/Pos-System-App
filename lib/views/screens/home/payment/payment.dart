@@ -27,44 +27,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ScopedModel(
-          model: Get.find<OrderViewModel>(),
+    return ScopedModel(
+        model: Get.find<OrderViewModel>(),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Get.theme.colorScheme.background,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          width: Get.width * 0.9,
+          height: Get.height * 0.8,
           child: Column(
             children: [
-              SizedBox(height: 16),
-              ScopedModelDescendant<OrderViewModel>(
-                  builder: (context, build, model) {
-                if (model.status == ViewStatus.Loading ||
-                    model.currentOrder == null) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Text(model.currentOrder?.invoiceId ?? "",
-                              style: Get.textTheme.titleMedium),
-                        ),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            model.clearOrder();
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            size: 40,
-                          )),
-                    ],
-                  ),
-                );
-              }),
               Expanded(
                 child: Get.context!.isPortrait
                     ? SingleChildScrollView(
@@ -76,7 +49,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 padding: EdgeInsets.all(8),
                                 width: double.infinity,
                                 height: Get.height * 0.9,
-                                child: orderConfig()),
+                                child: paymentTypeSelect()),
                             Container(
                                 padding: EdgeInsets.all(8),
                                 width: double.infinity,
@@ -90,7 +63,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           flex: 2,
                           child: Padding(
                             padding: const EdgeInsets.all(4.0),
-                            child: orderConfig(),
+                            child: paymentTypeSelect(),
                           ),
                         ),
                         Expanded(
@@ -102,51 +75,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ]),
               ),
             ],
-          )),
-    );
+          ),
+        ));
   }
 }
 
-Widget orderConfig() {
-  List<Tab>? listPaymentTab = [
-    // Tab(
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: const [
-    //       Icon(Icons.payment),
-    //       SizedBox(width: 8),
-    //       Text("Thanh toán"),
-    //     ],
-    //   ),
-    // ),
-    // Tab(
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: const [
-    //       Icon(Icons.person),
-    //       SizedBox(width: 8),
-    //       Text("Khách hàng"),
-    //     ],
-    //   ),
-    // ),
-    // Tab(
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: const [
-    //       Icon(Icons.local_offer),
-    //       SizedBox(width: 8),
-    //       Text("Khuyến mãi"),
-    //     ],
-    //   ),
-    // ),
-    // Tab(
-    //   text: "Đơn hàng",
-    //   icon: Icon(Icons.receipt),
-    // ),
-  ];
+Widget paymentTypeSelect() {
   return ScopedModelDescendant<OrderViewModel>(
       builder: (context, build, model) {
     if (model.status == ViewStatus.Loading || model.currentOrder == null) {
@@ -154,13 +88,6 @@ Widget orderConfig() {
         child: CircularProgressIndicator(),
       );
     }
-    return Expanded(child: paymentTypeSelect());
-  });
-}
-
-Widget paymentTypeSelect() {
-  return ScopedModelDescendant<OrderViewModel>(
-      builder: (context, build, model) {
     return Container(
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.onInverseSurface,
@@ -172,7 +99,8 @@ Widget paymentTypeSelect() {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("Thanh toán", style: Get.textTheme.titleLarge),
+            child:
+                Text("Phương thức thanh toán", style: Get.textTheme.titleLarge),
           ),
           Divider(
             thickness: 1,

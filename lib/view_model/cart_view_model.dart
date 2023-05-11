@@ -14,6 +14,7 @@ class CartViewModel extends BaseViewModel {
   int? _peopleNumber;
   num _totalAmount = 0;
   num _discountAmount = 0;
+  num _productDiscount = 0;
   int _quantity = 0;
   Promotion? selectedPromotion;
 
@@ -23,6 +24,7 @@ class CartViewModel extends BaseViewModel {
   int? get peopleNumber => _peopleNumber;
   num? get discountAmount => _discountAmount;
   int? get quantity => _quantity;
+  num? get productDiscount => _productDiscount;
 
   set setPeopleNumber(int value) {
     _peopleNumber = value;
@@ -67,10 +69,13 @@ class CartViewModel extends BaseViewModel {
 
   void countCartAmount() {
     _totalAmount = 0;
+    _productDiscount = 0;
     for (CartItem cart in _cartList) {
       _totalAmount = _totalAmount + cart.totalAmount;
+      _productDiscount =
+          _productDiscount + cart.product.discountPrice! * cart.quantity;
     }
-    _finalAmount = _totalAmount - _discountAmount;
+    _finalAmount = _totalAmount - _discountAmount - _productDiscount;
     notifyListeners();
   }
 
@@ -96,26 +101,13 @@ class CartViewModel extends BaseViewModel {
     _finalAmount = 0;
     _totalAmount = 0;
     _discountAmount = 0;
+    _productDiscount = 0;
     _quantity = 0;
     selectedPromotion = null;
     notifyListeners();
   }
 
   //UPDATE CART ITEM
-
-  CartItem countCartItemAmount(CartItem cartItem) {
-    cartItem.totalAmount = cartItem.product.sellingPrice! * quantity!;
-    cartItem = addExtraCartItemAmount(cartItem);
-    return cartItem;
-  }
-
-  CartItem addExtraCartItemAmount(CartItem cartItem) {
-    for (int index = 0; index < cartItem.extras!.length; index++) {
-      cartItem.totalAmount += cartItem.extras![index].sellingPrice!;
-    }
-    return cartItem;
-  }
-
   void checkPromotion(Promotion promotion) {
     switch (promotion.type) {
       case "Amount":
@@ -241,16 +233,17 @@ class CartViewModel extends BaseViewModel {
       List<ExtraInOrder> extraList = <ExtraInOrder>[];
       cart.extras?.forEach((element) {
         ExtraInOrder extra = ExtraInOrder(
-          productInMenuId: element.menuProductId,
-          quantity: 1,
-          sellingPrice: element.sellingPrice,
-        );
+            productInMenuId: element.menuProductId,
+            quantity: 1,
+            sellingPrice: element.sellingPrice,
+            discount: element.discountPrice! * cart.quantity);
         extraList.add(extra);
       });
       ProductInOrder product = ProductInOrder(
         productInMenuId: cart.product.menuProductId,
         quantity: cart.quantity,
         sellingPrice: cart.product.sellingPrice,
+        discount: cart.product.discountPrice! * cart.quantity,
         note: cart.attributes == null && cart.note == null
             ? null
             : ("${cart.attributes!.map((e) => e.value).join(" ")} ${cart.note ?? ''}"),
@@ -262,7 +255,7 @@ class CartViewModel extends BaseViewModel {
       orderType: deliType,
       productsList: productList,
       totalAmount: _totalAmount,
-      discountAmount: _discountAmount,
+      discountAmount: _discountAmount + _productDiscount,
       finalAmount: _finalAmount,
       promotionId: selectedPromotion == null ? null : selectedPromotion?.id,
     );

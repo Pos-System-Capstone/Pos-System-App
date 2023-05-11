@@ -1,11 +1,11 @@
 import 'dart:core';
+import 'dart:math';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/make_payment_response.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/enums/index.dart';
-import 'package:pos_apps/routes/routes_constraints.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
@@ -70,7 +70,7 @@ class OrderViewModel extends BaseViewModel {
 
   void setCustomerMoney(num money) {
     customerMoney = money;
-    returnMoney = customerMoney - currentOrder!.totalAmount!;
+    returnMoney = customerMoney - currentOrder!.finalAmount!;
     notifyListeners();
   }
 
@@ -190,38 +190,40 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void getOrderByStore(String orderId) async {
-    try {
-      setState(ViewStatus.Loading);
-      qrCodeData = null;
-      customerMoney = 0;
-      Account? userInfo = await getUserInfo();
+    setState(ViewStatus.Loading);
+    qrCodeData = null;
+    customerMoney = 0;
+    Account? userInfo = await getUserInfo();
 
-      await api.getOrderOfStore(userInfo!.storeId, orderId).then((value) => {
-            currentOrder = value,
-            value.orderStatus == OrderStatusEnum.PENDING
-                ? currentPaymentStatusMessage =
-                    "Vui lòng chọn phương thức thanh toán"
-                : "Chưa thanh toán",
-            setState(ViewStatus.Completed)
-          });
-      await paymentData?.getPaymentProviderOfOrder(orderId).then((value) => {
-            currentOrder?.paymentMethod = value,
-            // ignore: avoid_print
-          });
-
-      if (listPayment.isEmpty) {
-        selectedPaymentMethod = PaymentProvider(
-          name: "Tiền mặt",
-          type: "CASH",
-        );
-        currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
-      }
-      paymentCheckingStatus = PaymentStatusEnum.CANCELED;
-      setState(ViewStatus.Completed);
-    } catch (e) {
-      showAlertDialog(title: "Lỗi đơn hàng", content: e.toString());
-      setState(ViewStatus.Error);
+    await api.getOrderOfStore(userInfo!.storeId, orderId).then((value) => {
+          currentOrder = value,
+          value.orderStatus == OrderStatusEnum.PENDING
+              ? currentPaymentStatusMessage =
+                  "Vui lòng chọn phương thức thanh toán"
+              : "Chưa thanh toán",
+          setState(ViewStatus.Completed)
+        });
+    await paymentData?.getPaymentProviderOfOrder(orderId).then((value) => {
+          currentOrder?.paymentMethod = value,
+          // ignore: avoid_print
+        });
+    currentOrder!.discountProduct = 0;
+    currentOrder!.productList?.forEach((element) {
+      currentOrder!.discountProduct =
+          currentOrder!.discountProduct! + element.discount!;
+    });
+    currentOrder!.discountPromotion = 0;
+    currentOrder!.discountPromotion =
+        currentOrder!.discount! - currentOrder!.discountProduct!;
+    if (listPayment.isEmpty) {
+      selectedPaymentMethod = PaymentProvider(
+        name: "Tiền mặt",
+        type: "CASH",
+      );
+      currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
     }
+    paymentCheckingStatus = PaymentStatusEnum.CANCELED;
+    setState(ViewStatus.Completed);
   }
 
   Future<void> completeOrder(
@@ -256,7 +258,7 @@ class OrderViewModel extends BaseViewModel {
     currentOrderId = null;
     currentOrder = null;
     selectedPaymentMethod = null;
-    hideBottomSheet();
+    hideDialog();
   }
 
   Future<void> launchInWebViewOrVC() async {

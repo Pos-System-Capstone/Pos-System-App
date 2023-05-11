@@ -126,6 +126,21 @@ class _CartScreenState extends State<CartScreen> {
                         ],
                       ),
                     ),
+                    model.productDiscount! > 0
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Giảm giá SP",
+                                    style: Get.textTheme.titleMedium),
+                                Text(
+                                    "-${formatPrice(model.productDiscount ?? 0)}",
+                                    style: Get.textTheme.titleMedium),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
                     model.discountAmount! > 0
                         ? Padding(
                             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -159,35 +174,29 @@ class _CartScreenState extends State<CartScreen> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: FilledButton.tonal(
-                              onPressed: () => chooseTableDialog(),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                                child: Text(
-                                  'Bàn: $selectedTable',
-                                  style: Get.textTheme.bodyLarge,
-                                ),
+                          FilledButton.tonal(
+                            onPressed: () => chooseTableDialog(),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                              child: Text(
+                                'Bàn: $selectedTable',
+                                style: Get.textTheme.bodyLarge,
                               ),
                             ),
                           ),
                           SizedBox(
                             width: 4,
                           ),
-                          Expanded(
-                            child: FilledButton.tonal(
-                              onPressed: () => chooseDeliTypeDialog(),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                                child: Text(
-                                  ' ${selectedDeliLable.label}',
-                                  style: Get.textTheme.bodyLarge,
-                                ),
+                          FilledButton.tonal(
+                            onPressed: () => chooseDeliTypeDialog(),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                              child: Text(
+                                ' ${selectedDeliLable.label}',
+                                style: Get.textTheme.bodyLarge,
                               ),
                             ),
                           ),
@@ -330,9 +339,19 @@ class _CartScreenState extends State<CartScreen> {
                   flex: 3,
                   child: Align(
                     alignment: AlignmentDirectional.topEnd,
-                    child: Text(
-                      formatPrice(item.totalAmount),
-                      style: Get.textTheme.bodyLarge,
+                    child: Column(
+                      children: [
+                        Text(
+                          formatPrice(item.totalAmount),
+                          style: Get.textTheme.bodyLarge,
+                        ),
+                        item.product.discountPrice != null &&
+                                item.product.discountPrice != 0
+                            ? Text(
+                                "-${formatPrice(item.product.discountPrice! * item.quantity)}",
+                              )
+                            : SizedBox.shrink(),
+                      ],
                     ),
                   ),
                 ),

@@ -315,20 +315,42 @@ void orderInfoDialog(String orderId) {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                model.currentOrder?.discountName ?? "",
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                              Text(
-                                " - ${formatPrice(model.currentOrder!.discount!)}",
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
+                          model.currentOrder!.discount != null &&
+                                  model.currentOrder!.discount != 0
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${model.currentOrder!.discountName}",
+                                      style: Get.textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      " - ${formatPrice(model.currentOrder!.discountPromotion ?? 0)}",
+                                      style: Get.textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(),
+                          model.currentOrder!.discountProduct != null &&
+                                  model.currentOrder!.discountProduct != 0
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Giảm giá sản phẩm" ?? '',
+                                      style: Get.textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      " - ${formatPrice(model.currentOrder!.discountProduct ?? 0)}",
+                                      style: Get.textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,

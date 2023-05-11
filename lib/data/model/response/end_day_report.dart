@@ -3,6 +3,8 @@ class StoreEndDayReport {
   List<CategoryReports>? categoryReports;
   num? totalAmount;
   num? totalDiscount;
+  num? totalProductDiscount;
+  num? totalPromotionDiscount;
   num? vatAmount;
   num? finalAmount;
   num? productCosAmount;
@@ -22,6 +24,8 @@ class StoreEndDayReport {
       this.categoryReports,
       this.totalAmount,
       this.totalDiscount,
+      this.totalProductDiscount,
+      this.totalPromotionDiscount,
       this.vatAmount,
       this.finalAmount,
       this.productCosAmount,
@@ -46,6 +50,8 @@ class StoreEndDayReport {
     }
     totalAmount = json['totalAmount'];
     totalDiscount = json['totalDiscount'];
+    totalProductDiscount = json['totalProductDiscount'];
+    totalPromotionDiscount = json['totalPromotionDiscount'];
     vatAmount = json['vatAmount'];
     finalAmount = json['finalAmount'];
     productCosAmount = json['productCosAmount'];
@@ -92,6 +98,7 @@ class CategoryReports {
   String? name;
   num? totalProduct;
   num? totalAmount;
+  num? totalDiscount;
   List<ProductReports>? productReports;
 
   CategoryReports(
@@ -99,6 +106,7 @@ class CategoryReports {
       this.name,
       this.totalProduct,
       this.totalAmount,
+      this.totalDiscount,
       this.productReports});
 
   CategoryReports.fromJson(Map<String, dynamic> json) {
@@ -106,6 +114,7 @@ class CategoryReports {
     name = json['name'];
     totalProduct = json['totalProduct'];
     totalAmount = json['totalAmount'];
+    totalDiscount = json['totalDiscount'];
     if (json['productReports'] != null) {
       productReports = <ProductReports>[];
       json['productReports'].forEach((v) {
@@ -132,6 +141,7 @@ class ProductReports {
   String? name;
   num? quantity;
   num? totalAmount;
+  num? totalDiscount;
 
   ProductReports({this.id, this.name, this.quantity, this.totalAmount});
 
@@ -140,6 +150,7 @@ class ProductReports {
     name = json['name'];
     quantity = json['quantity'];
     totalAmount = json['totalAmount'];
+    totalDiscount = json['totalDiscount'];
   }
 
   Map<String, dynamic> toJson() {

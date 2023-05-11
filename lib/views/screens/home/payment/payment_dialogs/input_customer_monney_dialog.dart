@@ -8,7 +8,6 @@ import '../../../../widgets/other_dialogs/dialog.dart';
 Future<num> inputMonneyDialog({bool isNum = true}) async {
   List<num> list = [50000, 100000, 200000, 500000];
   TextEditingController value = TextEditingController();
-  hideDialog();
   num result = 0;
   await Get.dialog(AlertDialog(
     title: Text("Nhập số tiền khách đưa"),
