@@ -76,7 +76,7 @@ class OrderAPI {
     }
     var params = <String, dynamic>{
       'page': page,
-      'size': 10,
+      'size': 20,
       'endDate': endDate.toIso8601String(),
       'startDate': startDate.toIso8601String(),
     };

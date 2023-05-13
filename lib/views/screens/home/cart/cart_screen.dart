@@ -172,7 +172,7 @@ class _CartScreenState extends State<CartScreen> {
                       thickness: 1,
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                      padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,26 +182,26 @@ class _CartScreenState extends State<CartScreen> {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                               child: Text(
-                                'Bàn: $selectedTable',
+                                'Bàn $selectedTable',
                                 style: Get.textTheme.bodyLarge,
                               ),
                             ),
                           ),
                           SizedBox(
-                            width: 4,
+                            width: 2,
                           ),
                           FilledButton.tonal(
                             onPressed: () => chooseDeliTypeDialog(),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                               child: Text(
-                                ' ${selectedDeliLable.label}',
+                                '${selectedDeliLable.label}',
                                 style: Get.textTheme.bodyLarge,
                               ),
                             ),
                           ),
                           SizedBox(
-                            width: 4,
+                            width: 2,
                           ),
                           Expanded(
                             child: FilledButton.tonal(

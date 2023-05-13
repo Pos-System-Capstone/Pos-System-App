@@ -9,7 +9,7 @@ class SessionAPI {
   Future<List<Session>> getListSessionOfStore() async {
     DateTime now = DateTime.now();
 
-    DateTime startDate = DateTime(now.year, now.month, now.day);
+    DateTime startDate = DateTime(now.year, now.month, now.day - 7);
     DateTime endDate = DateTime(now.year, now.month, now.day + 1);
     Account? userInfo = await getUserInfo();
     var params = <String, dynamic>{

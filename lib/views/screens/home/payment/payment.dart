@@ -210,11 +210,34 @@ Widget paymentTypeSelect() {
                   height: 80,
                   padding: const EdgeInsets.all(8.0),
                   child: FilledButton(
-                    onPressed: () {
-                      model.makePayment(model.selectedPaymentMethod!);
-                    },
-                    child: Text("Thực hiện thanh toán"),
-                  ),
+                      onPressed: () {
+                        if (model.paymentCheckingStatus ==
+                            PaymentStatusEnum.PENDING) {
+                          null;
+                        } else if (model.selectedPaymentMethod == null) {
+                          Get.snackbar(
+                              "Lỗi", "Vui lòng chọn phương thức thanh toán");
+                        } else {
+                          model.makePayment(model.selectedPaymentMethod!);
+                        }
+                      },
+                      child: model.paymentCheckingStatus ==
+                              PaymentStatusEnum.PENDING
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                const Text(
+                                  'Đang thanh toán...',
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                const CircularProgressIndicator(),
+                              ],
+                            )
+                          : Text("Thực hiện thanh toán")),
                 ),
               ),
               Expanded(
