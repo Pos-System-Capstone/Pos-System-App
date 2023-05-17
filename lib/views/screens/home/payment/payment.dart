@@ -237,63 +237,74 @@ Widget paymentTypeSelect() {
                                 const CircularProgressIndicator(),
                               ],
                             )
-                          : Text("Thực hiện thanh toán")),
+                          : Text("Thanh toán")),
                 ),
               ),
               Expanded(
-                flex: 1,
-                child: Container(
-                    height: 80,
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        if (model.paymentCheckingStatus ==
-                                PaymentStatusEnum.CANCELED &&
-                            model.selectedPaymentMethod != null) {
-                          model
-                              .checkPaymentStatus(model.currentOrder!.orderId!);
-                        } else if (model.selectedPaymentMethod == null) {
-                          Get.snackbar(
-                              "Lỗi", "Vui lòng tiền hành thanh toán trước");
-                        } else {
-                          null;
-                        }
-                      },
-                      label: model.paymentCheckingStatus ==
-                              PaymentStatusEnum.PENDING
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                  child: Container(
+                      height: 80,
+                      padding: EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          num money = await inputMonneyDialog();
+                          model.setCustomerMoney(money);
+                        },
+                        child: Text("Nhập tiền khách đưa"),
+                      ))),
+              //     Expanded(
+              //   flex: 1,
+              //   child: Container(
+              //       height: 80,
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: ElevatedButton.icon(
+              //         onPressed: () {
+              //           if (model.paymentCheckingStatus ==
+              //                   PaymentStatusEnum.CANCELED &&
+              //               model.selectedPaymentMethod != null) {
+              //             model
+              //                 .checkPaymentStatus(model.currentOrder!.orderId!);
+              //           } else if (model.selectedPaymentMethod == null) {
+              //             Get.snackbar(
+              //                 "Lỗi", "Vui lòng tiền hành thanh toán trước");
+              //           } else {
+              //             null;
+              //           }
+              //         },
+              //         label: model.paymentCheckingStatus ==
+              //                 PaymentStatusEnum.PENDING
+              //             ? Row(
+              //                 mainAxisAlignment: MainAxisAlignment.center,
 
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                const Text(
-                                  'Đang kiểm tra...',
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                const CircularProgressIndicator(),
-                              ],
-                            )
-                          : model.paymentCheckingStatus ==
-                                  PaymentStatusEnum.PAID
-                              ? Text('Thanh toán thành công')
-                              : model.paymentCheckingStatus ==
-                                      PaymentStatusEnum.FAIL
-                                  ? Text('Thanh toán thất bại')
-                                  : Text('Kiểm tra thanh toán'),
-                      icon: model.paymentCheckingStatus ==
-                              PaymentStatusEnum.PENDING
-                          ? Icon(CupertinoIcons.refresh_circled)
-                          : model.paymentCheckingStatus ==
-                                  PaymentStatusEnum.PAID
-                              ? Icon(CupertinoIcons.check_mark_circled)
-                              : model.paymentCheckingStatus ==
-                                      PaymentStatusEnum.FAIL
-                                  ? Icon(CupertinoIcons.xmark_circle)
-                                  : Icon(CupertinoIcons.search_circle),
-                    )),
-              ),
+              //                 // ignore: prefer_const_literals_to_create_immutables
+              //                 children: [
+              //                   const Text(
+              //                     'Đang kiểm tra...',
+              //                   ),
+              //                   const SizedBox(
+              //                     width: 10,
+              //                   ),
+              //                   const CircularProgressIndicator(),
+              //                 ],
+              //               )
+              //             : model.paymentCheckingStatus ==
+              //                     PaymentStatusEnum.PAID
+              //                 ? Text('Thanh toán thành công')
+              //                 : model.paymentCheckingStatus ==
+              //                         PaymentStatusEnum.FAIL
+              //                     ? Text('Thanh toán thất bại')
+              //                     : Text('Kiểm tra thanh toán'),
+              //         icon: model.paymentCheckingStatus ==
+              //                 PaymentStatusEnum.PENDING
+              //             ? Icon(CupertinoIcons.refresh_circled)
+              //             : model.paymentCheckingStatus ==
+              //                     PaymentStatusEnum.PAID
+              //                 ? Icon(CupertinoIcons.check_mark_circled)
+              //                 : model.paymentCheckingStatus ==
+              //                         PaymentStatusEnum.FAIL
+              //                     ? Icon(CupertinoIcons.xmark_circle)
+              //                 : Icon(CupertinoIcons.search_circle),
+              //       )),
+              // ),
             ],
           ),
         ],

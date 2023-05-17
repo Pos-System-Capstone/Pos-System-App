@@ -140,23 +140,31 @@ class CartViewModel extends BaseViewModel {
         }
         break;
       case "Product":
-        for (var item in _cartList) {
-          for (var product in promotion.listProductApply!) {
-            if (item.product.id == product.productId) {
-              _discountAmount = promotion.discountAmount!;
-              selectedPromotion = promotion;
-              countCartAmount();
-              hideDialog();
-              break;
+        if (promotion.minConditionAmount! <= _totalAmount) {
+          for (var item in _cartList) {
+            for (var product in promotion.listProductApply!) {
+              if (item.product.id == product.productId) {
+                _discountAmount = promotion.discountAmount!;
+                selectedPromotion = promotion;
+                countCartAmount();
+                hideDialog();
+                break;
+              }
             }
           }
-        }
-        if (selectedPromotion?.type != "Product") {
+          if (selectedPromotion?.type != "Product") {
+            showAlertDialog(
+              title: "Lỗi",
+              content: "Khuyến mãi không hợp lệ",
+            );
+          }
+        } else {
           showAlertDialog(
             title: "Lỗi",
             content: "Khuyến mãi không hợp lệ",
           );
         }
+
         break;
       default:
         showAlertDialog(
@@ -204,15 +212,20 @@ class CartViewModel extends BaseViewModel {
         }
         break;
       case "Product":
-        for (var item in _cartList) {
-          for (var product in selectedPromotion!.listProductApply!) {
-            if (item.product.id == product.productId) {
-              return;
+        if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
+          for (var item in _cartList) {
+            for (var product in selectedPromotion!.listProductApply!) {
+              if (item.product.id == product.productId) {
+                return;
+              }
             }
           }
+          _discountAmount = 0;
+          selectedPromotion = null;
+        } else {
+          _discountAmount = 0;
+          selectedPromotion = null;
         }
-        _discountAmount = 0;
-        selectedPromotion = null;
         break;
       default:
         showAlertDialog(
