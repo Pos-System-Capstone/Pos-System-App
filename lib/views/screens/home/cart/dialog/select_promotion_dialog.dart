@@ -56,8 +56,8 @@ void selectPromotionDialog() {
                                 ? Get.theme.colorScheme.primaryContainer
                                 : Get.theme.colorScheme.background,
                             child: SizedBox(
-                              width: 320,
-                              height: 240,
+                              width: 200,
+                              height: 200,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
