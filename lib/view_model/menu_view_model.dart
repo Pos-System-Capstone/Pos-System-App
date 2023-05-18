@@ -49,7 +49,7 @@ class MenuViewModel extends BaseViewModel {
       setState(ViewStatus.Loading);
       await getStore();
       currentMenu = await menuData?.getMenuOfStore();
-      Get.find<OrderViewModel>().getListPayment();
+      // Get.find<OrderViewModel>().getListPayment();
       getListSession();
       getListPromotion();
       categories = currentMenu?.categories!

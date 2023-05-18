@@ -6,6 +6,7 @@ class OrderInList {
   String? endDate;
   num? finalAmount;
   String? orderType;
+  String? paymentType;
   String? status;
 
   OrderInList(
@@ -16,6 +17,7 @@ class OrderInList {
       this.endDate,
       this.finalAmount,
       this.orderType,
+      this.paymentType,
       this.status});
 
   OrderInList.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class OrderInList {
     endDate = json['endDate'];
     finalAmount = json['finalAmount'];
     orderType = json['orderType'];
+    paymentType = json['paymentType'];
     status = json['status'];
   }
 
@@ -38,6 +41,7 @@ class OrderInList {
     data['endDate'] = endDate;
     data['finalAmount'] = finalAmount;
     data['orderType'] = orderType;
+    data['paymentType'] = paymentType;
     data['status'] = status;
     return data;
   }

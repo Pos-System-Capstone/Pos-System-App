@@ -38,14 +38,45 @@ class OrderViewModel extends BaseViewModel {
   OrderViewModel() {
     api = OrderAPI();
     paymentData = PaymentData();
+    listPayment = [
+      PaymentProvider(
+          name: "Tiền mặt",
+          type: PaymentTypeEnums.CASH,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash.png?alt=media&token=42566a9d-b092-4e80-90dd-9313aeee081d'),
+      PaymentProvider(
+          name: "Momo",
+          type: PaymentTypeEnums.MOMO,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmomo.png?alt=media&token=d0d2e4f2-b035-4989-b04f-2ef55b9d0606'),
+      PaymentProvider(
+          name: "Ngân hàng",
+          type: PaymentTypeEnums.BANKING,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
+      PaymentProvider(
+          name: "Visa/Mastercard",
+          type: PaymentTypeEnums.VISA,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fvisa-credit-card.png?alt=media&token=1cfb48ab-b957-47db-8f52-89da33d0fb39'),
+    ];
   }
 
-  void getListPayment() async {
-    setState(ViewStatus.Loading);
-    await paymentData!.getListPayment().then((value) {
-      listPayment = value;
-    });
-    setState(ViewStatus.Completed);
+  // void getListPayment() async {
+  //   setState(ViewStatus.Loading);
+  //   await paymentData!.getListPayment().then((value) {
+  //     listPayment = value;
+  //   });
+  //   setState(ViewStatus.Completed);
+  // }
+
+  String getPaymentName(String paymentType) {
+    for (var item in listPayment) {
+      if (item!.type == paymentType) {
+        return item.name!;
+      }
+    }
+    return "Tiền mặt";
   }
 
   void selectPayment(PaymentProvider payment) {
@@ -86,36 +117,36 @@ class OrderViewModel extends BaseViewModel {
 
   void makePayment(PaymentProvider payment) async {
     paymentCheckingStatus = PaymentStatusEnum.PENDING;
-    if (listPayment.isEmpty) {
-      paymentCheckingStatus = PaymentStatusEnum.PAID;
-      await completeOrder(currentOrder!.orderId ?? '');
-    } else {
-      qrCodeData = null;
-      if (currentOrder == null) {
-        showAlertDialog(
-            title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
+    // if (listPayment.isEmpty) {
+    paymentCheckingStatus = PaymentStatusEnum.PAID;
+    await completeOrder(currentOrder!.orderId ?? '');
+    // } else {
+    //   qrCodeData = null;
+    //   if (currentOrder == null) {
+    //     showAlertDialog(
+    //         title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
 
-        return;
-      }
-      MakePaymentResponse makePaymentResponse =
-          await api.makePayment(currentOrder!, payment.id ?? '');
-      if (makePaymentResponse.displayType == "Url") {
-        currentPaymentStatusMessage =
-            makePaymentResponse.message ?? "Đợi thanh toán";
-        // qrCodeData = payment.type != "VNPAY" ? makePaymentResponse.url : null;
-        await launchInBrowser(makePaymentResponse.url ?? '');
-      } else if (makePaymentResponse.displayType == "Qr") {
-        currentPaymentStatusMessage =
-            makePaymentResponse.message ?? "Đợi thanh toán";
-        qrCodeData = makePaymentResponse.url;
-        await launchQrCode(makePaymentResponse.url ?? '');
-      } else {
-        currentPaymentStatusMessage =
-            makePaymentResponse.message ?? "Đợi thanh toán";
-      }
-      checkPaymentStatus(currentOrder!.orderId ?? '');
-      notifyListeners();
-    }
+    //     return;
+    //   }
+    //   MakePaymentResponse makePaymentResponse =
+    //       await api.makePayment(currentOrder!, payment.id ?? '');
+    //   if (makePaymentResponse.displayType == "Url") {
+    //     currentPaymentStatusMessage =
+    //         makePaymentResponse.message ?? "Đợi thanh toán";
+    //     // qrCodeData = payment.type != "VNPAY" ? makePaymentResponse.url : null;
+    //     await launchInBrowser(makePaymentResponse.url ?? '');
+    //   } else if (makePaymentResponse.displayType == "Qr") {
+    //     currentPaymentStatusMessage =
+    //         makePaymentResponse.message ?? "Đợi thanh toán";
+    //     qrCodeData = makePaymentResponse.url;
+    //     await launchQrCode(makePaymentResponse.url ?? '');
+    //   } else {
+    //     currentPaymentStatusMessage =
+    //         makePaymentResponse.message ?? "Đợi thanh toán";
+    //   }
+    //   checkPaymentStatus(currentOrder!.orderId ?? '');
+    //   notifyListeners();
+    // }
   }
 
   void updatePaymentStatus(String status) {
@@ -203,10 +234,10 @@ class OrderViewModel extends BaseViewModel {
               : "Chưa thanh toán",
           setState(ViewStatus.Completed)
         });
-    await paymentData?.getPaymentProviderOfOrder(orderId).then((value) => {
-          currentOrder?.paymentMethod = value,
-          // ignore: avoid_print
-        });
+    // await paymentData?.getPaymentProviderOfOrder(orderId).then((value) => {
+    //       currentOrder?.paymentMethod = value,
+    //       // ignore: avoid_print
+    //     });
     currentOrder!.discountProduct = 0;
     currentOrder!.productList?.forEach((element) {
       currentOrder!.discountProduct =
@@ -215,12 +246,10 @@ class OrderViewModel extends BaseViewModel {
     currentOrder!.discountPromotion = 0;
     currentOrder!.discountPromotion =
         currentOrder!.discount! - currentOrder!.discountProduct!;
-    if (listPayment.isEmpty) {
-      selectedPaymentMethod = PaymentProvider(
-        name: "Tiền mặt",
-        type: "CASH",
-      );
-      currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
+    for (var element in listPayment) {
+      if (element!.type! == currentOrder!.paymentType) {
+        selectedPaymentMethod = element;
+      }
     }
     paymentCheckingStatus = PaymentStatusEnum.CANCELED;
     setState(ViewStatus.Completed);

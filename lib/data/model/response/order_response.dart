@@ -12,6 +12,7 @@ class OrderResponseModel {
   String? orderType;
   String? checkInDate;
   String? discountName;
+  String? paymentType;
   List<ProductList>? productList;
   PaymentMethod? paymentMethod;
 
@@ -29,6 +30,7 @@ class OrderResponseModel {
     this.orderType,
     this.checkInDate,
     this.discountName,
+    this.paymentType,
     this.productList,
     this.paymentMethod,
   });
@@ -43,6 +45,7 @@ class OrderResponseModel {
     discount = json['discount'];
     orderStatus = json['orderStatus'];
     orderType = json['orderType'];
+    paymentType = json['paymentType'];
     checkInDate = json['checkInDate'];
     discountName = json['discountName'];
     if (json['productList'] != null) {
@@ -64,6 +67,7 @@ class OrderResponseModel {
     data['discount'] = discount;
     data['orderStatus'] = orderStatus;
     data['orderType'] = orderType;
+    data['paymentType'] = paymentType;
     data['checkInDate'] = checkInDate;
     data['discountName'] = discountName;
     if (productList != null) {

@@ -161,9 +161,9 @@ class _CartScreenState extends State<CartScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Tổng tiền', style: Get.textTheme.titleLarge),
+                          Text('Tổng tiền', style: Get.textTheme.titleMedium),
                           Text(formatPrice(model.finalAmount),
-                              style: Get.textTheme.titleLarge),
+                              style: Get.textTheme.titleMedium),
                         ],
                       ),
                     ),
@@ -183,7 +183,7 @@ class _CartScreenState extends State<CartScreen> {
                               padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                               child: Text(
                                 'Bàn $selectedTable',
-                                style: Get.textTheme.bodyLarge,
+                                style: Get.textTheme.bodyMedium,
                               ),
                             ),
                           ),
@@ -196,7 +196,7 @@ class _CartScreenState extends State<CartScreen> {
                               padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                               child: Text(
                                 '${selectedDeliLable.label}',
-                                style: Get.textTheme.bodyLarge,
+                                style: Get.textTheme.bodyMedium,
                               ),
                             ),
                           ),
@@ -213,7 +213,7 @@ class _CartScreenState extends State<CartScreen> {
                                     const EdgeInsets.fromLTRB(0, 12, 0, 12),
                                 child: Text(
                                   'Khuyến mãi',
-                                  style: Get.textTheme.bodyLarge,
+                                  style: Get.textTheme.bodyMedium,
                                 ),
                               ),
                             ),
@@ -263,7 +263,7 @@ class _CartScreenState extends State<CartScreen> {
                               },
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
                                 child: Text(
                                   'Tạo đơn hàng',
                                   style: Get.textTheme.titleMedium?.copyWith(

@@ -274,10 +274,8 @@ void orderInfoDialog(String orderId) {
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
-                                model.currentOrder!.paymentMethod == null
-                                    ? "Tiền mặt"
-                                    : model.currentOrder!.paymentMethod!
-                                        .paymentProviderName!,
+                                model.getPaymentName(
+                                    model.currentOrder!.paymentType!),
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ],
@@ -392,10 +390,8 @@ void orderInfoDialog(String orderId) {
                       Get.find<PrinterViewModel>().printBill(
                           model.currentOrder!,
                           model.selectedTable,
-                          model.currentOrder!.paymentMethod == null
-                              ? "Tiền mặt"
-                              : model.currentOrder!.paymentMethod!
-                                  .paymentProviderName!);
+                          model.getPaymentName(
+                              model.currentOrder!.paymentType!));
                     },
                     child: Text(
                       'In hoá đơn',

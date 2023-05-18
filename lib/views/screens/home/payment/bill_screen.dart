@@ -202,6 +202,23 @@ class _BillScreenState extends State<BillScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
+                              'Thanh toán',
+                              style: Get.textTheme.bodyMedium,
+                            ),
+                            Text(
+                              model.selectedPaymentMethod!.name ?? "Tiền mặt",
+                              style: Get.textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
                               'Thời gian',
                               style: Get.textTheme.bodyMedium,
                             ),

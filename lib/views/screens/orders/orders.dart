@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -127,10 +128,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            model.listOrder[index].invoiceId
-                                                .toString(),
-                                            style: Get.textTheme.titleSmall),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                                model.listOrder[index].invoiceId
+                                                    .toString(),
+                                                style:
+                                                    Get.textTheme.titleSmall),
+                                            Text(
+                                                showOrderStatus(model
+                                                        .listOrder[index]
+                                                        .status ??
+                                                    ''),
+                                                style: Get.textTheme.titleSmall
+                                                    ?.copyWith(
+                                                        color: Get
+                                                            .theme
+                                                            .colorScheme
+                                                            .primary)),
+                                          ],
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -143,10 +164,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   DateTime.now().toString()),
                                             ),
                                             Text(
-                                                showOrderStatus(model
+                                                model.getPaymentName(model
                                                         .listOrder[index]
-                                                        .status ??
-                                                    ''),
+                                                        .paymentType ??
+                                                    'CASH'),
                                                 style: Get.textTheme.titleSmall
                                                     ?.copyWith(
                                                         color: Get
