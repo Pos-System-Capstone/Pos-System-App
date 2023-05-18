@@ -356,10 +356,10 @@ packages:
     dependency: transitive
     description:
       name: pdf
-      sha256: "02bd438bbd1aa952c1070c8df3905ab3b6f0c6112a8266f5e8601ab1a4b9164f"
+      sha256: "70d84154dc5b6ddf28eee6c012510a4cbbebb3a1879c0957e05364a95e8f3832"
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.2"
+    version: "3.10.3"
   pdf_widget_wrapper:
     dependency: transitive
     description:
@@ -529,10 +529,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite
-      sha256: "3a82c9a216b46b88617e3714dd74227eaca20c501c4abcc213e56db26b9caa00"
+      sha256: b4d6710e1200e96845747e37338ea8a819a12b51689a3bcf31eff0003b37a0b9
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.8+2"
+    version: "2.2.8+4"
   sqflite_common:
     dependency: transitive
     description:
@@ -609,10 +609,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "22f8db4a72be26e9e3a4aa3f194b1f7afbc76d20ec141f84be1d787db2155cbd"
+      sha256: "7aac14be5f4731b923cc697ae2d42043945076cd0dbb8806baecc92c1dc88891"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.31"
+    version: "6.0.33"
   url_launcher_ios:
     dependency: transitive
     description:
