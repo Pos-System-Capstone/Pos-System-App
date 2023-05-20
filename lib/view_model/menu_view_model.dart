@@ -49,6 +49,7 @@ class MenuViewModel extends BaseViewModel {
       await getStore();
       currentMenu = await menuData?.getMenuOfStore();
       // Get.find<OrderViewModel>().getListPayment();
+      Get.find<CartViewModel>().getListPromotion();
       getListSession();
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)

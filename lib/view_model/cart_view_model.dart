@@ -201,11 +201,9 @@ class CartViewModel extends BaseViewModel {
   }
 
   void checkAutoApplyPromotion() {
-    Promotion? autoApplyPromotion = Get.find<MenuViewModel>()
-        .promotions
-        ?.firstWhere((element) =>
-            element.type == PromotionTypeEnums.AUTOAPPLY &&
-            element.isAvailable == true);
+    Promotion? autoApplyPromotion = promotions?.firstWhereOrNull((element) =>
+        element.type == PromotionTypeEnums.AUTOAPPLY &&
+        element.isAvailable == true);
     if (autoApplyPromotion == null) {
       return;
     } else {
