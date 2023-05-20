@@ -109,9 +109,9 @@ class _CartScreenState extends State<CartScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Số lượng', style: Get.textTheme.titleMedium),
+                          Text('Số lượng', style: Get.textTheme.titleSmall),
                           Text(model.quantity.toString(),
-                              style: Get.textTheme.titleMedium),
+                              style: Get.textTheme.titleSmall),
                         ],
                       ),
                     ),
@@ -120,9 +120,9 @@ class _CartScreenState extends State<CartScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Tạm tính', style: Get.textTheme.titleMedium),
+                          Text('Tạm tính', style: Get.textTheme.titleSmall),
                           Text(formatPrice(model.totalAmount ?? 0),
-                              style: Get.textTheme.titleMedium),
+                              style: Get.textTheme.titleSmall),
                         ],
                       ),
                     ),
@@ -133,10 +133,10 @@ class _CartScreenState extends State<CartScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text("Giảm giá SP",
-                                    style: Get.textTheme.titleMedium),
+                                    style: Get.textTheme.titleSmall),
                                 Text(
                                     "-${formatPrice(model.productDiscount ?? 0)}",
-                                    style: Get.textTheme.titleMedium),
+                                    style: Get.textTheme.titleSmall),
                               ],
                             ),
                           )
@@ -148,10 +148,10 @@ class _CartScreenState extends State<CartScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(model.selectedPromotion?.name ?? "",
-                                    style: Get.textTheme.titleMedium),
+                                    style: Get.textTheme.titleSmall),
                                 Text(
                                     "-${formatPrice(model.discountAmount ?? 0)}",
-                                    style: Get.textTheme.titleMedium),
+                                    style: Get.textTheme.titleSmall),
                               ],
                             ),
                           )
@@ -314,11 +314,11 @@ class _CartScreenState extends State<CartScreen> {
                         overflow: TextOverflow.clip,
                       ),
                       Align(
-                        alignment: Alignment.centerLeft,
-                        child: priceWidget(item.product.sellingPrice!,
-                            Get.textTheme.bodyMedium,
-                            discount: item.product.discountPrice ?? 0),
-                      ),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            formatPrice(item.product.sellingPrice!),
+                            style: Get.textTheme.bodyLarge,
+                          )),
                     ],
                   ),
                 ),
@@ -379,9 +379,10 @@ class _CartScreenState extends State<CartScreen> {
                         flex: 2,
                         child: Align(
                           alignment: AlignmentDirectional.centerEnd,
-                          child: priceWidget(item.extras![i].sellingPrice!,
-                              Get.textTheme.bodyMedium,
-                              discount: item.extras![i].discountPrice ?? 0),
+                          child: Text(
+                            formatPrice(item.extras![i].sellingPrice!),
+                            style: Get.textTheme.bodyMedium,
+                          ),
                         ),
                       ),
                     ],

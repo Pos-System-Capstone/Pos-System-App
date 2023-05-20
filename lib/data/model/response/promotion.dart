@@ -8,6 +8,9 @@ class Promotion {
   num? minConditionAmount;
   num? discountAmount;
   num? discountPercent;
+  String? startTime;
+  String? endTime;
+  bool? isAvailable;
   List<ListProductApply>? listProductApply;
   String? status;
 
@@ -21,6 +24,9 @@ class Promotion {
       this.minConditionAmount,
       this.discountAmount,
       this.discountPercent,
+      this.startTime,
+      this.endTime,
+      this.isAvailable,
       this.listProductApply,
       this.status});
 
@@ -34,6 +40,9 @@ class Promotion {
     minConditionAmount = json['minConditionAmount'];
     discountAmount = json['discountAmount'];
     discountPercent = json['discountPercent'];
+    startTime = json['startTime'];
+    endTime = json['endTime'];
+    isAvailable = json['isAvailable'];
     if (json['listProductApply'] != null) {
       listProductApply = <ListProductApply>[];
       json['listProductApply'].forEach((v) {

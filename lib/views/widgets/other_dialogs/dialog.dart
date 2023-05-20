@@ -446,8 +446,10 @@ Widget productItem(ProductList item) {
                     maxLines: 2,
                     overflow: TextOverflow.clip,
                   ),
-                  priceWidget(item.sellingPrice ?? 0, Get.textTheme.bodyMedium,
-                      discount: item.discount ?? 0),
+                  Text(
+                    formatPrice(item.sellingPrice ?? 0),
+                    style: Get.textTheme.bodyMedium,
+                  )
                 ],
               ),
             ),

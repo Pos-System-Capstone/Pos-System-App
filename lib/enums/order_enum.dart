@@ -82,3 +82,10 @@ class PaymentTypeEnums {
 enum PaymentTypeEnum { CASH, VIETQR, ZALOPAY, VNPAY }
 
 var a = PaymentTypeEnum.CASH.toString();
+
+class PromotionTypeEnums {
+  static const String AMOUNT = 'Amount';
+  static const String PRODUCT = 'Product';
+  static const String PERCENT = 'Percent';
+  static const String AUTOAPPLY = 'AutoApply';
+}

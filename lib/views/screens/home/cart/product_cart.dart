@@ -60,9 +60,9 @@ Widget productCard(Product product, List<Product>? childProducts) {
                     child: (childProducts != null &&
                             product.type == ProductTypeEnum.PARENT)
                         ? Text("")
-                        : priceWidget(
-                            product.sellingPrice!, Get.textTheme.bodyLarge,
-                            discount: product.discountPrice ?? 0),
+                        : Text(
+                            formatPrice(product.sellingPrice!),
+                          ),
                   ),
                 ],
               ),

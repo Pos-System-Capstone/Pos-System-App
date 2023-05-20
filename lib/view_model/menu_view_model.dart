@@ -32,7 +32,7 @@ class MenuViewModel extends BaseViewModel {
   List<Promotion>? promotions = [];
   SessionAPI? sessionAPI;
   ReportData? reportData;
-  PromotionData? promotionData;
+
   Promotion? selectedPromotion;
 
   MenuViewModel() {
@@ -41,7 +41,6 @@ class MenuViewModel extends BaseViewModel {
     currentMenu = Menu();
     sessionAPI = SessionAPI();
     reportData = ReportData();
-    promotionData = PromotionData();
   }
 
   Future<void> getMenuOfStore() async {
@@ -51,7 +50,6 @@ class MenuViewModel extends BaseViewModel {
       currentMenu = await menuData?.getMenuOfStore();
       // Get.find<OrderViewModel>().getListPayment();
       getListSession();
-      getListPromotion();
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
           .toList();
@@ -111,18 +109,6 @@ class MenuViewModel extends BaseViewModel {
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
       return null;
-    }
-  }
-
-  void getListPromotion() async {
-    try {
-      setState(ViewStatus.Loading);
-      await promotionData?.getListPromotionOfStore().then((value) {
-        promotions = value;
-      });
-      setState(ViewStatus.Completed);
-    } catch (e) {
-      setState(ViewStatus.Error, e.toString());
     }
   }
 

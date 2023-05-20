@@ -90,3 +90,10 @@ String formatOnlyDate(String time) {
   String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
   return formattedDate;
 }
+
+String formatTimeOnly(String time) {
+  DateFormat dateFormat = DateFormat("HH:mm:ss");
+  DateTime dateTime = dateFormat.parse(time);
+  String formattedDate = DateFormat('HH:mm').format(dateTime);
+  return formattedDate;
+}

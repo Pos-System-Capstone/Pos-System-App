@@ -2,10 +2,13 @@
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/data/model/response/promotion.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/view_model/base_view_model.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 
+import '../data/api/promotion_data.dart';
 import '../data/model/index.dart';
+import '../enums/view_status.dart';
 import 'index.dart';
 
 class CartViewModel extends BaseViewModel {
@@ -17,7 +20,8 @@ class CartViewModel extends BaseViewModel {
   num _productDiscount = 0;
   int _quantity = 0;
   Promotion? selectedPromotion;
-
+  PromotionData? promotionData = PromotionData();
+  List<Promotion>? promotions = [];
   List<CartItem> get cartList => _cartList;
   num get finalAmount => _finalAmount;
   num get totalAmount => _totalAmount;
@@ -52,8 +56,19 @@ class CartViewModel extends BaseViewModel {
     return -1;
   }
 
+  void getListPromotion() async {
+    try {
+      setState(ViewStatus.Loading);
+      promotions = await promotionData?.getListPromotionOfStore();
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
+  }
+
   void addToCart(CartItem cartModel) {
     _cartList.add(cartModel);
+    checkAvaileblePromotion();
     countCartAmount();
     countCartQuantity();
     notifyListeners();
@@ -110,7 +125,7 @@ class CartViewModel extends BaseViewModel {
   //UPDATE CART ITEM
   void checkPromotion(Promotion promotion) {
     switch (promotion.type) {
-      case "Amount":
+      case PromotionTypeEnums.AMOUNT:
         if (promotion.minConditionAmount! <= _totalAmount) {
           _discountAmount = promotion.discountAmount!;
           selectedPromotion = promotion;
@@ -123,7 +138,7 @@ class CartViewModel extends BaseViewModel {
           );
         }
         break;
-      case "Percent":
+      case PromotionTypeEnums.PERCENT:
         if (promotion.minConditionAmount! <= _totalAmount) {
           _discountAmount = (_totalAmount * promotion.discountPercent!);
           if (_discountAmount > promotion.maxDiscount!) {
@@ -139,7 +154,7 @@ class CartViewModel extends BaseViewModel {
           );
         }
         break;
-      case "Product":
+      case PromotionTypeEnums.PRODUCT:
         if (promotion.minConditionAmount! <= _totalAmount) {
           for (var item in _cartList) {
             for (var product in promotion.listProductApply!) {
@@ -152,7 +167,7 @@ class CartViewModel extends BaseViewModel {
               }
             }
           }
-          if (selectedPromotion?.type != "Product") {
+          if (selectedPromotion?.type != PromotionTypeEnums.PRODUCT) {
             showAlertDialog(
               title: "Lỗi",
               content: "Khuyến mãi không hợp lệ",
@@ -179,18 +194,41 @@ class CartViewModel extends BaseViewModel {
   void removePromotion() {
     _discountAmount = 0;
     selectedPromotion = null;
+    checkAutoApplyPromotion();
     countCartAmount();
     hideDialog();
     notifyListeners();
   }
 
+  void checkAutoApplyPromotion() {
+    Promotion? autoApplyPromotion = Get.find<MenuViewModel>()
+        .promotions
+        ?.firstWhere((element) =>
+            element.type == PromotionTypeEnums.AUTOAPPLY &&
+            element.isAvailable == true);
+    if (autoApplyPromotion == null) {
+      return;
+    } else {
+      for (var item in _cartList) {
+        for (var product in autoApplyPromotion.listProductApply!) {
+          if (item.product.id == product.productId) {
+            item.product.discountPrice =
+                (autoApplyPromotion.discountAmount ?? 0 * item.quantity);
+          }
+        }
+      }
+    }
+    countCartAmount();
+  }
+
   void checkAvaileblePromotion() {
+    checkAutoApplyPromotion();
     if (selectedPromotion == null) {
       return;
     }
     countCartAmount();
     switch (selectedPromotion?.type) {
-      case "Amount":
+      case PromotionTypeEnums.AMOUNT:
         if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
           return;
         } else {
@@ -198,7 +236,7 @@ class CartViewModel extends BaseViewModel {
           selectedPromotion = null;
         }
         break;
-      case "Percent":
+      case PromotionTypeEnums.PERCENT:
         if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
           _discountAmount =
               (_totalAmount * selectedPromotion!.discountPercent!);
@@ -211,7 +249,7 @@ class CartViewModel extends BaseViewModel {
           selectedPromotion = null;
         }
         break;
-      case "Product":
+      case PromotionTypeEnums.PRODUCT:
         if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
           for (var item in _cartList) {
             for (var product in selectedPromotion!.listProductApply!) {
