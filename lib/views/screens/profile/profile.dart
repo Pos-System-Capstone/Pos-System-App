@@ -19,6 +19,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   initState() {
     super.initState();
+    menuViewModel.getListSession(DateTime.now());
   }
 
   @override
@@ -32,52 +33,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // Expanded(
-                //   flex: 1,
-                //   child: Container(
-                //     padding: const EdgeInsets.all(8.0),
-                //     child: SizedBox(
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.start,
-                //         crossAxisAlignment: CrossAxisAlignment.center,
-                //         children: [
-                //           CircleAvatar(
-                //               radius: 48,
-                //               backgroundImage: NetworkImage(
-                //                 model.storeDetails.brandPicUrl ??
-                //                     "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash-register.png?alt=media&token=fb8b55e5-ce62-40a7-9099-b32c93e94532",
-                //               )),
-                //           SizedBox(width: 12.0),
-                //           Expanded(
-                //             child: Column(
-                //               mainAxisAlignment: MainAxisAlignment.start,
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 Text(
-                //                   "${model.storeDetails.name}(${model.storeDetails.code})",
-                //                   style: Get.textTheme.titleMedium,
-                //                 ),
-                //                 Text(
-                //                   model.storeDetails.address ?? "Store Name",
-                //                   style: Get.textTheme.titleSmall,
-                //                 ),
-                //                 Text(
-                //                   model.storeDetails.phone ?? "Store Name",
-                //                   style: Get.textTheme.titleSmall,
-                //                 ),
-                //                 Text(
-                //                   model.storeDetails.email ?? "Store Name",
-                //                   style: Get.textTheme.titleSmall,
-                //                 ),
-                //               ],
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                Text("Ca làm việc", style: Get.textTheme.titleLarge),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Ca làm việc", style: Get.textTheme.titleLarge),
+                    SizedBox(
+                      width: 8.0,
+                    ),
+                    OutlinedButton(
+                      onPressed: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: Get.context!,
+                            helpText: "Chọn ngày",
+                            confirmText: "Xem danh sách ca",
+                            cancelText: "Hủy",
+                            firstDate: DateTime(2022),
+                            lastDate: DateTime(2025),
+                            initialDate: DateTime.now());
+
+                        if (pickedDate != null) {
+                          model.getListSession(pickedDate);
+                        }
+                      },
+                      child: Text("Chọn ngày"),
+                    ),
+                  ],
+                ),
                 Container(
                   padding: EdgeInsets.all(8.0),
                   child: SingleChildScrollView(
@@ -90,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Card(
                             elevation: 2,
                             child: InkWell(
-                              onTap: () => sessionDetailsDialog(item.id ?? ''),
+                              onTap: () => sessionDetailsDialog(item),
                               child: Container(
                                 padding: const EdgeInsets.all(8),
                                 width: 240,
@@ -121,33 +103,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                Text("Báo cáo chi tiết ngày", style: Get.textTheme.titleLarge),
-                Expanded(
-                  flex: 2,
-                  child: Center(
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        DateTimeRange? pickedDateRange =
-                            await showDateRangePicker(
-                                context: Get.context!,
-                                helpText: "Chọn ngày báo cáo",
-                                confirmText: "Xem báo cáo",
-                                saveText: "Xem báo cáo",
-                                cancelText: "Hủy",
-                                initialDateRange: DateTimeRange(
-                                    start: DateTime.now(), end: DateTime.now()),
-                                firstDate: DateTime(2022),
-                                lastDate: DateTime(2025));
+                // Text("Báo cáo chi tiết ngày", style: Get.textTheme.titleLarge),
+                // Expanded(
+                //   flex: 2,
+                //   child: Center(
+                //     child: OutlinedButton(
+                //       onPressed: () async {
+                //         DateTimeRange? pickedDateRange =
+                //             await showDateRangePicker(
+                //                 context: Get.context!,
+                //                 helpText: "Chọn ngày báo cáo",
+                //                 confirmText: "Xem báo cáo",
+                //                 saveText: "Xem báo cáo",
+                //                 cancelText: "Hủy",
+                //                 initialDateRange: DateTimeRange(
+                //                     start: DateTime.now(), end: DateTime.now()),
+                //                 firstDate: DateTime(2022),
+                //                 lastDate: DateTime(2025));
 
-                        if (pickedDateRange != null) {
-                          reportDetailsDialog(
-                              pickedDateRange.start, pickedDateRange.end);
-                        }
-                      },
-                      child: Text("Xem báo cáo"),
-                    ),
-                  ),
-                )
+                //         if (pickedDateRange != null) {
+                //           reportDetailsDialog(
+                //               pickedDateRange.start, pickedDateRange.end);
+                //         }
+                //       },
+                //       child: Text("Xem báo cáo"),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           );

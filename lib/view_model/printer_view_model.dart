@@ -8,6 +8,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/view_status.dart';
@@ -15,6 +16,7 @@ import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 import 'package:printing/printing.dart';
 import '../data/model/account.dart';
+import '../data/model/response/sessions.dart';
 import '../util/bill-printing.dart';
 import 'base_view_model.dart';
 
@@ -149,8 +151,8 @@ class PrinterViewModel extends BaseViewModel {
     }
   }
 
-  void printCloseSessionInvoice(
-      SessionDetails session, StoreModel storeModel, Account account) {
+  void printCloseSessionInvoice(Session session, SessionDetailReport report,
+      StoreModel storeModel, Account account) {
     Printing.directPrintPdf(
         printer: selectedBillPrinter!,
         // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
@@ -158,7 +160,7 @@ class PrinterViewModel extends BaseViewModel {
         format: PdfPageFormat.roll80,
         onLayout: (PdfPageFormat format) {
           return generateClostSessionInvoice(
-              format, session, storeModel, account);
+              format, session, report, storeModel, account);
         });
   }
 

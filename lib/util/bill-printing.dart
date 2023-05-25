@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/index.dart';
@@ -16,6 +17,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 
 import '../data/model/account.dart';
+import '../data/model/response/sessions.dart';
 
 Future<Uint8List> generateBillInvoice(PdfPageFormat format,
     OrderResponseModel order, int table, String payment) async {
@@ -414,8 +416,12 @@ Future<Uint8List> generateStampInvoice(
   return pdf.save();
 }
 
-Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
-    SessionDetails session, StoreModel store, Account account) async {
+Future<Uint8List> generateClostSessionInvoice(
+    PdfPageFormat format,
+    Session session,
+    SessionDetailReport report,
+    StoreModel store,
+    Account account) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interBold();
 
@@ -527,7 +533,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
                   pw.Text("Số đơn hàng",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(session.numberOfOrders.toString(),
+                  pw.Text(report.totalOrder.toString(),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],
@@ -535,10 +541,98 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Doanh thu",
+                  pw.Text("Số đơn tiền mặt",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.totalAmount ?? 0),
+                  pw.Text(report.totalCash.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu tiền mặt",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.cashAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Số đơn ngân hàng",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(report.totalBanking.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu ngân hàng",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.bankingAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Số đơn momo",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(report.totalMomo.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu momo",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.momoAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Số đơn Visa",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(report.totalCash.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu Visa",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.visaAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu trước giảm",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.totalAmount ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],
@@ -549,7 +643,7 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
                   pw.Text("Giảm giá",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.totalDiscountAmount ?? 0),
+                  pw.Text(formatPrice(report.totalDiscount ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],
@@ -557,43 +651,10 @@ Future<Uint8List> generateClostSessionInvoice(PdfPageFormat format,
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Khuyến mãi",
+                  pw.Text("Doanh thu sau giảm",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.totalPromotion ?? 0),
-                      textAlign: pw.TextAlign.right,
-                      style: pw.TextStyle(font: font, fontSize: 8)),
-                ],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text("Tổng",
-                      textAlign: pw.TextAlign.left,
-                      style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.profitAmount ?? 0),
-                      textAlign: pw.TextAlign.right,
-                      style: pw.TextStyle(font: font, fontSize: 8)),
-                ],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text("Tiền mặt trong két",
-                      textAlign: pw.TextAlign.left,
-                      style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.currentCashInVault ?? 0),
-                      textAlign: pw.TextAlign.right,
-                      style: pw.TextStyle(font: font, fontSize: 8)),
-                ],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text("Tiền mặt đầu ca",
-                      textAlign: pw.TextAlign.left,
-                      style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.initCashInVault ?? 0),
+                  pw.Text(formatPrice(session.totalFinalAmount ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],

@@ -6,11 +6,9 @@ import '../../util/share_pref.dart';
 import '../model/account.dart';
 
 class SessionAPI {
-  Future<List<Session>> getListSessionOfStore() async {
-    DateTime now = DateTime.now();
-
-    DateTime startDate = DateTime(now.year, now.month, now.day - 7);
-    DateTime endDate = DateTime(now.year, now.month, now.day + 1);
+  Future<List<Session>> getListSessionOfStore(DateTime date) async {
+    DateTime startDate = DateTime(date.year, date.month, date.day);
+    DateTime endDate = DateTime(date.year, date.month, date.day + 1);
     Account? userInfo = await getUserInfo();
     var params = <String, dynamic>{
       'page': 1,

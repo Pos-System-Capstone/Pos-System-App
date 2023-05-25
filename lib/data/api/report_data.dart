@@ -1,3 +1,5 @@
+import 'package:pos_apps/data/model/response/session_detail_report.dart';
+
 import '../../util/request.dart';
 import '../../util/share_pref.dart';
 import '../model/index.dart';
@@ -15,6 +17,13 @@ class ReportData {
         queryParameters: params);
     var json = res.data;
     StoreEndDayReport report = StoreEndDayReport.fromJson(json);
+    return report;
+  }
+
+  Future<SessionDetailReport> getSessionDetailReport(String sessionId) async {
+    final res = await request.get('report/session-report/$sessionId');
+    var json = res.data;
+    SessionDetailReport report = SessionDetailReport.fromJson(json);
     return report;
   }
 }

@@ -3,6 +3,7 @@ import 'package:pos_apps/data/api/promotion_data.dart';
 import 'package:pos_apps/data/api/store_data.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/promotion.dart';
+import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
@@ -50,7 +51,7 @@ class MenuViewModel extends BaseViewModel {
       currentMenu = await menuData?.getMenuOfStore();
       // Get.find<OrderViewModel>().getListPayment();
       Get.find<CartViewModel>().getListPromotion();
-      getListSession();
+      getListSession(DateTime.now());
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
           .toList();
@@ -88,10 +89,10 @@ class MenuViewModel extends BaseViewModel {
     }
   }
 
-  void getListSession() async {
+  void getListSession(DateTime date) async {
     try {
       setState(ViewStatus.Loading);
-      await sessionAPI?.getListSessionOfStore().then((value) {
+      await sessionAPI?.getListSessionOfStore(date).then((value) {
         sessions = value;
       });
       setState(ViewStatus.Completed);
@@ -110,36 +111,6 @@ class MenuViewModel extends BaseViewModel {
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
       return null;
-    }
-  }
-
-  void printCloseSessionInvoice(SessionDetails session) async {
-    try {
-      setState(ViewStatus.Loading);
-      Account? userInfo = await getUserInfo();
-      if (Get.find<PrinterViewModel>().selectedBillPrinter != null) {
-        Get.find<PrinterViewModel>()
-            .printCloseSessionInvoice(session, storeDetails, userInfo!);
-        hideDialog();
-        setState(ViewStatus.Completed);
-        showAlertDialog(
-            title: "Hoàn thành", content: "In biên lai thành công ");
-      } else {
-        bool result = await showConfirmDialog(
-          title: "Lỗi in hóa đơn",
-          content: "Vui lòng chọn máy in hóa đơn",
-          cancelText: "Bỏ qua",
-          confirmText: "Chọn máy in",
-        );
-        if (result) {
-          showPrinterConfigDialog(PrinterTypeEnum.bill);
-          setState(ViewStatus.Completed);
-        }
-        setState(ViewStatus.Completed);
-        return;
-      }
-    } catch (e) {
-      setState(ViewStatus.Error, e.toString());
     }
   }
 

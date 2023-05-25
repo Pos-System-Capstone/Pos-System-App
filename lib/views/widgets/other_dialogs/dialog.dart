@@ -3,11 +3,14 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/view_model/report_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../../../data/model/response/sessions.dart';
 import '../../../enums/view_status.dart';
 
 Future<bool> showAlertDialog(
@@ -191,23 +194,23 @@ showLoadingDialog() {
   ));
 }
 
-void sessionDetailsDialog(String sessionId) {
-  MenuViewModel menuViewModel = Get.find<MenuViewModel>();
-  RootViewModel rootViewModel = Get.find<RootViewModel>();
-  SessionDetails? sessionDetails;
-  menuViewModel.getSessionDetail(sessionId).then((value) {
-    sessionDetails = value;
-    sessionDetails!.initCashInVault = rootViewModel.defaultCashboxMoney;
-    sessionDetails!.currentCashInVault =
-        rootViewModel.defaultCashboxMoney + sessionDetails!.currentCashInVault!;
+void sessionDetailsDialog(Session session) {
+  ReportViewModel reportViewModel = ReportViewModel();
+
+  SessionDetailReport? sessionDetailReport;
+
+  reportViewModel
+      .getSessionDetailReport(sessionId: session.id ?? '')
+      .then((value) {
+    sessionDetailReport = value;
   });
 
   Get.dialog(Dialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
     child: ScopedModel(
-      model: menuViewModel,
-      child: ScopedModelDescendant<MenuViewModel>(
+      model: reportViewModel,
+      child: ScopedModelDescendant<ReportViewModel>(
           builder: (context, build, model) {
         if (model.status == ViewStatus.Loading) {
           return Container(
@@ -242,7 +245,7 @@ void sessionDetailsDialog(String sessionId) {
               ],
             ),
           );
-        } else if (sessionDetails == null) {
+        } else if (sessionDetailReport == null) {
           return Container(
             width: Get.size.width * 0.8,
             height: Get.size.height * 0.8,
@@ -265,7 +268,7 @@ void sessionDetailsDialog(String sessionId) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Không tìm thấy thông tin ca",
+                  "Không tìm thấy thông tin báo cáo",
                   style: Get.textTheme.titleLarge,
                 ),
               ],
@@ -298,9 +301,13 @@ void sessionDetailsDialog(String sessionId) {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      sessionDetails?.name ?? "",
+                      session.name ?? "",
                       style: Get.textTheme.titleLarge,
                     ),
+                  ),
+                  Text(
+                    "${formatOnlyTime(session.startDateTime ?? '')} - ${formatOnlyTime(session.endDateTime ?? '')} ${formatOnlyDate(session.endDateTime ?? '')}",
+                    style: Get.textTheme.titleMedium,
                   ),
                   Align(
                     alignment: Alignment.centerRight,
@@ -320,10 +327,6 @@ void sessionDetailsDialog(String sessionId) {
               Divider(
                 color: Get.theme.colorScheme.onBackground,
               ),
-              Text(
-                "${formatOnlyTime(sessionDetails?.startDateTime ?? '')} - ${formatOnlyTime(sessionDetails?.endDateTime ?? '')} ${formatOnlyDate(sessionDetails?.endDateTime ?? '')}",
-                style: Get.textTheme.titleMedium,
-              ),
               Expanded(
                 child: SingleChildScrollView(
                     child: Column(
@@ -332,35 +335,62 @@ void sessionDetailsDialog(String sessionId) {
                       children: [
                         dashboardCard(
                           title: "Tổng số đơn hàng",
-                          value: sessionDetails!.numberOfOrders.toString(),
+                          value: sessionDetailReport!.totalOrder.toString(),
                         ),
                         dashboardCard(
-                          title: "Tổng doanh thu",
-                          value: formatPrice(sessionDetails?.totalAmount ?? 0),
-                        ),
-                        dashboardCard(
-                          title: "Tổng khuyến mãi",
+                          title: "Doanh thu trước khuyến mãi",
                           value: formatPrice(
-                              sessionDetails?.totalDiscountAmount ?? 0),
+                              sessionDetailReport?.totalAmount ?? 0),
                         ),
                         dashboardCard(
-                          title: "Tổng giảm giá",
-                          value:
-                              formatPrice(sessionDetails?.totalPromotion ?? 0),
-                        ),
-                        dashboardCard(
-                          title: "Tổng doanh thu sau khuyến mãi",
-                          value: formatPrice(sessionDetails?.profitAmount ?? 0),
-                        ),
-                        dashboardCard(
-                          title: "Số tiền hiện có trong két",
+                          title: "Giảm giá",
                           value: formatPrice(
-                              sessionDetails?.currentCashInVault ?? 0),
+                              sessionDetailReport?.totalDiscount ?? 0),
                         ),
                         dashboardCard(
-                          title: "Số tiền khởi tạo trong két",
+                          title: "Doanh thu sau khuyến mãi",
+                          value: formatPrice(
+                              sessionDetailReport?.finalAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Số đơn tiền mặt",
                           value:
-                              formatPrice(sessionDetails?.initCashInVault ?? 0),
+                              sessionDetailReport?.totalCash.toString() ?? "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn MOMO",
+                          value:
+                              sessionDetailReport?.totalMomo.toString() ?? "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn chuyển khoản",
+                          value: sessionDetailReport?.totalBanking.toString() ??
+                              "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn Visa",
+                          value:
+                              sessionDetailReport?.totalVisa.toString() ?? "0",
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu tiền mặt",
+                          value:
+                              formatPrice(sessionDetailReport?.cashAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu MOMO",
+                          value:
+                              formatPrice(sessionDetailReport?.momoAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu chuyển khoản",
+                          value: formatPrice(
+                              sessionDetailReport?.bankingAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu Visa",
+                          value:
+                              formatPrice(sessionDetailReport?.visaAmount ?? 0),
                         ),
                       ],
                     ),
@@ -372,8 +402,8 @@ void sessionDetailsDialog(String sessionId) {
                 children: [
                   OutlinedButton(
                     onPressed: () {
-                      Get.find<MenuViewModel>()
-                          .printCloseSessionInvoice(sessionDetails!);
+                      model.printCloseSessionInvoice(
+                          session, sessionDetailReport!);
                     },
                     child: Text(
                       "In biên lai",
@@ -394,7 +424,7 @@ Widget dashboardCard({required String title, required String value}) {
     child: Container(
       padding: EdgeInsets.all(16),
       height: 160,
-      width: 240,
+      width: 200,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -403,7 +433,7 @@ Widget dashboardCard({required String title, required String value}) {
             child: Center(
               child: Text(
                 title,
-                style: Get.textTheme.titleLarge,
+                style: Get.textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
             ),
