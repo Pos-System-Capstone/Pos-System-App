@@ -201,17 +201,21 @@ class CartViewModel extends BaseViewModel {
   }
 
   void checkAutoApplyPromotion() {
-    Promotion? autoApplyPromotion = promotions?.firstWhereOrNull((element) =>
-        element.type == PromotionTypeEnums.AUTOAPPLY &&
-        element.isAvailable == true);
-    if (autoApplyPromotion == null) {
+    List<Promotion>? listAutoApplyPromotion = promotions
+        ?.where((element) =>
+            element.type == PromotionTypeEnums.AUTOAPPLY &&
+            element.isAvailable == true)
+        .toList();
+    if (listAutoApplyPromotion == null || listAutoApplyPromotion.isEmpty) {
       return;
     } else {
       for (var item in _cartList) {
-        for (var product in autoApplyPromotion.listProductApply!) {
-          if (item.product.id == product.productId) {
-            item.product.discountPrice =
-                (autoApplyPromotion.discountAmount ?? 0 * item.quantity);
+        for (var autoApplyPromotion in listAutoApplyPromotion) {
+          for (var product in autoApplyPromotion.listProductApply!) {
+            if (item.product.id == product.productId) {
+              item.product.discountPrice =
+                  (autoApplyPromotion.discountAmount ?? 0 * item.quantity);
+            }
           }
         }
       }

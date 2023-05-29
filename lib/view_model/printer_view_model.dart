@@ -124,7 +124,11 @@ class PrinterViewModel extends BaseViewModel {
             format: PdfPageFormat.roll80,
             onLayout: (PdfPageFormat format) {
               return generateKitchenInvoice(
-                  format, orderResponse, table, paymentName);
+                format,
+                orderResponse,
+                table,
+                paymentName,
+              );
             });
       }
     }

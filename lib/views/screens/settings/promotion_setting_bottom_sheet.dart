@@ -4,9 +4,8 @@ import 'package:pos_apps/views/screens/settings/promotion_info.dart';
 import 'product_attributes.dart';
 
 void showPromotionConfigBottomSheet() {
-  Get.bottomSheet(
+  Get.dialog(
     // isDismissible: true,
-    isScrollControlled: true,
     PromotionInfoScreen(),
   );
 }

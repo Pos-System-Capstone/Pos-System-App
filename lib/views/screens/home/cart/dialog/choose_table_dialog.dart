@@ -18,7 +18,7 @@ void chooseTableDialog() {
           int numberOfTable = Get.find<RootViewModel>().numberOfTable;
           List<String> listPromotion = Get.find<RootViewModel>().promotions;
           return SizedBox(
-            width: Get.width * 0.8,
+            width: Get.width * 0.9,
             height: Get.height * 0.9,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -35,9 +35,6 @@ void chooseTableDialog() {
                   height: 1,
                   color: Get.theme.colorScheme.onSurface,
                 ),
-                SizedBox(
-                  height: 16,
-                ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Wrap(
@@ -53,8 +50,8 @@ void chooseTableDialog() {
                                   ? Get.theme.colorScheme.primaryContainer
                                   : Get.theme.colorScheme.background,
                               child: SizedBox(
-                                width: 120,
-                                height: 120,
+                                width: 100,
+                                height: 110,
                                 child: Center(
                                   child: Text(
                                     i < 10 ? '0$i' : '$i',
