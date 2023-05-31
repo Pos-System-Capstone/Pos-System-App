@@ -103,33 +103,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                // Text("Báo cáo chi tiết ngày", style: Get.textTheme.titleLarge),
-                // Expanded(
-                //   flex: 2,
-                //   child: Center(
-                //     child: OutlinedButton(
-                //       onPressed: () async {
-                //         DateTimeRange? pickedDateRange =
-                //             await showDateRangePicker(
-                //                 context: Get.context!,
-                //                 helpText: "Chọn ngày báo cáo",
-                //                 confirmText: "Xem báo cáo",
-                //                 saveText: "Xem báo cáo",
-                //                 cancelText: "Hủy",
-                //                 initialDateRange: DateTimeRange(
-                //                     start: DateTime.now(), end: DateTime.now()),
-                //                 firstDate: DateTime(2022),
-                //                 lastDate: DateTime(2025));
+                Text("Báo cáo chi tiết ngày", style: Get.textTheme.titleLarge),
+                Expanded(
+                  flex: 2,
+                  child: Center(
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: Get.context!,
+                            helpText: "Chọn ngày",
+                            confirmText: "Xem báo cáo",
+                            cancelText: "Hủy",
+                            firstDate: DateTime(2022),
+                            lastDate: DateTime(2025),
+                            initialDate: DateTime.now());
 
-                //         if (pickedDateRange != null) {
-                //           reportDetailsDialog(
-                //               pickedDateRange.start, pickedDateRange.end);
-                //         }
-                //       },
-                //       child: Text("Xem báo cáo"),
-                //     ),
-                //   ),
-                // )
+                        if (pickedDate != null) {
+                          reportDetailsDialog(pickedDate, pickedDate);
+                        }
+                      },
+                      child: Text("Chọn ngày"),
+                    ),
+                  ),
+                )
               ],
             ),
           );

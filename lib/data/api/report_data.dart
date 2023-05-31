@@ -5,7 +5,7 @@ import '../../util/share_pref.dart';
 import '../model/index.dart';
 
 class ReportData {
-  Future<StoreEndDayReport> getStoreEndDayReport(
+  Future<DayReport> getStoreEndDayReport(
       DateTime startDate, DateTime endDate) async {
     Account? userInfo = await getUserInfo();
     var params = <String, dynamic>{
@@ -16,7 +16,7 @@ class ReportData {
     final res = await request.get('stores/${userInfo!.storeId}/day-report',
         queryParameters: params);
     var json = res.data;
-    StoreEndDayReport report = StoreEndDayReport.fromJson(json);
+    DayReport report = DayReport.fromJson(json);
     return report;
   }
 

@@ -11,7 +11,7 @@ import '../../../widgets/other_dialogs/dialog.dart';
 
 void reportDetailsDialog(DateTime startDate, DateTime endDate) {
   MenuViewModel menuViewModel = Get.find<MenuViewModel>();
-  StoreEndDayReport? reportDetails;
+  DayReport? reportDetails;
   Account? account;
   menuViewModel.getStoreEndDayReport(startDate, endDate).then((value) {
     reportDetails = value;
@@ -117,8 +117,8 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Báo cáo ngày ${formatOnlyDate(startDate.toIso8601String())} - ${formatOnlyDate(endDate.toIso8601String())}",
-                      style: Get.textTheme.titleLarge,
+                      "Báo cáo ngày ${formatOnlyDate(startDate.toIso8601String())}",
+                      style: Get.textTheme.titleMedium,
                     ),
                   ),
                   Align(
@@ -143,79 +143,66 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 8,
-                                    child: Text(
-                                      'Tên',
-                                      style: Get.textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      'SL',
-                                      style: Get.textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        'Giảm giá',
-                                        style: Get.textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        'Tổng',
-                                        style: Get.textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: reportDetails?.categoryReports?.length,
-                        physics: ScrollPhysics(),
-                        itemBuilder: (context, i) {
-                          return reportDetails!
-                                      .categoryReports![i].totalProduct ==
-                                  0
-                              ? SizedBox()
-                              : categoryReportItem(
-                                  reportDetails!.categoryReports![i]);
-                        },
-                      ),
-                      Divider(
-                        color: Get.theme.colorScheme.onSurface,
-                        thickness: 1,
-                      ),
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.only(
+                      //         topLeft: Radius.circular(8),
+                      //         topRight: Radius.circular(8)),
+                      //   ),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     mainAxisAlignment: MainAxisAlignment.start,
+                      //     children: [
+                      //       Padding(
+                      //         padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                      //         child: Row(
+                      //           mainAxisAlignment: MainAxisAlignment.center,
+                      //           crossAxisAlignment: CrossAxisAlignment.center,
+                      //           children: [
+                      //             Expanded(
+                      //               flex: 8,
+                      //               child: Text(
+                      //                 'Tên',
+                      //                 style: Get.textTheme.bodyMedium,
+                      //               ),
+                      //             ),
+                      //             Expanded(
+                      //               flex: 1,
+                      //               child: Text(
+                      //                 'SL',
+                      //                 style: Get.textTheme.bodyMedium,
+                      //               ),
+                      //             ),
+                      //             Expanded(
+                      //               flex: 2,
+                      //               child: Align(
+                      //                 alignment: Alignment.centerRight,
+                      //                 child: Text(
+                      //                   'Giảm giá',
+                      //                   style: Get.textTheme.bodyMedium,
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //             Expanded(
+                      //               flex: 2,
+                      //               child: Align(
+                      //                 alignment: Alignment.centerRight,
+                      //                 child: Text(
+                      //                   'Tổng',
+                      //                   style: Get.textTheme.bodyMedium,
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Divider(
+                      //   color: Get.theme.colorScheme.onSurface,
+                      //   thickness: 1,
+                      // ),
                       Text(
                         'Doanh thu bán hàng',
                         style: Get.textTheme.bodyLarge,
@@ -293,62 +280,6 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Chi phí sản phẩm(4)',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            formatPrice(reportDetails?.productCosAmount ?? 0),
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Lợi nhuận (5)=(3)-(4)',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            formatPrice(reportDetails?.totalRevenue ?? 0),
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Tổng thuế VAT(3.1)',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            formatPrice(reportDetails?.vatAmount ?? 0),
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Bình quân hoá đơn (7)=(3)/(6)',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            formatPrice(reportDetails?.averageBill ?? 0),
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
                       Text(
                         'Hình thức mua hàng',
                         style: Get.textTheme.bodyLarge,
@@ -358,7 +289,49 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Tại quán',
+                            'Đơn tại quán',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalOrderInStore ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đơn mang đi',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalOrderTakeAway ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đơn giao hàng',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalOrderDeli ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu Tại quán',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
@@ -372,7 +345,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Mang đi',
+                            'Doanh thu Mang đi',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
@@ -386,7 +359,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Giao hàng',
+                            'Doanh thu Giao hàng',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
@@ -404,11 +377,109 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Tiền mặt',
+                            'Đơn tiền mặt',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
-                            formatPrice(reportDetails?.finalAmount ?? 0),
+                            "${reportDetails?.totalCash ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đơn chyển khoản',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalBanking ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đơn Momo',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalMomo ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đơn Visa',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalVisa ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu Tiền mặt',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.cashAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu Chuyển khoản',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.bankingAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu Momo',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.momoAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu Visa',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.visaAmount ?? 0),
                             style: Get.textTheme.bodyMedium,
                           ),
                         ],
@@ -450,57 +521,16 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            'Đơn tại quán',
+                            'Tổng số khuyến mãi sử dụng',
                             style: Get.textTheme.bodyMedium,
                           ),
                           Text(
-                            "${reportDetails?.totalOrderInStore ?? 0}",
+                            "${reportDetails?.totalPromotionUsed ?? 0}",
                             style: Get.textTheme.bodyMedium,
                           ),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Đơn mang về',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            "${reportDetails?.totalOrderTakeAway ?? 0}",
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Đơn giao hàng',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            "${reportDetails?.totalOrderDeli ?? 0}",
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Binh quân hoá đơn',
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                          Text(
-                            formatPrice(reportDetails?.averageBill ?? 0),
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -534,7 +564,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                     onPressed: () {
                       Get.find<PrinterViewModel>().printEndDayStoreReport(
                         reportDetails!,
-                        "Báo cáo bán hàng ngày ${formatOnlyDate(startDate.toIso8601String())} - ${formatOnlyDate(endDate.toIso8601String())}",
+                        "Báo cáo ngày ${formatOnlyDate(startDate.toIso8601String())}",
                       );
                     },
                     child: Text(
@@ -551,127 +581,127 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
   ));
 }
 
-Widget categoryReportItem(CategoryReports item) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-    child: Column(
-      children: [
-        Divider(
-          color: Get.theme.colorScheme.onSurface,
-          thickness: 0.5,
-        ),
-        Row(
-          textDirection: TextDirection.ltr,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 8,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name!,
-                    style: Get.textTheme.bodyLarge,
-                    maxLines: 2,
-                    overflow: TextOverflow.clip,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "${item.totalProduct}",
-                    style: Get.textTheme.bodyLarge,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: Text(
-                  formatPrice(item.totalDiscount!),
-                  style: Get.textTheme.bodyLarge,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: Text(
-                  formatPrice(item.totalAmount!),
-                  style: Get.textTheme.bodyLarge,
-                ),
-              ),
-            ),
-          ],
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: item.productReports?.length,
-          physics: ScrollPhysics(),
-          itemBuilder: (context, i) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 8,
-                    child: Text(
-                      "- ${item.productReports![i].name}",
-                      style: Get.textTheme.bodyMedium,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${item.productReports![i].quantity}",
-                          style: Get.textTheme.bodyLarge,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: Text(
-                        formatPrice(item.productReports![i].totalDiscount ?? 0),
-                        style: Get.textTheme.bodyLarge,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: Text(
-                        formatPrice(item.productReports![i].totalAmount!),
-                        style: Get.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}
+// Widget categoryReportItem(CategoryReports item) {
+//   return Padding(
+//     padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+//     child: Column(
+//       children: [
+//         Divider(
+//           color: Get.theme.colorScheme.onSurface,
+//           thickness: 0.5,
+//         ),
+//         Row(
+//           textDirection: TextDirection.ltr,
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Expanded(
+//               flex: 8,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     item.name!,
+//                     style: Get.textTheme.bodyLarge,
+//                     maxLines: 2,
+//                     overflow: TextOverflow.clip,
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Expanded(
+//               flex: 1,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 children: [
+//                   Text(
+//                     "${item.totalProduct}",
+//                     style: Get.textTheme.bodyLarge,
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Expanded(
+//               flex: 2,
+//               child: Align(
+//                 alignment: AlignmentDirectional.centerEnd,
+//                 child: Text(
+//                   formatPrice(item.totalDiscount!),
+//                   style: Get.textTheme.bodyLarge,
+//                 ),
+//               ),
+//             ),
+//             Expanded(
+//               flex: 2,
+//               child: Align(
+//                 alignment: AlignmentDirectional.centerEnd,
+//                 child: Text(
+//                   formatPrice(item.totalAmount!),
+//                   style: Get.textTheme.bodyLarge,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//         ListView.builder(
+//           shrinkWrap: true,
+//           itemCount: item.productReports?.length,
+//           physics: ScrollPhysics(),
+//           itemBuilder: (context, i) {
+//             return Padding(
+//               padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Expanded(
+//                     flex: 8,
+//                     child: Text(
+//                       "- ${item.productReports![i].name}",
+//                       style: Get.textTheme.bodyMedium,
+//                     ),
+//                   ),
+//                   Expanded(
+//                     flex: 1,
+//                     child: Column(
+//                       mainAxisAlignment: MainAxisAlignment.start,
+//                       crossAxisAlignment: CrossAxisAlignment.center,
+//                       children: [
+//                         Text(
+//                           "${item.productReports![i].quantity}",
+//                           style: Get.textTheme.bodyLarge,
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   Expanded(
+//                     flex: 2,
+//                     child: Align(
+//                       alignment: AlignmentDirectional.centerEnd,
+//                       child: Text(
+//                         formatPrice(item.productReports![i].totalDiscount ?? 0),
+//                         style: Get.textTheme.bodyLarge,
+//                       ),
+//                     ),
+//                   ),
+//                   Expanded(
+//                     flex: 2,
+//                     child: Align(
+//                       alignment: AlignmentDirectional.centerEnd,
+//                       child: Text(
+//                         formatPrice(item.productReports![i].totalAmount!),
+//                         style: Get.textTheme.bodyMedium,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             );
+//           },
+//         ),
+//       ],
+//     ),
+//   );
+// }

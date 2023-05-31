@@ -213,7 +213,7 @@ class MenuViewModel extends BaseViewModel {
   Future getStoreEndDayReport(DateTime startDate, DateTime endDate) async {
     try {
       setState(ViewStatus.Loading);
-      StoreEndDayReport storeEndDayReport = StoreEndDayReport();
+      DayReport storeEndDayReport = DayReport();
       await reportData
           ?.getStoreEndDayReport(startDate, endDate)
           .then((value) => storeEndDayReport = value);

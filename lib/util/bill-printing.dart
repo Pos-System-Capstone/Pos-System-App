@@ -755,7 +755,7 @@ Future<Uint8List> generateQRCode(
 
 Future<Uint8List> generateEndDayReport(
   PdfPageFormat format,
-  StoreEndDayReport reportDetails,
+  DayReport reportDetails,
   String? title,
 ) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
@@ -826,15 +826,15 @@ Future<Uint8List> generateEndDayReport(
                 ),
               ],
             ),
-            pw.ListView.builder(
-              itemCount: reportDetails.categoryReports!.length,
-              itemBuilder: (context, i) {
-                return reportDetails.categoryReports![i].totalProduct == 0
-                    ? pw.SizedBox()
-                    : categoryReportItem(
-                        reportDetails.categoryReports![i], font);
-              },
-            ),
+            // pw.ListView.builder(
+            //   itemCount: reportDetails.categoryReports!.length,
+            //   itemBuilder: (context, i) {
+            //     return reportDetails.categoryReports![i].totalProduct == 0
+            //         ? pw.SizedBox()
+            //         : categoryReportItem(
+            //             reportDetails.categoryReports![i], font);
+            //   },
+            // ),
             pw.Divider(thickness: 0.5),
             pw.Text(
               'Doanh thu bán hàng',
@@ -882,62 +882,6 @@ Future<Uint8List> generateEndDayReport(
                 ),
               ],
             ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  'Chi phí sản phẩm (4)',
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-                pw.Text(
-                  formatPrice(reportDetails.productCosAmount ?? 0),
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-              ],
-            ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  'Lợi nhuận (5)=(3)-(4)',
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-                pw.Text(
-                  formatPrice(reportDetails.totalRevenue ?? 0),
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-              ],
-            ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  'Tổng thuế VAT(3.1)',
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-                pw.Text(
-                  formatPrice(reportDetails.vatAmount ?? 0),
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-              ],
-            ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  'Bình quân hoá đơn (7)=(3)/(6)',
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-                pw.Text(
-                  formatPrice(reportDetails.averageBill ?? 0),
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-              ],
-            ),
             pw.Text(
               'Hình thức mua hàng',
               style: pw.TextStyle(font: font, fontSize: 7),
@@ -947,7 +891,49 @@ Future<Uint8List> generateEndDayReport(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 pw.Text(
-                  'Tại quán',
+                  'Đơn tại quán',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  "${reportDetails.totalOrderInStore ?? 0}",
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Đơn mang đi',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  "${reportDetails.totalOrderTakeAway ?? 0}",
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Đơn giao hàng',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  "${reportDetails.totalOrderDeli ?? 0}",
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Doanh thu Tại quán',
                   style: pw.TextStyle(font: font, fontSize: 7),
                 ),
                 pw.Text(
@@ -961,7 +947,7 @@ Future<Uint8List> generateEndDayReport(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 pw.Text(
-                  'Mang đi',
+                  'Doanh thu Mang đi',
                   style: pw.TextStyle(font: font, fontSize: 7),
                 ),
                 pw.Text(
@@ -975,7 +961,7 @@ Future<Uint8List> generateEndDayReport(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 pw.Text(
-                  'Giao hàng',
+                  'Doanh thu Giao hàng',
                   style: pw.TextStyle(font: font, fontSize: 7),
                 ),
                 pw.Text(
@@ -986,22 +972,121 @@ Future<Uint8List> generateEndDayReport(
             ),
             pw.Text(
               'Hình thức thanh toán',
-              style: pw.TextStyle(font: font, fontSize: 7),
+              style: pw.TextStyle(font: font, fontSize: 8),
             ),
             pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 pw.Text(
-                  'Tiền mặt',
+                  'Đơn tiền mặt',
                   style: pw.TextStyle(font: font, fontSize: 7),
                 ),
                 pw.Text(
-                  formatPrice(reportDetails.finalAmount ?? 0),
+                  "${reportDetails.totalCash ?? 0}",
                   style: pw.TextStyle(font: font, fontSize: 7),
                 ),
               ],
             ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Đơn chyển khoản',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  "${reportDetails.totalBanking ?? 0}",
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Đơn Momo',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  "${reportDetails.totalMomo ?? 0}",
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Đơn Visa',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  "${reportDetails.totalVisa ?? 0}",
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Doanh thu Tiền mặt',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  formatPrice(reportDetails.cashAmount ?? 0),
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Doanh thu Chuyển khoản',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  formatPrice(reportDetails.bankingAmount ?? 0),
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Doanh thu Momo',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  formatPrice(reportDetails.momoAmount ?? 0),
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Doanh thu Visa',
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+                pw.Text(
+                  formatPrice(reportDetails.visaAmount ?? 0),
+                  style: pw.TextStyle(font: font, fontSize: 7),
+                ),
+              ],
+            ),
+
             pw.Text(
               'Đơn hàng',
               style: pw.TextStyle(font: font, fontSize: 7),
@@ -1034,137 +1119,95 @@ Future<Uint8List> generateEndDayReport(
                 ),
               ],
             ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  'Đơn tại quán',
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-                pw.Text(
-                  "${reportDetails.totalOrderInStore ?? 0}",
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-              ],
-            ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  'Đơn mang về',
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-                pw.Text(
-                  "${reportDetails.totalOrderTakeAway ?? 0}",
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-              ],
-            ),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  'Đơn giao hàng',
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-                pw.Text(
-                  "${reportDetails.totalOrderDeli ?? 0}",
-                  style: pw.TextStyle(font: font, fontSize: 7),
-                ),
-              ],
-            ),
           ],
         );
       }));
   return pdf.save();
 }
 
-pw.Widget categoryReportItem(CategoryReports item, pw.Font font) {
-  return pw.Column(
-    children: [
-      pw.Divider(thickness: 0.5, borderStyle: pw.BorderStyle.dashed),
-      pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.start,
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Expanded(
-            flex: 7,
-            child: pw.Column(
-              mainAxisAlignment: pw.MainAxisAlignment.start,
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text(
-                  item.name!,
-                  style: pw.TextStyle(
-                      font: font, fontSize: 8, fontWeight: pw.FontWeight.bold),
-                  maxLines: 2,
-                  overflow: pw.TextOverflow.clip,
-                ),
-              ],
-            ),
-          ),
-          pw.Expanded(
-            flex: 1,
-            child: pw.Text(
-              "${item.totalProduct}",
-              textAlign: pw.TextAlign.center,
-              style: pw.TextStyle(font: font, fontSize: 7),
-            ),
-          ),
-          pw.Expanded(
-            flex: 3,
-            child: pw.Align(
-              alignment: pw.Alignment.centerRight,
-              child: pw.Text(
-                formatPrice(item.totalAmount!),
-                style: pw.TextStyle(font: font, fontSize: 7),
-              ),
-            ),
-          ),
-        ],
-      ),
-      pw.ListView.builder(
-        itemCount: item.productReports!.length,
-        itemBuilder: (context, i) {
-          return pw.Padding(
-            padding: pw.EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.start,
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Expanded(
-                  flex: 7,
-                  child: pw.Text(
-                    "- ${item.productReports![i].name!}",
-                    style: pw.TextStyle(font: font, fontSize: 7),
-                  ),
-                ),
-                pw.Expanded(
-                  flex: 1,
-                  child: pw.Text(
-                    "${item.productReports![i].quantity}",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(font: font, fontSize: 7),
-                  ),
-                ),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Align(
-                    alignment: pw.Alignment.centerRight,
-                    child: pw.Text(
-                      formatPrice(item.productReports![i].totalAmount!),
-                      style: pw.TextStyle(font: font, fontSize: 7),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    ],
-  );
-}
+// pw.Widget categoryReportItem(CategoryReports item, pw.Font font) {
+//   return pw.Column(
+//     children: [
+//       pw.Divider(thickness: 0.5, borderStyle: pw.BorderStyle.dashed),
+//       pw.Row(
+//         mainAxisAlignment: pw.MainAxisAlignment.start,
+//         crossAxisAlignment: pw.CrossAxisAlignment.start,
+//         children: [
+//           pw.Expanded(
+//             flex: 7,
+//             child: pw.Column(
+//               mainAxisAlignment: pw.MainAxisAlignment.start,
+//               crossAxisAlignment: pw.CrossAxisAlignment.start,
+//               children: [
+//                 pw.Text(
+//                   item.name!,
+//                   style: pw.TextStyle(
+//                       font: font, fontSize: 8, fontWeight: pw.FontWeight.bold),
+//                   maxLines: 2,
+//                   overflow: pw.TextOverflow.clip,
+//                 ),
+//               ],
+//             ),
+//           ),
+//           pw.Expanded(
+//             flex: 1,
+//             child: pw.Text(
+//               "${item.totalProduct}",
+//               textAlign: pw.TextAlign.center,
+//               style: pw.TextStyle(font: font, fontSize: 7),
+//             ),
+//           ),
+//           pw.Expanded(
+//             flex: 3,
+//             child: pw.Align(
+//               alignment: pw.Alignment.centerRight,
+//               child: pw.Text(
+//                 formatPrice(item.totalAmount!),
+//                 style: pw.TextStyle(font: font, fontSize: 7),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//       pw.ListView.builder(
+//         itemCount: item.productReports!.length,
+//         itemBuilder: (context, i) {
+//           return pw.Padding(
+//             padding: pw.EdgeInsets.fromLTRB(0, 0, 0, 0),
+//             child: pw.Row(
+//               mainAxisAlignment: pw.MainAxisAlignment.start,
+//               crossAxisAlignment: pw.CrossAxisAlignment.start,
+//               children: [
+//                 pw.Expanded(
+//                   flex: 7,
+//                   child: pw.Text(
+//                     "- ${item.productReports![i].name!}",
+//                     style: pw.TextStyle(font: font, fontSize: 7),
+//                   ),
+//                 ),
+//                 pw.Expanded(
+//                   flex: 1,
+//                   child: pw.Text(
+//                     "${item.productReports![i].quantity}",
+//                     textAlign: pw.TextAlign.center,
+//                     style: pw.TextStyle(font: font, fontSize: 7),
+//                   ),
+//                 ),
+//                 pw.Expanded(
+//                   flex: 3,
+//                   child: pw.Align(
+//                     alignment: pw.Alignment.centerRight,
+//                     child: pw.Text(
+//                       formatPrice(item.productReports![i].totalAmount!),
+//                       style: pw.TextStyle(font: font, fontSize: 7),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           );
+//         },
+//       ),
+//     ],
+//   );
+// }

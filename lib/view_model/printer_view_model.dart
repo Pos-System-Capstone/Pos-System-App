@@ -168,7 +168,7 @@ class PrinterViewModel extends BaseViewModel {
         });
   }
 
-  void printEndDayStoreReport(StoreEndDayReport report, String title) {
+  void printEndDayStoreReport(DayReport report, String title) {
     // Printing.directPrintPdf(
     //     printer: selectedBillPrinter!,
     //     // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
