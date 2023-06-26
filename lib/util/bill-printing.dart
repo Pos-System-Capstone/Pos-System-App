@@ -19,6 +19,27 @@ import 'package:pdf/pdf.dart';
 import '../data/model/account.dart';
 import '../data/model/response/sessions.dart';
 
+Future<Uint8List> genQRcode(PdfPageFormat format, String imageURL) async {
+  final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+  final font = await PdfGoogleFonts.interMedium();
+  final image = await flutterImageProvider(NetworkImage(imageURL));
+  pdf.addPage(pw.Page(
+      pageFormat: format,
+      build: (pw.Context context) {
+        return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Text("Scan QR code để thanh toán",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(font: font, fontSize: 8)),
+              pw.Image(image),
+            ]);
+      }));
+
+  return pdf.save();
+}
+
 Future<Uint8List> generateBillInvoice(PdfPageFormat format,
     OrderResponseModel order, int table, String payment) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);

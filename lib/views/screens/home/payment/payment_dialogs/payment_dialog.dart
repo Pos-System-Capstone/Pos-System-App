@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
+import '../../../../../enums/order_enum.dart';
+import '../../../../../helper/qr_generate.dart';
 import '../../../../widgets/other_dialogs/dialog.dart';
 import '../payment.dart';
 
@@ -14,8 +16,19 @@ void showPaymentBotomSheet(String orderId) {
       child: PaymentScreen(orderId)));
 }
 
-void showQRCodeDialog(String qrCode, String paymentName, String orderId) {
-  hideDialog();
+void showQRCodeDialog(String paymentName, num amount, String invoiceId) {
+  String url = "";
+  switch (paymentName) {
+    case PaymentTypeEnums.MOMO:
+      url =
+          "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fz4464235422454_d2c520e8b760cfbb8b3d08777455cf4e.jpg?alt=media&token=40005ae3-1f9d-4176-8717-b4379608fc82";
+      break;
+    case PaymentTypeEnums.BANKING:
+      url = vietQrGenerate(amount, invoiceId);
+      break;
+    default:
+      url = vietQrGenerate(amount, invoiceId);
+  }
   Get.dialog(Dialog(
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -69,14 +82,11 @@ void showQRCodeDialog(String qrCode, String paymentName, String orderId) {
           SizedBox(
             height: 16,
           ),
-          Expanded(
-              child: PrettyQr(
-            elementColor: Get.theme.colorScheme.onBackground,
-            size: 300,
-            data: qrCode,
-            errorCorrectLevel: QrErrorCorrectLevel.H,
-            typeNumber: null,
-          )),
+          Image.network(
+            url,
+            width: 80,
+            height: 80,
+          ),
           SizedBox(
             height: 16,
           ),
@@ -87,8 +97,7 @@ void showQRCodeDialog(String qrCode, String paymentName, String orderId) {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.find<PrinterViewModel>()
-                        .printQRCode(qrCode, paymentName);
+                    Get.find<PrinterViewModel>().printQRCode(url);
                   },
                   child: Text("In ma QR"),
                 ),
@@ -110,7 +119,19 @@ void showQRCodeDialog(String qrCode, String paymentName, String orderId) {
   ));
 }
 
-void scanQRCodeDialog(String qrCode, String paymentName) {
+void scanQRCodeDialog(String paymentName, num amount, String invoiceId) {
+  String url = "";
+  switch (paymentName) {
+    case PaymentTypeEnums.MOMO:
+      url =
+          "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fz4464235422454_d2c520e8b760cfbb8b3d08777455cf4e.jpg?alt=media&token=40005ae3-1f9d-4176-8717-b4379608fc82";
+      break;
+    case PaymentTypeEnums.BANKING:
+      url = vietQrGenerate(amount, invoiceId);
+      break;
+    default:
+      url = vietQrGenerate(amount, invoiceId);
+  }
   hideDialog();
   Get.dialog(Dialog(
     shape: RoundedRectangleBorder(
@@ -181,7 +202,7 @@ void scanQRCodeDialog(String qrCode, String paymentName) {
           SizedBox(
             height: 16,
           ),
-          Expanded(child: CachedNetworkImage(imageUrl: qrCode)),
+          Expanded(child: CachedNetworkImage(imageUrl: url)),
         ],
       ),
     ),

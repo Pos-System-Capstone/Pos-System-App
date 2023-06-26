@@ -11,7 +11,9 @@ import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/enums/view_status.dart';
+import 'package:pos_apps/helper/qr_generate.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 import 'package:printing/printing.dart';
@@ -188,14 +190,12 @@ class PrinterViewModel extends BaseViewModel {
     ));
   }
 
-  void printQRCode(String payment, String code) {
+  void printQRCode(String url) {
     Printing.directPrintPdf(
         printer: selectedBillPrinter!,
-        // format: PdfPageFormat(58 * PdfPageFormat.mm, double.infinity,
-        //     marginAll: 2 * PdfPageFormat.mm),
-        format: PdfPageFormat.roll57,
+        format: PdfPageFormat.roll80,
         onLayout: (PdfPageFormat format) {
-          return generateQRCode(format, code, payment);
+          return genQRcode(format, url);
         });
   }
 
