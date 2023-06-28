@@ -33,7 +33,9 @@ Future<Uint8List> genQRcode(PdfPageFormat format, String imageURL) async {
               pw.Text("Scan QR code để thanh toán",
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(font: font, fontSize: 8)),
-              pw.Image(image),
+              pw.Image(
+                image,
+              ),
             ]);
       }));
 

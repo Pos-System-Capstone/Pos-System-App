@@ -7,6 +7,7 @@ import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/index.dart';
 import 'bill_screen.dart';
+import 'payment_dialogs/payment_dialog.dart';
 
 class PaymentScreen extends StatefulWidget {
   String orderId;
@@ -246,65 +247,33 @@ Widget paymentTypeSelect() {
                       padding: EdgeInsets.all(8.0),
                       child: ElevatedButton(
                         onPressed: () async {
-                          num money = await inputMonneyDialog();
-                          model.setCustomerMoney(money);
+                          switch (model.selectedPaymentMethod?.type) {
+                            case PaymentTypeEnums.CASH:
+                              num money = await inputMonneyDialog();
+                              model.setCustomerMoney(money);
+                              break;
+                            case PaymentTypeEnums.MOMO:
+                              showQRCodeDialog(
+                                  model.selectedPaymentMethod!.type!,
+                                  model.currentOrder!.finalAmount ?? 0,
+                                  model.currentOrder!.invoiceId!);
+                              break;
+                            case PaymentTypeEnums.BANKING:
+                              showQRCodeDialog(
+                                  model.selectedPaymentMethod!.type!,
+                                  model.currentOrder!.finalAmount ?? 0,
+                                  model.currentOrder!.invoiceId!);
+                              break;
+                            default:
+                              num money = await inputMonneyDialog();
+                              model.setCustomerMoney(money);
+                          }
                         },
-                        child: Text("Nhập tiền khách đưa"),
+                        child: Text(model.selectedPaymentMethod!.type ==
+                                PaymentTypeEnums.CASH
+                            ? "Nhập tiền khách đưa"
+                            : "Hiển thị mã QR"),
                       ))),
-              //     Expanded(
-              //   flex: 1,
-              //   child: Container(
-              //       height: 80,
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: ElevatedButton.icon(
-              //         onPressed: () {
-              //           if (model.paymentCheckingStatus ==
-              //                   PaymentStatusEnum.CANCELED &&
-              //               model.selectedPaymentMethod != null) {
-              //             model
-              //                 .checkPaymentStatus(model.currentOrder!.orderId!);
-              //           } else if (model.selectedPaymentMethod == null) {
-              //             Get.snackbar(
-              //                 "Lỗi", "Vui lòng tiền hành thanh toán trước");
-              //           } else {
-              //             null;
-              //           }
-              //         },
-              //         label: model.paymentCheckingStatus ==
-              //                 PaymentStatusEnum.PENDING
-              //             ? Row(
-              //                 mainAxisAlignment: MainAxisAlignment.center,
-
-              //                 // ignore: prefer_const_literals_to_create_immutables
-              //                 children: [
-              //                   const Text(
-              //                     'Đang kiểm tra...',
-              //                   ),
-              //                   const SizedBox(
-              //                     width: 10,
-              //                   ),
-              //                   const CircularProgressIndicator(),
-              //                 ],
-              //               )
-              //             : model.paymentCheckingStatus ==
-              //                     PaymentStatusEnum.PAID
-              //                 ? Text('Thanh toán thành công')
-              //                 : model.paymentCheckingStatus ==
-              //                         PaymentStatusEnum.FAIL
-              //                     ? Text('Thanh toán thất bại')
-              //                     : Text('Kiểm tra thanh toán'),
-              //         icon: model.paymentCheckingStatus ==
-              //                 PaymentStatusEnum.PENDING
-              //             ? Icon(CupertinoIcons.refresh_circled)
-              //             : model.paymentCheckingStatus ==
-              //                     PaymentStatusEnum.PAID
-              //                 ? Icon(CupertinoIcons.check_mark_circled)
-              //                 : model.paymentCheckingStatus ==
-              //                         PaymentStatusEnum.FAIL
-              //                     ? Icon(CupertinoIcons.xmark_circle)
-              //                 : Icon(CupertinoIcons.search_circle),
-              //       )),
-              // ),
             ],
           ),
         ],

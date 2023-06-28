@@ -79,36 +79,27 @@ void showQRCodeDialog(String paymentName, num amount, String invoiceId) {
           Divider(
             color: Get.theme.colorScheme.onBackground,
           ),
-          SizedBox(
-            height: 16,
-          ),
-          Image.network(
-            url,
-            width: 80,
-            height: 80,
+          Expanded(
+            child: Image.network(
+              url,
+              height: Get.size.height * 0.5,
+            ),
           ),
           SizedBox(
-            height: 16,
+            height: 8,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.find<PrinterViewModel>().printQRCode(url);
-                  },
-                  child: Text("In ma QR"),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    hideDialog();
-                  },
-                  child: Text("Hoàn thành"),
+              ElevatedButton(
+                onPressed: () {
+                  Get.find<PrinterViewModel>().printQRCode(url);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "In mã QR",
+                  ),
                 ),
               ),
             ],
