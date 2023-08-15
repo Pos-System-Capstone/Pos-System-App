@@ -23,6 +23,9 @@ class DayReport {
   num? momoAmount;
   num? bankingAmount;
   num? visaAmount;
+  List<num>? timeLine;
+  List<num>? totalOrderTimeLine;
+  List<num>? totalAmountTimeLine;
 
   DayReport(
       {this.storeId,
@@ -48,7 +51,10 @@ class DayReport {
       this.cashAmount,
       this.momoAmount,
       this.bankingAmount,
-      this.visaAmount});
+      this.visaAmount,
+      this.timeLine,
+      this.totalOrderTimeLine,
+      this.totalAmountTimeLine});
 
   DayReport.fromJson(Map<String, dynamic> json) {
     storeId = json['storeId'];
@@ -75,6 +81,9 @@ class DayReport {
     momoAmount = json['momoAmount'];
     bankingAmount = json['bankingAmount'];
     visaAmount = json['visaAmount'];
+    timeLine = json['timeLine'].cast<num>();
+    totalOrderTimeLine = json['totalOrderTimeLine'].cast<num>();
+    totalAmountTimeLine = json['totalAmountTimeLine'].cast<num>();
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +112,9 @@ class DayReport {
     data['momoAmount'] = momoAmount;
     data['bankingAmount'] = bankingAmount;
     data['visaAmount'] = visaAmount;
+    data['timeLine'] = timeLine;
+    data['totalOrderTimeLine'] = totalOrderTimeLine;
+    data['totalAmountTimeLine'] = totalAmountTimeLine;
     return data;
   }
 }

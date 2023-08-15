@@ -65,30 +65,6 @@ void chooseTableDialog() {
                     ),
                   ),
                 ),
-                SizedBox(
-                    height: 240,
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        listPromotion.isNotEmpty
-                            ? Expanded(
-                                child: ListView.builder(
-                                  itemCount: listPromotion.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      title: Text(
-                                        listPromotion[index],
-                                        style: Get.textTheme.titleMedium,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            : Container(),
-                      ],
-                    ))
               ],
             ),
           );

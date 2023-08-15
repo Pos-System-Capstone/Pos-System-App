@@ -530,6 +530,84 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                         ],
                       ),
+                      Text(
+                        'Đơn hàng theo khoản giờ',
+                        style: Get.textTheme.bodyLarge,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '6:00 - 9:59',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.totalAmountTimeLine
+                                    ?.sublist(0, 4)
+                                    .reduce(
+                                        (value, element) => value + element) ??
+                                0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '10:00 - 13:59',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.totalAmountTimeLine
+                                    ?.sublist(4, 8)
+                                    .reduce(
+                                        (value, element) => value + element) ??
+                                0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '14:00 - 17:59',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.totalAmountTimeLine
+                                    ?.sublist(8, 12)
+                                    .reduce(
+                                        (value, element) => value + element) ??
+                                0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '18:00 - 22:00',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.totalAmountTimeLine
+                                    ?.sublist(12)
+                                    .reduce(
+                                        (value, element) => value + element) ??
+                                0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
