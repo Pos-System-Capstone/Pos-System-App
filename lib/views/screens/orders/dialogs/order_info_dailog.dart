@@ -313,40 +313,34 @@ void orderInfoDialog(String orderId) {
                               ),
                             ],
                           ),
-                          model.currentOrder!.discount != null &&
-                                  model.currentOrder!.discount != 0
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "${model.currentOrder!.discountName}",
-                                      style: Get.textTheme.bodyMedium,
-                                    ),
-                                    Text(
-                                      " - ${formatPrice(model.currentOrder!.discountPromotion ?? 0)}",
-                                      style: Get.textTheme.bodyMedium,
-                                    ),
-                                  ],
-                                )
-                              : SizedBox(),
-                          model.currentOrder!.discountProduct != null &&
-                                  model.currentOrder!.discountProduct != 0
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Giảm giá sản phẩm" ?? '',
-                                      style: Get.textTheme.bodyMedium,
-                                    ),
-                                    Text(
-                                      " - ${formatPrice(model.currentOrder!.discountProduct ?? 0)}",
-                                      style: Get.textTheme.bodyMedium,
-                                    ),
-                                  ],
+                          model.currentOrder!.promotionList != null
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      model.currentOrder!.promotionList!.length,
+                                  physics: ScrollPhysics(),
+                                  itemBuilder: (context, i) {
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "${model.currentOrder!.promotionList![i].promotionName} X ${model.currentOrder!.promotionList![i].quantity}",
+                                            style: Get.textTheme.bodySmall,
+                                          ),
+                                          Text(
+                                            " - ${formatPrice(model.currentOrder!.promotionList![i].discountAmount ?? 0)}",
+                                            style: Get.textTheme.bodySmall,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 )
                               : SizedBox(),
                           Row(
@@ -354,15 +348,29 @@ void orderInfoDialog(String orderId) {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'VAT(${percentCalculation(model.currentOrder!.vat!)})',
+                                'Tổng giảm giá',
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
-                                formatPrice(model.currentOrder!.vatAmount ?? 0),
+                                " - ${formatPrice(model.currentOrder!.discount!)}",
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ],
                           ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   crossAxisAlignment: CrossAxisAlignment.center,
+                          //   children: [
+                          //     Text(
+                          //       'VAT(${percentCalculation(model.currentOrder!.vat!)})',
+                          //       style: Get.textTheme.bodyMedium,
+                          //     ),
+                          //     Text(
+                          //       formatPrice(model.currentOrder!.vatAmount ?? 0),
+                          //       style: Get.textTheme.bodyMedium,
+                          //     ),
+                          //   ],
+                          // ),
                           Divider(
                             color: Get.theme.colorScheme.onSurface,
                             thickness: 1,

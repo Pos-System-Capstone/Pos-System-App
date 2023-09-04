@@ -250,8 +250,37 @@ class _BillScreenState extends State<BillScreen> {
                           ],
                         ),
                       ),
-                      model.currentOrder!.discount != null &&
-                              model.currentOrder!.discount != 0
+                      model.currentOrder!.promotionList != null
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              itemCount:
+                                  model.currentOrder!.promotionList!.length,
+                              physics: ScrollPhysics(),
+                              itemBuilder: (context, i) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "- ${model.currentOrder!.promotionList![i].promotionName} x ${model.currentOrder!.promotionList![i].quantity}",
+                                        style: Get.textTheme.bodySmall,
+                                      ),
+                                      Text(
+                                        " - ${formatPrice((model.currentOrder!.promotionList![i].discountAmount ?? 0))}",
+                                        style: Get.textTheme.bodySmall,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          : SizedBox(),
+                      model.currentOrder!.discount != 0
                           ? Padding(
                               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                               child: Row(
@@ -260,55 +289,55 @@ class _BillScreenState extends State<BillScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "${model.currentOrder!.discountName}",
+                                    "Tổng giảm",
                                     style: Get.textTheme.bodyMedium,
                                   ),
                                   Text(
-                                    " - ${formatPrice(model.currentOrder!.discountPromotion ?? 0)}",
+                                    " - ${formatPrice(model.currentOrder!.discount ?? 0)}",
                                     style: Get.textTheme.bodyMedium,
                                   ),
                                 ],
                               ),
                             )
                           : SizedBox(),
-                      model.currentOrder!.discountProduct != null &&
-                              model.currentOrder!.discountProduct != 0
-                          ? Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Giảm giá sản phẩm" ?? '',
-                                    style: Get.textTheme.bodyMedium,
-                                  ),
-                                  Text(
-                                    " - ${formatPrice(model.currentOrder!.discountProduct ?? 0)}",
-                                    style: Get.textTheme.bodyMedium,
-                                  ),
-                                ],
-                              ),
-                            )
-                          : SizedBox(),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'VAT (${percentCalculation(model.currentOrder!.vat!)})',
-                              style: Get.textTheme.bodyMedium,
-                            ),
-                            Text(
-                              formatPrice(model.currentOrder!.vatAmount!),
-                              style: Get.textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // model.currentOrder!.discountProduct != null &&
+                      //         model.currentOrder!.discountProduct != 0
+                      //     ? Padding(
+                      //         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      //         child: Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceBetween,
+                      //           crossAxisAlignment: CrossAxisAlignment.center,
+                      //           children: [
+                      //             Text(
+                      //               "Giảm giá sản phẩm" ?? '',
+                      //               style: Get.textTheme.bodyMedium,
+                      //             ),
+                      //             Text(
+                      //               " - ${formatPrice(model.currentOrder!.discountProduct ?? 0)}",
+                      //               style: Get.textTheme.bodyMedium,
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       )
+                      //     : SizedBox(),
+                      // Padding(
+                      //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     children: [
+                      //       Text(
+                      //         'VAT (${percentCalculation(model.currentOrder!.vat!)})',
+                      //         style: Get.textTheme.bodyMedium,
+                      //       ),
+                      //       Text(
+                      //         formatPrice(model.currentOrder!.vatAmount!),
+                      //         style: Get.textTheme.bodyMedium,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       Divider(
                         color: Get.theme.colorScheme.onSurface,
                         thickness: 1,

@@ -5,7 +5,7 @@ class OrderModel {
   num? totalAmount;
   num? discountAmount;
   num? finalAmount;
-  String? promotionId;
+  List<PromotionList>? promotionList;
 
   OrderModel(
       {this.orderType,
@@ -13,7 +13,7 @@ class OrderModel {
       this.totalAmount,
       this.discountAmount,
       this.finalAmount,
-      this.promotionId});
+      this.promotionList});
 
   OrderModel.fromJson(Map<String, dynamic> json) {
     orderType = json['orderType'];
@@ -26,7 +26,12 @@ class OrderModel {
     totalAmount = json['totalAmount'];
     discountAmount = json['discountAmount'];
     finalAmount = json['finalAmount'];
-    promotionId = json['promotionId'];
+    if (json['promotionList'] != null) {
+      promotionList = <PromotionList>[];
+      json['promotionList'].forEach((v) {
+        promotionList!.add(PromotionList.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -38,7 +43,9 @@ class OrderModel {
     data['totalAmount'] = totalAmount;
     data['discountAmount'] = discountAmount;
     data['finalAmount'] = finalAmount;
-    data['promotionId'] = promotionId;
+    if (promotionList != null) {
+      data['promotionList'] = promotionList!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -109,6 +116,33 @@ class ExtraInOrder {
     data['quantity'] = quantity;
     data['sellingPrice'] = sellingPrice;
     data['discount'] = discount;
+    return data;
+  }
+}
+
+class PromotionList {
+  String? promotionId;
+  String? promotionName;
+  num? quantity;
+  num? discountAmount;
+
+  PromotionList(
+      {this.promotionId,
+      this.promotionName,
+      this.quantity,
+      this.discountAmount});
+
+  PromotionList.fromJson(Map<String, dynamic> json) {
+    promotionId = json['promotionId'];
+    quantity = json['quantity'];
+    discountAmount = json['discountAmount'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['promotionId'] = promotionId;
+    data['quantity'] = quantity;
+    data['discountAmount'] = discountAmount;
     return data;
   }
 }

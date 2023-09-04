@@ -81,18 +81,15 @@ class _PormotionDialogState extends State<PormotionDialog> {
                                     "Khuyến mãi này được áp dụng tự động");
                                 return;
                               } else {
-                                (model.selectedPromotion != null &&
-                                        model.selectedPromotion?.id == item.id)
-                                    ? model.removePromotion()
+                                (model.isPromotionApplied(item.id ?? ''))
+                                    ? model.removePromotion(item.id ?? '')
                                     : model.checkPromotion(item);
                               }
                             },
                             child: Card(
                               color: item.isAvailable == false
                                   ? Get.theme.colorScheme.errorContainer
-                                  : (model.selectedPromotion != null &&
-                                          model.selectedPromotion?.id ==
-                                              item.id)
+                                  : model.isPromotionApplied(item.id ?? '')
                                       ? Get.theme.colorScheme.primaryContainer
                                       : Get.theme.colorScheme.background,
                               child: SizedBox(
@@ -122,56 +119,100 @@ class _PormotionDialogState extends State<PormotionDialog> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(item.description ?? ''),
                                         )),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
                                         children: [
-                                          Chip(
-                                            label: Text(
-                                              "${formatTimeOnly(item.startTime ?? '')} - ${formatTimeOnly(item.endTime ?? '')}",
-                                              style: Get.textTheme.labelSmall,
-                                            ),
-                                          ),
-                                          Chip(
-                                            backgroundColor:
-                                                item.isAvailable == true
-                                                    ? Get.theme.colorScheme
-                                                        .primaryContainer
-                                                    : Get.theme.colorScheme
-                                                        .background,
-                                            label: Text(
-                                              item.isAvailable ?? false
-                                                  ? "Khả dụng"
-                                                  : "Tạm ẩn",
-                                              style: Get.textTheme.labelSmall,
-                                            ),
-                                          ),
-                                          Chip(
-                                            backgroundColor:
-                                                item.isAvailable == true
-                                                    ? Get.theme.colorScheme
-                                                        .primaryContainer
-                                                    : Get.theme.colorScheme
-                                                        .background,
-                                            label: Text(
-                                              item.type ==
-                                                      PromotionTypeEnums.AMOUNT
-                                                  ? "Giảm ${formatPrice(item.discountAmount ?? 0)}"
-                                                  : item.type ==
+                                          model.isPromotionApplied(
+                                                  item.id ?? '')
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          model
+                                                              .decreasePromotionQuantity(
+                                                                  item.id!);
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.remove,
+                                                          size: 48,
+                                                        )),
+                                                    Text(
+                                                        "${model.selectedPromotion(item.id!)!.quantity ?? 1}",
+                                                        style: Get.textTheme
+                                                            .titleLarge),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          model
+                                                              .increasePromotionQuantity(
+                                                                  item.id!);
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                          size: 48,
+                                                        )),
+                                                  ],
+                                                )
+                                              : SizedBox(),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Chip(
+                                                label: Text(
+                                                  "${formatTimeOnly(item.startTime ?? '')} - ${formatTimeOnly(item.endTime ?? '')}",
+                                                  style:
+                                                      Get.textTheme.labelSmall,
+                                                ),
+                                              ),
+                                              Chip(
+                                                backgroundColor:
+                                                    item.isAvailable == true
+                                                        ? Get.theme.colorScheme
+                                                            .primaryContainer
+                                                        : Get.theme.colorScheme
+                                                            .background,
+                                                label: Text(
+                                                  item.isAvailable ?? false
+                                                      ? "Khả dụng"
+                                                      : "Tạm ẩn",
+                                                  style:
+                                                      Get.textTheme.labelSmall,
+                                                ),
+                                              ),
+                                              Chip(
+                                                backgroundColor:
+                                                    item.isAvailable == true
+                                                        ? Get.theme.colorScheme
+                                                            .primaryContainer
+                                                        : Get.theme.colorScheme
+                                                            .background,
+                                                label: Text(
+                                                  item.type ==
                                                           PromotionTypeEnums
-                                                              .PERCENT
-                                                      ? "Giảm ${percentCalculation(item.discountPercent ?? 0)}"
+                                                              .AMOUNT
+                                                      ? "Giảm ${formatPrice(item.discountAmount ?? 0)}"
                                                       : item.type ==
                                                               PromotionTypeEnums
-                                                                  .PRODUCT
-                                                          ? "Giảm sản phẩm"
-                                                          : "Tự động giảm",
-                                              style: Get.textTheme.labelSmall,
-                                            ),
-                                          )
+                                                                  .PERCENT
+                                                          ? "Giảm ${percentCalculation(item.discountPercent ?? 0)}"
+                                                          : item.type ==
+                                                                  PromotionTypeEnums
+                                                                      .PRODUCT
+                                                              ? "Giảm sản phẩm"
+                                                              : "Tự động giảm",
+                                                  style:
+                                                      Get.textTheme.labelSmall,
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     )

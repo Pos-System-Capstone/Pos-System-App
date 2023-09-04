@@ -126,36 +126,44 @@ class _CartScreenState extends State<CartScreen> {
                         ],
                       ),
                     ),
-                    model.productDiscount! > 0
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text("Giảm giá SP",
-                                    style: Get.textTheme.titleSmall),
-                                Text(
-                                    "-${formatPrice(model.productDiscount ?? 0)}",
-                                    style: Get.textTheme.titleSmall),
-                              ],
-                            ),
+                    model.promotionApplyList.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: model.promotionApplyList.length,
+                            physics: ScrollPhysics(),
+                            itemBuilder: (context, i) {
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "-${model.promotionApplyList[i].name} x ${model.promotionApplyList[i].quantity}",
+                                      style: Get.textTheme.bodySmall,
+                                    ),
+                                    Text(
+                                      " - ${formatPrice(model.promotionApplyList[i].discountInOrder!)}",
+                                      style: Get.textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           )
                         : SizedBox(),
-                    model.discountAmount! > 0
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(model.selectedPromotion?.name ?? "",
-                                    style: Get.textTheme.titleSmall),
-                                Text(
-                                    "-${formatPrice(model.discountAmount ?? 0)}",
-                                    style: Get.textTheme.titleSmall),
-                              ],
-                            ),
-                          )
-                        : SizedBox(),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Tổng giảm', style: Get.textTheme.titleSmall),
+                          Text(" - ${formatPrice(model.discountAmount ?? 0)}",
+                              style: Get.textTheme.titleSmall),
+                        ],
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                       child: Row(

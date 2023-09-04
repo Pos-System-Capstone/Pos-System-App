@@ -11,29 +11,28 @@ class OrderResponseModel {
   String? orderStatus;
   String? orderType;
   String? checkInDate;
-  String? discountName;
   String? paymentType;
   List<ProductList>? productList;
   PaymentMethod? paymentMethod;
+  List<PromotionListResponse>? promotionList;
 
-  OrderResponseModel({
-    this.orderId,
-    this.invoiceId,
-    this.totalAmount,
-    this.finalAmount,
-    this.vat,
-    this.vatAmount,
-    this.discount,
-    this.discountProduct,
-    this.discountPromotion,
-    this.orderStatus,
-    this.orderType,
-    this.checkInDate,
-    this.discountName,
-    this.paymentType,
-    this.productList,
-    this.paymentMethod,
-  });
+  OrderResponseModel(
+      {this.orderId,
+      this.invoiceId,
+      this.totalAmount,
+      this.finalAmount,
+      this.vat,
+      this.vatAmount,
+      this.discount,
+      this.discountProduct,
+      this.discountPromotion,
+      this.orderStatus,
+      this.orderType,
+      this.checkInDate,
+      this.paymentType,
+      this.productList,
+      this.paymentMethod,
+      this.promotionList});
 
   OrderResponseModel.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
@@ -47,11 +46,16 @@ class OrderResponseModel {
     orderType = json['orderType'];
     paymentType = json['paymentType'];
     checkInDate = json['checkInDate'];
-    discountName = json['discountName'];
     if (json['productList'] != null) {
       productList = <ProductList>[];
       json['productList'].forEach((v) {
         productList!.add(ProductList.fromJson(v));
+      });
+    }
+    if (json['promotionList'] != null) {
+      promotionList = <PromotionListResponse>[];
+      json['promotionList'].forEach((v) {
+        promotionList!.add(PromotionListResponse.fromJson(v));
       });
     }
   }
@@ -69,9 +73,11 @@ class OrderResponseModel {
     data['orderType'] = orderType;
     data['paymentType'] = paymentType;
     data['checkInDate'] = checkInDate;
-    data['discountName'] = discountName;
     if (productList != null) {
       data['productList'] = productList!.map((v) => v.toJson()).toList();
+    }
+    if (promotionList != null) {
+      data['promotionList'] = promotionList!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -196,6 +202,35 @@ class PaymentMethod {
     data['paymentProviderId'] = paymentProviderId;
     data['paymentProviderName'] = paymentProviderName;
     data['picUrl'] = picUrl;
+    return data;
+  }
+}
+
+class PromotionListResponse {
+  String? promotionId;
+  String? promotionName;
+  int? discountAmount;
+  int? quantity;
+
+  PromotionListResponse(
+      {this.promotionId,
+      this.promotionName,
+      this.discountAmount,
+      this.quantity});
+
+  PromotionListResponse.fromJson(Map<String, dynamic> json) {
+    promotionId = json['promotionId'];
+    promotionName = json['promotionName'];
+    discountAmount = json['discountAmount'];
+    quantity = json['quantity'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['promotionId'] = promotionId;
+    data['promotionName'] = promotionName;
+    data['discountAmount'] = discountAmount;
+    data['quantity'] = quantity;
     return data;
   }
 }

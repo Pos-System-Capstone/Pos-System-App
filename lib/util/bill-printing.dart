@@ -192,17 +192,30 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                   ],
                 ),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text(order.discountName ?? 'Giảm giá',
-                        textAlign: pw.TextAlign.left,
-                        style: pw.TextStyle(font: font, fontSize: 7)),
-                    pw.Text(formatPrice(order.discount ?? 0),
-                        textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(font: font, fontSize: 7)),
-                  ],
-                ),
+                if (order.promotionList != null)
+                  for (PromotionListResponse promotion in order.promotionList!)
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text(promotion.promotionName ?? 'Giảm giá',
+                            textAlign: pw.TextAlign.left,
+                            style: pw.TextStyle(font: font, fontSize: 7)),
+                        pw.Text(formatPrice(promotion.discountAmount ?? 0),
+                            textAlign: pw.TextAlign.right,
+                            style: pw.TextStyle(font: font, fontSize: 7)),
+                      ],
+                    ),
+                // pw.Row(
+                //   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     pw.Text(order.discountName ?? 'Giảm giá',
+                //         textAlign: pw.TextAlign.left,
+                //         style: pw.TextStyle(font: font, fontSize: 7)),
+                //     pw.Text(formatPrice(order.discount ?? 0),
+                //         textAlign: pw.TextAlign.right,
+                //         style: pw.TextStyle(font: font, fontSize: 7)),
+                //   ],
+                // ),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [

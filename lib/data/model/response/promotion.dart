@@ -13,6 +13,8 @@ class Promotion {
   bool? isAvailable;
   List<ListProductApply>? listProductApply;
   String? status;
+  num? quantity = 0;
+  num? discountInOrder = 0;
 
   Promotion(
       {this.id,
@@ -28,7 +30,9 @@ class Promotion {
       this.endTime,
       this.isAvailable,
       this.listProductApply,
-      this.status});
+      this.status,
+      this.quantity,
+      this.discountInOrder});
 
   Promotion.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -82,7 +86,7 @@ class ListProductApply {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['productId'] = productId;
     return data;
   }

@@ -1,4 +1,6 @@
 // ignore_for_file: unnecessary_import
+
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/data/model/response/promotion.dart';
@@ -13,13 +15,13 @@ import 'index.dart';
 
 class CartViewModel extends BaseViewModel {
   List<CartItem> _cartList = [];
+  List<Promotion> promotionApplyList = [];
   num _finalAmount = 0;
   int? _peopleNumber;
   num _totalAmount = 0;
   num _discountAmount = 0;
   num _productDiscount = 0;
   int _quantity = 0;
-  Promotion? selectedPromotion;
   PromotionData? promotionData = PromotionData();
   List<Promotion>? promotions = [];
   List<CartItem> get cartList => _cartList;
@@ -68,7 +70,7 @@ class CartViewModel extends BaseViewModel {
 
   void addToCart(CartItem cartModel) {
     _cartList.add(cartModel);
-    checkAvaileblePromotion();
+    checkAvailablePromotion();
     countCartAmount();
     countCartQuantity();
     notifyListeners();
@@ -76,19 +78,24 @@ class CartViewModel extends BaseViewModel {
 
   void updateCart(CartItem cartModel, int cartIndex) {
     _cartList[cartIndex] = cartModel;
-    checkAvaileblePromotion();
+    checkAvailablePromotion();
     countCartAmount();
     countCartQuantity();
     notifyListeners();
   }
 
   void countCartAmount() {
+    print(promotionApplyList.length);
     _totalAmount = 0;
     _productDiscount = 0;
+    _discountAmount = 0;
     for (CartItem cart in _cartList) {
       _totalAmount = _totalAmount + cart.totalAmount;
       _productDiscount =
           _productDiscount + cart.product.discountPrice! * cart.quantity;
+    }
+    for (Promotion promotion in promotionApplyList) {
+      _discountAmount += ((promotion.discountInOrder ?? 0));
     }
     _finalAmount = _totalAmount - _discountAmount - _productDiscount;
     notifyListeners();
@@ -105,10 +112,19 @@ class CartViewModel extends BaseViewModel {
   void removeFromCart(int idx) {
     _totalAmount = _totalAmount - (_cartList[idx].totalAmount);
     _cartList.remove(_cartList[idx]);
-    checkAvaileblePromotion();
+    checkAvailablePromotion();
     countCartAmount();
     countCartQuantity();
     notifyListeners();
+  }
+
+  bool isPromotionApplied(String promotionId) {
+    for (var promotion in promotionApplyList) {
+      if (promotion.id == promotionId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void clearCartData() {
@@ -118,19 +134,42 @@ class CartViewModel extends BaseViewModel {
     _discountAmount = 0;
     _productDiscount = 0;
     _quantity = 0;
-    selectedPromotion = null;
+    promotionApplyList = [];
     notifyListeners();
+  }
+
+  bool isPromotionTypeExist(String type) {
+    Promotion? res =
+        promotionApplyList.firstWhereOrNull((element) => element.type == type);
+    if (res == null) {
+      return false;
+    }
+    return true;
+  }
+
+  bool isPromotionExist(String id) {
+    Promotion? res =
+        promotionApplyList.firstWhereOrNull((element) => element.id == id);
+    if (res == null) {
+      return false;
+    }
+    return true;
   }
 
   //UPDATE CART ITEM
   void checkPromotion(Promotion promotion) {
     switch (promotion.type) {
       case PromotionTypeEnums.AMOUNT:
-        if (promotion.minConditionAmount! <= _totalAmount) {
-          _discountAmount = promotion.discountAmount!;
-          selectedPromotion = promotion;
-          countCartAmount();
-          hideDialog();
+        if (isPromotionTypeExist(promotion.type!)) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: "Loại khuyến mãi này đã được áp dụng rồi",
+          );
+        } else if (promotion.minConditionAmount! <= _totalAmount) {
+          promotion.quantity = 1;
+          promotion.discountInOrder = promotion.discountAmount;
+          promotionApplyList.add(promotion);
+          checkAvailablePromotion();
         } else {
           showAlertDialog(
             title: "Lỗi",
@@ -139,13 +178,20 @@ class CartViewModel extends BaseViewModel {
         }
         break;
       case PromotionTypeEnums.PERCENT:
-        if (promotion.minConditionAmount! <= _totalAmount) {
-          _discountAmount = (_totalAmount * promotion.discountPercent!);
-          if (_discountAmount > promotion.maxDiscount!) {
-            _discountAmount = promotion.maxDiscount!;
-          }
-          selectedPromotion = promotion;
-          countCartAmount();
+        if (isPromotionTypeExist(promotion.type!)) {
+          showAlertDialog(
+            title: "Lỗi",
+            content: "Loại khuyến mãi này đã được áp dụng rồi",
+          );
+        } else if (promotion.minConditionAmount! <= _totalAmount) {
+          promotion.quantity = 1;
+          promotion.discountInOrder =
+              (_totalAmount * promotion.discountPercent!) >
+                      promotion.maxDiscount!
+                  ? promotion.maxDiscount!
+                  : (_totalAmount * promotion.discountPercent!);
+          promotionApplyList.add(promotion);
+          checkAvailablePromotion();
           hideDialog();
         } else {
           showAlertDialog(
@@ -157,17 +203,28 @@ class CartViewModel extends BaseViewModel {
       case PromotionTypeEnums.PRODUCT:
         if (promotion.minConditionAmount! <= _totalAmount) {
           for (var item in _cartList) {
-            for (var product in promotion.listProductApply!) {
-              if (item.product.id == product.productId) {
-                _discountAmount = promotion.discountAmount!;
-                selectedPromotion = promotion;
-                countCartAmount();
-                hideDialog();
-                break;
+            for (var p in promotion.listProductApply!) {
+              if (item.product.id == p.productId) {
+                int idx = promotionApplyList
+                    .indexWhere((element) => element.id == promotion.id);
+                if (idx == -1) {
+                  promotion.quantity = item.quantity;
+                  promotion.discountInOrder =
+                      promotion.discountAmount! * promotion.quantity!;
+                  promotionApplyList.add(promotion);
+                  checkAvailablePromotion();
+                } else {
+                  promotionApplyList[idx].quantity =
+                      (promotionApplyList[idx].quantity! + item.quantity);
+                  promotionApplyList[idx].discountInOrder =
+                      (promotionApplyList[idx].discountInOrder! +
+                          (promotion.discountAmount! * item.quantity));
+                  checkAvailablePromotion();
+                }
               }
             }
           }
-          if (selectedPromotion?.type != PromotionTypeEnums.PRODUCT) {
+          if (promotion.type != PromotionTypeEnums.PRODUCT) {
             showAlertDialog(
               title: "Lỗi",
               content: "Khuyến mãi không hợp lệ",
@@ -191,91 +248,100 @@ class CartViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void removePromotion() {
+  void removePromotion(String promotionId) {
     _discountAmount = 0;
-    selectedPromotion = null;
-    checkAutoApplyPromotion();
-    countCartAmount();
+    promotionApplyList.removeWhere((element) => element.id == promotionId);
+    // checkAutoApplyPromotion();
+    checkAvailablePromotion();
     hideDialog();
     notifyListeners();
   }
 
-  void checkAutoApplyPromotion() {
-    List<Promotion>? listAutoApplyPromotion = promotions
-        ?.where((element) =>
-            element.type == PromotionTypeEnums.AUTOAPPLY &&
-            element.isAvailable == true)
-        .toList();
-    if (listAutoApplyPromotion == null || listAutoApplyPromotion.isEmpty) {
-      return;
-    } else {
-      for (var item in _cartList) {
-        for (var autoApplyPromotion in listAutoApplyPromotion) {
-          for (var product in autoApplyPromotion.listProductApply!) {
-            if (item.product.id == product.productId) {
-              item.product.discountPrice =
-                  (autoApplyPromotion.discountAmount ?? 0 * item.quantity);
-            }
-          }
-        }
-      }
-    }
-    countCartAmount();
-  }
+  // void checkAutoApplyPromotion() {
+  //   List<Promotion>? listAutoApplyPromotion = promotions
+  //       ?.where((element) =>
+  //           element.type == PromotionTypeEnums.AUTOAPPLY &&
+  //           element.isAvailable == true)
+  //       .toList();
+  //   if (listAutoApplyPromotion == null || listAutoApplyPromotion.isEmpty) {
+  //     return;
+  //   } else {
+  //     for (var item in _cartList) {
+  //       for (var autoApplyPromotion in listAutoApplyPromotion) {
+  //         for (var product in autoApplyPromotion.listProductApply!) {
+  //           if (item.product.id == product.productId) {
+  //             item.product.discountPrice =
+  //                 (autoApplyPromotion.discountAmount ?? 0 * item.quantity);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   countCartAmount();
+  // }
 
-  void checkAvaileblePromotion() {
-    checkAutoApplyPromotion();
-    if (selectedPromotion == null) {
-      return;
-    }
+  void checkAvailablePromotion() {
     countCartAmount();
-    switch (selectedPromotion?.type) {
-      case PromotionTypeEnums.AMOUNT:
-        if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
-          return;
-        } else {
-          _discountAmount = 0;
-          selectedPromotion = null;
-        }
-        break;
-      case PromotionTypeEnums.PERCENT:
-        if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
-          _discountAmount =
-              (_totalAmount * selectedPromotion!.discountPercent!);
-          if (_discountAmount > selectedPromotion!.maxDiscount!) {
-            _discountAmount = selectedPromotion!.maxDiscount!;
+    for (var promotion in promotionApplyList) {
+      switch (promotion.type) {
+        case PromotionTypeEnums.AMOUNT:
+          if (promotion.minConditionAmount! <= _totalAmount) {
+            continue;
+          } else {
+            promotionApplyList
+                .removeWhere((element) => element.id == promotion.id);
+            countCartAmount();
           }
-          countCartAmount();
-        } else {
-          _discountAmount = 0;
-          selectedPromotion = null;
-        }
-        break;
-      case PromotionTypeEnums.PRODUCT:
-        if (selectedPromotion!.minConditionAmount! <= _totalAmount) {
-          for (var item in _cartList) {
-            for (var product in selectedPromotion!.listProductApply!) {
-              if (item.product.id == product.productId) {
-                return;
+          break;
+        case PromotionTypeEnums.PERCENT:
+          if (promotion.minConditionAmount! <= _totalAmount) {
+            promotion.discountInOrder =
+                (_totalAmount * promotion.discountPercent!) >
+                        promotion.maxDiscount!
+                    ? promotion.maxDiscount!
+                    : (_totalAmount * promotion.discountPercent!);
+            countCartAmount();
+          } else {
+            promotionApplyList
+                .removeWhere((element) => element.id == promotion.id);
+            countCartAmount();
+          }
+          break;
+        case PromotionTypeEnums.PRODUCT:
+          if ((promotion.minConditionAmount! * promotion.quantity!) <=
+              _totalAmount) {
+            for (var item in _cartList) {
+              for (var product in promotion.listProductApply!) {
+                if (item.product.id == product.productId) {
+                  return;
+                }
               }
             }
+            promotionApplyList
+                .removeWhere((element) => element.id == promotion.id);
+            countCartAmount();
+          } else {
+            showAlertDialog(
+              title: "Thông báo",
+              content: "Khuyến mãi không hợp lệ",
+            );
+            promotionApplyList
+                .removeWhere((element) => element.id == promotion.id);
+            countCartAmount();
           }
-          _discountAmount = 0;
-          selectedPromotion = null;
-        } else {
-          _discountAmount = 0;
-          selectedPromotion = null;
-        }
-        break;
-      default:
-        showAlertDialog(
-          title: "Thông báo",
-          content: "Khuyến mãi đã bị xoá",
-        );
-        _discountAmount = 0;
-        selectedPromotion = null;
-        break;
+          break;
+        default:
+          showAlertDialog(
+            title: "Thông báo",
+            content: "Khuyến mãi đã bị xoá",
+          );
+          promotionApplyList
+              .removeWhere((element) => element.id == promotion.id);
+          countCartAmount();
+          break;
+      }
     }
+
     notifyListeners();
   }
 
@@ -310,7 +376,13 @@ class CartViewModel extends BaseViewModel {
       totalAmount: _totalAmount,
       discountAmount: _discountAmount + _productDiscount,
       finalAmount: _finalAmount,
-      promotionId: selectedPromotion == null ? null : selectedPromotion?.id,
+      promotionList: promotionApplyList
+          .map((e) => PromotionList(
+              promotionId: e.id,
+              promotionName: e.name,
+              quantity: e.quantity,
+              discountAmount: e.discountInOrder))
+          .toList(),
     );
     bool res = false;
     Get.find<OrderViewModel>().placeOrder(order).then((value) => {
@@ -323,5 +395,53 @@ class CartViewModel extends BaseViewModel {
     List<PaymentProvider?> listPayment = [];
     listPayment = Get.find<OrderViewModel>().listPayment;
     return listPayment;
+  }
+
+  void increasePromotionQuantity(String id) {
+    int idx = promotionApplyList.indexWhere((element) => element.id == id);
+    if (idx == -1) {
+      showAlertDialog(
+        title: "Thông báo",
+        content: "Khuyến mãi đã bị xoá",
+      );
+      return;
+    }
+    promotionApplyList[idx].quantity = (promotionApplyList[idx].quantity! + 1);
+    promotionApplyList[idx].discountInOrder =
+        (promotionApplyList[idx].discountAmount! *
+            promotionApplyList[idx].quantity!);
+    checkAvailablePromotion();
+  }
+
+  void decreasePromotionQuantity(String id) {
+    int idx = promotionApplyList.indexWhere((element) => element.id == id);
+    if (idx == -1) {
+      showAlertDialog(
+        title: "Thông báo",
+        content: "Khuyến mãi đã bị xoá",
+      );
+      return;
+    }
+    if (promotionApplyList[idx].quantity == 1) {
+      removePromotion(id);
+      checkAvailablePromotion();
+      return;
+    } else {
+      promotionApplyList[idx].quantity =
+          (promotionApplyList[idx].quantity! - 1);
+      promotionApplyList[idx].discountInOrder =
+          (promotionApplyList[idx].discountAmount! *
+              promotionApplyList[idx].quantity!);
+      checkAvailablePromotion();
+    }
+  }
+
+  Promotion? selectedPromotion(String id) {
+    for (var promotion in promotionApplyList) {
+      if (promotion.id == id) {
+        return promotion;
+      }
+    }
+    return null;
   }
 }
