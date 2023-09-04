@@ -192,12 +192,13 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                   ],
                 ),
-                if (order.promotionList != null)
+                if (order.promotionList != null || order.productList != [])
                   for (PromotionListResponse promotion in order.promotionList!)
                     pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
-                        pw.Text(promotion.promotionName ?? 'Giảm giá',
+                        pw.Text(
+                            "${promotion.promotionName} X ${promotion.quantity}",
                             textAlign: pw.TextAlign.left,
                             style: pw.TextStyle(font: font, fontSize: 7)),
                         pw.Text(formatPrice(promotion.discountAmount ?? 0),
@@ -205,17 +206,17 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                             style: pw.TextStyle(font: font, fontSize: 7)),
                       ],
                     ),
-                // pw.Row(
-                //   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     pw.Text(order.discountName ?? 'Giảm giá',
-                //         textAlign: pw.TextAlign.left,
-                //         style: pw.TextStyle(font: font, fontSize: 7)),
-                //     pw.Text(formatPrice(order.discount ?? 0),
-                //         textAlign: pw.TextAlign.right,
-                //         style: pw.TextStyle(font: font, fontSize: 7)),
-                //   ],
-                // ),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text('Tổng giảm giá',
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(font: font, fontSize: 7)),
+                    pw.Text(formatPrice(order.discount ?? 0),
+                        textAlign: pw.TextAlign.right,
+                        style: pw.TextStyle(font: font, fontSize: 7)),
+                  ],
+                ),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
