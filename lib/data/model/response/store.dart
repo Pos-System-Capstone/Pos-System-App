@@ -9,6 +9,8 @@ class StoreModel {
   String? email;
   String? address;
   String? status;
+  String? wifiName;
+  String? wifiPassword;
 
   StoreModel(
       {this.phone,
@@ -20,7 +22,9 @@ class StoreModel {
       this.shortName,
       this.email,
       this.address,
-      this.status});
+      this.status,
+      this.wifiName,
+      this.wifiPassword});
 
   StoreModel.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
@@ -33,6 +37,8 @@ class StoreModel {
     email = json['email'];
     address = json['address'];
     status = json['status'];
+    wifiName = json['wifiName'];
+    wifiPassword = json['wifiPassword'];
   }
 
   Map<String, dynamic> toJson() {
