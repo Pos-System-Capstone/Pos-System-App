@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/api/pointify/pointify_data.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/data/model/response/promotion.dart';
 import 'package:pos_apps/enums/index.dart';
@@ -10,6 +11,7 @@ import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 
 import '../data/api/promotion_data.dart';
 import '../data/model/index.dart';
+import '../data/model/pointify/promotion_model.dart';
 import '../enums/view_status.dart';
 import 'index.dart';
 
@@ -22,8 +24,8 @@ class CartViewModel extends BaseViewModel {
   num _discountAmount = 0;
   num _productDiscount = 0;
   int _quantity = 0;
-  PromotionData? promotionData = PromotionData();
-  List<Promotion>? promotions = [];
+  PointifyData? promotionData = PointifyData();
+  List<PromotionPointify>? promotions = [];
   List<CartItem> get cartList => _cartList;
   num get finalAmount => _finalAmount;
   num get totalAmount => _totalAmount;
@@ -61,7 +63,7 @@ class CartViewModel extends BaseViewModel {
   void getListPromotion() async {
     try {
       setState(ViewStatus.Loading);
-      promotions = await promotionData?.getListPromotionOfStore();
+      promotions = await promotionData?.getListPromotionOfPointify();
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
