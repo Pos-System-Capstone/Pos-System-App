@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
+import '../model/customer.dart';
 import '../model/index.dart';
 
 class AccountData {
@@ -43,5 +44,27 @@ class AccountData {
       requestObj.setToken = token;
     }
     return token.isNotEmpty;
+  }
+
+  Future<CustomerInfoModel?> scanCustomer(String phone) async {
+    try {
+      final response =
+          await request.get("users/scan", queryParameters: {"phone": phone});
+
+      if (response.statusCode == 200) {
+        final customer = response.data;
+
+        CustomerInfoModel customerInfoModel =
+            CustomerInfoModel.fromJson(customer);
+        return customerInfoModel;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error login (account_dao): ${e.toString()}');
+      }
+    }
+    return null;
   }
 }

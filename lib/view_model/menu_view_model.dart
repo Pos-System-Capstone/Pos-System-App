@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pos_apps/data/api/promotion_data.dart';
 import 'package:pos_apps/data/api/store_data.dart';
+import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/promotion.dart';
 import 'package:pos_apps/data/model/response/session_detail_report.dart';
@@ -49,8 +50,6 @@ class MenuViewModel extends BaseViewModel {
       setState(ViewStatus.Loading);
       await getStore();
       currentMenu = await menuData?.getMenuOfStore();
-      // Get.find<OrderViewModel>().getListPayment();
-      Get.find<CartViewModel>().getListPromotion();
       getListSession(DateTime.now());
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
@@ -69,6 +68,7 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == ProductTypeEnum.CHILD)
           .toList();
       productsFilter = normalProducts;
+      handleChangeFilterProductByCategory(categories![0].id);
       productsFilter
           ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
       setState(ViewStatus.Completed);
@@ -176,10 +176,26 @@ class MenuViewModel extends BaseViewModel {
         .toList();
   }
 
-  List<Category>? getExtraCategoryByNormalProduct(Product product) {
+  List<Category>? getExtraCategoryByNormalProduct(String productMenuId) {
     List<Category> listExtraCategory = [];
+    Product? product = normalProducts
+        ?.firstWhereOrNull((element) => element.menuProductId == productMenuId);
     for (Category item in currentMenu!.categories!) {
-      if (product.extraCategoryIds!.contains(item.id)) {
+      if (product!.extraCategoryIds!.contains(item.id)) {
+        listExtraCategory.add(item);
+      }
+    }
+    listExtraCategory
+        .sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
+    return listExtraCategory;
+  }
+
+  List<Category>? getExtraCategoryByChildProduct(String parentProductId) {
+    List<Category> listExtraCategory = [];
+    Product? product = normalProducts
+        ?.firstWhereOrNull((element) => element.id == parentProductId);
+    for (Category item in currentMenu!.categories!) {
+      if (product!.extraCategoryIds!.contains(item.id)) {
         listExtraCategory.add(item);
       }
     }

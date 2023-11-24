@@ -75,12 +75,7 @@ Widget orderProduct(bool isPortrait) {
           child: Text(e.name ?? '', style: Get.textTheme.titleLarge),
         );
       }).toList();
-      listCategoryTab.insert(
-          0,
-          Tab(
-            height: 48,
-            child: Text("Tất cả", style: Get.textTheme.titleLarge),
-          ));
+
       return Padding(
         padding: const EdgeInsets.all(4),
         child: DefaultTabController(
@@ -93,12 +88,8 @@ Widget orderProduct(bool isPortrait) {
                 tabs: listCategoryTab,
                 onTap: (value) {
                   debugPrint("value: $value");
-                  if (value == 0) {
-                    model.handleChangeFilterProductByCategory(null);
-                  } else {
-                    model.handleChangeFilterProductByCategory(
-                        model.categories![value - 1].id);
-                  }
+                  model.handleChangeFilterProductByCategory(
+                      model.categories![value].id);
                 },
               ),
               Expanded(

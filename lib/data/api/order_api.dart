@@ -1,16 +1,36 @@
+import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/data/model/index.dart';
-import 'package:pos_apps/data/model/response/make_payment_response.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/util/share_pref.dart';
+import 'package:pos_apps/view_model/index.dart';
 
 import '../../util/request.dart';
+import '../model/payment_response_model.dart';
 
 class OrderAPI {
   Future placeOrder(OrderModel order, String storeId) async {
     var dataJson = order.toJson();
     final res = await request.post('stores/$storeId/orders', data: dataJson);
     var jsonList = res.data;
+    return jsonList;
+  }
+
+  Future prepareOrder(CartModel cart, String storeId) async {
+    cart.storeId = storeId;
+    var dataJson = cart.toJson();
+    final res = await request.post('/orders/prepare', data: dataJson);
+    var jsonList = res.data;
+    print(jsonList);
+    return CartModel.fromJson(jsonList);
+  }
+
+  Future createOrder(CartModel cart, String storeId) async {
+    cart.storeId = storeId;
+    var dataJson = cart.toJson();
+    final res = await request.post('/orders/create', data: dataJson);
+    var jsonList = res.data;
+    print(jsonList);
     return jsonList;
   }
 
@@ -31,29 +51,43 @@ class OrderAPI {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['paymentType'] = paymentType;
-    final res =
-        await request.put('stores/$storeId/orders/$orderId', data: data);
+    final res = await request.post('orders/$orderId/checkout',
+        queryParameters: {'storeId': storeId}, data: data);
     var json = res.data;
     return json;
   }
 
-  Future<MakePaymentResponse> makePayment(
-      OrderResponseModel order, String paymentId) async {
-    Account? user = await getUserInfo();
+  Future<MakePaymentResponse>? makePayment(
+    String orderId,
+    String? code,
+    String? paymentType,
+  ) async {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['orderId'] = order.orderId;
-    data['invoiceId'] = order.invoiceId;
-    data['storeId'] = user?.storeId;
-    data['accountId'] = user?.id;
-    data['paymentId'] = paymentId;
-    data['amount'] = order.finalAmount;
-    data['orderDescription'] = "Thanh toán đơn hàng ${order.invoiceId} ";
-    final res = await paymentRequest.post('payments', data: data);
+    data['code'] = code;
+    data['paymentType'] = paymentType;
+    final res = await request.post('orders/$orderId/payment', data: data);
     var json = res.data;
-    MakePaymentResponse makePaymentResponse =
-        MakePaymentResponse.fromJson(json);
-    return makePaymentResponse;
+    MakePaymentResponse? paymentResponse = MakePaymentResponse.fromJson(json);
+    return paymentResponse;
   }
+
+  // Future<MakePaymentResponse> makePayment(
+  //     OrderResponseModel order, String paymentId) async {
+  //   Account? user = await getUserInfo();
+  //   final Map<String, dynamic> data = <String, dynamic>{};
+  //   data['orderId'] = order.orderId;
+  //   data['invoiceId'] = order.invoiceId;
+  //   data['storeId'] = user?.storeId;
+  //   data['accountId'] = user?.id;
+  //   data['paymentId'] = paymentId;
+  //   data['amount'] = order.finalAmount;
+  //   data['orderDescription'] = "Thanh toán đơn hàng ${order.invoiceId} ";
+  //   final res = await paymentRequest.post('payments', data: data);
+  //   var json = res.data;
+  //   MakePaymentResponse makePaymentResponse =
+  //       MakePaymentResponse.fromJson(json);
+  //   return makePaymentResponse;
+  // }
 
   Future<List<OrderInList>> getListOrderOfStore(String storeId,
       {bool isToday = false,

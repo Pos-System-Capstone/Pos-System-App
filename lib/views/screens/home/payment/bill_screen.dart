@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/model/customer.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:scoped_model/scoped_model.dart';
+import '../../../../data/model/response/order_response.dart';
 import '../../../../util/format.dart';
 import '../../../../view_model/index.dart';
 import '../../../widgets/other_dialogs/dialog.dart';
@@ -160,23 +162,7 @@ class _BillScreenState extends State<BillScreen> {
                         color: Get.theme.colorScheme.onSurface,
                         thickness: 1,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Khách hàng',
-                              style: Get.textTheme.bodyMedium,
-                            ),
-                            Text(
-                              'Người dùng',
-                              style: Get.textTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      ),
+                      customerInfo(model.currentOrder?.customerInfo),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         child: Row(
@@ -233,6 +219,7 @@ class _BillScreenState extends State<BillScreen> {
                         color: Get.theme.colorScheme.onSurface,
                         thickness: 1,
                       ),
+
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         child: Row(
@@ -267,11 +254,15 @@ class _BillScreenState extends State<BillScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "- ${model.currentOrder!.promotionList![i].promotionName} x ${model.currentOrder!.promotionList![i].quantity}",
+                                        "- ${model.currentOrder!.promotionList![i].promotionName}",
                                         style: Get.textTheme.bodySmall,
                                       ),
                                       Text(
-                                        " - ${formatPrice((model.currentOrder!.promotionList![i].discountAmount ?? 0))}",
+                                        model.currentOrder!.promotionList![i]
+                                                    .effectType ==
+                                                "GET_POINT"
+                                            ? ("+${model.currentOrder!.promotionList![i].discountAmount} Điểm")
+                                            : ("- ${formatPrice(model.currentOrder!.promotionList![i].discountAmount ?? 0)}"),
                                         style: Get.textTheme.bodySmall,
                                       ),
                                     ],
@@ -435,5 +426,66 @@ class _BillScreenState extends State<BillScreen> {
         ),
       );
     });
+  }
+
+  Widget customerInfo(CustomerInfo? info) {
+    if (info == null) {
+      return SizedBox();
+    }
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Khách hàng',
+                style: Get.textTheme.bodyMedium,
+              ),
+              Text(
+                info.name ?? "Khách",
+                style: Get.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'SDT',
+                style: Get.textTheme.bodyMedium,
+              ),
+              Text(
+                info.phone ?? "Khách",
+                style: Get.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Địa chỉ giao',
+                style: Get.textTheme.bodyMedium,
+              ),
+              Text(
+                info.address ?? "",
+                style: Get.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

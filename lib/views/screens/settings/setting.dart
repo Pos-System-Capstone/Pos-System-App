@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Image;
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
+import 'package:pos_apps/routes/routes_constraints.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/settings/promotion_setting_bottom_sheet.dart';
@@ -116,6 +117,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     thickness: 1,
                   ),
                   stampPrinterSetting(),
+                  Divider(
+                    thickness: 1,
+                  ),
+                  bluetoothPrinterSetting(),
                   Divider(
                     thickness: 1,
                   ),
@@ -301,6 +306,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Máy in tem', style: Get.textTheme.titleMedium),
+                  Get.find<PrinterViewModel>().selectedProductPrinter != null
+                      ? Text(
+                          Get.find<PrinterViewModel>()
+                              .selectedProductPrinter!
+                              .url,
+                        )
+                      : Text(" Chưa kết nối thiết bị"),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.print_outlined,
+              size: 32,
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 32,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget bluetoothPrinterSetting() {
+    return InkWell(
+      onTap: () => Get.toNamed(RouteHandler.PRINTER),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Máy in bluetooth', style: Get.textTheme.titleMedium),
                   Get.find<PrinterViewModel>().selectedProductPrinter != null
                       ? Text(
                           Get.find<PrinterViewModel>()

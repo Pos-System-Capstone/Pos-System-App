@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../../../../data/model/response/order_response.dart';
 import '../../../../enums/order_enum.dart';
 import '../../../../enums/view_status.dart';
 import '../../../../util/format.dart';
@@ -236,20 +237,7 @@ void orderInfoDialog(String orderId) {
                             color: Get.theme.colorScheme.onSurface,
                             thickness: 1,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Khách hàng',
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                              Text(
-                                'Người dùng',
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
+                          customerInfo(model.currentOrder?.customerInfo),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -409,4 +397,65 @@ void orderInfoDialog(String orderId) {
               ));
         }),
       )));
+}
+
+Widget customerInfo(CustomerInfo? info) {
+  if (info == null) {
+    return SizedBox();
+  }
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Khách hàng',
+              style: Get.textTheme.bodyMedium,
+            ),
+            Text(
+              info.name ?? "Khách",
+              style: Get.textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'SDT',
+              style: Get.textTheme.bodyMedium,
+            ),
+            Text(
+              info.phone ?? "Khách",
+              style: Get.textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Địa chỉ giao',
+              style: Get.textTheme.bodyMedium,
+            ),
+            Text(
+              info.address ?? "",
+              style: Get.textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

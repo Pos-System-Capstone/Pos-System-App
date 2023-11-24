@@ -14,20 +14,6 @@ class PaymentData {
     return listPayment;
   }
 
-  Future<PaymentMethod?> getPaymentProviderOfOrder(String orderId) async {
-    final res = await paymentRequest.get(
-      'payments',
-      queryParameters: {'orderId': orderId},
-    );
-    var jsonList = res.data;
-    if (jsonList == null) {
-      return null;
-    } else {
-      PaymentMethod payment = PaymentMethod.fromJson(jsonList);
-      return payment;
-    }
-  }
-
   Future<PaymentStatusResponse?> checkPayment(String orderId) async {
     final res = await paymentRequest.get(
       'check-transaction-status',

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/format.dart';
@@ -88,10 +89,10 @@ class _CartScreenState extends State<CartScreen> {
               Expanded(
                   child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: model.cartList.length,
+                itemCount: model.cart.productList!.length,
                 physics: ScrollPhysics(),
                 itemBuilder: (context, i) {
-                  return cartItem(model.cartList[i], i);
+                  return cartItem(model.cart.productList![i], i);
                 },
               )),
               SizedBox(
@@ -110,7 +111,7 @@ class _CartScreenState extends State<CartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Số lượng', style: Get.textTheme.titleSmall),
-                          Text(model.quantity.toString(),
+                          Text(model.countCartQuantity().toString(),
                               style: Get.textTheme.titleSmall),
                         ],
                       ),
@@ -121,15 +122,15 @@ class _CartScreenState extends State<CartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Tạm tính', style: Get.textTheme.titleSmall),
-                          Text(formatPrice(model.totalAmount ?? 0),
+                          Text(formatPrice(model.cart.totalAmount ?? 0),
                               style: Get.textTheme.titleSmall),
                         ],
                       ),
                     ),
-                    model.promotionApplyList.isNotEmpty
+                    model.cart.promotionList!.isNotEmpty
                         ? ListView.builder(
                             shrinkWrap: true,
-                            itemCount: model.promotionApplyList.length,
+                            itemCount: model.cart.promotionList!.length,
                             physics: ScrollPhysics(),
                             itemBuilder: (context, i) {
                               return Padding(
@@ -140,11 +141,14 @@ class _CartScreenState extends State<CartScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "-${model.promotionApplyList[i].name} x ${model.promotionApplyList[i].quantity}",
+                                      "-${model.cart.promotionList![i].name}",
                                       style: Get.textTheme.bodySmall,
                                     ),
                                     Text(
-                                      " - ${formatPrice(model.promotionApplyList[i].discountInOrder!)}",
+                                      model.cart.promotionList![i].effectType ==
+                                              "GET_POINT"
+                                          ? "+${model.cart.promotionList![i].discountAmount} Điểm"
+                                          : ("-${formatPrice(model.cart.promotionList![i].discountAmount!)}"),
                                       style: Get.textTheme.bodySmall,
                                     ),
                                   ],
@@ -159,7 +163,8 @@ class _CartScreenState extends State<CartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Tổng giảm', style: Get.textTheme.titleSmall),
-                          Text(" - ${formatPrice(model.discountAmount ?? 0)}",
+                          Text(
+                              " - ${formatPrice(model.cart.discountAmount ?? 0)}",
                               style: Get.textTheme.titleSmall),
                         ],
                       ),
@@ -170,7 +175,7 @@ class _CartScreenState extends State<CartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('Tổng tiền', style: Get.textTheme.titleMedium),
-                          Text(formatPrice(model.finalAmount),
+                          Text(formatPrice(model.cart.finalAmount ?? 0),
                               style: Get.textTheme.titleMedium),
                         ],
                       ),
@@ -259,7 +264,7 @@ class _CartScreenState extends State<CartScreen> {
                           Expanded(
                             child: FilledButton(
                               onPressed: () async {
-                                if (model.quantity == 0) {
+                                if (model.countCartQuantity() == 0) {
                                   showAlertDialog(
                                     title: 'Thông báo',
                                     content: 'Giỏ hàng trống',
@@ -296,7 +301,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget cartItem(CartItem item, int index) {
+  Widget cartItem(ProductList item, int index) {
     return InkWell(
       onTap: () =>
           {Get.dialog(UpdateCartItemDialog(cartItem: item, idx: index))},
@@ -316,7 +321,7 @@ class _CartScreenState extends State<CartScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.product.name!,
+                        item.name!,
                         style: Get.textTheme.bodyLarge,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
@@ -324,7 +329,7 @@ class _CartScreenState extends State<CartScreen> {
                       Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            formatPrice(item.product.sellingPrice!),
+                            formatPrice(item.sellingPrice!),
                             style: Get.textTheme.bodyLarge,
                           )),
                     ],
@@ -350,13 +355,12 @@ class _CartScreenState extends State<CartScreen> {
                     child: Column(
                       children: [
                         Text(
-                          formatPrice(item.totalAmount),
+                          formatPrice(item.totalAmount ?? 0),
                           style: Get.textTheme.bodyLarge,
                         ),
-                        item.product.discountPrice != null &&
-                                item.product.discountPrice != 0
+                        item.discount != null && item.discount != 0
                             ? Text(
-                                "-${formatPrice(item.product.discountPrice! * item.quantity)}",
+                                "-${formatPrice(item.discount ?? 0)}",
                               )
                             : SizedBox.shrink(),
                       ],

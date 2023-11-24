@@ -2,6 +2,8 @@
 
 import 'dart:async';
 import 'dart:typed_data' show Uint8List;
+import 'package:bluetooth_print/bluetooth_print.dart';
+import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
@@ -27,8 +29,13 @@ class PrinterViewModel extends BaseViewModel {
   List<Printer>? listDevice = [];
   Printer? selectedBillPrinter;
   Printer? selectedProductPrinter;
+  List<BluetoothDevice>? bluetoothDevice;
+  BluetoothPrint? bluetoothPrint;
   PrinterViewModel() {
     scanPrinter();
+    if (GetPlatform.isAndroid || GetPlatform.isIOS) {
+      bluetoothPrint = BluetoothPrint.instance;
+    }
   }
 
   void scanPrinter() {
@@ -56,6 +63,33 @@ class PrinterViewModel extends BaseViewModel {
           }
         });
       });
+      setState(ViewStatus.Completed);
+    } catch (e) {
+      printError(info: e.toString());
+    }
+  }
+
+  Future<void> scanBluetoothPrinter() async {
+    try {
+      bluetoothPrint
+          ?.startScan(timeout: Duration(seconds: 4))
+          .then((value) => bluetoothDevice = value);
+
+      print(bluetoothDevice);
+      bool isConnected = await bluetoothPrint?.isConnected ?? false;
+
+      bluetoothPrint?.state.listen((state) {
+        print('******************* cur device status: $state');
+        switch (state) {
+          case BluetoothPrint.CONNECTED:
+            break;
+          case BluetoothPrint.DISCONNECTED:
+            break;
+          default:
+            break;
+        }
+      });
+
       setState(ViewStatus.Completed);
     } catch (e) {
       printError(info: e.toString());

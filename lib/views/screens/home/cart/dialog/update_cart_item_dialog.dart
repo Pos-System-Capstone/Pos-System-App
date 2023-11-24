@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/enums/product_enum.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
@@ -9,7 +10,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../../../../../data/model/index.dart';
 
 class UpdateCartItemDialog extends StatefulWidget {
-  final CartItem cartItem;
+  final ProductList cartItem;
   final int idx;
   const UpdateCartItemDialog(
       {required this.cartItem, required this.idx, super.key});
@@ -25,22 +26,22 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   List<Category> extraCategory = [];
   String? selectedSize;
   List<Attribute> listAttribute = [];
-  List<ProductAttribute> selectedAttributes = [];
+  List<Attributes> selectedAttributes = [];
   List<GroupProducts> groupProducts = [];
   @override
   void initState() {
     super.initState();
     productViewModel.getCartItemToUpdate(widget.cartItem);
-    extraCategory =
-        menuViewModel.getExtraCategoryByNormalProduct(widget.cartItem.product)!;
-    if (widget.cartItem.product.type == ProductTypeEnum.CHILD) {
+
+    if (widget.cartItem.type == ProductTypeEnum.CHILD) {
       childProducts = menuViewModel.getChildProductByParentProduct(
-          productViewModel.productInCart!.parentProductId!)!;
-      selectedSize = productViewModel.productInCart!.id;
-    }
-    if (widget.cartItem.product.type == ProductTypeEnum.COMBO) {
-      groupProducts = menuViewModel
-          .getGroupProductByComboProduct(widget.cartItem.product.id!)!;
+          productViewModel.productInCart.parentProductId!)!;
+      selectedSize = productViewModel.productInCart.productInMenuId;
+      extraCategory = menuViewModel
+          .getExtraCategoryByChildProduct(widget.cartItem.parentProductId!)!;
+    } else {
+      extraCategory = menuViewModel
+          .getExtraCategoryByNormalProduct(widget.cartItem.productInMenuId!)!;
     }
     listAttribute = productViewModel.listAttribute;
     selectedAttributes = widget.cartItem.attributes!;
@@ -105,17 +106,14 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
-                        children: widget.cartItem.product.type ==
-                                ProductTypeEnum.CHILD
+                        children: widget.cartItem.type == ProductTypeEnum.CHILD
                             ? [
                                 productSize(model),
                                 addExtra(model),
                                 productAttributes(model)
                               ]
-                            : widget.cartItem.product.type ==
-                                    ProductTypeEnum.COMBO
+                            : widget.cartItem.type == ProductTypeEnum.COMBO
                                 ? [
-                                    comboProduct(model),
                                     addExtra(model),
                                     productAttributes(model),
                                   ]
@@ -133,7 +131,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           TextFormField(
-                            initialValue: model.notes,
+                            initialValue: model.productInCart.note,
                             maxLines: 2,
                             decoration: InputDecoration(
                               hintText: "Ghi chú",
@@ -163,7 +161,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                     Icons.remove,
                                     size: 48,
                                   )),
-                              Text("${model.quantity}",
+                              Text("${model.productInCart.quantity}",
                                   style: Get.textTheme.titleLarge),
                               IconButton(
                                   onPressed: () {
@@ -175,7 +173,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                   )),
                             ],
                           ),
-                          model.quantity == 0
+                          model.productInCart.quantity == 0
                               ? Expanded(
                                   child: FilledButton(
                                       onPressed: () {
@@ -200,7 +198,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                         padding: const EdgeInsets.fromLTRB(
                                             4, 16, 4, 16),
                                         child: Text(
-                                            "Cập nhật ${formatPrice(model.totalAmount!)}",
+                                            "Cập nhật ${formatPrice(model.productInCart.finalAmount!)}",
                                             style: Get.textTheme.titleMedium
                                                 ?.copyWith(
                                                     color: Get.theme.colorScheme
@@ -245,9 +243,9 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                   Text(formatPrice(childProducts[i].sellingPrice!)),
                 ],
               ),
-              value: childProducts[i].id,
+              value: childProducts[i].menuProductId,
               groupValue: selectedSize,
-              selected: selectedSize == childProducts[i].id,
+              selected: selectedSize == childProducts[i].menuProductId,
               onChanged: (value) {
                 model.addProductToCartItem(childProducts[i]);
                 setSelectedRadio(value!);
@@ -305,57 +303,57 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
     );
   }
 
-  Widget comboProduct(ProductViewModel model) {
-    return SingleChildScrollView(
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: groupProducts.map((e) {
-            List<ProductsInGroup> productInGroup =
-                menuViewModel.getListProductInGroup(e.id);
-            return Column(
-              children: [
-                Text(e.name!, style: Get.textTheme.titleMedium),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: productInGroup.length,
-                  physics: ScrollPhysics(),
-                  itemBuilder: (context, i) {
-                    Product currentProduct = menuViewModel
-                        .getProductById(productInGroup[i].productId!);
-                    return CheckboxListTile(
-                      // dense: true,
-                      visualDensity: VisualDensity(
-                        horizontal: VisualDensity.minimumDensity,
-                        vertical: VisualDensity.minimumDensity,
-                      ),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(currentProduct.name!),
-                          Text(
-                              "+ ${formatPrice(productInGroup[i].additionalPrice!)}"),
-                        ],
-                      ),
-                      enabled:
-                          (model.countProductInGroupInExtra(productInGroup) <
-                                  e.quantity! ||
-                              model.isExtraExist(currentProduct.id ?? "")),
-                      value: model.isExtraExist(currentProduct.id ?? ""),
-                      selected: model.isExtraExist(currentProduct.id ?? ""),
-                      onChanged: (value) => {
-                        currentProduct.sellingPrice =
-                            productInGroup[i].additionalPrice,
-                        model.addOrRemoveExtra(currentProduct)
-                      },
-                    );
-                  },
-                ),
-              ],
-            );
-          }).toList()),
-    );
-  }
+  // Widget comboProduct(ProductViewModel model) {
+  //   return SingleChildScrollView(
+  //     child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: groupProducts.map((e) {
+  //           List<ProductsInGroup> productInGroup =
+  //               menuViewModel.getListProductInGroup(e.id);
+  //           return Column(
+  //             children: [
+  //               Text(e.name!, style: Get.textTheme.titleMedium),
+  //               ListView.builder(
+  //                 shrinkWrap: true,
+  //                 itemCount: productInGroup.length,
+  //                 physics: ScrollPhysics(),
+  //                 itemBuilder: (context, i) {
+  //                   Product currentProduct = menuViewModel
+  //                       .getProductById(productInGroup[i].productId!);
+  //                   return CheckboxListTile(
+  //                     // dense: true,
+  //                     visualDensity: VisualDensity(
+  //                       horizontal: VisualDensity.minimumDensity,
+  //                       vertical: VisualDensity.minimumDensity,
+  //                     ),
+  //                     title: Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Text(currentProduct.name!),
+  //                         Text(
+  //                             "+ ${formatPrice(productInGroup[i].additionalPrice!)}"),
+  //                       ],
+  //                     ),
+  //                     enabled:
+  //                         (model.countProductInGroupInExtra(productInGroup) <
+  //                                 e.quantity! ||
+  //                             model.isExtraExist(currentProduct.id ?? "")),
+  //                     value: model.isExtraExist(currentProduct.id ?? ""),
+  //                     selected: model.isExtraExist(currentProduct.id ?? ""),
+  //                     onChanged: (value) => {
+  //                       currentProduct.sellingPrice =
+  //                           productInGroup[i].additionalPrice,
+  //                       model.addOrRemoveExtra(currentProduct)
+  //                     },
+  //                   );
+  //                 },
+  //               ),
+  //             ],
+  //           );
+  //         }).toList()),
+  //   );
+  // }
 
   Widget productAttributes(ProductViewModel model) {
     return Column(

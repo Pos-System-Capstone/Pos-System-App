@@ -86,8 +86,8 @@ class CustomInterceptors extends Interceptor {
     return super.onError(err, handler);
   }
 }
-// or new Dio with a BaseOptions instance.
 
+// or new Dio with a BaseOptions instance
 class MyRequest {
   static BaseOptions options = BaseOptions(
       baseUrl: 'https://admin.reso.vn/api/v1/',
@@ -117,18 +117,7 @@ class MyRequest {
             title: "Lỗi hệ thống",
             content: "Vui lòng đăng nhập lại",
           );
-          res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
-        } else if (e.response?.statusCode == 401) {
-          await showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-          Get.offAllNamed(RouteHandler.LOGIN);
-        } else {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
+          res.then((value) => Get.offAllNamed(RouteHandler.WELCOME));
         }
         handler.next(e);
       },

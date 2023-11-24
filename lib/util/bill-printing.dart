@@ -185,15 +185,17 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                   ],
                 ),
                 if (order.promotionList != null || order.productList != [])
-                  for (PromotionListResponse promotion in order.promotionList!)
+                  for (PromotionList promotion in order.promotionList!)
                     pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
-                        pw.Text(
-                            "${promotion.promotionName} X ${promotion.quantity}",
+                        pw.Text("${promotion.promotionName}",
                             textAlign: pw.TextAlign.left,
                             style: pw.TextStyle(font: font, fontSize: 7)),
-                        pw.Text(formatPrice(promotion.discountAmount ?? 0),
+                        pw.Text(
+                            promotion.effectType == "GET_POINT"
+                                ? ("+${promotion.discountAmount} Điểm")
+                                : ("- ${formatPrice(promotion.discountAmount ?? 0)}"),
                             textAlign: pw.TextAlign.right,
                             style: pw.TextStyle(font: font, fontSize: 7)),
                       ],

@@ -34,6 +34,7 @@ class LoginViewModel extends BaseViewModel {
               }
           });
     } catch (e) {
+      hideDialog();
       setState(ViewStatus.Error);
     }
   }

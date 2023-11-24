@@ -32,7 +32,10 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     FilledButton(
-                        onPressed: () => model.scanPrinter(),
+                        onPressed: () {
+                          // model.scanPrinter();
+                          model.scanBluetoothPrinter();
+                        },
                         child: model.status == ViewStatus.Loading
                             ? Text('Dang tìm kiếm...')
                             : Text('Tìm kiếm')),

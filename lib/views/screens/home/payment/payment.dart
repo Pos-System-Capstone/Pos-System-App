@@ -190,7 +190,7 @@ Widget paymentTypeSelect() {
           SizedBox(
             height: 8,
           ),
-          model.selectedPaymentMethod?.type == "VIETQR" &&
+          model.selectedPaymentMethod?.type == PaymentTypeEnums.POINTIFY &&
                   model.paymentCheckingStatus == PaymentStatusEnum.PENDING
               ? OutlinedButton(
                   onPressed: () {

@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'dart:math';
 import 'package:get/get.dart';
-import 'package:pos_apps/data/model/response/make_payment_response.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
@@ -9,10 +8,13 @@ import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
+import 'package:pos_apps/views/screens/home/payment/payment_dialogs/scan_membership_card_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/api/order_api.dart';
 import '../data/api/payment_data.dart';
+import '../data/model/cart_model.dart';
 import '../data/model/index.dart';
+import '../data/model/payment_response_model.dart';
 import '../views/screens/home/payment/payment_dialogs/payment_dialog.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
 import '../views/widgets/printer_dialogs/add_printer_dialog.dart';
@@ -20,7 +22,6 @@ import '../views/widgets/printer_dialogs/add_printer_dialog.dart';
 class OrderViewModel extends BaseViewModel {
   int selectedTable = 01;
   String deliveryType = DeliType().eatIn.type;
-  Cart? currentCart;
   late OrderAPI api = OrderAPI();
   String? currentOrderId;
   num customerMoney = 0;
@@ -55,11 +56,12 @@ class OrderViewModel extends BaseViewModel {
           picUrl:
               'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
       PaymentProvider(
-          name: "Visa/Mastercard",
-          type: PaymentTypeEnums.VISA,
+          name: "Thẻ thành viên",
+          type: PaymentTypeEnums.POINTIFY,
           picUrl:
-              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fvisa-credit-card.png?alt=media&token=1cfb48ab-b957-47db-8f52-89da33d0fb39'),
+              "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fpointify.jpg?alt=media&token=c1953b7c-23d4-4fb6-b866-ac13ae639a00")
     ];
+    selectedPaymentMethod = listPayment[0];
   }
 
   // void getListPayment() async {
@@ -80,7 +82,6 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void selectPayment(PaymentProvider payment) {
-    qrCodeData = null;
     selectedPaymentMethod = payment;
     currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
     notifyListeners();
@@ -105,10 +106,10 @@ class OrderViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<bool> placeOrder(OrderModel order) async {
+  Future<bool> placeOrder(CartModel order) async {
     showLoadingDialog();
     Account? userInfo = await getUserInfo();
-    await api.placeOrder(order, userInfo!.storeId).then((value) => {
+    await api.createOrder(order, userInfo!.storeId).then((value) => {
           hideDialog(),
           showPaymentBotomSheet(value),
         });
@@ -238,14 +239,6 @@ class OrderViewModel extends BaseViewModel {
     //       currentOrder?.paymentMethod = value,
     //       // ignore: avoid_print
     //     });
-    currentOrder!.discountProduct = 0;
-    currentOrder!.productList?.forEach((element) {
-      currentOrder!.discountProduct =
-          currentOrder!.discountProduct! + element.discount!;
-    });
-    currentOrder!.discountPromotion = 0;
-    currentOrder!.discountPromotion =
-        currentOrder!.discount! - currentOrder!.discountProduct!;
     for (var element in listPayment) {
       if (element!.type! == currentOrder!.paymentType) {
         selectedPaymentMethod = element;
@@ -269,16 +262,43 @@ class OrderViewModel extends BaseViewModel {
           title: "Thông báo", content: "Vui lòng kiểm tra lại thanh toán");
       return;
     }
-    await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
-        selectedPaymentMethod!.type);
-    Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
-        selectedPaymentMethod!.name ?? "Tiền mặt");
-    clearOrder();
-    await showAlertDialog(
-        title: "Thanh toán thành công",
-        content: "Đơn hàng thanh toán thành công");
-    Duration(seconds: 2);
-    chooseTableDialog();
+    if (selectedPaymentMethod?.type == PaymentTypeEnums.POINTIFY) {
+      String? code = await scanPointifyWallet();
+      if (code != null) {
+        MakePaymentResponse? makePaymentResponse =
+            await api.makePayment(orderId, code, selectedPaymentMethod?.type);
+        if (makePaymentResponse?.status == "FAIL") {
+          await showAlertDialog(
+              title: "Lỗi thanh toán",
+              content: makePaymentResponse?.message ?? '');
+        } else if (makePaymentResponse?.status == "SUCCESS") {
+          await api.updateOrder(userInfo!.storeId, orderId,
+              OrderStatusEnum.PAID, makePaymentResponse?.paymentType);
+          Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
+              selectedPaymentMethod!.name ?? "Tiền mặt");
+          clearOrder();
+          await showAlertDialog(
+              title: "Thanh toán thành công",
+              content: "Đơn hàng thanh toán thành công");
+          Duration(seconds: 2);
+          chooseTableDialog();
+        }
+      } else {
+        return;
+      }
+    } else {
+      await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
+          selectedPaymentMethod!.type);
+      Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
+          selectedPaymentMethod!.name ?? "Tiền mặt");
+      clearOrder();
+      await showAlertDialog(
+          title: "Thanh toán thành công",
+          content: "Đơn hàng thanh toán thành công");
+      Duration(seconds: 2);
+      chooseTableDialog();
+    }
+
     // Duration(seconds: 2);
     // await launchStoreLogo();
   }

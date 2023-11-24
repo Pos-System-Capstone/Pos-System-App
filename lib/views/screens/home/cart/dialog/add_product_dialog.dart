@@ -7,6 +7,7 @@ import 'package:pos_apps/view_model/menu_view_model.dart';
 import 'package:pos_apps/view_model/product_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../../../../../data/model/cart_model.dart';
 import '../../../../../data/model/index.dart';
 
 class ProductDialog extends StatefulWidget {
@@ -24,30 +25,26 @@ class _ProductDialogState extends State<ProductDialog> {
   List<Category> extraCategory = [];
   String? selectedSize;
   List<Attribute> listAttribute = [];
-  List<ProductAttribute> selectedAttributes = [];
+  List<Attributes> selectedAttributes = [];
   List<GroupProducts> groupProducts = [];
 
   @override
   void initState() {
     super.initState();
     productViewModel.addProductToCartItem(widget.product);
-    extraCategory =
-        menuViewModel.getExtraCategoryByNormalProduct(widget.product)!;
+    extraCategory = menuViewModel
+        .getExtraCategoryByNormalProduct(widget.product.menuProductId!)!;
 
     if (widget.product.type == ProductTypeEnum.PARENT) {
       childProducts =
           menuViewModel.getChildProductByParentProduct(widget.product.id!)!;
       if (childProducts.isNotEmpty) {
-        selectedSize = childProducts[0].id;
+        selectedSize = childProducts[0].menuProductId;
       }
       productViewModel.addProductToCartItem(childProducts[0]);
     }
-    if (widget.product.type == ProductTypeEnum.COMBO) {
-      groupProducts =
-          menuViewModel.getGroupProductByComboProduct(widget.product.id!)!;
-    }
     listAttribute = productViewModel.listAttribute;
-    selectedAttributes = productViewModel.currentAttributes;
+    selectedAttributes = productViewModel.productInCart.attributes!;
   }
 
   setSelectedRadio(String val) {
@@ -117,7 +114,7 @@ class _ProductDialogState extends State<ProductDialog> {
                               ]
                             : widget.product.type == ProductTypeEnum.COMBO
                                 ? [
-                                    comboProduct(model),
+                                    // comboProduct(model),
                                     addExtra(model),
                                     productAttributes(model),
                                   ]
@@ -151,7 +148,7 @@ class _ProductDialogState extends State<ProductDialog> {
                         children: [
                           IconButton(
                               onPressed: () {
-                                if (model.quantity > 1) {
+                                if (model.productInCart.quantity! > 1) {
                                   model.decreaseQuantity();
                                 }
                               },
@@ -159,7 +156,7 @@ class _ProductDialogState extends State<ProductDialog> {
                                 Icons.remove,
                                 size: 48,
                               )),
-                          Text("${model.quantity}",
+                          Text("${model.productInCart.quantity}",
                               style: Get.textTheme.titleLarge),
                           IconButton(
                               onPressed: () {
@@ -178,7 +175,7 @@ class _ProductDialogState extends State<ProductDialog> {
                                   padding:
                                       const EdgeInsets.fromLTRB(4, 16, 4, 16),
                                   child: Text(
-                                      "Thêm ${formatPrice(model.totalAmount!)}",
+                                      "Thêm ${formatPrice(model.productInCart.finalAmount!)}",
                                       style: Get.textTheme.titleMedium
                                           ?.copyWith(
                                               color: Get.theme.colorScheme
@@ -217,13 +214,13 @@ class _ProductDialogState extends State<ProductDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Size ${childProducts[i].size!}"),
+                  Text(childProducts[i].name!),
                   Text(formatPrice(childProducts[i].sellingPrice!)),
                 ],
               ),
-              value: childProducts[i].id,
+              value: childProducts[i].menuProductId,
               groupValue: selectedSize,
-              selected: selectedSize == childProducts[i].id,
+              selected: selectedSize == childProducts[i].menuProductId,
               onChanged: (value) {
                 model.addProductToCartItem(childProducts[i]);
                 setSelectedRadio(value!);
@@ -266,8 +263,10 @@ class _ProductDialogState extends State<ProductDialog> {
                         ],
                       ),
 
-                      value: model.isExtraExist(extraProduct[i].id ?? ""),
-                      selected: model.isExtraExist(extraProduct[i].id ?? ""),
+                      value: model
+                          .isExtraExist(extraProduct[i].menuProductId ?? ""),
+                      selected: model
+                          .isExtraExist(extraProduct[i].menuProductId ?? ""),
                       onChanged: (value) {
                         model.addOrRemoveExtra(extraProduct[i]);
                       },
@@ -280,60 +279,60 @@ class _ProductDialogState extends State<ProductDialog> {
     );
   }
 
-  Widget comboProduct(ProductViewModel model) {
-    return SingleChildScrollView(
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: groupProducts.map((e) {
-            List<ProductsInGroup> productInGroup =
-                menuViewModel.getListProductInGroup(e.id);
-            return Column(
-              children: [
-                Text("${e.name!} (Tối đa ${e.quantity} sản phẩm)",
-                    style: Get.textTheme.titleMedium),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: productInGroup.length,
-                  physics: ScrollPhysics(),
-                  itemBuilder: (context, i) {
-                    Product currentProduct = menuViewModel
-                        .getProductById(productInGroup[i].productId!);
-                    return CheckboxListTile(
-                      visualDensity: VisualDensity(
-                        horizontal: VisualDensity.maximumDensity,
-                        vertical: VisualDensity.maximumDensity,
-                      ),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            currentProduct.name!,
-                            maxLines: 2,
-                          ),
-                          Text(
-                              "+ ${formatPrice(productInGroup[i].additionalPrice!)}"),
-                        ],
-                      ),
-                      value: model.isExtraExist(currentProduct.id ?? ""),
-                      selected: model.isExtraExist(currentProduct.id ?? ""),
-                      enabled:
-                          (model.countProductInGroupInExtra(productInGroup) <
-                                  e.quantity! ||
-                              model.isExtraExist(currentProduct.id ?? "")),
-                      onChanged: (value) => {
-                        currentProduct.sellingPrice =
-                            productInGroup[i].additionalPrice,
-                        model.addOrRemoveExtra(currentProduct)
-                      },
-                    );
-                  },
-                ),
-              ],
-            );
-          }).toList()),
-    );
-  }
+  // Widget comboProduct(ProductViewModel model) {
+  //   return SingleChildScrollView(
+  //     child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: groupProducts.map((e) {
+  //           List<ProductsInGroup> productInGroup =
+  //               menuViewModel.getListProductInGroup(e.id);
+  //           return Column(
+  //             children: [
+  //               Text("${e.name!} (Tối đa ${e.quantity} sản phẩm)",
+  //                   style: Get.textTheme.titleMedium),
+  //               ListView.builder(
+  //                 shrinkWrap: true,
+  //                 itemCount: productInGroup.length,
+  //                 physics: ScrollPhysics(),
+  //                 itemBuilder: (context, i) {
+  //                   Product currentProduct = menuViewModel
+  //                       .getProductById(productInGroup[i].productId!);
+  //                   return CheckboxListTile(
+  //                     visualDensity: VisualDensity(
+  //                       horizontal: VisualDensity.maximumDensity,
+  //                       vertical: VisualDensity.maximumDensity,
+  //                     ),
+  //                     title: Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Text(
+  //                           currentProduct.name!,
+  //                           maxLines: 2,
+  //                         ),
+  //                         Text(
+  //                             "+ ${formatPrice(productInGroup[i].additionalPrice!)}"),
+  //                       ],
+  //                     ),
+  //                     value: model.isExtraExist(currentProduct.id ?? ""),
+  //                     selected: model.isExtraExist(currentProduct.id ?? ""),
+  //                     enabled:
+  //                         (model.countProductInGroupInExtra(productInGroup) <
+  //                                 e.quantity! ||
+  //                             model.isExtraExist(currentProduct.id ?? "")),
+  //                     onChanged: (value) => {
+  //                       currentProduct.sellingPrice =
+  //                           productInGroup[i].additionalPrice,
+  //                       model.addOrRemoveExtra(currentProduct)
+  //                     },
+  //                   );
+  //                 },
+  //               ),
+  //             ],
+  //           );
+  //         }).toList()),
+  //   );
+  // }
 
   Widget productAttributes(ProductViewModel model) {
     return Column(
