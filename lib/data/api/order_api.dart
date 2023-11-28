@@ -2,11 +2,14 @@ import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
+import 'package:pos_apps/data/model/topup_wallet_response.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 
 import '../../util/request.dart';
 import '../model/payment_response_model.dart';
+import '../model/topup_wallet_request.dart';
 
 class OrderAPI {
   Future placeOrder(OrderModel order, String storeId) async {
@@ -34,12 +37,34 @@ class OrderAPI {
     return jsonList;
   }
 
-  Future<OrderResponseModel> getOrderOfStore(
+  Future<TopUpWalletResponse?> topupMemberWallet(
+      TopUpWalletRequest data) async {
+    try {
+      final res =
+          await request.post('users/top-up-wallet', data: data.toJson());
+      var json = res.data;
+      TopUpWalletResponse topUpWalletResponse =
+          TopUpWalletResponse.fromJson(json);
+      return topUpWalletResponse;
+    } catch (e) {
+      showAlertDialog(
+          title: "Lỗi nạp tiền", content: "Nạp tiền không thành công");
+      return null;
+    }
+  }
+
+  Future<OrderResponseModel?> getOrderOfStore(
       String storeId, String orderId) async {
-    final res = await request.get('stores/$storeId/orders/$orderId');
-    var jsonList = res.data;
-    OrderResponseModel orderResponse = OrderResponseModel.fromJson(jsonList);
-    return orderResponse;
+    try {
+      final res = await request.get('stores/$storeId/orders/$orderId');
+      var jsonList = res.data;
+      OrderResponseModel orderResponse = OrderResponseModel.fromJson(jsonList);
+      return orderResponse;
+    } catch (e) {
+      showAlertDialog(
+          title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
+      return null;
+    }
   }
 
   Future updateOrder(

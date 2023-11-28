@@ -18,6 +18,7 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   OrderViewModel orderViewModel = Get.find<OrderViewModel>();
+  TextEditingController orderController = TextEditingController();
   bool isToday = true;
   bool isYesterday = false;
   int page = 1;
@@ -87,7 +88,72 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     page: page)
                               },
                           child: Text("Hôm qua")),
-                      Spacer(),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Expanded(
+                          child: TextField(
+                        controller: orderController,
+                        decoration: InputDecoration(
+                            hintText: "Quét mã để tìm đơn hàng",
+                            hintStyle: Get.textTheme.bodyMedium,
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            filled: true,
+                            isDense: true,
+                            labelStyle: Get.textTheme.labelLarge,
+                            fillColor: Get.theme.colorScheme.background,
+                            prefixIcon: Icon(
+                              Icons.portrait_rounded,
+                              color: Get.theme.colorScheme.onBackground,
+                            ),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  orderController.clear();
+                                },
+                                icon: Icon(
+                                  Icons.clear,
+                                )),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color:
+                                        Get.theme.colorScheme.primaryContainer,
+                                    width: 2.0)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color:
+                                        Get.theme.colorScheme.primaryContainer,
+                                    width: 2.0)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color:
+                                        Get.theme.colorScheme.primaryContainer,
+                                    width: 2.0)),
+                            contentPadding: EdgeInsets.all(16),
+                            isCollapsed: true,
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Get.theme.colorScheme.error,
+                                    width: 2.0))),
+                      )),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      FilledButton(
+                          onPressed: () => {
+                                if (orderController.text.isNotEmpty)
+                                  {orderInfoDialog(orderController.text)}
+                              },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Kiểm tra"),
+                          )),
+                      SizedBox(
+                        width: 8,
+                      ),
                       IconButton(
                           onPressed: () => {
                                 fetchOrder(),
@@ -164,10 +230,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                   DateTime.now().toString()),
                                             ),
                                             Text(
-                                                model.getPaymentName(model
-                                                        .listOrder[index]
-                                                        .paymentType ??
-                                                    'CASH'),
+                                                "${model.getPaymentName(model.listOrder[index].paymentType ?? 'CASH')} (${formatPrice(model.listOrder[index].finalAmount ?? 0)})",
                                                 style: Get.textTheme.titleSmall
                                                     ?.copyWith(
                                                         color: Get

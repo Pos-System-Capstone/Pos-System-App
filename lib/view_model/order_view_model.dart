@@ -4,15 +4,19 @@ import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
+import 'package:pos_apps/data/model/topup_wallet_request.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
 import 'package:pos_apps/views/screens/home/payment/payment_dialogs/scan_membership_card_dialog.dart';
+import 'package:pos_apps/views/screens/orders/dialogs/order_info_dailog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../data/api/account_data.dart';
 import '../data/api/order_api.dart';
 import '../data/api/payment_data.dart';
 import '../data/model/cart_model.dart';
+import '../data/model/customer.dart';
 import '../data/model/index.dart';
 import '../data/model/payment_response_model.dart';
 import '../views/screens/home/payment/payment_dialogs/payment_dialog.dart';
@@ -29,13 +33,15 @@ class OrderViewModel extends BaseViewModel {
   OrderResponseModel? currentOrder;
   List<PaymentProvider?> listPayment = [];
   PaymentProvider? selectedPaymentMethod;
+  AccountData accountData = AccountData();
   PaymentData? paymentData;
   List<OrderInList> listOrder = [];
   PaymentStatusResponse? paymentStatus;
   String currentPaymentStatusMessage = "Chưa thanh toán";
   String paymentCheckingStatus = PaymentStatusEnum.CANCELED;
   String? qrCodeData;
-
+  CustomerInfoModel? memberShipInfo;
+  String topupPaymentType = PaymentTypeEnums.CASH;
   OrderViewModel() {
     api = OrderAPI();
     paymentData = PaymentData();
@@ -64,14 +70,6 @@ class OrderViewModel extends BaseViewModel {
     selectedPaymentMethod = listPayment[0];
   }
 
-  // void getListPayment() async {
-  //   setState(ViewStatus.Loading);
-  //   await paymentData!.getListPayment().then((value) {
-  //     listPayment = value;
-  //   });
-  //   setState(ViewStatus.Completed);
-  // }
-
   String getPaymentName(String paymentType) {
     for (var item in listPayment) {
       if (item!.type == paymentType) {
@@ -79,6 +77,48 @@ class OrderViewModel extends BaseViewModel {
       }
     }
     return "Tiền mặt";
+  }
+
+  void scanMembership(String phone) async {
+    try {
+      setState(ViewStatus.Loading);
+      memberShipInfo = await accountData.scanCustomer(phone);
+      setState(ViewStatus.Completed);
+      notifyListeners();
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+      setState(ViewStatus.Completed);
+    }
+  }
+
+  void removeMembership() {
+    memberShipInfo = null;
+    notifyListeners();
+  }
+
+  void setTopUpType(String type) {
+    topupPaymentType = type;
+    notifyListeners();
+  }
+
+  Future topupWallet(num amount) async {
+    showLoadingDialog();
+    Account? userInfo = await getUserInfo();
+    TopUpWalletRequest request = TopUpWalletRequest(
+        storeId: userInfo!.storeId,
+        userId: memberShipInfo?.id ?? '',
+        amount: amount,
+        paymentType: topupPaymentType);
+    await api.topupMemberWallet(request).then((value) => {
+          if (value == null)
+            {showAlertDialog(content: "Nạp tiền không thành công")}
+          else
+            {
+              showAlertDialog(
+                  title: value.status == "SUCCESS" ? "Thành công" : "Thất bại",
+                  content: value.message ?? '')
+            }
+        });
   }
 
   void selectPayment(PaymentProvider payment) {
@@ -228,12 +268,17 @@ class OrderViewModel extends BaseViewModel {
     Account? userInfo = await getUserInfo();
 
     await api.getOrderOfStore(userInfo!.storeId, orderId).then((value) => {
-          currentOrder = value,
-          value.orderStatus == OrderStatusEnum.PENDING
-              ? currentPaymentStatusMessage =
-                  "Vui lòng chọn phương thức thanh toán"
-              : "Chưa thanh toán",
-          setState(ViewStatus.Completed)
+          if (value == null)
+            {setState(ViewStatus.Completed)}
+          else
+            {
+              currentOrder = value,
+              value.orderStatus == OrderStatusEnum.PENDING
+                  ? currentPaymentStatusMessage =
+                      "Vui lòng chọn phương thức thanh toán"
+                  : "Chưa thanh toán",
+              setState(ViewStatus.Completed)
+            }
         });
     // await paymentData?.getPaymentProviderOfOrder(orderId).then((value) => {
     //       currentOrder?.paymentMethod = value,

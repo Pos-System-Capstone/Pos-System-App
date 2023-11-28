@@ -132,11 +132,16 @@ class CartViewModel extends BaseViewModel {
     prepareOrder();
   }
 
-  void selectVoucher(String code) {
-    List<String> parts = code.split("-");
-    cart.promotionCode = parts[0];
-    cart.voucherCode = parts[1];
-    prepareOrder();
+  Future<void> selectVoucher(String code) async {
+    if (code.contains('-')) {
+      List<String> parts = code.split("-");
+      cart.promotionCode = parts[0];
+      cart.voucherCode = parts[1];
+    } else {
+      cart.promotionCode = code;
+      cart.voucherCode = null;
+    }
+    await prepareOrder();
   }
 
   List<PaymentProvider?> getListPayment() {

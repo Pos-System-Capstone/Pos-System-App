@@ -10,6 +10,7 @@ class DeliType {
   TakeAway takeAway = TakeAway();
   EatIn eatIn = EatIn();
   Delivery delivery = Delivery();
+  Topup topup = Topup();
 }
 
 class TakeAway {
@@ -28,6 +29,12 @@ class Delivery {
   String type = 'DELIVERY';
   IconData icon = Icons.delivery_dining;
   String label = 'Giao hàng';
+}
+
+class Topup {
+  String type = 'TOP_UP';
+  IconData icon = Icons.credit_card;
+  String label = 'Nạp thẻ';
 }
 
 class OrderStatusEnum {
@@ -57,6 +64,8 @@ dynamic showOrderType(String type) {
     return deliType.eatIn;
   } else if (type == deliType.delivery.type) {
     return deliType.delivery;
+  } else if (type == deliType.topup.type) {
+    return deliType.topup;
   } else {
     return deliType.eatIn;
   }

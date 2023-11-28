@@ -225,7 +225,7 @@ class _CartScreenState extends State<CartScreen> {
                                 padding:
                                     const EdgeInsets.fromLTRB(0, 12, 0, 12),
                                 child: Text(
-                                  'Giảm giá',
+                                  'Khuyến mãi',
                                   style: Get.textTheme.bodyMedium,
                                 ),
                               ),

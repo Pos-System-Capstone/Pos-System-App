@@ -34,7 +34,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                       child: TextField(
                     controller: voucherController,
                     decoration: InputDecoration(
-                        hintText: "Nhập mã giảm giá",
+                        hintText: "Nhập mã giảm giá hoặc quét mã",
                         hintStyle: Get.textTheme.bodyMedium,
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         filled: true,
@@ -50,7 +50,10 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                             voucherController.clear();
                             model.removeVoucher();
                           },
-                          icon: Icon(Icons.clear),
+                          icon: Icon(
+                            Icons.clear_rounded,
+                            size: 32,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -76,15 +79,21 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                 width: 2.0))),
                   )),
                   SizedBox(
-                    width: 16,
+                    width: 8,
                   ),
-                  OutlinedButton(
+                  FilledButton(
                       onPressed: () =>
                           {model.selectVoucher(voucherController.text)},
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("Chọn"),
-                      ))
+                        child: Text("Kiểm tra"),
+                      )),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
                 ],
               ),
               Padding(
@@ -123,7 +132,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                 : Get.theme.colorScheme.background,
                         child: SizedBox(
                           width: 220,
-                          height: 200,
+                          height: 180,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -142,6 +151,8 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                     child: Text(
                                       item.description ?? '',
                                       style: Get.textTheme.bodySmall,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 4,
                                     ),
                                   )),
                               Padding(
@@ -152,7 +163,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                                     Chip(
                                         label: Text(
                                       item.promotionType! == 2
-                                          ? "Khuyễn mãi"
+                                          ? "Khuyến mãi thường"
                                           : item.promotionType! == 3
                                               ? "Sử dụng voucher"
                                               : "Tự động giảm",

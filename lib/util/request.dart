@@ -110,7 +110,7 @@ class MyRequest {
         if (e.response?.statusCode == 400) {
           showAlertDialog(
             title: "Lỗi",
-            content: e.response?.data["Error"],
+            content: e.response?.data["error"],
           );
         } else if (e.response?.statusCode == 500) {
           Future<bool> res = showConfirmDialog(

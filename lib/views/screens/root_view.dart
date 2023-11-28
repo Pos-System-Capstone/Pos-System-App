@@ -6,6 +6,7 @@ import 'package:pos_apps/views/screens/home/cart/cart_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../widgets/other_dialogs/dialog.dart';
 import 'home/cart/cart.dart';
+import 'membership/membership_screen.dart';
 import 'orders/orders.dart';
 import 'profile/profile.dart';
 import 'settings/setting.dart';
@@ -22,6 +23,7 @@ class _RootScreenState extends State<RootScreen> {
     AddToCartScreen(),
     OrdersScreen(),
     ProfileScreen(),
+    MembershipScreen(),
     SettingsScreen(),
   ];
 
@@ -30,6 +32,7 @@ class _RootScreenState extends State<RootScreen> {
     CartScreen(),
     OrdersScreen(),
     ProfileScreen(),
+    MembershipScreen(),
     SettingsScreen(),
   ];
   List<BottomNavigationBarItem> items = const [
@@ -54,6 +57,11 @@ class _RootScreenState extends State<RootScreen> {
       label: 'Cửa hàng',
     ),
     BottomNavigationBarItem(
+      icon: Icon(Icons.card_membership),
+      activeIcon: Icon(Icons.card_membership_outlined),
+      label: 'Thành viên',
+    ),
+    BottomNavigationBarItem(
       icon: Icon(Icons.settings),
       activeIcon: Icon(Icons.settings_outlined),
       label: 'Thiết lập',
@@ -74,6 +82,11 @@ class _RootScreenState extends State<RootScreen> {
       icon: Icon(Icons.store),
       selectedIcon: Icon(Icons.store_outlined),
       label: Text('Cửa hàng'),
+    ),
+    NavigationRailDestination(
+      icon: Icon(Icons.card_membership),
+      selectedIcon: Icon(Icons.card_membership_outlined),
+      label: Text('Thành viên'),
     ),
     NavigationRailDestination(
       icon: Icon(Icons.settings),
