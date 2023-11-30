@@ -141,7 +141,7 @@ class CartViewModel extends BaseViewModel {
       cart.promotionCode = code;
       cart.voucherCode = null;
     }
-    await prepareOrder();
+    prepareOrder();
   }
 
   List<PaymentProvider?> getListPayment() {
@@ -151,7 +151,6 @@ class CartViewModel extends BaseViewModel {
   }
 
   Future<bool> prepareOrder() async {
-    showLoadingDialog();
     cart.orderType = Get.find<OrderViewModel>().deliveryType;
     cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
     cart.customerId = customer?.id;
@@ -171,9 +170,11 @@ class CartViewModel extends BaseViewModel {
     Account? userInfo = await getUserInfo();
     await api.prepareOrder(cart, userInfo!.storeId).then((value) => {
           cart = value,
-          hideDialog(),
         });
     notifyListeners();
+    Get.snackbar("Kiểm tra giỏ hàng", cart.message ?? '',
+        duration: Duration(milliseconds: 1500));
+
     return true;
   }
 

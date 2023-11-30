@@ -3,8 +3,12 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 String formatPrice(num price, {num discount = 0}) {
-  price = price - discount;
-  return NumberFormat.simpleCurrency(locale: 'vi').format(price);
+  final format = NumberFormat.currency(
+    locale: 'vi_VN',
+    symbol: '',
+    decimalDigits: 0,
+  );
+  return format.format(price);
 }
 
 Widget priceWidget(num price, TextStyle? style, {num discount = 0}) {
@@ -34,7 +38,7 @@ String convertPrice(num price, {num discount = 0}) {
 }
 
 String formatPriceWithoutUnit(num price) {
-  NumberFormat format = NumberFormat("###0.0");
+  NumberFormat format = NumberFormat("#,###.##");
   format.minimumFractionDigits = 0;
   return format.format(price);
 }

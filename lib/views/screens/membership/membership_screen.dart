@@ -26,14 +26,13 @@ class _MembershipScreenState extends State<MembershipScreen> {
       child: ScopedModelDescendant<OrderViewModel>(
           builder: (context, build, model) {
         return Scaffold(
-          body: Expanded(
-              child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -97,16 +96,16 @@ class _MembershipScreenState extends State<MembershipScreen> {
                         )),
                   ],
                 ),
-                SizedBox(
-                  height: 32,
-                ),
-                Center(child: userCard(model)),
-                SizedBox(
-                  height: 32,
-                ),
-              ],
-            ),
-          )),
+              ),
+              SizedBox(
+                height: 32,
+              ),
+              Center(child: userCard(model)),
+              SizedBox(
+                height: 32,
+              ),
+            ],
+          ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(

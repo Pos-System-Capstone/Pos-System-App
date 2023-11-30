@@ -355,7 +355,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: Column(
                       children: [
                         Text(
-                          formatPrice(item.totalAmount ?? 0),
+                          formatPrice(item.finalAmount ?? 0),
                           style: Get.textTheme.bodyLarge,
                         ),
                         item.discount != null && item.discount != 0

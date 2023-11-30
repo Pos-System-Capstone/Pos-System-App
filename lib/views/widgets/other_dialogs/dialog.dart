@@ -503,7 +503,7 @@ Widget productItem(ProductList item) {
                 child: Column(
                   children: [
                     Text(
-                      formatPrice(item.totalAmount!),
+                      formatPrice(item.finalAmount!),
                       style: Get.textTheme.bodyLarge,
                     ),
                     item.discount != 0
