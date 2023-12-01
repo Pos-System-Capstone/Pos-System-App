@@ -7,10 +7,12 @@ class SessionDetailReport {
   num? totalBanking;
   num? totalMomo;
   num? totalVisa;
+  num? totalPointify;
   num? cashAmount;
   num? momoAmount;
   num? bankingAmount;
   num? visaAmount;
+  num? pointifyAmount;
 
   SessionDetailReport(
       {this.totalAmount,
@@ -21,10 +23,12 @@ class SessionDetailReport {
       this.totalBanking,
       this.totalMomo,
       this.totalVisa,
+      this.totalPointify,
       this.cashAmount,
       this.momoAmount,
       this.bankingAmount,
-      this.visaAmount});
+      this.visaAmount,
+      this.pointifyAmount});
 
   SessionDetailReport.fromJson(Map<String, dynamic> json) {
     totalAmount = json['totalAmount'];
@@ -35,10 +39,12 @@ class SessionDetailReport {
     totalBanking = json['totalBanking'];
     totalMomo = json['totalMomo'];
     totalVisa = json['totalVisa'];
+    totalPointify = json['totalPointify'];
     cashAmount = json['cashAmount'];
     momoAmount = json['momoAmount'];
     bankingAmount = json['bankingAmount'];
     visaAmount = json['visaAmount'];
+    pointifyAmount = json['pointifyAmount'];
   }
 
   Map<String, dynamic> toJson() {

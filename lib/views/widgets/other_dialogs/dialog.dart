@@ -368,6 +368,12 @@ void sessionDetailsDialog(Session session) {
                               "0",
                         ),
                         dashboardCard(
+                          title: "Số đơn thẻ thành viên",
+                          value:
+                              sessionDetailReport?.totalPointify.toString() ??
+                                  "0",
+                        ),
+                        dashboardCard(
                           title: "Số đơn Visa",
                           value:
                               sessionDetailReport?.totalVisa.toString() ?? "0",
@@ -386,6 +392,11 @@ void sessionDetailsDialog(Session session) {
                           title: "Doanh thu chuyển khoản",
                           value: formatPrice(
                               sessionDetailReport?.bankingAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu ví thành viên",
+                          value: formatPrice(
+                              sessionDetailReport?.pointifyAmount ?? 0),
                         ),
                         dashboardCard(
                           title: "Doanh thu Visa",
@@ -423,8 +434,8 @@ Widget dashboardCard({required String title, required String value}) {
   return Card(
     child: Container(
       padding: EdgeInsets.all(16),
-      height: 160,
-      width: 200,
+      height: 140,
+      width: 160,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -433,7 +444,7 @@ Widget dashboardCard({required String title, required String value}) {
             child: Center(
               child: Text(
                 title,
-                style: Get.textTheme.titleMedium,
+                style: Get.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
             ),

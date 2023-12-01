@@ -428,6 +428,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                         ],
                       ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
