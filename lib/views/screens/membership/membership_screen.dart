@@ -263,12 +263,12 @@ class _MembershipScreenState extends State<MembershipScreen> {
                   width: 8,
                 ),
                 FilledButton(
-                    onPressed: () {
+                    onPressed: () async {
                       bool res = false;
-                      showConfirmDialog(confirmText: "Xác nhận")
-                          .then((value) => res = value);
+                      res = await showConfirmDialog(confirmText: "Xác nhận");
                       if (res) {
-                        model.topupWallet(num.parse(topupController.text));
+                        await model
+                            .topupWallet(num.parse(topupController.text));
                       }
                     },
                     child: Padding(
