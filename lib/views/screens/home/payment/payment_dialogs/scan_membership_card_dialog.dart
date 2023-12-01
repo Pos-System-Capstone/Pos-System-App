@@ -7,8 +7,8 @@ Future<String?> scanPointifyWallet() async {
   await Get.dialog(AlertDialog(
     title: Text("Quét thẻ thành viên"),
     content: SizedBox(
-      width: Get.width * 0.6,
-      height: 300,
+      width: Get.width * 0.5,
+      height: 160,
       child: Column(
         children: [
           Expanded(
@@ -32,7 +32,7 @@ Future<String?> scanPointifyWallet() async {
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('Cập nhật', style: Get.textTheme.titleMedium),
+            child: Text('Thanh toán', style: Get.textTheme.titleMedium),
           )),
       TextButton(
           onPressed: () {

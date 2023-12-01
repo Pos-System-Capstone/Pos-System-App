@@ -28,14 +28,13 @@ class _MembershipWidgetState extends State<MembershipWidget> {
       model: Get.find<CartViewModel>(),
       child: ScopedModelDescendant<CartViewModel>(
           builder: (context, build, model) {
-        return Expanded(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -99,13 +98,13 @@ class _MembershipWidgetState extends State<MembershipWidget> {
                       )),
                 ],
               ),
-              SizedBox(
-                height: 32,
-              ),
-              Center(child: userCard(model))
-            ],
-          ),
-        ));
+            ),
+            SizedBox(
+              height: 32,
+            ),
+            Center(child: userCard(model))
+          ],
+        );
       }),
     );
   }

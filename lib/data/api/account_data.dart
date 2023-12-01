@@ -17,7 +17,6 @@ class AccountData {
         final userRole = user['role'] as String;
 
         requestObj.setToken = accessToken;
-        paymentRequestObj.setToken = accessToken;
         setToken(accessToken, userRole);
 
         Account userResponse = Account.fromJson(user);

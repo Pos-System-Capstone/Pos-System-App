@@ -190,19 +190,6 @@ Widget paymentTypeSelect() {
           SizedBox(
             height: 8,
           ),
-          model.selectedPaymentMethod?.type == PaymentTypeEnums.POINTIFY &&
-                  model.paymentCheckingStatus == PaymentStatusEnum.PENDING
-              ? OutlinedButton(
-                  onPressed: () {
-                    model.updatePaymentStatus(PaymentStatusEnum.PAID);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Đã thanh toán"),
-                  ))
-              : SizedBox(
-                  height: 8,
-                ),
           Row(
             children: [
               Expanded(

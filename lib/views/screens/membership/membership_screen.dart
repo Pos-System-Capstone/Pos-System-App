@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/membership/topup_dialog.dart';
+import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../../enums/view_status.dart';
@@ -204,8 +205,7 @@ class _MembershipScreenState extends State<MembershipScreen> {
                       ),
                       suffixIcon: IconButton(
                           onPressed: () {
-                            phoneController.clear();
-                            model.removeMembership();
+                            topupController.clear();
                           },
                           icon: Icon(
                             Icons.clear,
@@ -263,8 +263,14 @@ class _MembershipScreenState extends State<MembershipScreen> {
                   width: 8,
                 ),
                 FilledButton(
-                    onPressed: () =>
-                        {model.topupWallet(num.parse(topupController.text))},
+                    onPressed: () {
+                      bool res = false;
+                      showConfirmDialog(confirmText: "Xác nhận")
+                          .then((value) => res = value);
+                      if (res) {
+                        model.topupWallet(num.parse(topupController.text));
+                      }
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text("Nạp"),

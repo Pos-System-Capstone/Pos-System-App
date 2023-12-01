@@ -53,6 +53,12 @@ class ProductViewModel extends BaseViewModel {
 
   void increaseQuantity() {
     productInCart.quantity = (productInCart.quantity! + 1);
+    if (productInCart.extras != null) {
+      for (var e in productInCart.extras!) {
+        e.quantity = productInCart.quantity;
+        e.totalAmount = e.sellingPrice! * e.quantity!;
+      }
+    }
     countAmount();
     notifyListeners();
   }
@@ -62,6 +68,12 @@ class ProductViewModel extends BaseViewModel {
       return;
     }
     productInCart.quantity = (productInCart.quantity! - 1);
+    if (productInCart.extras != null) {
+      for (var e in productInCart.extras!) {
+        e.quantity = productInCart.quantity;
+        e.totalAmount = e.sellingPrice! * e.quantity!;
+      }
+    }
     countAmount();
     notifyListeners();
   }
@@ -75,8 +87,8 @@ class ProductViewModel extends BaseViewModel {
       productInCart.extras?.add(Extras(
           productInMenuId: extra.menuProductId,
           name: extra.name,
-          quantity: 1,
-          totalAmount: extra.sellingPrice,
+          quantity: productInCart.quantity,
+          totalAmount: extra.sellingPrice! * productInCart.quantity!,
           sellingPrice: extra.sellingPrice));
       countAmount();
     }
@@ -93,8 +105,8 @@ class ProductViewModel extends BaseViewModel {
 
   addExtraAmount() {
     for (int index = 0; index < productInCart.extras!.length; index++) {
-      productInCart.totalAmount = productInCart!.totalAmount! +
-          productInCart.extras![index].sellingPrice!;
+      productInCart.totalAmount = productInCart.totalAmount! +
+          productInCart.extras![index].totalAmount!;
     }
     notifyListeners();
   }

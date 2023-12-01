@@ -190,55 +190,6 @@ class OrderViewModel extends BaseViewModel {
     // }
   }
 
-  void updatePaymentStatus(String status) {
-    paymentData
-        ?.updatePayment(currentOrder!.orderId ?? '', status)
-        .then((value) => {
-              if (value != null)
-                {
-                  Get.snackbar("Cập nhật trạng thái thanh toán", value),
-                }
-              else
-                {
-                  Get.snackbar(
-                      "Cập nhật trạng thái thanh toán", "Thanh toan that bai"),
-                }
-            });
-  }
-
-  void checkPaymentStatus(String orderId) async {
-    paymentCheckingStatus = PaymentStatusEnum.PENDING;
-    for (int i = 0; i < 30; i++) {
-      await Future.delayed(Duration(seconds: 3));
-      await paymentData?.checkPayment(orderId).then((value) => {
-            paymentStatus = value,
-          });
-      if (paymentStatus != null) {
-        if (paymentStatus!.transactionStatus == PaymentStatusEnum.PAID) {
-          currentPaymentStatusMessage = "Thanh toán thành công";
-          paymentCheckingStatus = PaymentStatusEnum.PAID;
-          break;
-        } else if (paymentStatus!.transactionStatus == PaymentStatusEnum.FAIL) {
-          currentPaymentStatusMessage = "Thanh toán thất bại";
-          paymentCheckingStatus = PaymentStatusEnum.FAIL;
-          Get.snackbar("Thanh toán thất bại",
-              "Đơn hàng thanh toán thanh toán thất bại, vui lòng thử lại");
-          break;
-        } else {
-          currentPaymentStatusMessage = "Đang kiểm tra thanh toán";
-          paymentCheckingStatus = PaymentStatusEnum.PENDING;
-        }
-      } else {
-        currentPaymentStatusMessage = "Vui lòng kiểm tra lại";
-        paymentCheckingStatus = PaymentStatusEnum.CANCELED;
-      }
-    }
-    if (paymentCheckingStatus == PaymentStatusEnum.PAID) {
-      await completeOrder(orderId);
-    }
-    notifyListeners();
-  }
-
   void getListOrder(
       {bool isToday = true,
       bool isYesterday = false,

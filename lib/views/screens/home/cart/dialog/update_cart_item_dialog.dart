@@ -289,8 +289,10 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                         ],
                       ),
 
-                      value: model.isExtraExist(extraProduct[i].id ?? ""),
-                      selected: model.isExtraExist(extraProduct[i].id ?? ""),
+                      value: model
+                          .isExtraExist(extraProduct[i].menuProductId ?? ""),
+                      selected: model
+                          .isExtraExist(extraProduct[i].menuProductId ?? ""),
                       onChanged: (value) {
                         model.addOrRemoveExtra(extraProduct[i]);
                       },

@@ -42,44 +42,37 @@ class _CartScreenState extends State<CartScreen> {
           ),
           child: Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 7,
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Text(
+                        'Tên',
+                        style: Get.textTheme.bodyMedium,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        'SL',
+                        style: Get.textTheme.bodyMedium,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: Alignment.centerRight,
                         child: Text(
-                          'Tên',
-                          style: Get.textTheme.titleMedium,
+                          'Tổng',
+                          style: Get.textTheme.bodyMedium,
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          'SL',
-                          style: Get.textTheme.titleMedium,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'Tổng',
-                            style: Get.textTheme.titleMedium,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               Divider(
@@ -110,20 +103,12 @@ class _CartScreenState extends State<CartScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Số lượng', style: Get.textTheme.titleSmall),
-                          Text(model.countCartQuantity().toString(),
-                              style: Get.textTheme.titleSmall),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Tạm tính', style: Get.textTheme.titleSmall),
-                          Text(formatPrice(model.cart.totalAmount ?? 0),
-                              style: Get.textTheme.titleSmall),
+                          Text(
+                              'Tạm tính: ${formatPrice(model.cart.totalAmount ?? 0)}',
+                              style: Get.textTheme.bodyMedium),
+                          Text(
+                              'Số lượng: ${model.countCartQuantity().toString()}',
+                              style: Get.textTheme.bodyMedium),
                         ],
                       ),
                     ),
@@ -239,7 +224,7 @@ class _CartScreenState extends State<CartScreen> {
                       color: Get.theme.colorScheme.onSurface,
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -322,7 +307,7 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       Text(
                         item.name!,
-                        style: Get.textTheme.bodyLarge,
+                        style: Get.textTheme.bodyMedium,
                         maxLines: 2,
                         overflow: TextOverflow.clip,
                       ),
@@ -330,7 +315,7 @@ class _CartScreenState extends State<CartScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             formatPrice(item.sellingPrice!),
-                            style: Get.textTheme.bodyLarge,
+                            style: Get.textTheme.bodyMedium,
                           )),
                     ],
                   ),
@@ -343,7 +328,7 @@ class _CartScreenState extends State<CartScreen> {
                     children: [
                       Text(
                         "${item.quantity}",
-                        style: Get.textTheme.bodyLarge,
+                        style: Get.textTheme.bodyMedium,
                       ),
                     ],
                   ),
@@ -356,7 +341,7 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Text(
                           formatPrice(item.finalAmount ?? 0),
-                          style: Get.textTheme.bodyLarge,
+                          style: Get.textTheme.bodyMedium,
                         ),
                         item.discount != null && item.discount != 0
                             ? Text(
@@ -374,31 +359,41 @@ class _CartScreenState extends State<CartScreen> {
               itemCount: item.extras?.length,
               physics: ScrollPhysics(),
               itemBuilder: (context, i) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 4, 0, 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 6,
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Text(
+                        " +${item.extras![i].name!}",
+                        style: Get.textTheme.bodySmall,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${item.extras![i].quantity}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Align(
+                        alignment: AlignmentDirectional.centerEnd,
                         child: Text(
-                          "+${item.extras![i].name!}",
+                          "+${formatPrice(item.extras![i].totalAmount!)}",
                           style: Get.textTheme.bodyMedium,
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: Text(
-                            formatPrice(item.extras![i].sellingPrice!),
-                            style: Get.textTheme.bodyMedium,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               },
             ),
