@@ -172,8 +172,8 @@ class CartViewModel extends BaseViewModel {
           cart = value,
         });
     notifyListeners();
-    Get.snackbar("Kiểm tra giỏ hàng", cart.message ?? '',
-        duration: Duration(milliseconds: 1500));
+    // Get.snackbar("Kiểm tra giỏ hàng", cart.message ?? '',
+    //     duration: Duration(milliseconds: 1500));
 
     return true;
   }
