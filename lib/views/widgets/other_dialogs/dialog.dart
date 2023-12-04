@@ -394,7 +394,7 @@ void sessionDetailsDialog(Session session) {
                               sessionDetailReport?.bankingAmount ?? 0),
                         ),
                         dashboardCard(
-                          title: "Doanh thu ví thành viên",
+                          title: "Doanh thu thẻ thành viên",
                           value: formatPrice(
                               sessionDetailReport?.pointifyAmount ?? 0),
                         ),

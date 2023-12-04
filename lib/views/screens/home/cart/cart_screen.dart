@@ -104,10 +104,10 @@ class _CartScreenState extends State<CartScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              'Tạm tính: ${formatPrice(model.cart.totalAmount ?? 0)}',
+                              'Số lượng: ${model.countCartQuantity().toString()}',
                               style: Get.textTheme.bodyMedium),
                           Text(
-                              'Số lượng: ${model.countCartQuantity().toString()}',
+                              'Tạm tính: ${formatPrice(model.cart.totalAmount ?? 0)}',
                               style: Get.textTheme.bodyMedium),
                         ],
                       ),
@@ -146,22 +146,14 @@ class _CartScreenState extends State<CartScreen> {
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('Tổng giảm', style: Get.textTheme.titleSmall),
                           Text(
-                              " - ${formatPrice(model.cart.discountAmount ?? 0)}",
-                              style: Get.textTheme.titleSmall),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Tổng tiền', style: Get.textTheme.titleMedium),
-                          Text(formatPrice(model.cart.finalAmount ?? 0),
-                              style: Get.textTheme.titleMedium),
+                              'Tổng giảm: ${formatPrice(model.cart.discountAmount ?? 0)}',
+                              style: Get.textTheme.bodyMedium),
+                          Text(
+                              'Tổng tiền: ${formatPrice(model.cart.finalAmount ?? 0)}',
+                              style: Get.textTheme.bodyMedium),
                         ],
                       ),
                     ),
@@ -210,7 +202,7 @@ class _CartScreenState extends State<CartScreen> {
                                 padding:
                                     const EdgeInsets.fromLTRB(0, 12, 0, 12),
                                 child: Text(
-                                  'Khuyến mãi',
+                                  'Giảm giá',
                                   style: Get.textTheme.bodyMedium,
                                 ),
                               ),

@@ -30,13 +30,15 @@ class CartViewModel extends BaseViewModel {
     cart.finalAmount = 0;
     cart.bonusPoint = 0;
     cart.shippingFee = 0;
+    cart.customerId = null;
+    cart.promotionCode = null;
+    cart.voucherCode = null;
   }
 
   void getListPromotion() async {
     try {
       setState(ViewStatus.Loading);
       promotions = await promotionData?.getListPromotionOfStore();
-
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
@@ -48,6 +50,7 @@ class CartViewModel extends BaseViewModel {
       setState(ViewStatus.Loading);
       customer = await accountData.scanCustomer(phone);
       prepareOrder();
+
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
@@ -75,7 +78,6 @@ class CartViewModel extends BaseViewModel {
       cart.totalAmount = cart.totalAmount! + item.totalAmount!;
     }
     cart.finalAmount = cart.totalAmount! - cart.discountAmount!;
-    notifyListeners();
   }
 
   countCartQuantity() {
@@ -107,6 +109,11 @@ class CartViewModel extends BaseViewModel {
     cart.totalAmount = 0;
     cart.discountAmount = 0;
     cart.promotionList = [];
+    cart.voucherCode = null;
+    cart.promotionCode = null;
+    cart.bonusPoint = 0;
+    cart.shippingFee = 0;
+    cart.customerId = null;
     notifyListeners();
   }
 
@@ -151,6 +158,7 @@ class CartViewModel extends BaseViewModel {
   }
 
   Future<bool> prepareOrder() async {
+    showLoadingDialog();
     cart.orderType = Get.find<OrderViewModel>().deliveryType;
     cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
     cart.customerId = customer?.id;
@@ -167,10 +175,19 @@ class CartViewModel extends BaseViewModel {
     if (kDebugMode) {
       print(cart.voucherCode);
     }
+    if (customer?.id == null &&
+        cart.promotionCode == null &&
+        cart.voucherCode == null) {
+      cart.promotionList!.clear();
+      hideDialog();
+      notifyListeners();
+      return true;
+    }
     Account? userInfo = await getUserInfo();
     await api.prepareOrder(cart, userInfo!.storeId).then((value) => {
           cart = value,
         });
+    hideDialog();
     notifyListeners();
     // Get.snackbar("Kiểm tra giỏ hàng", cart.message ?? '',
     //     duration: Duration(milliseconds: 1500));
