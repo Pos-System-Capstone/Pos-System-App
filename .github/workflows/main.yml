@@ -9,6 +9,10 @@ jobs:
           channel: "beta"
       - run: flutter config --enable-windows-desktop
       - run: flutter build windows
+      - uses: actions/upload-artifact@v2
+        with:
+          name: windows-build
+          path: build/windows
     #       with:
     #         name: apk-build
     #         path: build/app/outputs/apk/release
