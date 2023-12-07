@@ -25,7 +25,6 @@ class _PormotionDialogState extends State<PormotionDialog> {
 
   @override
   void initState() {
-    cartViewModel.getListPromotion();
     super.initState();
   }
 

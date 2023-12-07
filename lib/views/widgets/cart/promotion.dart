@@ -140,48 +140,37 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                             model.isPromotionApplied(item.promotionCode ?? '')
                                 ? Get.theme.colorScheme.primaryContainer
                                 : Get.theme.colorScheme.background,
-                        child: SizedBox(
-                          width: 220,
-                          height: 180,
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          width: 200,
+                          height: 160,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  item.promotionName ?? '',
-                                  style: Get.textTheme.titleSmall,
-                                ),
+                              Text(
+                                item.promotionName ?? '',
+                                style: Get.textTheme.titleSmall,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
                               ),
+                              Divider(),
                               Expanded(
-                                  flex: 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      item.description ?? '',
-                                      style: Get.textTheme.bodySmall,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 4,
-                                    ),
-                                  )),
-                              Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Chip(
-                                        label: Text(
-                                      item.promotionType! == 2
-                                          ? "Khuyến mãi thường"
-                                          : item.promotionType! == 3
-                                              ? "Sử dụng voucher"
-                                              : "Tự động giảm",
-                                      style: Get.textTheme.bodySmall,
-                                    ))
-                                  ],
-                                ),
-                              )
+                                  child: Text(
+                                item.description ?? '',
+                                style: Get.textTheme.bodySmall,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 4,
+                              )),
+                              Chip(
+                                  label: Text(
+                                item.promotionType! == 2
+                                    ? "Khuyến mãi thường"
+                                    : item.promotionType! == 3
+                                        ? "Sử dụng voucher"
+                                        : "Tự động giảm",
+                                style: Get.textTheme.bodySmall,
+                              ))
                             ],
                           ),
                         ),
@@ -225,48 +214,37 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                             model.isPromotionApplied(item.promotionCode ?? '')
                                 ? Get.theme.colorScheme.primaryContainer
                                 : Get.theme.colorScheme.background,
-                        child: SizedBox(
-                          width: 220,
-                          height: 180,
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          width: 200,
+                          height: 160,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  item.promotionName ?? '',
-                                  style: Get.textTheme.titleSmall,
-                                ),
+                              Text(
+                                item.promotionName ?? '',
+                                style: Get.textTheme.titleSmall,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
                               ),
+                              Divider(),
                               Expanded(
-                                  flex: 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      item.description ?? '',
-                                      style: Get.textTheme.bodySmall,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 4,
-                                    ),
-                                  )),
-                              Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Chip(
-                                        label: Text(
-                                      item.promotionType! == 2
-                                          ? "Khuyến mãi thường"
-                                          : item.promotionType! == 3
-                                              ? "Sử dụng voucher"
-                                              : "Tự động giảm",
-                                      style: Get.textTheme.bodySmall,
-                                    ))
-                                  ],
-                                ),
-                              )
+                                  child: Text(
+                                item.description ?? '',
+                                style: Get.textTheme.bodySmall,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 4,
+                              )),
+                              Chip(
+                                  label: Text(
+                                item.promotionType! == 2
+                                    ? "Khuyến mãi thường"
+                                    : item.promotionType! == 3
+                                        ? "Sử dụng voucher"
+                                        : "Tự động giảm",
+                                style: Get.textTheme.bodySmall,
+                              ))
                             ],
                           ),
                         ),

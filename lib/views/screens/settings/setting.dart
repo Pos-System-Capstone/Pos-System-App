@@ -371,7 +371,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget updateMenu() {
     return InkWell(
-      onTap: () => Get.find<MenuViewModel>().getMenuOfStore(),
+      onTap: () {
+        Get.find<MenuViewModel>().getMenuOfStore();
+      },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(

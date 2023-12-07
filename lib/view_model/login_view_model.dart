@@ -15,7 +15,7 @@ class LoginViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       showLoadingDialog();
-      dao.login(userName, password).then((value) => {
+      dao.login(userName, password).then((value) async => {
             userDTO = value,
             if (userDTO == null)
               {
@@ -30,7 +30,8 @@ class LoginViewModel extends BaseViewModel {
                 setUserInfo(userDTO!),
                 setState(ViewStatus.Completed),
                 hideDialog(),
-                Get.offAllNamed(RouteHandler.HOME)
+                await Get.find<MenuViewModel>().getMenuOfStore(),
+                await Get.offAllNamed(RouteHandler.HOME)
               }
           });
     } catch (e) {
