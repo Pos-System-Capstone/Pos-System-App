@@ -49,7 +49,7 @@ class CartViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       customer = await accountData.scanCustomer(phone);
-      prepareOrder();
+      await prepareOrder();
 
       setState(ViewStatus.Completed);
     } catch (e) {
@@ -57,18 +57,18 @@ class CartViewModel extends BaseViewModel {
     }
   }
 
-  void addToCart(ProductList cartModel) {
+  Future<void> addToCart(ProductList cartModel) async {
     cart.productList!.add(cartModel);
     countCartAmount();
     countCartQuantity();
-    prepareOrder();
+    await prepareOrder();
   }
 
-  void updateCart(ProductList cartModel, int cartIndex) {
+  Future<void> updateCart(ProductList cartModel, int cartIndex) async {
     cart.productList![cartIndex] = cartModel;
     countCartAmount();
     countCartQuantity();
-    prepareOrder();
+    await prepareOrder();
   }
 
   void countCartAmount() {
@@ -85,18 +85,17 @@ class CartViewModel extends BaseViewModel {
     for (ProductList item in cart.productList!) {
       quantity = quantity + item.quantity!;
     }
-    return quantity;
   }
 
-  void removeFromCart(int idx) {
+  Future<void> removeFromCart(int idx) async {
     cart.productList!.remove(cart.productList![idx]);
     countCartAmount();
-    prepareOrder();
+    await prepareOrder();
   }
 
-  void removeCustomer() {
+  Future<void> removeCustomer() async {
     customer = null;
-    prepareOrder();
+    await prepareOrder();
   }
 
   bool isPromotionApplied(String code) {
@@ -104,6 +103,7 @@ class CartViewModel extends BaseViewModel {
   }
 
   void clearCartData() {
+    customer = null;
     cart.productList = [];
     cart.finalAmount = 0;
     cart.totalAmount = 0;
@@ -114,6 +114,7 @@ class CartViewModel extends BaseViewModel {
     cart.bonusPoint = 0;
     cart.shippingFee = 0;
     cart.customerId = null;
+    cart.customerName = null;
     notifyListeners();
   }
 
@@ -121,22 +122,22 @@ class CartViewModel extends BaseViewModel {
     return cart.promotionCode == code;
   }
 
-  void removePromotion() {
+  Future<void> removePromotion() async {
     cart.promotionCode = null;
     cart.voucherCode = null;
-    prepareOrder();
+    await prepareOrder();
   }
 
-  void selectPromotion(String code) {
+  Future<void> selectPromotion(String code) async {
     cart.promotionCode = code;
     cart.voucherCode = null;
-    prepareOrder();
+    await prepareOrder();
   }
 
-  void removeVoucher() {
+  Future<void> removeVoucher() async {
     cart.voucherCode = null;
     cart.promotionCode = null;
-    prepareOrder();
+    await prepareOrder();
   }
 
   Future<void> selectVoucher(String code) async {
@@ -148,7 +149,7 @@ class CartViewModel extends BaseViewModel {
       cart.promotionCode = code;
       cart.voucherCode = null;
     }
-    prepareOrder();
+    await prepareOrder();
   }
 
   List<PaymentProvider?> getListPayment() {
@@ -157,7 +158,7 @@ class CartViewModel extends BaseViewModel {
     return listPayment;
   }
 
-  Future<bool> prepareOrder() async {
+  Future<void> prepareOrder() async {
     showLoadingDialog();
     cart.orderType = Get.find<OrderViewModel>().deliveryType;
     cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
@@ -172,27 +173,13 @@ class CartViewModel extends BaseViewModel {
       element.promotionCodeApplied = null;
     }
     cart.promotionList!.clear();
-    if (kDebugMode) {
-      print(cart.voucherCode);
-    }
-    if (customer?.id == null &&
-        cart.promotionCode == null &&
-        cart.voucherCode == null) {
-      cart.promotionList!.clear();
-      hideDialog();
-      notifyListeners();
-      return true;
-    }
     Account? userInfo = await getUserInfo();
     await api.prepareOrder(cart, userInfo!.storeId).then((value) => {
           cart = value,
         });
-    hideDialog();
-    notifyListeners();
-    // Get.snackbar("Kiểm tra giỏ hàng", cart.message ?? '',
-    //     duration: Duration(milliseconds: 1500));
 
-    return true;
+    notifyListeners();
+    hideDialog();
   }
 
   Future<void> createOrder() async {
