@@ -107,29 +107,6 @@ class _MembershipScreenState extends State<MembershipScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FilledButton(
-                    onPressed: () async {
-                      topupUserWalletDialog();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text("Nạp tiền"),
-                    )),
-                OutlinedButton(
-                  onPressed: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text("Đóng"),
-                  ),
-                ),
-              ],
-            ),
-          ),
         );
       }),
     );
@@ -273,7 +250,7 @@ class _MembershipScreenState extends State<MembershipScreen> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Nạp"),
+                      child: Text("Nạp tiền"),
                     )),
               ],
             ),

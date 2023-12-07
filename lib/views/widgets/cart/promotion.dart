@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/enums/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../../data/model/pointify/promotion_model.dart';
@@ -22,6 +23,13 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
       model: Get.find<CartViewModel>(),
       child: ScopedModelDescendant<CartViewModel>(
           builder: (context, build, model) {
+        if (model.status == ViewStatus.Loading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (model.promotions == null || model.promotions == []) {
+          return Center(
+            child: Text("Hiên không có khuyến mãi cho cửa hàng này"),
+          );
+        }
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView(
@@ -99,13 +107,100 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Danh sánh khuyến mãi hiện có",
+                  "Danh sánh khuyến mãi khả dụng",
                   style: Get.textTheme.titleMedium,
                 ),
               ),
               Wrap(
                 children: [
-                  for (PromotionPointify item in model.promotions!)
+                  for (PromotionPointify item in model.promotions!
+                      .where((element) => element.promotionType == 2)
+                      .toList())
+                    InkWell(
+                      onTap: () {
+                        if (model
+                            .isPromotionApplied(item.promotionCode ?? '')) {
+                          model.removePromotion();
+                        } else if (item.promotionType == 1) {
+                          showAlertDialog(
+                              content:
+                                  "Khuyến mãi sẽ tự động áp dụng nếu đủ điều kiện");
+                        } else if (item.promotionType == 3) {
+                          showAlertDialog(
+                              content:
+                                  "Khuyến mãi cần có mã để được áp dụng, vui lòng quét mã để sử dụng");
+                        } else {
+                          model.selectPromotion(item.promotionCode ?? '');
+                        }
+
+                        // }
+                      },
+                      child: Card(
+                        color:
+                            model.isPromotionApplied(item.promotionCode ?? '')
+                                ? Get.theme.colorScheme.primaryContainer
+                                : Get.theme.colorScheme.background,
+                        child: SizedBox(
+                          width: 220,
+                          height: 180,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  item.promotionName ?? '',
+                                  style: Get.textTheme.titleSmall,
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      item.description ?? '',
+                                      style: Get.textTheme.bodySmall,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 4,
+                                    ),
+                                  )),
+                              Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Chip(
+                                        label: Text(
+                                      item.promotionType! == 2
+                                          ? "Khuyến mãi thường"
+                                          : item.promotionType! == 3
+                                              ? "Sử dụng voucher"
+                                              : "Tự động giảm",
+                                      style: Get.textTheme.bodySmall,
+                                    ))
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Danh sánh khuyến mãi tự động hoặc cần voucher",
+                  style: Get.textTheme.titleMedium,
+                ),
+              ),
+              Wrap(
+                children: [
+                  for (PromotionPointify item in model.promotions!
+                      .where((element) => element.promotionType != 2)
+                      .toList())
                     InkWell(
                       onTap: () {
                         if (model

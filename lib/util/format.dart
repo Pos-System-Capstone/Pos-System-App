@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 String formatPrice(num price, {num discount = 0}) {

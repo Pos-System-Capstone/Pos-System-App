@@ -4,8 +4,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart' hide Response;
-import '../routes/routes_constraints.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
 
 Map<String, dynamic> convertToQueryParams(
@@ -78,7 +76,7 @@ class CustomInterceptors extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(err, ErrorInterceptorHandler handler) {
     if (kDebugMode) {
       print(
           'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');

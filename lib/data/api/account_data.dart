@@ -46,24 +46,17 @@ class AccountData {
   }
 
   Future<CustomerInfoModel?> scanCustomer(String phone) async {
-    try {
-      final response =
-          await request.get("users/scan", queryParameters: {"phone": phone});
+    final response =
+        await request.get("users/scan", queryParameters: {"code": phone});
 
-      if (response.statusCode == 200) {
-        final customer = response.data;
+    if (response.statusCode == 200) {
+      final customer = response.data;
 
-        CustomerInfoModel customerInfoModel =
-            CustomerInfoModel.fromJson(customer);
-        return customerInfoModel;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error login (account_dao): ${e.toString()}');
-      }
+      CustomerInfoModel customerInfoModel =
+          CustomerInfoModel.fromJson(customer);
+      return customerInfoModel;
+    } else {
+      return null;
     }
-    return null;
   }
 }
