@@ -85,6 +85,7 @@ class CartViewModel extends BaseViewModel {
     for (ProductList item in cart.productList!) {
       quantity = quantity + item.quantity!;
     }
+    return quantity;
   }
 
   Future<void> removeFromCart(int idx) async {
