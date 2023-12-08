@@ -302,7 +302,8 @@ class OrderViewModel extends BaseViewModel {
   clearOrder() {
     currentOrderId = null;
     currentOrder = null;
-    selectedPaymentMethod = null;
+    selectedPaymentMethod = listPayment[0];
+    deliveryType = DeliType().eatIn.type;
     hideDialog();
   }
 
