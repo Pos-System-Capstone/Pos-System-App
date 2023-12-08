@@ -31,6 +31,7 @@ class LoginViewModel extends BaseViewModel {
                 setState(ViewStatus.Completed),
                 hideDialog(),
                 await Get.find<MenuViewModel>().getMenuOfStore(),
+                await Get.find<CartViewModel>().getListPromotion(),
                 await Get.offAllNamed(RouteHandler.HOME)
               }
           });
@@ -43,6 +44,7 @@ class LoginViewModel extends BaseViewModel {
   Future<void> logout() async {
     userDTO = null;
     Get.snackbar("Đăng xuất", "Đăng xuất thành công");
+    Get.find<CartViewModel>().clearCartData();
     await deleteUserInfo();
     await Get.offAllNamed(RouteHandler.LOGIN);
   }

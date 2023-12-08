@@ -35,7 +35,7 @@ class CartViewModel extends BaseViewModel {
     cart.voucherCode = null;
   }
 
-  void getListPromotion() async {
+  Future getListPromotion() async {
     try {
       setState(ViewStatus.Loading);
       promotions = await promotionData?.getListPromotionOfStore();
@@ -50,7 +50,7 @@ class CartViewModel extends BaseViewModel {
       setState(ViewStatus.Loading);
       customer = await accountData.scanCustomer(phone);
       await prepareOrder();
-
+      notifyListeners();
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
@@ -62,6 +62,7 @@ class CartViewModel extends BaseViewModel {
     countCartAmount();
     countCartQuantity();
     await prepareOrder();
+    notifyListeners();
   }
 
   Future<void> updateCart(ProductList cartModel, int cartIndex) async {
@@ -69,6 +70,7 @@ class CartViewModel extends BaseViewModel {
     countCartAmount();
     countCartQuantity();
     await prepareOrder();
+    notifyListeners();
   }
 
   void countCartAmount() {
@@ -92,11 +94,13 @@ class CartViewModel extends BaseViewModel {
     cart.productList!.remove(cart.productList![idx]);
     countCartAmount();
     await prepareOrder();
+    notifyListeners();
   }
 
   Future<void> removeCustomer() async {
     customer = null;
     await prepareOrder();
+    notifyListeners();
   }
 
   bool isPromotionApplied(String code) {
@@ -105,6 +109,7 @@ class CartViewModel extends BaseViewModel {
 
   void clearCartData() {
     customer = null;
+    cart.paymentType = PaymentTypeEnums.CASH;
     cart.productList = [];
     cart.finalAmount = 0;
     cart.totalAmount = 0;
@@ -127,18 +132,21 @@ class CartViewModel extends BaseViewModel {
     cart.promotionCode = null;
     cart.voucherCode = null;
     await prepareOrder();
+    notifyListeners();
   }
 
   Future<void> selectPromotion(String code) async {
     cart.promotionCode = code;
     cart.voucherCode = null;
     await prepareOrder();
+    notifyListeners();
   }
 
   Future<void> removeVoucher() async {
     cart.voucherCode = null;
     cart.promotionCode = null;
     await prepareOrder();
+    notifyListeners();
   }
 
   Future<void> selectVoucher(String code) async {
@@ -151,6 +159,7 @@ class CartViewModel extends BaseViewModel {
       cart.voucherCode = null;
     }
     await prepareOrder();
+    notifyListeners();
   }
 
   List<PaymentProvider?> getListPayment() {
@@ -163,10 +172,10 @@ class CartViewModel extends BaseViewModel {
     showLoadingDialog();
     cart.orderType = Get.find<OrderViewModel>().deliveryType;
     cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
-    cart.customerId = customer?.id;
-    cart.customerName = customer?.fullName;
     cart.discountAmount = 0;
     cart.bonusPoint = 0;
+    cart.customerId = customer?.id;
+    cart.customerName = customer?.fullName;
     cart.finalAmount = cart.totalAmount;
     for (var element in cart.productList!) {
       element.discount = 0;
@@ -174,12 +183,15 @@ class CartViewModel extends BaseViewModel {
       element.promotionCodeApplied = null;
     }
     cart.promotionList!.clear();
+    if (cart.promotionCode == null &&
+        cart.voucherCode == null &&
+        cart.customerId == null) {
+      return;
+    }
     Account? userInfo = await getUserInfo();
     await api.prepareOrder(cart, userInfo!.storeId).then((value) => {
           cart = value,
         });
-
-    notifyListeners();
     hideDialog();
   }
 

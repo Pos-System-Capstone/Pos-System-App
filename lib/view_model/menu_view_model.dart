@@ -47,7 +47,6 @@ class MenuViewModel extends BaseViewModel {
 
   Future<void> getMenuOfStore() async {
     try {
-      showLoadingDialog();
       await getStore();
       currentMenu = await menuData?.getMenuOfStore();
       getListSession(DateTime.now());
@@ -71,8 +70,6 @@ class MenuViewModel extends BaseViewModel {
       handleChangeFilterProductByCategory(categories![0].id);
       productsFilter
           ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
-      Get.find<CartViewModel>().getListPromotion();
-      hideDialog();
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }
