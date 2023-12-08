@@ -186,6 +186,7 @@ class CartViewModel extends BaseViewModel {
     if (cart.promotionCode == null &&
         cart.voucherCode == null &&
         cart.customerId == null) {
+      hideDialog();
       return;
     }
     Account? userInfo = await getUserInfo();
