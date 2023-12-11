@@ -139,7 +139,7 @@ class PrinterViewModel extends BaseViewModel {
   }
 
   Future<void> printBill(
-      OrderResponseModel orderResponse, int table, String paymentName) async {
+      OrderResponseModel orderResponse, String paymentName) async {
     if (selectedBillPrinter == null) {
       return;
     } else {
@@ -147,8 +147,7 @@ class PrinterViewModel extends BaseViewModel {
           printer: selectedBillPrinter!,
           format: PdfPageFormat.roll80,
           onLayout: (PdfPageFormat format) {
-            return generateBillInvoice(
-                format, orderResponse, table, paymentName);
+            return generateBillInvoice(format, orderResponse, paymentName);
           });
     }
     if (selectedProductPrinter == null) {
@@ -162,7 +161,6 @@ class PrinterViewModel extends BaseViewModel {
               return generateKitchenInvoice(
                 format,
                 orderResponse,
-                table,
                 paymentName,
               );
             });
@@ -171,11 +169,11 @@ class PrinterViewModel extends BaseViewModel {
   }
 
   Future<void> printBillMobile(
-      OrderResponseModel orderResponse, int table, String paymentName) async {
+      OrderResponseModel orderResponse, String paymentName) async {
     await Printing.layoutPdf(
         format: PdfPageFormat.roll80,
         onLayout: (PdfPageFormat format) async =>
-            generateBillInvoice(format, orderResponse, table, paymentName));
+            generateBillInvoice(format, orderResponse, paymentName));
     if (orderResponse.productList != null) {
       for (var product in orderResponse.productList!) {
         for (var i = 1; i <= product.quantity!; i++) {
@@ -183,8 +181,12 @@ class PrinterViewModel extends BaseViewModel {
               format: PdfPageFormat(32 * PdfPageFormat.mm, double.infinity,
                   marginAll: 2 * PdfPageFormat.mm),
               onLayout: (PdfPageFormat format) {
-                return generateStampInvoice(format, product,
-                    orderResponse.checkInDate, orderResponse.invoiceId, table);
+                return generateStampInvoice(
+                    format,
+                    product,
+                    orderResponse.checkInDate,
+                    orderResponse.invoiceId,
+                    orderResponse.customerNumber);
               });
         }
       }

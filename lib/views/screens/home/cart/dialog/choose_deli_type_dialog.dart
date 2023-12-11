@@ -39,10 +39,9 @@ void chooseDeliTypeDialog() {
           ),
           Expanded(
               child: ScopedModel(
-            model: Get.find<OrderViewModel>(),
-            child: ScopedModelDescendant<OrderViewModel>(
+            model: Get.find<CartViewModel>(),
+            child: ScopedModelDescendant<CartViewModel>(
                 builder: (context, child, model) {
-              List<String> listPromotion = Get.find<RootViewModel>().promotions;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,51 +54,26 @@ void chooseDeliTypeDialog() {
                           deliveryOptionButton(
                             DeliType().delivery.label,
                             DeliType().delivery.icon,
-                            () => model
-                                .chooseDeliveryType(DeliType().delivery.type),
-                            model.deliveryType == DeliType().delivery.type,
+                            () =>
+                                model.chooseOrderType(DeliType().delivery.type),
+                            model.cart.orderType == DeliType().delivery.type,
                           ),
                           deliveryOptionButton(
                             DeliType().eatIn.label,
                             DeliType().eatIn.icon,
-                            () =>
-                                model.chooseDeliveryType(DeliType().eatIn.type),
-                            model.deliveryType == DeliType().eatIn.type,
+                            () => model.chooseOrderType(DeliType().eatIn.type),
+                            model.cart.orderType == DeliType().eatIn.type,
                           ),
                           deliveryOptionButton(
                               DeliType().takeAway.label,
                               DeliType().takeAway.icon,
                               () => model
-                                  .chooseDeliveryType(DeliType().takeAway.type),
-                              model.deliveryType == DeliType().takeAway.type),
+                                  .chooseOrderType(DeliType().takeAway.type),
+                              model.cart.orderType == DeliType().takeAway.type),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(
-                      height: 240,
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          listPromotion.isNotEmpty
-                              ? Expanded(
-                                  child: ListView.builder(
-                                    itemCount: listPromotion.length,
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        title: Text(
-                                          listPromotion[index],
-                                          style: Get.textTheme.titleMedium,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              : Container(),
-                        ],
-                      ))
                 ],
               );
             }),

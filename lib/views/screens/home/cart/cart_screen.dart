@@ -27,9 +27,6 @@ class _CartScreenState extends State<CartScreen> {
       model: Get.find<CartViewModel>(),
       child: ScopedModelDescendant<CartViewModel>(
           builder: (context, child, model) {
-        int selectedTable = Get.find<OrderViewModel>().selectedTable;
-        String selectedDeliType = Get.find<OrderViewModel>().deliveryType;
-        dynamic selectedDeliLable = showOrderType(selectedDeliType);
         if (model.status == ViewStatus.Loading) {
           return Center(
             child: CircularProgressIndicator(),
@@ -172,7 +169,7 @@ class _CartScreenState extends State<CartScreen> {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                               child: Text(
-                                'Bàn $selectedTable',
+                                'STT: ${model.cart.customerNumber}',
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ),
@@ -185,7 +182,7 @@ class _CartScreenState extends State<CartScreen> {
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
                               child: Text(
-                                '${selectedDeliLable.label}',
+                                '${showOrderType(model.cart.orderType ?? DeliType().eatIn.type).label}',
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ),
@@ -397,7 +394,11 @@ class _CartScreenState extends State<CartScreen> {
                   children: [
                     if (item.attributes != null)
                       for (int i = 0; i < item.attributes!.length; i++)
-                        Text("${item.attributes![i].value} ",
+                        Text(
+                            (item.attributes![i].value != null &&
+                                    item.attributes![i].value!.isNotEmpty)
+                                ? "${item.attributes![i].name}:${item.attributes![i].value}, "
+                                : "",
                             style: Get.textTheme.bodyMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis),

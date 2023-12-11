@@ -33,6 +33,8 @@ class CartViewModel extends BaseViewModel {
     cart.customerId = null;
     cart.promotionCode = null;
     cart.voucherCode = null;
+    cart.orderType = DeliType().eatIn.type;
+    cart.customerNumber = 1;
   }
 
   Future getListPromotion() async {
@@ -110,6 +112,8 @@ class CartViewModel extends BaseViewModel {
   void clearCartData() {
     customer = null;
     cart.paymentType = PaymentTypeEnums.CASH;
+    cart.orderType = DeliType().eatIn.type;
+    cart.customerNumber = 1;
     cart.productList = [];
     cart.finalAmount = 0;
     cart.totalAmount = 0;
@@ -168,9 +172,19 @@ class CartViewModel extends BaseViewModel {
     return listPayment;
   }
 
+  void chooseOrderType(String type) {
+    cart.orderType = type;
+    hideDialog();
+    notifyListeners();
+  }
+
+  void chooseTable(num table) {
+    cart.customerNumber = table;
+    hideDialog();
+    notifyListeners();
+  }
+
   Future<void> prepareOrder() async {
-    showLoadingDialog();
-    cart.orderType = Get.find<OrderViewModel>().deliveryType;
     cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
     cart.discountAmount = 0;
     cart.bonusPoint = 0;
@@ -198,6 +212,15 @@ class CartViewModel extends BaseViewModel {
 
   Future<void> createOrder() async {
     bool res = false;
+    for (var item in cart.productList!) {
+      if (item.attributes != null) {
+        for (var attribute in item.attributes!) {
+          item.note = (attribute.value != null && attribute.value!.isNotEmpty)
+              ? " ${item.note ?? ""}, ${attribute.name}:${attribute.value}, "
+              : "";
+        }
+      }
+    }
     Get.find<OrderViewModel>().placeOrder(cart).then((value) => {
           res = value,
           if (res == true) {clearCartData()}

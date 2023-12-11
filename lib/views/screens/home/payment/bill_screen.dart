@@ -130,11 +130,12 @@ class _BillScreenState extends State<BillScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Bàn',
+                              'STT',
                               style: Get.textTheme.bodyMedium,
                             ),
                             Text(
-                              model.selectedTable.toString(),
+                              (model.currentOrder?.customerNumber ?? 1)
+                                  .toString(),
                               style: Get.textTheme.bodyMedium,
                             ),
                           ],

@@ -12,11 +12,10 @@ void chooseTableDialog() {
     ),
     elevation: 0,
     child: ScopedModel(
-      model: Get.find<OrderViewModel>(),
-      child: ScopedModelDescendant<OrderViewModel>(
+      model: Get.find<CartViewModel>(),
+      child: ScopedModelDescendant<CartViewModel>(
         builder: (context, child, model) {
           int numberOfTable = Get.find<RootViewModel>().numberOfTable;
-          List<String> listPromotion = Get.find<RootViewModel>().promotions;
           return SizedBox(
             width: Get.width * 0.9,
             height: Get.height * 0.9,
@@ -28,8 +27,8 @@ void chooseTableDialog() {
                   padding: const EdgeInsets.all(16),
                   child: Align(
                       alignment: Alignment.center,
-                      child:
-                          Text("Chọn số bàn", style: Get.textTheme.titleLarge)),
+                      child: Text("Chọn số thứ tự",
+                          style: Get.textTheme.titleLarge)),
                 ),
                 Divider(
                   height: 1,
@@ -46,7 +45,7 @@ void chooseTableDialog() {
                               chooseDeliTypeDialog();
                             },
                             child: Card(
-                              color: model.selectedTable == i
+                              color: model.cart.customerNumber == i
                                   ? Get.theme.colorScheme.primaryContainer
                                   : Get.theme.colorScheme.background,
                               child: SizedBox(

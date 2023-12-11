@@ -28,11 +28,11 @@ class LoginViewModel extends BaseViewModel {
             else
               {
                 setUserInfo(userDTO!),
-                setState(ViewStatus.Completed),
-                hideDialog(),
                 await Get.find<MenuViewModel>().getMenuOfStore(),
                 await Get.find<CartViewModel>().getListPromotion(),
-                await Get.offAllNamed(RouteHandler.HOME)
+                Get.offAllNamed(RouteHandler.HOME),
+                setState(ViewStatus.Completed),
+                hideDialog(),
               }
           });
     } catch (e) {

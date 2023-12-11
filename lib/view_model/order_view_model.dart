@@ -24,8 +24,6 @@ import '../views/widgets/other_dialogs/dialog.dart';
 import '../views/widgets/printer_dialogs/add_printer_dialog.dart';
 
 class OrderViewModel extends BaseViewModel {
-  int selectedTable = 01;
-  String deliveryType = DeliType().eatIn.type;
   late OrderAPI api = OrderAPI();
   String? currentOrderId;
   num customerMoney = 0;
@@ -124,19 +122,6 @@ class OrderViewModel extends BaseViewModel {
   void selectPayment(PaymentProvider payment) {
     selectedPaymentMethod = payment;
     currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
-    notifyListeners();
-  }
-
-  void chooseDeliveryType(String type) {
-    deliveryType = type;
-    hideDialog();
-
-    notifyListeners();
-  }
-
-  void chooseTable(int table) {
-    selectedTable = table;
-    hideDialog();
     notifyListeners();
   }
 
@@ -270,8 +255,8 @@ class OrderViewModel extends BaseViewModel {
         } else if (makePaymentResponse?.status == "SUCCESS") {
           await api.updateOrder(userInfo!.storeId, orderId,
               OrderStatusEnum.PAID, makePaymentResponse?.paymentType);
-          Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
-              selectedPaymentMethod!.name ?? "Tiền mặt");
+          Get.find<PrinterViewModel>().printBill(
+              currentOrder!, selectedPaymentMethod!.name ?? "Tiền mặt");
           clearOrder();
           await showAlertDialog(
               title: "Thanh toán thành công",
@@ -285,8 +270,8 @@ class OrderViewModel extends BaseViewModel {
     } else {
       await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
           selectedPaymentMethod!.type);
-      Get.find<PrinterViewModel>().printBill(currentOrder!, selectedTable,
-          selectedPaymentMethod!.name ?? "Tiền mặt");
+      Get.find<PrinterViewModel>()
+          .printBill(currentOrder!, selectedPaymentMethod!.name ?? "Tiền mặt");
       clearOrder();
       await showAlertDialog(
           title: "Thanh toán thành công",
@@ -303,7 +288,6 @@ class OrderViewModel extends BaseViewModel {
     currentOrderId = null;
     currentOrder = null;
     selectedPaymentMethod = listPayment[0];
-    deliveryType = DeliType().eatIn.type;
     hideDialog();
   }
 

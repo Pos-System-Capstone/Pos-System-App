@@ -208,7 +208,7 @@ void orderInfoDialog(String orderId) {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Mã',
+                                'Mã đơn',
                                 style: Get.textTheme.bodyMedium,
                               ),
                               Text(
@@ -229,6 +229,21 @@ void orderInfoDialog(String orderId) {
                               Text(
                                 showOrderType(model.currentOrder!.orderType!)
                                     .label,
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Số thứ tự',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                (model.currentOrder?.customerNumber ?? 1)
+                                    .toString(),
                                 style: Get.textTheme.bodyMedium,
                               ),
                             ],
@@ -318,11 +333,17 @@ void orderInfoDialog(String orderId) {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "${model.currentOrder!.promotionList![i].promotionName} X ${model.currentOrder!.promotionList![i].quantity}",
+                                            "- ${model.currentOrder!.promotionList![i].promotionName}",
                                             style: Get.textTheme.bodySmall,
                                           ),
                                           Text(
-                                            " - ${formatPrice(model.currentOrder!.promotionList![i].discountAmount ?? 0)}",
+                                            model
+                                                        .currentOrder!
+                                                        .promotionList![i]
+                                                        .effectType ==
+                                                    "GET_POINT"
+                                                ? ("+${model.currentOrder!.promotionList![i].discountAmount} Điểm")
+                                                : ("- ${formatPrice(model.currentOrder!.promotionList![i].discountAmount ?? 0)}"),
                                             style: Get.textTheme.bodySmall,
                                           ),
                                         ],
@@ -385,7 +406,6 @@ void orderInfoDialog(String orderId) {
                     onPressed: () {
                       Get.find<PrinterViewModel>().printBill(
                           model.currentOrder!,
-                          model.selectedTable,
                           model.getPaymentName(
                               model.currentOrder!.paymentType!));
                     },

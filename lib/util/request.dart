@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart' show Get, Inst;
+import '../view_model/index.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
 
 Map<String, dynamic> convertToQueryParams(
@@ -109,6 +111,14 @@ class MyRequest {
           await showAlertDialog(
               title: "Lỗi",
               content: e.response?.data["Error"].toString() ?? 'Có lỗi xãy ra');
+        } else if (e.response?.statusCode == 403) {
+          showConfirmDialog(
+            title: "Lỗi đăng nhập",
+            content:
+                "Tài khoản của bạn không có quyền đăng nhập vào hệ thống này",
+          ).then((value) => {
+                if (value) Get.find<LoginViewModel>().logout(),
+              });
         } else if (e.response?.statusCode == 500) {
           showAlertDialog(
             title: "Lỗi hệ thống",

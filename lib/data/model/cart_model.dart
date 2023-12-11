@@ -15,6 +15,7 @@ class CartModel {
   String? customerName;
   String? deliveryAddress;
   String? message;
+  num? customerNumber;
 
   CartModel(
       {this.storeId,
@@ -32,7 +33,8 @@ class CartModel {
       this.customerId,
       this.customerName,
       this.deliveryAddress,
-      this.message});
+      this.message,
+      this.customerNumber});
 
   CartModel.fromJson(Map<String, dynamic> json) {
     storeId = json['storeId'];
@@ -61,6 +63,7 @@ class CartModel {
     customerName = json['customerName'];
     deliveryAddress = json['deliveryAddress'];
     message = json['message'];
+    customerNumber = json['customerNumber'];
   }
 
   Map<String, dynamic> toJson() {
@@ -85,6 +88,7 @@ class CartModel {
     data['customerName'] = customerName;
     data['deliveryAddress'] = deliveryAddress;
     data['message'] = message;
+    data['customerNumber'] = customerNumber;
     return data;
   }
 }

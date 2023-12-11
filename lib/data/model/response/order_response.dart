@@ -10,6 +10,7 @@ class OrderResponseModel {
   String? orderType;
   String? paymentType;
   String? checkInDate;
+  num? customerNumber;
   List<PromotionList>? promotionList;
   List<ProductList>? productList;
   CustomerInfo? customerInfo;
@@ -26,6 +27,7 @@ class OrderResponseModel {
       this.orderType,
       this.paymentType,
       this.checkInDate,
+      this.customerNumber,
       this.promotionList,
       this.productList,
       this.customerInfo});
@@ -41,46 +43,47 @@ class OrderResponseModel {
     orderStatus = json['orderStatus'];
     orderType = json['orderType'];
     paymentType = json['paymentType'];
+    customerNumber = json['customerNumber'];
     checkInDate = json['checkInDate'];
     if (json['promotionList'] != null) {
       promotionList = <PromotionList>[];
       json['promotionList'].forEach((v) {
-        promotionList!.add(new PromotionList.fromJson(v));
+        promotionList!.add(PromotionList.fromJson(v));
       });
     }
     if (json['productList'] != null) {
       productList = <ProductList>[];
       json['productList'].forEach((v) {
-        productList!.add(new ProductList.fromJson(v));
+        productList!.add(ProductList.fromJson(v));
       });
     }
     customerInfo = json['customerInfo'] != null
-        ? new CustomerInfo.fromJson(json['customerInfo'])
+        ? CustomerInfo.fromJson(json['customerInfo'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['orderId'] = this.orderId;
-    data['invoiceId'] = this.invoiceId;
-    data['totalAmount'] = this.totalAmount;
-    data['finalAmount'] = this.finalAmount;
-    data['vat'] = this.vat;
-    data['vatAmount'] = this.vatAmount;
-    data['discount'] = this.discount;
-    data['orderStatus'] = this.orderStatus;
-    data['orderType'] = this.orderType;
-    data['paymentType'] = this.paymentType;
-    data['checkInDate'] = this.checkInDate;
-    if (this.promotionList != null) {
-      data['promotionList'] =
-          this.promotionList!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['orderId'] = orderId;
+    data['invoiceId'] = invoiceId;
+    data['totalAmount'] = totalAmount;
+    data['finalAmount'] = finalAmount;
+    data['vat'] = vat;
+    data['vatAmount'] = vatAmount;
+    data['discount'] = discount;
+    data['orderStatus'] = orderStatus;
+    data['orderType'] = orderType;
+    data['paymentType'] = paymentType;
+    data['checkInDate'] = checkInDate;
+    data['customerNumber'] = customerNumber;
+    if (promotionList != null) {
+      data['promotionList'] = promotionList!.map((v) => v.toJson()).toList();
     }
-    if (this.productList != null) {
-      data['productList'] = this.productList!.map((v) => v.toJson()).toList();
+    if (productList != null) {
+      data['productList'] = productList!.map((v) => v.toJson()).toList();
     }
-    if (this.customerInfo != null) {
-      data['customerInfo'] = this.customerInfo!.toJson();
+    if (customerInfo != null) {
+      data['customerInfo'] = customerInfo!.toJson();
     }
     return data;
   }
@@ -109,12 +112,12 @@ class PromotionList {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['promotionId'] = this.promotionId;
-    data['promotionName'] = this.promotionName;
-    data['discountAmount'] = this.discountAmount;
-    data['quantity'] = this.quantity;
-    data['effectType'] = this.effectType;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['promotionId'] = promotionId;
+    data['promotionName'] = promotionName;
+    data['discountAmount'] = discountAmount;
+    data['quantity'] = quantity;
+    data['effectType'] = effectType;
     return data;
   }
 }
@@ -156,24 +159,24 @@ class ProductList {
     if (json['extras'] != null) {
       extras = <Extras>[];
       json['extras'].forEach((v) {
-        extras!.add(new Extras.fromJson(v));
+        extras!.add(Extras.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['productInMenuId'] = this.productInMenuId;
-    data['orderDetailId'] = this.orderDetailId;
-    data['sellingPrice'] = this.sellingPrice;
-    data['quantity'] = this.quantity;
-    data['name'] = this.name;
-    data['totalAmount'] = this.totalAmount;
-    data['finalAmount'] = this.finalAmount;
-    data['discount'] = this.discount;
-    data['note'] = this.note;
-    if (this.extras != null) {
-      data['extras'] = this.extras!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['productInMenuId'] = productInMenuId;
+    data['orderDetailId'] = orderDetailId;
+    data['sellingPrice'] = sellingPrice;
+    data['quantity'] = quantity;
+    data['name'] = name;
+    data['totalAmount'] = totalAmount;
+    data['finalAmount'] = finalAmount;
+    data['discount'] = discount;
+    data['note'] = note;
+    if (extras != null) {
+      data['extras'] = extras!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -208,14 +211,14 @@ class Extras {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['productInMenuId'] = this.productInMenuId;
-    data['sellingPrice'] = this.sellingPrice;
-    data['quantity'] = this.quantity;
-    data['totalAmount'] = this.totalAmount;
-    data['finalAmount'] = this.finalAmount;
-    data['discount'] = this.discount;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['productInMenuId'] = productInMenuId;
+    data['sellingPrice'] = sellingPrice;
+    data['quantity'] = quantity;
+    data['totalAmount'] = totalAmount;
+    data['finalAmount'] = finalAmount;
+    data['discount'] = discount;
+    data['name'] = name;
     return data;
   }
 }
@@ -246,13 +249,13 @@ class CustomerInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['address'] = this.address;
-    data['customerType'] = this.customerType;
-    data['deliStatus'] = this.deliStatus;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['phone'] = phone;
+    data['address'] = address;
+    data['customerType'] = customerType;
+    data['deliStatus'] = deliStatus;
     return data;
   }
 }

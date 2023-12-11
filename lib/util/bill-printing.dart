@@ -42,12 +42,11 @@ Future<Uint8List> genQRcode(PdfPageFormat format, String imageURL) async {
   return pdf.save();
 }
 
-Future<Uint8List> generateBillInvoice(PdfPageFormat format,
-    OrderResponseModel order, int table, String payment) async {
+Future<Uint8List> generateBillInvoice(
+    PdfPageFormat format, OrderResponseModel order, String payment) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interMedium();
 
-  String deliType = Get.find<OrderViewModel>().deliveryType;
   StoreModel storeInfo = Get.find<MenuViewModel>().storeDetails;
   final provider =
       await flutterImageProvider(NetworkImage(storeInfo.brandPicUrl!));
@@ -89,7 +88,7 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                     "Ngày: ${formatTime(order.checkInDate ?? DateTime.now().toString())}",
                     textAlign: pw.TextAlign.left,
                     style: pw.TextStyle(font: font, fontSize: 8)),
-                pw.Text("Bàn: $table",
+                pw.Text("STT: ${order.customerNumber ?? 1}",
                     textAlign: pw.TextAlign.left,
                     style: pw.TextStyle(font: font, fontSize: 8)),
                 pw.Row(
@@ -217,7 +216,10 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
                     pw.Text("Nhận món :",
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 8)),
-                    pw.Text(showOrderType(deliType).label ?? '',
+                    pw.Text(
+                        showOrderType(order.orderType ?? DeliType().eatIn.type)
+                                .label ??
+                            '',
                         textAlign: pw.TextAlign.right,
                         style: pw.TextStyle(font: font, fontSize: 8)),
                   ],
@@ -272,8 +274,8 @@ Future<Uint8List> generateBillInvoice(PdfPageFormat format,
   return pdf.save();
 }
 
-Future<Uint8List> generateKitchenInvoice(PdfPageFormat format,
-    OrderResponseModel order, int table, String payment) async {
+Future<Uint8List> generateKitchenInvoice(
+    PdfPageFormat format, OrderResponseModel order, String payment) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interMedium();
   pdf.addPage(
@@ -295,7 +297,7 @@ Future<Uint8List> generateKitchenInvoice(PdfPageFormat format,
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text("Bàn: $table",
+                    pw.Text("STT: ${order.customerNumber ?? 1}",
                         textAlign: pw.TextAlign.center,
                         style: pw.TextStyle(font: font, fontSize: 12)),
                     pw.Text(showOrderType(order.orderType ?? "EAT_IN").label,
@@ -393,7 +395,7 @@ Future<Uint8List> generateStampInvoice(
   ProductList product,
   String? time,
   String? invoiceId,
-  int table,
+  num? table,
 ) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
   final font = await PdfGoogleFonts.interBold();
@@ -410,7 +412,7 @@ Future<Uint8List> generateStampInvoice(
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Bàn: $table",
+                  pw.Text("STT: ${table ?? 1}",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(
                           font: font,
@@ -643,6 +645,28 @@ Future<Uint8List> generateClostSessionInvoice(
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
+                  pw.Text("Doanh thu Thẻ thành viên",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.pointifyAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Số đơn Thẻ thành viên",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(report.totalPointify.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
                   pw.Text("Doanh thu Visa",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
@@ -679,7 +703,7 @@ Future<Uint8List> generateClostSessionInvoice(
                   pw.Text("Doanh thu sau giảm",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(session.totalFinalAmount ?? 0),
+                  pw.Text(formatPrice(report.finalAmount ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],
