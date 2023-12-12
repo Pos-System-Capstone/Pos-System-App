@@ -216,12 +216,12 @@ class CartViewModel extends BaseViewModel {
       if (item.attributes != null) {
         for (var attribute in item.attributes!) {
           item.note = (attribute.value != null && attribute.value!.isNotEmpty)
-              ? " ${item.note ?? ""}, ${attribute.name}:${attribute.value}, "
-              : "";
+              ? "${attribute.name} ${attribute.value}, ${item.note}"
+              : item.note;
         }
       }
     }
-    Get.find<OrderViewModel>().placeOrder(cart).then((value) => {
+    await Get.find<OrderViewModel>().placeOrder(cart).then((value) => {
           res = value,
           if (res == true) {clearCartData()}
         });
