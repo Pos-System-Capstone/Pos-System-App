@@ -46,8 +46,10 @@ class AccountData {
   }
 
   Future<CustomerInfoModel?> scanCustomer(String phone) async {
-    final response =
-        await request.get("users/scan", queryParameters: {"code": phone});
+    Account? userInfo = await getUserInfo();
+    final response = await request.get(
+        "stores/${userInfo?.storeId ?? ""}/scan-user",
+        queryParameters: {"phone": phone});
 
     if (response.statusCode == 200) {
       final customer = response.data;

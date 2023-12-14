@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/views/screens/home/payment/payment_dialogs/input_customer_monney_dialog.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/index.dart';
 import 'bill_screen.dart';
@@ -107,24 +105,6 @@ Widget paymentTypeSelect() {
             thickness: 1,
             color: Get.theme.colorScheme.onBackground,
           ),
-          model.qrCodeData != null
-              ? Container(
-                  color: Colors.white,
-                  margin: const EdgeInsets.all(8),
-                  padding: const EdgeInsets.all(16),
-                  child: PrettyQr(
-                    image: NetworkImage(
-                      model.selectedPaymentMethod?.picUrl ?? "",
-                    ),
-                    typeNumber: null,
-                    size: 280,
-                    elementColor: Colors.black,
-                    data: model.qrCodeData!,
-                    errorCorrectLevel: QrErrorCorrectLevel.M,
-                    roundEdges: true,
-                  ),
-                )
-              : SizedBox(),
           model.listPayment.isEmpty
               ? Expanded(
                   child: Center(

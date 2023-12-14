@@ -47,7 +47,7 @@ class CartViewModel extends BaseViewModel {
     }
   }
 
-  void scanCustomer(String phone) async {
+  Future scanCustomer(String phone) async {
     try {
       setState(ViewStatus.Loading);
       customer = await accountData.scanCustomer(phone);
@@ -154,13 +154,21 @@ class CartViewModel extends BaseViewModel {
   }
 
   Future<void> selectVoucher(String code) async {
-    if (code.contains('-')) {
-      List<String> parts = code.split("-");
-      cart.promotionCode = parts[0];
-      cart.voucherCode = parts[1];
-    } else {
-      cart.promotionCode = code;
-      cart.voucherCode = null;
+    String? phoneNumber;
+    if (code.contains('_')) {
+      List<String> parts = code.split("_");
+      if (parts.length > 2) {
+        phoneNumber = parts[0];
+        cart.promotionCode = parts[1];
+        cart.voucherCode = parts[2];
+      } else {
+        phoneNumber = parts[0];
+        cart.promotionCode = parts[1];
+        cart.voucherCode = null;
+      }
+    }
+    if (phoneNumber != null) {
+      await scanCustomer(phoneNumber);
     }
     await prepareOrder();
     notifyListeners();

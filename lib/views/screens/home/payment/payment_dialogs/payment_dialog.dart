@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 import '../../../../../enums/order_enum.dart';
 import '../../../../../helper/qr_generate.dart';

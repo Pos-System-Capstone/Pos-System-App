@@ -510,7 +510,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget displayMenu() {
     String? brandLogo = Get.find<MenuViewModel>().storeDetails.brandPicUrl;
     return InkWell(
-      onTap: () => Get.find<OrderViewModel>().launchInBrowser(brandLogo ?? ""),
+      onTap: () {},
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(

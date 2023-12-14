@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:math';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
@@ -10,8 +9,6 @@ import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
 import 'package:pos_apps/views/screens/home/payment/payment_dialogs/scan_membership_card_dialog.dart';
-import 'package:pos_apps/views/screens/orders/dialogs/order_info_dailog.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../data/api/account_data.dart';
 import '../data/api/order_api.dart';
 import '../data/api/payment_data.dart';
@@ -21,7 +18,6 @@ import '../data/model/index.dart';
 import '../data/model/payment_response_model.dart';
 import '../views/screens/home/payment/payment_dialogs/payment_dialog.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
-import '../views/widgets/printer_dialogs/add_printer_dialog.dart';
 
 class OrderViewModel extends BaseViewModel {
   late OrderAPI api = OrderAPI();
@@ -289,50 +285,5 @@ class OrderViewModel extends BaseViewModel {
     currentOrder = null;
     selectedPaymentMethod = listPayment[0];
     hideDialog();
-  }
-
-  Future<void> launchInWebViewOrVC() async {
-    Uri url = Uri.parse('https://www.google.com/');
-    if (!await launchUrl(
-      url,
-      mode: LaunchMode.inAppWebView,
-      webViewConfiguration: const WebViewConfiguration(
-          headers: <String, String>{'my_header_key': 'my_header_value'}),
-    )) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
-  Future<void> launchInBrowser(String value) async {
-    Uri url = Uri.parse(value);
-    if (!await launchUrl(
-      url,
-      mode: LaunchMode.externalApplication,
-    )) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
-  Future<void> launchQrCode(String qrCode) async {
-    Uri url = Uri.parse(
-        'https://quickchart.io/qr?text=$qrCode&ecLevel=H&margin=8&size=350');
-    if (!await launchUrl(
-      url,
-      mode: LaunchMode.externalApplication,
-    )) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
-  Future<void> launchStoreLogo() async {
-    String? url = Get.find<MenuViewModel>().storeDetails.brandPicUrl;
-    Uri uri = Uri.parse(url ??
-        "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Flogo.png?alt=media&token=423dceec-a73b-4313-83ed-9b56f8f3996c");
-    if (!await launchUrl(
-      uri,
-      mode: LaunchMode.externalApplication,
-    )) {
-      throw Exception('Could not launch $url');
-    }
   }
 }
