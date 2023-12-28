@@ -39,9 +39,7 @@ class CartViewModel extends BaseViewModel {
 
   Future getListPromotion() async {
     try {
-      setState(ViewStatus.Loading);
       promotions = await promotionData?.getListPromotionOfStore();
-      setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }

@@ -70,6 +70,7 @@ class MenuViewModel extends BaseViewModel {
       handleChangeFilterProductByCategory(categories![0].id);
       productsFilter
           ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
+      Get.find<CartViewModel>().getListPromotion();
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }
