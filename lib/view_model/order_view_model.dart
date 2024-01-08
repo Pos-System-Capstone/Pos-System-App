@@ -193,6 +193,19 @@ class OrderViewModel extends BaseViewModel {
     }
   }
 
+  void findNewUserOrder() async {
+    try {
+      Account? userInfo = await getUserInfo();
+      var res = await api.findNewUserOrder(userInfo?.storeId ?? '');
+      if (res?.totalOrder != 0) {
+        showAlertDialog(
+            title: "Có ${res?.totalOrder} đơn hàng mới",
+            content:
+                'Có ${res?.totalOrder} đơn hàng mới\n  ${res?.totalOrderPickUp} đơn hàng nhận tại quán\n  ${res?.totalOrderDeli} đơn hàng giao hàng ');
+      }
+    } catch (e) {}
+  }
+
   void getOrderByStore(String orderId) async {
     setState(ViewStatus.Loading);
     qrCodeData = null;
@@ -212,10 +225,7 @@ class OrderViewModel extends BaseViewModel {
               setState(ViewStatus.Completed)
             }
         });
-    // await paymentData?.getPaymentProviderOfOrder(orderId).then((value) => {
-    //       currentOrder?.paymentMethod = value,
-    //       // ignore: avoid_print
-    //     });
+
     for (var element in listPayment) {
       if (element!.type! == currentOrder!.paymentType) {
         selectedPaymentMethod = element;

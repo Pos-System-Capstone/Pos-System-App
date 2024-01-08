@@ -1,5 +1,6 @@
 import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/data/model/index.dart';
+import 'package:pos_apps/data/model/response/new_user_order.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/topup_wallet_response.dart';
@@ -148,5 +149,18 @@ class OrderAPI {
       listOrder.add(orderResponse);
     }
     return listOrder;
+  }
+
+  Future<NewUserOrder?> findNewUserOrder(String storeId) async {
+    try {
+      final res = await request.get('stores/$storeId/user-order');
+      var jsonList = res.data;
+      NewUserOrder orderResponse = NewUserOrder.fromJson(jsonList);
+      return orderResponse;
+    } catch (e) {
+      showAlertDialog(
+          title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
+      return null;
+    }
   }
 }

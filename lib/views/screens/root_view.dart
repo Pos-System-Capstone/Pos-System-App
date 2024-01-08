@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -95,10 +97,18 @@ class _RootScreenState extends State<RootScreen> {
     ),
   ];
   int _selectedIndex = 0;
+  Timer? _timer;
   @override
   void initState() {
     Get.find<MenuViewModel>().getMenuOfStore();
+    startCountdown();
     super.initState();
+  }
+
+  void startCountdown() {
+    _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      Get.find<OrderViewModel>().findNewUserOrder();
+    });
   }
 
   @override

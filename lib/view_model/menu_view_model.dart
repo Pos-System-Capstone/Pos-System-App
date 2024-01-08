@@ -49,6 +49,7 @@ class MenuViewModel extends BaseViewModel {
     try {
       await getStore();
       currentMenu = await menuData?.getMenuOfStore();
+      Get.find<CartViewModel>().getListPromotion();
       getListSession(DateTime.now());
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
@@ -70,7 +71,6 @@ class MenuViewModel extends BaseViewModel {
       handleChangeFilterProductByCategory(categories![0].id);
       productsFilter
           ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
-      Get.find<CartViewModel>().getListPromotion();
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }
