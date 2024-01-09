@@ -68,7 +68,9 @@ class _MyAppState extends State<MyApp> {
             transition: Transition.zoom),
         GetPage(
             name: RouteHandler.HOME,
-            page: () => RootScreen(),
+            page: () => RootScreen(
+                  idx: int.parse(Get.parameters['idx'] ?? '0'),
+                ),
             transition: Transition.cupertino),
         GetPage(
             name: RouteHandler.PRINTER,

@@ -14,7 +14,8 @@ import 'profile/profile.dart';
 import 'settings/setting.dart';
 
 class RootScreen extends StatefulWidget {
-  const RootScreen({super.key});
+  final int idx;
+  const RootScreen({super.key, required this.idx});
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -100,13 +101,14 @@ class _RootScreenState extends State<RootScreen> {
   Timer? _timer;
   @override
   void initState() {
+    _selectedIndex = widget.idx;
     Get.find<MenuViewModel>().getMenuOfStore();
     startCountdown();
     super.initState();
   }
 
-  void startCountdown() {
-    _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+  startCountdown() {
+    Timer.periodic(Duration(seconds: 20), (timer) {
       Get.find<OrderViewModel>().findNewUserOrder();
     });
   }

@@ -1,10 +1,12 @@
 import 'dart:core';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
 import 'package:pos_apps/data/model/topup_wallet_request.dart';
 import 'package:pos_apps/enums/index.dart';
+import 'package:pos_apps/routes/routes_constraints.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
@@ -198,10 +200,15 @@ class OrderViewModel extends BaseViewModel {
       Account? userInfo = await getUserInfo();
       var res = await api.findNewUserOrder(userInfo?.storeId ?? '');
       if (res?.totalOrder != 0) {
-        showAlertDialog(
-            title: "Có ${res?.totalOrder} đơn hàng mới",
-            content:
-                'Có ${res?.totalOrder} đơn hàng mới\n  ${res?.totalOrderPickUp} đơn hàng nhận tại quán\n  ${res?.totalOrderDeli} đơn hàng giao hàng ');
+        SystemSound.play(SystemSoundType.alert);
+        Get.snackbar(onTap: (snack) {
+          Get.toNamed(
+            "${RouteHandler.HOME}?idx=${1}",
+          );
+        },
+            duration: Duration(seconds: 3),
+            "Có ${res?.totalOrder} đơn hàng mới",
+            '${res?.totalOrderPickUp} đơn hàng nhận tại quán, ${res?.totalOrderDeli} đơn hàng giao hàng ');
       }
     } catch (e) {}
   }

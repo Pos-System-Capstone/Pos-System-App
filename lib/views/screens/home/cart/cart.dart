@@ -23,8 +23,8 @@ class AddToCartScreen extends StatefulWidget {
 class _AddToCartScreenState extends State<AddToCartScreen> {
   @override
   initState() {
-    super.initState();
     Timer.run(chooseTableDialog);
+    super.initState();
   }
 
   @override
