@@ -58,10 +58,10 @@ class OrderViewModel extends BaseViewModel {
           picUrl:
               'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
       PaymentProvider(
-          name: "Visa/MasterCard",
+          name: "Visa/Mastercard",
           type: PaymentTypeEnums.VISA,
           picUrl:
-              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fvisa-credit-card.png?alt=media&token=1cfb48ab-b957-47db-8f52-89da33d0fb39'),
       PaymentProvider(
           name: "Thẻ thành viên",
           type: PaymentTypeEnums.POINTIFY,
