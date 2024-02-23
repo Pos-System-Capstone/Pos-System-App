@@ -1,6 +1,7 @@
 class OrderResponseModel {
   String? orderId;
   String? invoiceId;
+  String? storeName;
   num? totalAmount;
   num? finalAmount;
   num? vat;
@@ -18,6 +19,7 @@ class OrderResponseModel {
   OrderResponseModel(
       {this.orderId,
       this.invoiceId,
+      this.storeName,
       this.totalAmount,
       this.finalAmount,
       this.vat,
@@ -35,6 +37,7 @@ class OrderResponseModel {
   OrderResponseModel.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
     invoiceId = json['invoiceId'];
+    storeName = json['storeName'];
     totalAmount = json['totalAmount'];
     finalAmount = json['finalAmount'];
     vat = json['vat'];
@@ -43,8 +46,8 @@ class OrderResponseModel {
     orderStatus = json['orderStatus'];
     orderType = json['orderType'];
     paymentType = json['paymentType'];
-    customerNumber = json['customerNumber'];
     checkInDate = json['checkInDate'];
+    customerNumber = json['customerNumber'];
     if (json['promotionList'] != null) {
       promotionList = <PromotionList>[];
       json['promotionList'].forEach((v) {
@@ -66,6 +69,7 @@ class OrderResponseModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['orderId'] = orderId;
     data['invoiceId'] = invoiceId;
+    data['storeName'] = storeName;
     data['totalAmount'] = totalAmount;
     data['finalAmount'] = finalAmount;
     data['vat'] = vat;
@@ -229,6 +233,8 @@ class CustomerInfo {
   String? phone;
   String? address;
   String? customerType;
+  String? deliTime;
+  String? paymentStatus;
   String? deliStatus;
 
   CustomerInfo(
@@ -237,6 +243,8 @@ class CustomerInfo {
       this.phone,
       this.address,
       this.customerType,
+      this.deliTime,
+      this.paymentStatus,
       this.deliStatus});
 
   CustomerInfo.fromJson(Map<String, dynamic> json) {
@@ -245,6 +253,8 @@ class CustomerInfo {
     phone = json['phone'];
     address = json['address'];
     customerType = json['customerType'];
+    deliTime = json['deliTime'];
+    paymentStatus = json['paymentStatus'];
     deliStatus = json['deliStatus'];
   }
 
@@ -255,6 +265,8 @@ class CustomerInfo {
     data['phone'] = phone;
     data['address'] = address;
     data['customerType'] = customerType;
+    data['deliTime'] = deliTime;
+    data['paymentStatus'] = paymentStatus;
     data['deliStatus'] = deliStatus;
     return data;
   }

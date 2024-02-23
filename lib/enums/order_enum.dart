@@ -17,18 +17,21 @@ class TakeAway {
   String type = 'TAKE_AWAY';
   IconData icon = Icons.home;
   String label = 'Mang đi';
+  Color color = Colors.amber;
 }
 
 class EatIn {
   String type = 'EAT_IN';
   IconData icon = Icons.store;
   String label = 'Tại quán';
+  Color color = Colors.cyan;
 }
 
 class Delivery {
   String type = 'DELIVERY';
   IconData icon = Icons.delivery_dining;
   String label = 'Giao hàng';
+  Color color = Colors.teal;
 }
 
 class Topup {
@@ -46,13 +49,13 @@ class OrderStatusEnum {
 String showOrderStatus(String status) {
   switch (status) {
     case OrderStatusEnum.PENDING:
-      return 'Chờ thanh toán';
+      return 'Đang thực hiện';
     case OrderStatusEnum.CANCELED:
       return 'Đã huỷ';
     case OrderStatusEnum.PAID:
-      return 'Đã thanh toán';
+      return 'Đã hoàn thành';
     default:
-      return 'Chờ thanh toán';
+      return 'Đang thực hiện';
   }
 }
 
@@ -71,11 +74,23 @@ dynamic showOrderType(String type) {
   }
 }
 
+String showPaymentStatusEnum(String status) {
+  switch (status) {
+    case PaymentStatusEnum.PENDING:
+      return 'Chưa thanh toán';
+    case PaymentStatusEnum.FAIL:
+      return 'Thất bại';
+    case PaymentStatusEnum.PAID:
+      return 'Đã thanh toán';
+    default:
+      return 'Không có thông tin';
+  }
+}
+
 class PaymentStatusEnum {
   static const String FAIL = 'Fail';
-  static const String PAID = 'Paid';
-  static const String PENDING = 'Pending';
-  static const String CANCELED = 'Canceled';
+  static const String PAID = 'PAID';
+  static const String PENDING = 'PENDING';
 }
 
 class PaymentTypeEnums {

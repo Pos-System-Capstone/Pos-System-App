@@ -34,7 +34,7 @@ class OrderViewModel extends BaseViewModel {
   List<OrderInList> listOrder = [];
   PaymentStatusResponse? paymentStatus;
   String currentPaymentStatusMessage = "Chưa thanh toán";
-  String paymentCheckingStatus = PaymentStatusEnum.CANCELED;
+  String paymentCheckingStatus = PaymentStatusEnum.PENDING;
   String? qrCodeData;
   CustomerInfoModel? memberShipInfo;
   String topupPaymentType = PaymentTypeEnums.CASH;
@@ -55,6 +55,11 @@ class OrderViewModel extends BaseViewModel {
       PaymentProvider(
           name: "Ngân hàng",
           type: PaymentTypeEnums.BANKING,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
+      PaymentProvider(
+          name: "Visa/MasterCard",
+          type: PaymentTypeEnums.VISA,
           picUrl:
               'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
       PaymentProvider(
@@ -111,7 +116,7 @@ class OrderViewModel extends BaseViewModel {
           else
             {
               showAlertDialog(
-                  title: value.status == "SUCCESS" ? "Thành công" : "Thất bại",
+                  title: value.status == "PAID" ? "Thành công" : "Thất bại",
                   content: value.message ?? '')
             }
         });
@@ -140,7 +145,6 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void makePayment(PaymentProvider payment) async {
-    paymentCheckingStatus = PaymentStatusEnum.PENDING;
     // if (listPayment.isEmpty) {
     paymentCheckingStatus = PaymentStatusEnum.PAID;
     await completeOrder(currentOrder!.orderId ?? '');
@@ -206,7 +210,7 @@ class OrderViewModel extends BaseViewModel {
             "${RouteHandler.HOME}?idx=${1}",
           );
         },
-            duration: Duration(seconds: 3),
+            duration: Duration(seconds: 1),
             "Có ${res?.totalOrder} đơn hàng mới",
             '${res?.totalOrderPickUp} đơn hàng nhận tại quán, ${res?.totalOrderDeli} đơn hàng giao hàng ');
       }
@@ -232,13 +236,18 @@ class OrderViewModel extends BaseViewModel {
               setState(ViewStatus.Completed)
             }
         });
-
+    if (currentOrder?.customerInfo != null &&
+        currentOrder?.customerInfo?.paymentStatus != null) {
+      paymentCheckingStatus = currentOrder?.customerInfo?.paymentStatus ??
+          PaymentStatusEnum.PENDING;
+    } else {
+      paymentCheckingStatus = PaymentStatusEnum.PENDING;
+    }
     for (var element in listPayment) {
       if (element!.type! == currentOrder!.paymentType) {
         selectedPaymentMethod = element;
       }
     }
-    paymentCheckingStatus = PaymentStatusEnum.CANCELED;
     setState(ViewStatus.Completed);
   }
 
@@ -251,34 +260,43 @@ class OrderViewModel extends BaseViewModel {
           title: "Thông báo", content: "Vui lòng chọn phương thức thanh toán");
       return;
     }
-    if (paymentCheckingStatus != PaymentStatusEnum.PAID) {
-      await showAlertDialog(
-          title: "Thông báo", content: "Vui lòng kiểm tra lại thanh toán");
-      return;
-    }
     if (selectedPaymentMethod?.type == PaymentTypeEnums.POINTIFY) {
-      String? code = await scanPointifyWallet();
-      if (code != null) {
-        MakePaymentResponse? makePaymentResponse =
-            await api.makePayment(orderId, code, selectedPaymentMethod?.type);
-        if (makePaymentResponse?.status == "FAIL") {
-          await showAlertDialog(
-              title: "Lỗi thanh toán",
-              content: makePaymentResponse?.message ?? '');
-        } else if (makePaymentResponse?.status == "SUCCESS") {
-          await api.updateOrder(userInfo!.storeId, orderId,
-              OrderStatusEnum.PAID, makePaymentResponse?.paymentType);
-          Get.find<PrinterViewModel>().printBill(
-              currentOrder!, selectedPaymentMethod!.name ?? "Tiền mặt");
-          clearOrder();
-          await showAlertDialog(
-              title: "Thanh toán thành công",
-              content: "Đơn hàng thanh toán thành công");
-          Duration(seconds: 2);
-          chooseTableDialog();
-        }
+      if (currentOrder?.customerInfo != null &&
+          currentOrder?.customerInfo?.paymentStatus == PaymentStatusEnum.PAID) {
+        await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,
+            currentOrder?.paymentType);
+        Get.find<PrinterViewModel>().printBill(
+            currentOrder!, selectedPaymentMethod!.name ?? "Tiền mặt");
+        clearOrder();
+        await showAlertDialog(
+            title: "Thanh toán thành công",
+            content: "Đơn hàng thanh toán thành công");
+        Duration(seconds: 2);
+        chooseTableDialog();
       } else {
-        return;
+        String? code = await scanPointifyWallet();
+        if (code != null) {
+          MakePaymentResponse? makePaymentResponse =
+              await api.makePayment(orderId, code, selectedPaymentMethod?.type);
+          if (makePaymentResponse?.status == "FAIL") {
+            await showAlertDialog(
+                title: "Lỗi thanh toán",
+                content: makePaymentResponse?.message ?? '');
+          } else if (makePaymentResponse?.status == "SUCCESS") {
+            await api.updateOrder(userInfo!.storeId, orderId,
+                OrderStatusEnum.PAID, makePaymentResponse?.paymentType);
+            Get.find<PrinterViewModel>().printBill(
+                currentOrder!, selectedPaymentMethod!.name ?? "Tiền mặt");
+            clearOrder();
+            await showAlertDialog(
+                title: "Thanh toán thành công",
+                content: "Đơn hàng thanh toán thành công");
+            Duration(seconds: 2);
+            chooseTableDialog();
+          }
+        } else {
+          return;
+        }
       }
     } else {
       await api.updateOrder(userInfo!.storeId, orderId, OrderStatusEnum.PAID,

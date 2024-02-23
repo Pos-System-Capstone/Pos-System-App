@@ -11,6 +11,7 @@ import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/order_view_model.dart';
 import 'cart_screen.dart';
+import 'order_product.dart';
 import 'product_cart.dart';
 
 class AddToCartScreen extends StatefulWidget {
@@ -40,12 +41,11 @@ class _AddToCartScreenState extends State<AddToCartScreen> {
                   children: context.isPortrait
                       ? [
                           Expanded(
-                            child: orderProduct(context.isPortrait),
+                            child: OrderProduct(),
                           ),
                         ]
                       : [
-                          Expanded(
-                              flex: 2, child: orderProduct(context.isPortrait)),
+                          Expanded(flex: 2, child: OrderProduct()),
                           Expanded(flex: 1, child: CartScreen()),
                         ],
                 ),
@@ -82,6 +82,16 @@ Widget orderProduct(bool isPortrait) {
           length: listCategoryTab.length,
           child: Column(
             children: [
+              TabBar(
+                isScrollable: true,
+                indicatorColor: Get.theme.colorScheme.primary,
+                tabs: listCategoryTab,
+                onTap: (value) {
+                  debugPrint("value: $value");
+                  model.handleChangeFilterProductByCategory(
+                      model.categories![value].id);
+                },
+              ),
               TabBar(
                 isScrollable: true,
                 indicatorColor: Get.theme.colorScheme.primary,

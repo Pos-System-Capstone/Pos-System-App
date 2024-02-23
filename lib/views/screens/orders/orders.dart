@@ -183,6 +183,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 }
                             },
                             child: Container(
+                              color: model.listOrder[index].customerName != null
+                                  ? Get.theme.colorScheme.outlineVariant
+                                  : Get.theme.colorScheme.background,
                               padding: EdgeInsets.only(left: 8, right: 8),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -212,10 +215,26 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                     ''),
                                                 style: Get.textTheme.titleSmall
                                                     ?.copyWith(
-                                                        color: Get
-                                                            .theme
-                                                            .colorScheme
-                                                            .primary)),
+                                                        color: model
+                                                                    .listOrder[
+                                                                        index]
+                                                                    .status ==
+                                                                OrderStatusEnum
+                                                                    .PENDING
+                                                            ? Get
+                                                                .theme
+                                                                .colorScheme
+                                                                .primary
+                                                            : model
+                                                                        .listOrder[
+                                                                            index]
+                                                                        .status ==
+                                                                    OrderStatusEnum
+                                                                        .PAID
+                                                                ? Colors
+                                                                    .greenAccent
+                                                                : Colors
+                                                                    .redAccent)),
                                           ],
                                         ),
                                         Row(
@@ -231,12 +250,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                             ),
                                             Text(
                                                 "${model.getPaymentName(model.listOrder[index].paymentType ?? 'CASH')} (${formatPrice(model.listOrder[index].finalAmount ?? 0)})",
-                                                style: Get.textTheme.titleSmall
-                                                    ?.copyWith(
-                                                        color: Get
-                                                            .theme
-                                                            .colorScheme
-                                                            .primary)),
+                                                style:
+                                                    Get.textTheme.titleSmall),
                                           ],
                                         ),
                                         Row(
@@ -263,6 +278,54 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                                             .theme
                                                             .colorScheme
                                                             .primary)),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                                model.listOrder[index]
+                                                            .customerName !=
+                                                        null
+                                                    ? "Khách hàng: ${model.listOrder[index].customerName} , ${model.listOrder[index].phone?.replaceFirst("+84", "0")} "
+                                                    : "",
+                                                style:
+                                                    Get.textTheme.titleSmall),
+                                            Text(
+                                                model.listOrder[index]
+                                                            .customerName !=
+                                                        null
+                                                    ? showPaymentStatusEnum(
+                                                        model.listOrder[index]
+                                                                .paymentStatus ??
+                                                            '',
+                                                      )
+                                                    : "",
+                                                style: Get.textTheme.titleSmall
+                                                    ?.copyWith(
+                                                        color: model
+                                                                    .listOrder[
+                                                                        index]
+                                                                    .paymentStatus ==
+                                                                PaymentStatusEnum
+                                                                    .PENDING
+                                                            ? Get
+                                                                .theme
+                                                                .colorScheme
+                                                                .primary
+                                                            : model
+                                                                        .listOrder[
+                                                                            index]
+                                                                        .paymentStatus ==
+                                                                    PaymentStatusEnum
+                                                                        .PAID
+                                                                ? Colors
+                                                                    .greenAccent
+                                                                : Colors
+                                                                    .redAccent)),
                                           ],
                                         ),
                                       ],

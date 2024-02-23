@@ -103,29 +103,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                Text("Báo cáo chi tiết ngày", style: Get.textTheme.titleLarge),
-                Expanded(
-                  flex: 2,
-                  child: Center(
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: Get.context!,
-                            helpText: "Chọn ngày",
-                            confirmText: "Xem báo cáo",
-                            cancelText: "Hủy",
-                            firstDate: DateTime(2022),
-                            lastDate: DateTime(2025),
-                            initialDate: DateTime.now());
+                // Text("Báo cáo chi tiết ngày", style: Get.textTheme.titleLarge),
+                // Expanded(
+                //   flex: 2,
+                //   child: Center(
+                //     child: OutlinedButton(
+                //       onPressed: () async {
+                //         DateTime? pickedDate = await showDatePicker(
+                //             context: Get.context!,
+                //             helpText: "Chọn ngày",
+                //             confirmText: "Xem báo cáo",
+                //             cancelText: "Hủy",
+                //             firstDate: DateTime(2022),
+                //             lastDate: DateTime(2025),
+                //             initialDate: DateTime.now());
 
-                        if (pickedDate != null) {
-                          reportDetailsDialog(pickedDate, pickedDate);
-                        }
-                      },
-                      child: Text("Chọn ngày"),
-                    ),
-                  ),
-                )
+                //         if (pickedDate != null) {
+                //           reportDetailsDialog(pickedDate, pickedDate);
+                //         }
+                //       },
+                //       child: Text("Chọn ngày"),
+                //     ),
+                //   ),
+                // )
               ],
             ),
           );

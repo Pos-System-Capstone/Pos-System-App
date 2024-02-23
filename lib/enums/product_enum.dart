@@ -16,5 +16,6 @@ class ProductSizeEnum {
 
 class CategoryTypeEnum {
   static const String Normal = 'Normal';
+  static const String Child = 'Child';
   static const String Extra = 'Extra';
 }

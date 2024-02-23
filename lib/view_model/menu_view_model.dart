@@ -27,6 +27,7 @@ class MenuViewModel extends BaseViewModel {
   StoreModel storeDetails = StoreModel();
   List<Product>? normalProducts = [];
   List<Category>? categories = [];
+  List<Category>? subCategories = [];
   List<Product>? extraProducts = [];
   List<Product>? childProducts = [];
   List<Product>? productsFilter = [];
@@ -55,6 +56,10 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == CategoryTypeEnum.Normal)
           .toList();
       categories?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
+      subCategories = currentMenu?.categories!
+          .where((element) => element.type == CategoryTypeEnum.Child)
+          .toList();
+      subCategories?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
       normalProducts = currentMenu?.products!
           .where((element) =>
               element.type == ProductTypeEnum.SINGLE ||
@@ -151,6 +156,16 @@ class MenuViewModel extends BaseViewModel {
       }
     }
     return listChildsSorted;
+  }
+
+  List<Category>? getChildCategory(Category? cate) {
+    List<Category>? listSubCate = [];
+    subCategories?.forEach((element) {
+      if (cate!.childCategoryIds!.any((e) => e == element.id)) {
+        listSubCate.add(element);
+      }
+    });
+    return listSubCate;
   }
 
   List<GroupProducts>? getGroupProductByComboProduct(String productId) {

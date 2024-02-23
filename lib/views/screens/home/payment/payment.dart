@@ -124,6 +124,10 @@ Widget paymentTypeSelect() {
                                 padding: const EdgeInsets.all(16),
                                 child: InkWell(
                                   onTap: () async {
+                                    if (model.paymentCheckingStatus ==
+                                        PaymentStatusEnum.PAID) {
+                                      return;
+                                    }
                                     if (e.type == PaymentTypeEnums.CASH) {
                                       num money = await inputMonneyDialog();
                                       model.setCustomerMoney(money);
@@ -164,7 +168,7 @@ Widget paymentTypeSelect() {
                   ),
                 ),
           Text(
-            "Trạng thái: ${model.currentPaymentStatusMessage}",
+            "Trạng thái: ${showPaymentStatusEnum(model.paymentCheckingStatus)}",
             style: Get.textTheme.titleMedium,
           ),
           SizedBox(
@@ -179,68 +183,54 @@ Widget paymentTypeSelect() {
                   padding: const EdgeInsets.all(8.0),
                   child: FilledButton(
                       onPressed: () {
-                        if (model.paymentCheckingStatus ==
-                            PaymentStatusEnum.PENDING) {
-                          null;
-                        } else if (model.selectedPaymentMethod == null) {
+                        if (model.selectedPaymentMethod == null) {
                           Get.snackbar(
                               "Lỗi", "Vui lòng chọn phương thức thanh toán");
                         } else {
                           model.makePayment(model.selectedPaymentMethod!);
                         }
                       },
-                      child: model.paymentCheckingStatus ==
-                              PaymentStatusEnum.PENDING
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                const Text(
-                                  'Đang thanh toán...',
-                                ),
-                                const SizedBox(
-                                  width: 4,
-                                ),
-                                const CircularProgressIndicator(),
-                              ],
-                            )
-                          : Text("Thanh toán")),
+                      child:
+                          model.paymentCheckingStatus == PaymentStatusEnum.PAID
+                              ? Text(
+                                  "Hoàn thành (Đơn hàng đã thanh toán)",
+                                )
+                              : Text("Thanh toán")),
                 ),
               ),
-              Expanded(
-                  child: Container(
-                      height: 80,
-                      padding: EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          switch (model.selectedPaymentMethod?.type) {
-                            case PaymentTypeEnums.CASH:
-                              num money = await inputMonneyDialog();
-                              model.setCustomerMoney(money);
-                              break;
-                            case PaymentTypeEnums.MOMO:
-                              showQRCodeDialog(
-                                  model.selectedPaymentMethod!.type!,
-                                  model.currentOrder!.finalAmount ?? 0,
-                                  model.currentOrder!.invoiceId!);
-                              break;
-                            case PaymentTypeEnums.BANKING:
-                              showQRCodeDialog(
-                                  model.selectedPaymentMethod!.type!,
-                                  model.currentOrder!.finalAmount ?? 0,
-                                  model.currentOrder!.invoiceId!);
-                              break;
-                            default:
-                              num money = await inputMonneyDialog();
-                              model.setCustomerMoney(money);
-                          }
-                        },
-                        child: Text(model.selectedPaymentMethod!.type ==
-                                PaymentTypeEnums.CASH
-                            ? "Nhập tiền khách đưa"
-                            : "Hiển thị mã QR"),
-                      ))),
+              // Expanded(
+              //     child: Container(
+              //         height: 80,
+              //         padding: EdgeInsets.all(8.0),
+              //         child: ElevatedButton(
+              //           onPressed: () async {
+              //             switch (model.selectedPaymentMethod?.type) {
+              //               case PaymentTypeEnums.CASH:
+              //                 num money = await inputMonneyDialog();
+              //                 model.setCustomerMoney(money);
+              //                 break;
+              //               case PaymentTypeEnums.MOMO:
+              //                 showQRCodeDialog(
+              //                     model.selectedPaymentMethod!.type!,
+              //                     model.currentOrder!.finalAmount ?? 0,
+              //                     model.currentOrder!.invoiceId!);
+              //                 break;
+              //               case PaymentTypeEnums.BANKING:
+              //                 showQRCodeDialog(
+              //                     model.selectedPaymentMethod!.type!,
+              //                     model.currentOrder!.finalAmount ?? 0,
+              //                     model.currentOrder!.invoiceId!);
+              //                 break;
+              //               default:
+              //                 num money = await inputMonneyDialog();
+              //                 model.setCustomerMoney(money);
+              //             }
+              //           },
+              //           child: Text(model.selectedPaymentMethod!.type ==
+              //                   PaymentTypeEnums.CASH
+              //               ? "Nhập tiền khách đưa"
+              //               : "Hiển thị mã QR"),
+              //         ))),
             ],
           ),
         ],

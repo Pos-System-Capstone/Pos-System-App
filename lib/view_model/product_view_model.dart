@@ -6,7 +6,8 @@ import '../data/model/cart_model.dart';
 class ProductViewModel extends BaseViewModel {
   ProductList productInCart = ProductList();
   List<Attribute> listAttribute = Get.find<RootViewModel>().listAttribute;
-  List<Category>? listCategory = Get.find<MenuViewModel>().categories;
+  List<Category>? listCategory =
+      Get.find<MenuViewModel>().currentMenu?.categories;
   void addProductToCartItem(Product product) {
     productInCart = ProductList(
         productInMenuId: product.menuProductId,

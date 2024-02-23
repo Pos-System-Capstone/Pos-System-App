@@ -171,7 +171,7 @@ class _BillScreenState extends State<BillScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Trạng thái',
+                              'Trạng thái đơn hàng',
                               style: Get.textTheme.bodyMedium,
                             ),
                             Text(
@@ -481,6 +481,24 @@ class _BillScreenState extends State<BillScreen> {
               ),
               Text(
                 info.address ?? "",
+                style: Get.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Trạng thái thanh toán',
+                style: Get.textTheme.bodyMedium,
+              ),
+              Text(
+                showPaymentStatusEnum(
+                    info.paymentStatus ?? PaymentStatusEnum.PENDING),
                 style: Get.textTheme.bodyMedium,
               ),
             ],
