@@ -41,6 +41,7 @@ class Topup {
 }
 
 class OrderStatusEnum {
+  static const String NEW = 'NEW';
   static const String PENDING = 'PENDING';
   static const String CANCELED = 'CANCELED';
   static const String PAID = 'PAID';
@@ -48,6 +49,8 @@ class OrderStatusEnum {
 
 String showOrderStatus(String status) {
   switch (status) {
+    case OrderStatusEnum.NEW:
+      return 'Chờ xác nhận';
     case OrderStatusEnum.PENDING:
       return 'Đang thực hiện';
     case OrderStatusEnum.CANCELED:
@@ -55,7 +58,7 @@ String showOrderStatus(String status) {
     case OrderStatusEnum.PAID:
       return 'Đã hoàn thành';
     default:
-      return 'Đang thực hiện';
+      return 'Chờ xác nhận';
   }
 }
 

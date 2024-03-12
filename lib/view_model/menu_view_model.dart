@@ -32,7 +32,6 @@ class MenuViewModel extends BaseViewModel {
   List<Product>? childProducts = [];
   List<Product>? productsFilter = [];
   List<Session>? sessions = [];
-  List<Promotion>? promotions = [];
   SessionAPI? sessionAPI;
   ReportData? reportData;
 

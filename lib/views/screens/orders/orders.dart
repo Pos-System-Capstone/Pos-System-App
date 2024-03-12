@@ -3,9 +3,12 @@ import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
+import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
+import '../../../data/model/response/order_in_list.dart';
 import '../../../enums/order_enum.dart';
 import '../../../enums/view_status.dart';
+import '../../../helper/responsive_helper.dart';
 import '../home/payment/payment_dialogs/payment_dialog.dart';
 import 'dialogs/order_info_dailog.dart';
 
@@ -20,6 +23,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
   OrderViewModel orderViewModel = Get.find<OrderViewModel>();
   TextEditingController orderController = TextEditingController();
   bool isToday = true;
+  String? invoice;
+  String? status;
+  String? payment;
+  String? type;
   bool isYesterday = false;
   int page = 1;
   @override
@@ -54,7 +61,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   height: 40,
                   child: Row(
                     children: [
-                      OutlinedButton(
+                      TextButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(isToday
                                   ? Get.theme.colorScheme.surfaceVariant
@@ -67,11 +74,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 model.getListOrder(
                                     isToday: isToday,
                                     isYesterday: isYesterday,
-                                    page: page)
+                                    page: page,
+                                    orderStatus: status,
+                                    paymentType: payment)
                               },
                           child: Text("Hôm nay")),
-                      SizedBox(width: 8),
-                      OutlinedButton(
+                      TextButton(
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                   isYesterday
@@ -88,9 +96,82 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     page: page)
                               },
                           child: Text("Hôm qua")),
-                      SizedBox(
-                        width: 8,
-                      ),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  payment == PaymentTypeEnums.CASH
+                                      ? Get.theme.colorScheme.surfaceVariant
+                                      : Get.theme.colorScheme.background)),
+                          onPressed: () => {
+                                setState(() {
+                                  payment = PaymentTypeEnums.CASH;
+                                }),
+                                model.getListOrder(
+                                  isToday: isToday,
+                                  isYesterday: isYesterday,
+                                  page: page,
+                                  paymentType: payment,
+                                  orderStatus: status,
+                                )
+                              },
+                          child: Text("Tiền mặt")),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  payment == PaymentTypeEnums.BANKING
+                                      ? Get.theme.colorScheme.surfaceVariant
+                                      : Get.theme.colorScheme.background)),
+                          onPressed: () => {
+                                setState(() {
+                                  payment = PaymentTypeEnums.BANKING;
+                                }),
+                                model.getListOrder(
+                                  isToday: isToday,
+                                  isYesterday: isYesterday,
+                                  page: page,
+                                  paymentType: payment,
+                                  orderStatus: status,
+                                )
+                              },
+                          child: Text("Ngân hàng")),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  payment == PaymentTypeEnums.MOMO
+                                      ? Get.theme.colorScheme.surfaceVariant
+                                      : Get.theme.colorScheme.background)),
+                          onPressed: () => {
+                                setState(() {
+                                  payment = PaymentTypeEnums.MOMO;
+                                }),
+                                model.getListOrder(
+                                  isToday: isToday,
+                                  isYesterday: isYesterday,
+                                  page: page,
+                                  paymentType: payment,
+                                  orderStatus: status,
+                                )
+                              },
+                          child: Text("MOMO")),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  payment == PaymentTypeEnums.POINTIFY
+                                      ? Get.theme.colorScheme.surfaceVariant
+                                      : Get.theme.colorScheme.background)),
+                          onPressed: () => {
+                                setState(() {
+                                  payment = PaymentTypeEnums.POINTIFY;
+                                }),
+                                model.getListOrder(
+                                  isToday: isToday,
+                                  isYesterday: isYesterday,
+                                  page: page,
+                                  paymentType: payment,
+                                  orderStatus: status,
+                                )
+                              },
+                          child: Text("POINTIFY")),
                       Expanded(
                           child: TextField(
                         controller: orderController,
@@ -107,9 +188,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               color: Get.theme.colorScheme.onBackground,
                             ),
                             suffixIcon: IconButton(
-                                onPressed: () {
-                                  orderController.clear();
-                                },
+                                onPressed: () => {
+                                      orderController.clear(),
+                                      setState(() {
+                                        invoice = null;
+                                      }),
+                                      model.getListOrder(
+                                          isToday: isToday,
+                                          isYesterday: isYesterday,
+                                          page: page,
+                                          orderStatus: status,
+                                          paymentType: payment,
+                                          invoiceId: null)
+                                    },
                                 icon: Icon(
                                   Icons.clear,
                                 )),
@@ -142,20 +233,34 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       SizedBox(
                         width: 4,
                       ),
-                      FilledButton(
-                          onPressed: () => {
-                                if (orderController.text.isNotEmpty)
-                                  {orderInfoDialog(orderController.text)}
-                              },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Kiểm tra"),
-                          )),
+                      IconButton.filled(
+                        onPressed: () => {
+                          if (orderController.text.isNotEmpty)
+                            {
+                              setState(() {
+                                invoice = orderController.text;
+                              }),
+                              model.getListOrder(
+                                  isToday: isToday,
+                                  isYesterday: isYesterday,
+                                  page: page,
+                                  orderStatus: status,
+                                  paymentType: payment,
+                                  invoiceId: invoice == "" ? null : invoice)
+                            }
+                        },
+                        icon: Icon(Icons.search),
+                      ),
                       SizedBox(
                         width: 8,
                       ),
                       IconButton(
                           onPressed: () => {
+                                setState(() {
+                                  status = null;
+                                  payment = null;
+                                  invoice = null;
+                                }),
                                 fetchOrder(),
                               },
                           icon: Icon(Icons.replay_outlined)),
@@ -163,182 +268,26 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: model.listOrder.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GridView.count(
+                        scrollDirection: Axis.vertical,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
+                        childAspectRatio: 3,
+                        crossAxisCount: ResponsiveHelper.isDesktop()
+                            ? 3
+                            : ResponsiveHelper.isTab()
+                                ? 2
+                                : ResponsiveHelper.isSmallTab()
+                                    ? 2
+                                    : ResponsiveHelper.isMobile()
+                                        ? 1
+                                        : 1,
                         children: [
-                          InkWell(
-                            onTap: () => {
-                              if (model.listOrder[index].status ==
-                                  OrderStatusEnum.PAID)
-                                {
-                                  orderInfoDialog(
-                                      model.listOrder[index].id ?? "")
-                                }
-                              else
-                                {
-                                  showPaymentBotomSheet(
-                                      model.listOrder[index].id!),
-                                }
-                            },
-                            child: Container(
-                              color: model.listOrder[index].customerName != null
-                                  ? Get.theme.colorScheme.outlineVariant
-                                  : Get.theme.colorScheme.background,
-                              padding: EdgeInsets.only(left: 8, right: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                                model.listOrder[index].invoiceId
-                                                    .toString(),
-                                                style:
-                                                    Get.textTheme.titleSmall),
-                                            Text(
-                                                showOrderStatus(model
-                                                        .listOrder[index]
-                                                        .status ??
-                                                    ''),
-                                                style: Get.textTheme.titleSmall
-                                                    ?.copyWith(
-                                                        color: model
-                                                                    .listOrder[
-                                                                        index]
-                                                                    .status ==
-                                                                OrderStatusEnum
-                                                                    .PENDING
-                                                            ? Get
-                                                                .theme
-                                                                .colorScheme
-                                                                .primary
-                                                            : model
-                                                                        .listOrder[
-                                                                            index]
-                                                                        .status ==
-                                                                    OrderStatusEnum
-                                                                        .PAID
-                                                                ? Colors
-                                                                    .greenAccent
-                                                                : Colors
-                                                                    .redAccent)),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              formatTime(model.listOrder[index]
-                                                      .endDate ??
-                                                  DateTime.now().toString()),
-                                            ),
-                                            Text(
-                                                "${model.getPaymentName(model.listOrder[index].paymentType ?? 'CASH')} (${formatPrice(model.listOrder[index].finalAmount ?? 0)})",
-                                                style:
-                                                    Get.textTheme.titleSmall),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                                model.listOrder[index]
-                                                        .staffName ??
-                                                    '',
-                                                style:
-                                                    Get.textTheme.titleSmall),
-                                            Text(
-                                                showOrderType(model
-                                                            .listOrder[index]
-                                                            .orderType ??
-                                                        '')
-                                                    .label,
-                                                style: Get.textTheme.titleSmall
-                                                    ?.copyWith(
-                                                        color: Get
-                                                            .theme
-                                                            .colorScheme
-                                                            .primary)),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                                model.listOrder[index]
-                                                            .customerName !=
-                                                        null
-                                                    ? "Khách hàng: ${model.listOrder[index].customerName} , ${model.listOrder[index].phone?.replaceFirst("+84", "0")} "
-                                                    : "",
-                                                style:
-                                                    Get.textTheme.titleSmall),
-                                            Text(
-                                                model.listOrder[index]
-                                                            .customerName !=
-                                                        null
-                                                    ? showPaymentStatusEnum(
-                                                        model.listOrder[index]
-                                                                .paymentStatus ??
-                                                            '',
-                                                      )
-                                                    : "",
-                                                style: Get.textTheme.titleSmall
-                                                    ?.copyWith(
-                                                        color: model
-                                                                    .listOrder[
-                                                                        index]
-                                                                    .paymentStatus ==
-                                                                PaymentStatusEnum
-                                                                    .PENDING
-                                                            ? Get
-                                                                .theme
-                                                                .colorScheme
-                                                                .primary
-                                                            : model
-                                                                        .listOrder[
-                                                                            index]
-                                                                        .paymentStatus ==
-                                                                    PaymentStatusEnum
-                                                                        .PAID
-                                                                ? Colors
-                                                                    .greenAccent
-                                                                : Colors
-                                                                    .redAccent)),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Divider(),
-                        ],
-                      );
-                    },
+                          for (int i = 0; i < model.listOrder.length; i++)
+                            orderCard(model, model.listOrder[i])
+                        ]),
                   ),
                 ),
                 SingleChildScrollView(
@@ -374,7 +323,65 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                           page: page)
                                     },
                                 child: Text(i.toString())),
-                          )
+                          ),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    status == OrderStatusEnum.PAID
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    status = OrderStatusEnum.PAID;
+                                  }),
+                                  model.getListOrder(
+                                      isToday: isToday,
+                                      isYesterday: isYesterday,
+                                      page: page,
+                                      orderStatus: status)
+                                },
+                            child: Text(showOrderStatus(OrderStatusEnum.PAID),
+                                style: Get.textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.teal))),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    status == OrderStatusEnum.PENDING
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    status = OrderStatusEnum.PENDING;
+                                  }),
+                                  model.getListOrder(
+                                      isToday: isToday,
+                                      isYesterday: isYesterday,
+                                      page: page,
+                                      orderStatus: status)
+                                },
+                            child: Text(
+                                showOrderStatus(OrderStatusEnum.PENDING),
+                                style: Get.textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.orange))),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    status == OrderStatusEnum.NEW
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    status = OrderStatusEnum.NEW;
+                                  }),
+                                  model.getListOrder(
+                                      isToday: isToday,
+                                      isYesterday: isYesterday,
+                                      page: page,
+                                      orderStatus: status)
+                                },
+                            child: Text(showOrderStatus(OrderStatusEnum.NEW),
+                                style: Get.textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.grey))),
                       ],
                     ),
                   ),
@@ -382,6 +389,110 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ],
             );
           }),
+        ),
+      ),
+    );
+  }
+
+  Widget orderCard(OrderViewModel model, OrderInList order) {
+    return InkWell(
+      onTap: () => {
+        if (order.status == OrderStatusEnum.PAID ||
+            order.status == OrderStatusEnum.CANCELED)
+          {orderInfoDialog(order.id ?? "")}
+        else if (order.status == OrderStatusEnum.NEW)
+          {
+            showConfirmDialog(
+                    title: "Có đơn hàng chờ xác nhận",
+                    content:
+                        "Để xác nhận đơn hàng vui lòng bấm vào nút nhận đơn \n Để huỷ đơn vui lòng bấm nút huỷ",
+                    confirmText: "Nhận đơn",
+                    cancelText: "Huỷ đơn")
+                .then((value) => {
+                      if (value)
+                        {
+                          model.confirmOrder(
+                              OrderStatusEnum.PENDING, order.id ?? '')
+                        }
+                      else
+                        {
+                          model.confirmOrder(
+                              OrderStatusEnum.CANCELED, order.id ?? '')
+                        }
+                    })
+          }
+        else
+          {
+            showPaymentBotomSheet(order.id!),
+          }
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surfaceVariant,
+          borderRadius: BorderRadius.all(
+            Radius.circular(12),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(order.invoiceId.toString(), style: Get.textTheme.bodyMedium),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(showOrderStatus(order.status ?? ''),
+                    style: Get.textTheme.titleSmall?.copyWith(
+                        color: order.status == OrderStatusEnum.NEW
+                            ? Get.theme.colorScheme.secondary
+                            : order.status == OrderStatusEnum.PENDING
+                                ? Get.theme.colorScheme.primary
+                                : order.status == OrderStatusEnum.PAID
+                                    ? Colors.teal
+                                    : Colors.red)),
+                Text(showOrderType(order.orderType ?? '').label,
+                    style: Get.textTheme.titleSmall
+                        ?.copyWith(color: Get.theme.colorScheme.primary)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  formatTime(order.endDate ?? DateTime.now().toString()),
+                ),
+                Text(
+                    "${model.getPaymentName(order.paymentType ?? 'CASH')} (${formatPrice(order.finalAmount ?? 0)})",
+                    style: Get.textTheme.titleSmall),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                    order.customerName != null
+                        ? "KH: ${order.customerName} , ${order.phone?.replaceFirst("+84", "0")} "
+                        : "",
+                    style: Get.textTheme.titleSmall),
+                Text(
+                    order.customerName != null
+                        ? showPaymentStatusEnum(
+                            order.paymentStatus ?? '',
+                          )
+                        : "",
+                    style: Get.textTheme.titleSmall?.copyWith(
+                        color: order.paymentStatus == PaymentStatusEnum.PENDING
+                            ? Get.theme.colorScheme.primary
+                            : order.paymentStatus == PaymentStatusEnum.PAID
+                                ? Colors.teal
+                                : Colors.redAccent)),
+              ],
+            ),
+          ],
         ),
       ),
     );

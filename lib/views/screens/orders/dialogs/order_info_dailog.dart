@@ -248,6 +248,20 @@ void orderInfoDialog(String orderId) {
                               ),
                             ],
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Ghi chú',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                              Text(
+                                (model.currentOrder?.notes ?? "").toString(),
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
                           Divider(
                             color: Get.theme.colorScheme.onSurface,
                             thickness: 1,

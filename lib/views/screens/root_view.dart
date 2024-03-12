@@ -108,9 +108,15 @@ class _RootScreenState extends State<RootScreen> {
   }
 
   startCountdown() {
-    Timer.periodic(Duration(seconds: 20), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 20), (timer) {
       Get.find<OrderViewModel>().findNewUserOrder();
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

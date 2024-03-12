@@ -483,7 +483,7 @@ Widget productItem(ProductList item) {
                 children: [
                   Text(
                     item.name!,
-                    style: Get.textTheme.bodyLarge,
+                    style: Get.textTheme.bodyMedium,
                     maxLines: 2,
                     overflow: TextOverflow.clip,
                   ),
@@ -502,7 +502,7 @@ Widget productItem(ProductList item) {
                 children: [
                   Text(
                     "${item.quantity}",
-                    style: Get.textTheme.bodyLarge,
+                    style: Get.textTheme.bodyMedium,
                   ),
                 ],
               ),
@@ -515,7 +515,7 @@ Widget productItem(ProductList item) {
                   children: [
                     Text(
                       formatPrice(item.finalAmount!),
-                      style: Get.textTheme.bodyLarge,
+                      style: Get.textTheme.bodyMedium,
                     ),
                     item.discount != 0
                         ? Text(
@@ -544,7 +544,7 @@ Widget productItem(ProductList item) {
                     flex: 6,
                     child: Text(
                       "+${item.extras![i].name!}",
-                      style: Get.textTheme.bodyMedium,
+                      style: Get.textTheme.bodySmall,
                     ),
                   ),
                   Expanded(
@@ -553,7 +553,7 @@ Widget productItem(ProductList item) {
                       alignment: AlignmentDirectional.centerEnd,
                       child: Text(
                         formatPrice(item.extras![i].sellingPrice!),
-                        style: Get.textTheme.bodyMedium,
+                        style: Get.textTheme.bodySmall,
                       ),
                     ),
                   ),
@@ -568,7 +568,7 @@ Widget productItem(ProductList item) {
             child: Align(
               alignment: AlignmentDirectional.centerStart,
               child: Text(item.note ?? '',
-                  style: Get.textTheme.bodyMedium,
+                  style: Get.textTheme.bodySmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis),
             ),

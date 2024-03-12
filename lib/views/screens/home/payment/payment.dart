@@ -198,39 +198,16 @@ Widget paymentTypeSelect() {
                               : Text("Thanh toán")),
                 ),
               ),
-              // Expanded(
-              //     child: Container(
-              //         height: 80,
-              //         padding: EdgeInsets.all(8.0),
-              //         child: ElevatedButton(
-              //           onPressed: () async {
-              //             switch (model.selectedPaymentMethod?.type) {
-              //               case PaymentTypeEnums.CASH:
-              //                 num money = await inputMonneyDialog();
-              //                 model.setCustomerMoney(money);
-              //                 break;
-              //               case PaymentTypeEnums.MOMO:
-              //                 showQRCodeDialog(
-              //                     model.selectedPaymentMethod!.type!,
-              //                     model.currentOrder!.finalAmount ?? 0,
-              //                     model.currentOrder!.invoiceId!);
-              //                 break;
-              //               case PaymentTypeEnums.BANKING:
-              //                 showQRCodeDialog(
-              //                     model.selectedPaymentMethod!.type!,
-              //                     model.currentOrder!.finalAmount ?? 0,
-              //                     model.currentOrder!.invoiceId!);
-              //                 break;
-              //               default:
-              //                 num money = await inputMonneyDialog();
-              //                 model.setCustomerMoney(money);
-              //             }
-              //           },
-              //           child: Text(model.selectedPaymentMethod!.type ==
-              //                   PaymentTypeEnums.CASH
-              //               ? "Nhập tiền khách đưa"
-              //               : "Hiển thị mã QR"),
-              //         ))),
+              Container(
+                  height: 80,
+                  padding: EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      num money = await inputMonneyDialog();
+                      model.setCustomerMoney(money);
+                    },
+                    child: Text("Nhập tiền khách đưa"),
+                  )),
             ],
           ),
         ],

@@ -68,6 +68,17 @@ class OrderAPI {
     }
   }
 
+  Future confirmOrder(
+    String orderId,
+    String status,
+  ) async {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    final res = await request.patch('orders/$orderId', data: data);
+    var json = res.data;
+    return json;
+  }
+
   Future updateOrder(
     String storeId,
     String orderId,
@@ -120,7 +131,9 @@ class OrderAPI {
       bool isYesterday = false,
       int page = 1,
       String? orderType,
-      String? orderStatus}) async {
+      String? orderStatus,
+      String? paymentType,
+      String? invoiceId}) async {
     DateTime now = DateTime.now();
     DateTime startDate = now;
     DateTime endDate = now;
@@ -136,9 +149,12 @@ class OrderAPI {
     }
     var params = <String, dynamic>{
       'page': page,
-      'size': 20,
+      'size': 30,
       'endDate': endDate.toIso8601String(),
       'startDate': startDate.toIso8601String(),
+      'paymentType': paymentType,
+      'status': orderStatus,
+      'invoiceId': invoiceId
     };
     final res =
         await request.get('stores/$storeId/orders', queryParameters: params);

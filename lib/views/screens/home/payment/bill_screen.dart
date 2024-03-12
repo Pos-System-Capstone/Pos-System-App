@@ -159,6 +159,23 @@ class _BillScreenState extends State<BillScreen> {
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Ghi chú:',
+                              style: Get.textTheme.bodyMedium,
+                            ),
+                            Text(
+                              model.currentOrder?.notes ?? '',
+                              style: Get.textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                      ),
                       Divider(
                         color: Get.theme.colorScheme.onSurface,
                         thickness: 1,
@@ -220,7 +237,6 @@ class _BillScreenState extends State<BillScreen> {
                         color: Get.theme.colorScheme.onSurface,
                         thickness: 1,
                       ),
-
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         child: Row(
@@ -292,44 +308,6 @@ class _BillScreenState extends State<BillScreen> {
                               ),
                             )
                           : SizedBox(),
-                      // model.currentOrder!.discountProduct != null &&
-                      //         model.currentOrder!.discountProduct != 0
-                      //     ? Padding(
-                      //         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      //         child: Row(
-                      //           mainAxisAlignment:
-                      //               MainAxisAlignment.spaceBetween,
-                      //           crossAxisAlignment: CrossAxisAlignment.center,
-                      //           children: [
-                      //             Text(
-                      //               "Giảm giá sản phẩm" ?? '',
-                      //               style: Get.textTheme.bodyMedium,
-                      //             ),
-                      //             Text(
-                      //               " - ${formatPrice(model.currentOrder!.discountProduct ?? 0)}",
-                      //               style: Get.textTheme.bodyMedium,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       )
-                      //     : SizedBox(),
-                      // Padding(
-                      //   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     children: [
-                      //       Text(
-                      //         'VAT (${percentCalculation(model.currentOrder!.vat!)})',
-                      //         style: Get.textTheme.bodyMedium,
-                      //       ),
-                      //       Text(
-                      //         formatPrice(model.currentOrder!.vatAmount!),
-                      //         style: Get.textTheme.bodyMedium,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                       Divider(
                         color: Get.theme.colorScheme.onSurface,
                         thickness: 1,
@@ -400,6 +378,16 @@ class _BillScreenState extends State<BillScreen> {
                 ),
               ),
             ),
+            Container(
+                height: 80,
+                padding: EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.find<PrinterViewModel>().printBill(model.currentOrder!,
+                        model.getPaymentName(model.currentOrder!.paymentType!));
+                  },
+                  child: Text("In hoá đơn tạm tính"),
+                )),
             // Container(
             //   padding: const EdgeInsets.all(8.0),
             //   width: double.infinity,

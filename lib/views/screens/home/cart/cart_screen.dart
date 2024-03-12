@@ -96,6 +96,72 @@ class _CartScreenState extends State<CartScreen> {
                       color: Get.theme.colorScheme.onSurface,
                     ),
                     Padding(
+                      padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FilledButton.tonal(
+                            onPressed: () => chooseTableDialog(),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                              child: Text(
+                                'STT: ${model.cart.customerNumber}',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          FilledButton.tonal(
+                            onPressed: () => chooseDeliTypeDialog(),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                              child: Text(
+                                '${showOrderType(model.cart.orderType ?? DeliType().eatIn.type).label}',
+                                style: Get.textTheme.bodyMedium,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Expanded(
+                            child: FilledButton.tonal(
+                              onPressed: () async {
+                                selectPromotionDialog();
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                child: Text(
+                                  'Giảm giá',
+                                  style: Get.textTheme.bodyMedium,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: TextFormField(
+                        initialValue: model.cart.notes,
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                          hintText: "Ghi chú đơn hàng",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          model.setCartNote(value);
+                        },
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,60 +217,6 @@ class _CartScreenState extends State<CartScreen> {
                           Text(
                               'Tổng tiền: ${formatPrice(model.cart.finalAmount ?? 0)}',
                               style: Get.textTheme.bodyMedium),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      color: Get.theme.colorScheme.onSurface,
-                      thickness: 1,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          FilledButton.tonal(
-                            onPressed: () => chooseTableDialog(),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                              child: Text(
-                                'STT: ${model.cart.customerNumber}',
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 2,
-                          ),
-                          FilledButton.tonal(
-                            onPressed: () => chooseDeliTypeDialog(),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                              child: Text(
-                                '${showOrderType(model.cart.orderType ?? DeliType().eatIn.type).label}',
-                                style: Get.textTheme.bodyMedium,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 2,
-                          ),
-                          Expanded(
-                            child: FilledButton.tonal(
-                              onPressed: () async {
-                                selectPromotionDialog();
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 12, 0, 12),
-                                child: Text(
-                                  'Giảm giá',
-                                  style: Get.textTheme.bodyMedium,
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),

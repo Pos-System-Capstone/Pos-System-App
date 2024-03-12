@@ -190,6 +190,11 @@ class CartViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void setCartNote(String note) {
+    cart.notes = note;
+    notifyListeners();
+  }
+
   Future<void> prepareOrder() async {
     cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
     cart.discountAmount = 0;

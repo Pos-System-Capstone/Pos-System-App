@@ -144,6 +144,10 @@ class OrderViewModel extends BaseViewModel {
     return true;
   }
 
+  Future<void> confirmOrder(String status, String orderId) async {
+    await api.confirmOrder(orderId, status);
+  }
+
   void makePayment(PaymentProvider payment) async {
     // if (listPayment.isEmpty) {
     paymentCheckingStatus = PaymentStatusEnum.PAID;
@@ -182,7 +186,9 @@ class OrderViewModel extends BaseViewModel {
       bool isYesterday = false,
       int page = 1,
       String? orderStatus,
-      String? orderType}) async {
+      String? orderType,
+      String? paymentType,
+      String? invoiceId}) async {
     try {
       setState(ViewStatus.Loading);
       Account? userInfo = await getUserInfo();
@@ -191,7 +197,9 @@ class OrderViewModel extends BaseViewModel {
           isYesterday: isYesterday,
           page: page,
           orderStatus: orderStatus,
-          orderType: orderType);
+          orderType: orderType,
+          paymentType: paymentType,
+          invoiceId: invoiceId);
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Completed);
