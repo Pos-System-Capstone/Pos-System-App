@@ -158,10 +158,34 @@ class PrinterViewModel extends BaseViewModel {
             printer: selectedBillPrinter!,
             format: PdfPageFormat.roll80,
             onLayout: (PdfPageFormat format) {
+              return generateKitchenInvoice(format, orderResponse);
+            });
+      }
+    }
+  }
+
+  Future<void> printBillDraft(OrderResponseModel orderResponse) async {
+    if (selectedBillPrinter == null) {
+      return;
+    } else {
+      await Printing.directPrintPdf(
+          printer: selectedBillPrinter!,
+          format: PdfPageFormat.roll80,
+          onLayout: (PdfPageFormat format) {
+            return generateDraftBill(format, orderResponse);
+          });
+    }
+    if (selectedProductPrinter == null) {
+      return;
+    } else {
+      if (orderResponse.productList != null) {
+        await Printing.directPrintPdf(
+            printer: selectedBillPrinter!,
+            format: PdfPageFormat.roll80,
+            onLayout: (PdfPageFormat format) {
               return generateKitchenInvoice(
                 format,
                 orderResponse,
-                paymentName,
               );
             });
       }

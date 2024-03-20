@@ -383,8 +383,9 @@ class _BillScreenState extends State<BillScreen> {
                 padding: EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.find<PrinterViewModel>().printBill(model.currentOrder!,
-                        model.getPaymentName(model.currentOrder!.paymentType!));
+                    Get.find<PrinterViewModel>().printBillDraft(
+                      model.currentOrder!,
+                    );
                   },
                   child: Text("In hoá đơn tạm tính"),
                 )),
