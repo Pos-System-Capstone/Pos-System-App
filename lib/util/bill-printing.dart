@@ -479,10 +479,9 @@ Future<Uint8List> generateDraftBill(
                     pw.Text("Ghi chú:",
                         textAlign: pw.TextAlign.left,
                         style: pw.TextStyle(font: font, fontSize: 8)),
-                    pw.Text(order.notes ?? "",
+                    pw.Text(order.notes ?? '',
                         textAlign: pw.TextAlign.right,
-                        maxLines: 3,
-                        style: pw.TextStyle(font: font, fontSize: 8)),
+                        style: pw.TextStyle(font: font, fontSize: 7)),
                   ],
                 ),
                 pw.Divider(

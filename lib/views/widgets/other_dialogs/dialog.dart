@@ -477,21 +477,11 @@ Widget productItem(ProductList item) {
           children: [
             Expanded(
               flex: 7,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name!,
-                    style: Get.textTheme.bodyMedium,
-                    maxLines: 2,
-                    overflow: TextOverflow.clip,
-                  ),
-                  Text(
-                    formatPrice(item.sellingPrice ?? 0),
-                    style: Get.textTheme.bodyMedium,
-                  )
-                ],
+              child: Text(
+                item.name!,
+                style: Get.textTheme.bodyMedium,
+                maxLines: 2,
+                overflow: TextOverflow.clip,
               ),
             ),
             Expanded(

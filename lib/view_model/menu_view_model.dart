@@ -50,6 +50,7 @@ class MenuViewModel extends BaseViewModel {
       await getStore();
       currentMenu = await menuData?.getMenuOfStore();
       Get.find<CartViewModel>().getListPromotion();
+      Get.find<OrderViewModel>().getListPayment();
       getListSession(DateTime.now());
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)

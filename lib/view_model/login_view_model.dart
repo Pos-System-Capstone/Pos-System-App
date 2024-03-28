@@ -29,7 +29,8 @@ class LoginViewModel extends BaseViewModel {
               {
                 setUserInfo(userDTO!),
                 await Get.find<MenuViewModel>().getMenuOfStore(),
-                await Get.find<CartViewModel>().getListPromotion(),
+                // await Get.find<OrderViewModel>().getListPayment(),
+                // await Get.find<CartViewModel>().getListPromotion(),
                 Get.offAllNamed(RouteHandler.HOME),
                 setState(ViewStatus.Completed),
                 hideDialog(),

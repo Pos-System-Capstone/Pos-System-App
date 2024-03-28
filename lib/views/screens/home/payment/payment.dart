@@ -88,6 +88,7 @@ Widget paymentTypeSelect() {
       );
     }
     return Container(
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.onInverseSurface,
         borderRadius: BorderRadius.circular(8),
@@ -112,59 +113,52 @@ Widget paymentTypeSelect() {
                       style: Get.textTheme.titleMedium),
                 ))
               : Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Center(
-                      child: Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        alignment: WrapAlignment.center,
-                        children: model.listPayment
-                            .map(
-                              (e) => Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: InkWell(
-                                  onTap: () async {
-                                    if (model.paymentCheckingStatus ==
-                                        PaymentStatusEnum.PAID) {
-                                      return;
-                                    }
-                                    if (e.type == PaymentTypeEnums.CASH) {
-                                      num money = await inputMonneyDialog();
-                                      model.setCustomerMoney(money);
-                                    } else {
-                                      model.setCustomerMoney(0);
-                                    }
-                                    model.selectPayment(e);
-                                  },
-                                  child: Card(
-                                    color: model.selectedPaymentMethod == e
-                                        ? Get.theme.colorScheme.primaryContainer
-                                        : Get.theme.colorScheme.background,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        children: [
-                                          Image.network(
-                                            e!.picUrl!,
-                                            width: 80,
-                                            height: 80,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(4),
-                                            child: Text(
-                                              e.name!,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                  child: GridView.count(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 1,
+                    crossAxisSpacing: 1,
+                    children: model.listPayment
+                        .map(
+                          (e) => InkWell(
+                            onTap: () async {
+                              if (model.paymentCheckingStatus ==
+                                  PaymentStatusEnum.PAID) {
+                                return;
+                              }
+                              if (e.type == PaymentTypeEnums.CASH) {
+                                num money = await inputMonneyDialog();
+                                model.setCustomerMoney(money);
+                              } else {
+                                model.setCustomerMoney(0);
+                              }
+                              model.selectPayment(e);
+                            },
+                            child: Card(
+                              color: model.selectedPaymentMethod == e
+                                  ? Get.theme.colorScheme.primaryContainer
+                                  : Get.theme.colorScheme.background,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.network(
+                                      e!.picUrl,
+                                      width: 80,
+                                      height: 80,
                                     ),
-                                  ),
+                                    Text(
+                                      e.name,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            )
-                            .toList(),
-                      ),
-                    ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
           Text(

@@ -32,7 +32,6 @@ class OrderViewModel extends BaseViewModel {
   AccountData accountData = AccountData();
   PaymentData? paymentData;
   List<OrderInList> listOrder = [];
-  PaymentStatusResponse? paymentStatus;
   String currentPaymentStatusMessage = "Chưa thanh toán";
   String paymentCheckingStatus = PaymentStatusEnum.PENDING;
   String? qrCodeData;
@@ -41,34 +40,15 @@ class OrderViewModel extends BaseViewModel {
   OrderViewModel() {
     api = OrderAPI();
     paymentData = PaymentData();
-    listPayment = [
-      PaymentProvider(
-          name: "Tiền mặt",
-          type: PaymentTypeEnums.CASH,
-          picUrl:
-              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fcash.png?alt=media&token=42566a9d-b092-4e80-90dd-9313aeee081d'),
-      PaymentProvider(
-          name: "Momo",
-          type: PaymentTypeEnums.MOMO,
-          picUrl:
-              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fmomo.png?alt=media&token=d0d2e4f2-b035-4989-b04f-2ef55b9d0606'),
-      PaymentProvider(
-          name: "Ngân hàng",
-          type: PaymentTypeEnums.BANKING,
-          picUrl:
-              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbanking.png?alt=media&token=f4dba580-bd73-433d-9b8c-ed8a79958ed9'),
-      PaymentProvider(
-          name: "Visa/Mastercard",
-          type: PaymentTypeEnums.VISA,
-          picUrl:
-              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fvisa-credit-card.png?alt=media&token=1cfb48ab-b957-47db-8f52-89da33d0fb39'),
-      PaymentProvider(
-          name: "Thẻ thành viên",
-          type: PaymentTypeEnums.POINTIFY,
-          picUrl:
-              "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fpointify.jpg?alt=media&token=c1953b7c-23d4-4fb6-b866-ac13ae639a00")
-    ];
-    selectedPaymentMethod = listPayment[0];
+  }
+  Future getListPayment() async {
+    try {
+      listPayment = (await paymentData?.getListPayment())!;
+      selectedPaymentMethod = listPayment
+          .firstWhere((element) => element?.type == PaymentTypeEnums.CASH);
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
+    }
   }
 
   String getPaymentName(String paymentType) {
@@ -146,6 +126,7 @@ class OrderViewModel extends BaseViewModel {
 
   Future<void> confirmOrder(String status, String orderId) async {
     await api.confirmOrder(orderId, status);
+    getListOrder();
   }
 
   void makePayment(PaymentProvider payment) async {
@@ -316,6 +297,7 @@ class OrderViewModel extends BaseViewModel {
           title: "Thanh toán thành công",
           content: "Đơn hàng thanh toán thành công");
       Duration(seconds: 2);
+      getListOrder();
       chooseTableDialog();
     }
 
@@ -326,7 +308,10 @@ class OrderViewModel extends BaseViewModel {
   clearOrder() {
     currentOrderId = null;
     currentOrder = null;
-    selectedPaymentMethod = listPayment[0];
+    if (listPayment.isNotEmpty) {
+      selectedPaymentMethod = listPayment[0];
+    }
+    getListOrder();
     hideDialog();
   }
 }
