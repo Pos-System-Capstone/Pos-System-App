@@ -90,11 +90,11 @@ class CustomInterceptors extends Interceptor {
 
 class MyRequest {
   static BaseOptions options = BaseOptions(
-      baseUrl: 'https://admin.reso.vn/api/v1/',
-      // baseUrl: 'https://localhost:7131/api/v1/',
+      // baseUrl: 'https://admin.reso.vn/api/v1/',
+      baseUrl: 'http://posapi.reso.vn/api/v1/',
       headers: {
         Headers.contentTypeHeader: "application/json",
-        Headers.acceptHeader: "text/plain"
+        Headers.acceptHeader: "text/plain",
       },
       sendTimeout: Duration(seconds: 15),
       receiveTimeout: Duration(seconds: 5));
@@ -117,7 +117,7 @@ class MyRequest {
             title: "Lỗi hệ thống",
             content: "Vui lòng đăng nhập lại",
           );
-          res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
+          // res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
         } else if (e.response?.statusCode == 401) {
           await showAlertDialog(
             title: "Lỗi",

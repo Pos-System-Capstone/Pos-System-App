@@ -59,6 +59,21 @@ class OrderViewModel extends BaseViewModel {
           type: PaymentTypeEnums.VISA,
           picUrl:
               'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fvisa-credit-card.png?alt=media&token=1cfb48ab-b957-47db-8f52-89da33d0fb39'),
+      PaymentProvider(
+          name: "Grab Food",
+          type: PaymentTypeEnums.GRABFOOD,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fgrabfood.jpg?alt=media&token=653cf6f6-c06f-4130-94a6-cbb7d53f6b13'),
+      PaymentProvider(
+          name: "Shopee Food",
+          type: PaymentTypeEnums.SHOPEEFODD,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fshopeefood.png?alt=media&token=dca4e08c-5450-49de-a7ed-9c1cc42611db'),
+      PaymentProvider(
+          name: "Be Fodd",
+          type: PaymentTypeEnums.BEFOOD,
+          picUrl:
+              'https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fbefood.png?alt=media&token=bf50eea4-41cd-43e7-9770-8ecdcaca95d5'),
     ];
   }
 

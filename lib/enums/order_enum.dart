@@ -77,6 +77,9 @@ class PaymentTypeEnums {
   static const String MOMO = 'MOMO';
   static const String BANKING = 'BANKING';
   static const String VISA = 'VISA';
+  static const String GRABFOOD = 'GRABFOOD';
+  static const String SHOPEEFODD = 'SHOPEEFODD';
+  static const String BEFOOD = 'BEFOOD';
 }
 
 enum PaymentTypeEnum { CASH, VIETQR, ZALOPAY, VNPAY }

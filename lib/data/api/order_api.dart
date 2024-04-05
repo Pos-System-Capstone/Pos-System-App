@@ -32,7 +32,7 @@ class OrderAPI {
     data['status'] = status;
     data['paymentType'] = paymentType;
     final res =
-        await request.put('stores/$storeId/orders/$orderId', data: data);
+        await request.patch('stores/$storeId/orders/$orderId', data: data);
     var json = res.data;
     return json;
   }
