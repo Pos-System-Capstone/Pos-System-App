@@ -241,7 +241,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Size ${childProducts[i].size!}"),
+                  Text(childProducts[i].name ?? ''),
                   Text(formatPrice(childProducts[i].sellingPrice!)),
                 ],
               ),

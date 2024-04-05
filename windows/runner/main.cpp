@@ -1,4 +1,3 @@
-#include <bitsdojo_window_windows/bitsdojo_window_plugin.h>
 
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
