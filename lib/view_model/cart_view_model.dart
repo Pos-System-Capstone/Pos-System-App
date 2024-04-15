@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/api/index.dart';
+import 'package:pos_apps/data/api/pointify/pointify_data.dart';
 import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/data/model/customer.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
@@ -17,6 +18,7 @@ class CartViewModel extends BaseViewModel {
   CartModel cart = CartModel();
   int? peopleNumber;
   late OrderAPI api = OrderAPI();
+  PointifyData pointifyData = PointifyData();
   PromotionData? promotionData = PromotionData();
   AccountData accountData = AccountData();
   List<PromotionPointify>? promotions = [];
@@ -39,7 +41,7 @@ class CartViewModel extends BaseViewModel {
 
   Future getListPromotion() async {
     try {
-      promotions = await promotionData?.getListPromotionOfStore();
+      promotions = await pointifyData.getListPromotionOfStore();
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }
@@ -215,7 +217,7 @@ class CartViewModel extends BaseViewModel {
       return;
     }
     Account? userInfo = await getUserInfo();
-    await api.prepareOrder(cart, userInfo!.storeId).then((value) => {
+    await api.prepareOrder(cart, userInfo!.storeId ?? '').then((value) => {
           cart = value,
         });
     hideDialog();

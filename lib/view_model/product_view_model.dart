@@ -5,7 +5,7 @@ import '../data/model/cart_model.dart';
 
 class ProductViewModel extends BaseViewModel {
   ProductList productInCart = ProductList();
-  List<Attribute> listAttribute = Get.find<RootViewModel>().listAttribute;
+  // List<Attribute> listAttribute = Get.find<RootViewModel>().listAttribute;
   List<Category>? listCategory =
       Get.find<MenuViewModel>().currentMenu?.categories;
   void addProductToCartItem(Product product) {
@@ -25,10 +25,6 @@ class ProductViewModel extends BaseViewModel {
         discount: 0,
         extras: [],
         attributes: []);
-    for (var attribute in listAttribute) {
-      productInCart.attributes!
-          .add(Attributes(name: attribute.name, value: ""));
-    }
     countAmount();
     notifyListeners();
   }

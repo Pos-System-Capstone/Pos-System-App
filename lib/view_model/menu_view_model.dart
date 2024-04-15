@@ -240,6 +240,11 @@ class MenuViewModel extends BaseViewModel {
     return currentMenu!.products!.firstWhere((element) => element.id == id);
   }
 
+  Product? getProductByMenuProductId(String id) {
+    return currentMenu!.products!
+        .firstWhere((element) => element.menuProductId == id);
+  }
+
   Future getStoreEndDayReport(DateTime startDate, DateTime endDate) async {
     try {
       setState(ViewStatus.Loading);

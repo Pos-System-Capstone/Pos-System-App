@@ -15,6 +15,8 @@ class UpdateCartItemDialog extends StatefulWidget {
   const UpdateCartItemDialog(
       {required this.cartItem, required this.idx, super.key});
 
+  get parentProduct => null;
+
   @override
   State<UpdateCartItemDialog> createState() => _UpdateCartItemDialogState();
 }
@@ -25,26 +27,43 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   List<Product> childProducts = [];
   List<Category> extraCategory = [];
   String? selectedSize;
-  List<Attribute> listAttribute = [];
+  List<Variants> listVariants = [];
   List<Attributes> selectedAttributes = [];
   List<GroupProducts> groupProducts = [];
+  Product? parentProduct;
   @override
   void initState() {
     super.initState();
     productViewModel.getCartItemToUpdate(widget.cartItem);
-
     if (widget.cartItem.type == ProductTypeEnum.CHILD) {
       childProducts = menuViewModel.getChildProductByParentProduct(
           productViewModel.productInCart.parentProductId!)!;
       selectedSize = productViewModel.productInCart.productInMenuId;
       extraCategory = menuViewModel
           .getExtraCategoryByChildProduct(widget.cartItem.parentProductId!)!;
+      parentProduct =
+          menuViewModel.getProductById(widget.cartItem.parentProductId ?? "");
     } else {
+      parentProduct = menuViewModel
+          .getProductByMenuProductId(widget.cartItem.productInMenuId ?? "");
       extraCategory = menuViewModel
           .getExtraCategoryByNormalProduct(widget.cartItem.productInMenuId!)!;
     }
-    listAttribute = productViewModel.listAttribute;
-    selectedAttributes = widget.cartItem.attributes!;
+    if (parentProduct != null &&
+        parentProduct?.variants != null &&
+        parentProduct!.variants!.isNotEmpty) {
+      listVariants = parentProduct!.variants!;
+      for (var attribute in listVariants) {
+        var exitedAtr = widget.cartItem.attributes!
+            .firstWhereOrNull((element) => element.name == attribute.name);
+        if (exitedAtr == null) {
+          selectedAttributes.add(Attributes(name: attribute.name, value: null));
+        } else {
+          selectedAttributes
+              .add(Attributes(name: exitedAtr.name, value: exitedAtr.value));
+        }
+      }
+    }
   }
 
   setSelectedRadio(String val) {
@@ -110,14 +129,17 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                             ? [
                                 productSize(model),
                                 addExtra(model),
-                                productAttributes(model)
+                                buildProductAttributes(model)
                               ]
                             : widget.cartItem.type == ProductTypeEnum.COMBO
                                 ? [
                                     addExtra(model),
-                                    productAttributes(model),
+                                    buildProductAttributes(model),
                                   ]
-                                : [addExtra(model), productAttributes(model)]),
+                                : [
+                                    addExtra(model),
+                                    buildProductAttributes(model)
+                                  ]),
                   ),
                 ),
                 Container(
@@ -239,7 +261,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Size ${childProducts[i].size!}"),
+                  Text("Size ${childProducts[i].name!}"),
                   Text(formatPrice(childProducts[i].sellingPrice!)),
                 ],
               ),
@@ -357,49 +379,51 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
   //   );
   // }
 
-  Widget productAttributes(ProductViewModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Wrap(
-          children: [
-            for (int i = 0; i < listAttribute.length; i++)
-              Column(
-                children: [
-                  Text(listAttribute[i].name, style: Get.textTheme.titleMedium),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: listAttribute[i].options.length,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, idx) {
-                      return RadioListTile(
-                        visualDensity: VisualDensity(
-                          horizontal: VisualDensity.maximumDensity,
-                          vertical: VisualDensity.minimumDensity,
-                        ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(listAttribute[i].options[idx]),
-                          ],
-                        ),
-                        value: listAttribute[i].options[idx],
-                        groupValue: selectedAttributes[i].value,
-                        selected: selectedAttributes[i].value ==
-                            listAttribute[i].options[idx],
-                        onChanged: (value) {
-                          setAttributes(i, value!);
-                          model.setAttributes(selectedAttributes[i]);
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
-          ],
-        ),
-      ],
+  Widget buildProductAttributes(ProductViewModel model) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          for (int i = 0; i < listVariants.length; i++)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(listVariants[i].name, style: Get.textTheme.bodyLarge),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: listVariants[i]
+                      .value!
+                      .split("_")
+                      .map((option) => TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                selectedAttributes.isNotEmpty
+                                    ? (selectedAttributes
+                                            .where((element) =>
+                                                element.value == option)
+                                            .isNotEmpty
+                                        ? Get.theme.colorScheme.primaryContainer
+                                        : Colors.transparent)
+                                    : Colors.transparent),
+                          ),
+                          onPressed: () {
+                            setAttributes(i, option);
+                            model.setAttributes(Attributes(
+                                name: listVariants[i].name, value: option));
+                          },
+                          child: Text(
+                            option,
+                          )))
+                      .toList(),
+                ),
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

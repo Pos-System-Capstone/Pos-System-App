@@ -1,49 +1,56 @@
 class Account {
-  final String accessToken;
-  final String id;
-  final String storeId;
-  final String name;
-  final String userName;
-  final String userRole;
-  final String status;
-  String? picUrl;
+  late String storeId;
+  late String storeCode;
+  late String brandId;
+  late String brandCode;
+  late String accessToken;
+  late String id;
+  late String username;
+  late String name;
+  String? role;
+  String? status;
+  String? brandPicUrl;
 
-  Account({
-    required this.accessToken,
-    required this.id,
-    required this.storeId,
-    required this.name,
-    required this.userName,
-    required this.userRole,
-    required this.status,
-    this.picUrl,
-  });
+  Account(
+      {required this.storeId,
+      required this.storeCode,
+      required this.brandId,
+      required this.brandCode,
+      required this.accessToken,
+      required this.id,
+      required this.username,
+      required this.name,
+      this.role,
+      this.status,
+      this.brandPicUrl});
 
-  @override
-  String toString() {
-    return 'AccountDTO(uid: $id, uid: $storeId, name: $name, userName: $userName, userRole: $userRole, status: $status, picUrl: $picUrl)';
+  Account.fromJson(Map<String, dynamic> json) {
+    storeId = json['storeId'];
+    storeCode = json['storeCode'];
+    brandId = json['brandId'];
+    brandCode = json['brandCode'];
+    accessToken = json['accessToken'];
+    id = json['id'];
+    username = json['username'];
+    name = json['name'];
+    role = json['role'];
+    status = json['status'];
+    brandPicUrl = json['brandPicUrl'];
   }
 
-  factory Account.fromJson(dynamic json) => Account(
-      accessToken: json['accessToken'],
-      id: json["id"],
-      storeId: json["storeId"],
-      name: json['name'],
-      userName: json['username'] as String,
-      userRole: json['role'],
-      status: json['status'],
-      picUrl: json['picUrl'] ?? "");
-
   Map<String, dynamic> toJson() {
-    return {
-      "accessToken": accessToken.toString(),
-      "id": id.toString(),
-      "storeId": storeId.toString(),
-      "name": name,
-      "username": userName,
-      "role": userRole,
-      "status": status,
-      "picUrl": picUrl ?? "",
-    };
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['storeId'] = storeId;
+    data['storeCode'] = storeCode;
+    data['brandId'] = brandId;
+    data['brandCode'] = brandCode;
+    data['accessToken'] = accessToken;
+    data['id'] = id;
+    data['username'] = username;
+    data['name'] = name;
+    data['role'] = role;
+    data['status'] = status;
+    data['brandPicUrl'] = brandPicUrl;
+    return data;
   }
 }

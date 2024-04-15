@@ -1,21 +1,21 @@
 class PromotionPointify {
-  String? promotionId;
+  late String promotionId;
   String? promotionTierId;
-  String? promotionName;
-  String? promotionCode;
+  late String promotionName;
+  late String promotionCode;
   String? description;
-  int? forMembership;
-  int? actionType;
-  int? saleMode;
+  num? forMembership;
+  num? actionType;
+  num? saleMode;
   String? imgUrl;
-  int? promotionType;
-  int? tierIndex;
+  num? promotionType;
+  num? tierIndex;
 
   PromotionPointify(
-      {this.promotionId,
+      {required this.promotionId,
       this.promotionTierId,
-      this.promotionName,
-      this.promotionCode,
+      required this.promotionName,
+      required this.promotionCode,
       this.description,
       this.forMembership,
       this.actionType,

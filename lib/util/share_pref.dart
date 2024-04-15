@@ -95,6 +95,16 @@ Future<void> setUserInfo(Account userDTO) async {
   prefs.setString("userInfo", jsonEncode(userInfo));
 }
 
+Future<void> setUserId(String userId) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("userId", userId);
+}
+
+Future<String> getUserId() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('userId') ?? "";
+}
+
 Future<Account?> getUserInfo() async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
   String? userData = pref.getString("userInfo");

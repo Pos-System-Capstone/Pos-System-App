@@ -24,7 +24,7 @@ class _ProductDialogState extends State<ProductDialog> {
   List<Product> childProducts = [];
   List<Category> extraCategory = [];
   String? selectedSize;
-  List<Attribute> listAttribute = [];
+  List<Variants> listAttribute = [];
   List<Attributes> selectedAttributes = [];
   List<GroupProducts> groupProducts = [];
 
@@ -43,8 +43,13 @@ class _ProductDialogState extends State<ProductDialog> {
       }
       productViewModel.addProductToCartItem(childProducts[0]);
     }
-    listAttribute = productViewModel.listAttribute;
-    selectedAttributes = productViewModel.productInCart.attributes!;
+    if (widget.product.variants != null &&
+        widget.product.variants!.isNotEmpty) {
+      listAttribute = widget.product.variants!;
+      for (var attribute in listAttribute) {
+        selectedAttributes.add(Attributes(name: attribute.name, value: null));
+      }
+    }
   }
 
   setSelectedRadio(String val) {
@@ -110,17 +115,17 @@ class _ProductDialogState extends State<ProductDialog> {
                             ? [
                                 productSize(model),
                                 addExtra(model),
-                                productAttributes(model),
+                                buildProductAttributes(model),
                               ]
                             : widget.product.type == ProductTypeEnum.COMBO
                                 ? [
                                     // comboProduct(model),
                                     addExtra(model),
-                                    productAttributes(model),
+                                    buildProductAttributes(model),
                                   ]
                                 : [
                                     addExtra(model),
-                                    productAttributes(model),
+                                    buildProductAttributes(model),
                                   ]),
                   ),
                 ),
@@ -335,6 +340,9 @@ class _ProductDialogState extends State<ProductDialog> {
   // }
 
   Widget productAttributes(ProductViewModel model) {
+    if (widget.product.variants == null || widget.product.variants!.isEmpty) {
+      return SizedBox();
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -346,26 +354,33 @@ class _ProductDialogState extends State<ProductDialog> {
                 children: [
                   Text(listAttribute[i].name, style: Get.textTheme.titleMedium),
                   ListView.builder(
+                    scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemCount: listAttribute[i].options.length,
+                    itemCount: listAttribute[i].value?.split("_").length,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, idx) {
-                      return RadioListTile(
-                        visualDensity: VisualDensity(
-                          horizontal: VisualDensity.maximumDensity,
-                          vertical: VisualDensity.maximumDensity,
+                      // return RadioListTile(
+                      //   visualDensity: VisualDensity(
+                      //     horizontal: VisualDensity.maximumDensity,
+                      //     vertical: VisualDensity.maximumDensity,
+                      //   ),
+                      //   title: Text(
+                      //     listAttribute[i].value!.split("_")[idx],
+                      //   ),
+                      //   value: listAttribute[i].value?.split("_")[idx],
+                      //   groupValue: selectedAttributes[i].value,
+                      //   selected: selectedAttributes[i].value ==
+                      //       listAttribute[i].value?.split("_")[idx],
+                      //   onChanged: (value) {
+                      //     setAttributes(i, value!);
+                      //     model.setAttributes(selectedAttributes[i]);
+                      //   },
+                      // );
+                      return TextButton(
+                        onPressed: () => {},
+                        child: Text(
+                          listAttribute[i].value!.split("_")[idx],
                         ),
-                        title: Text(
-                          listAttribute[i].options[idx],
-                        ),
-                        value: listAttribute[i].options[idx],
-                        groupValue: selectedAttributes[i].value,
-                        selected: selectedAttributes[i].value ==
-                            listAttribute[i].options[idx],
-                        onChanged: (value) {
-                          setAttributes(i, value!);
-                          model.setAttributes(selectedAttributes[i]);
-                        },
                       );
                     },
                   ),
@@ -398,5 +413,47 @@ class _ProductDialogState extends State<ProductDialog> {
             ),
           ],
         ));
+  }
+
+  Widget buildProductAttributes(ProductViewModel model) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          for (int i = 0; i < listAttribute.length; i++)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(listAttribute[i].name, style: Get.textTheme.bodyLarge),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: listAttribute[i]
+                      .value!
+                      .split("_")
+                      .map((option) => TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                option == selectedAttributes[i].value
+                                    ? Get.theme.colorScheme.primaryContainer
+                                    : Colors.transparent),
+                          ),
+                          onPressed: () {
+                            setAttributes(i, option);
+                            model.setAttributes(selectedAttributes[i]);
+                          },
+                          child: Text(
+                            option,
+                          )))
+                      .toList(),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
   }
 }
