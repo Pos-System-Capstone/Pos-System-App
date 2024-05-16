@@ -28,17 +28,6 @@ Widget productCard(Product product, List<Product>? childProducts) {
                             "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fdownload.png?alt=media&token=d3d049e8-536e-4939-bb93-2704647445b4"),
                         fit: BoxFit.cover)),
               ),
-              // child: Container(
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8),
-              //   ),
-              //   child: CachedNetworkImage(
-              //     imageUrl: (product.picUrl ??
-              //         "https://firebasestorage.googleapis.com/v0/b/pos-system-47f93.appspot.com/o/files%2Fdownload.png?alt=media&token=d3d049e8-536e-4939-bb93-2704647445b4"),
-              //     placeholder: (context, url) => CircularProgressIndicator(),
-              //     errorWidget: (context, url, error) => Icon(Icons.error),
-              //   ),
-              // ),
             ),
           ),
           Expanded(
@@ -49,21 +38,20 @@ Widget productCard(Product product, List<Product>? childProducts) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      product.name!,
-                      style: Get.theme.textTheme.bodyLarge,
-                    ),
+                  Text(
+                    product.name,
+                    style: Get.theme.textTheme.labelLarge,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: (childProducts != null &&
-                            product.type == ProductTypeEnum.PARENT)
-                        ? Text("")
-                        : Text(
-                            formatPrice(product.sellingPrice!),
-                          ),
-                  ),
+                  (childProducts != null &&
+                          product.type == ProductTypeEnum.PARENT)
+                      ? Text("")
+                      : Text(
+                          formatPrice(product.sellingPrice),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                 ],
               ),
             ),

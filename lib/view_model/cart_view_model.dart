@@ -50,7 +50,7 @@ class CartViewModel extends BaseViewModel {
   Future scanCustomer(String phone) async {
     try {
       setState(ViewStatus.Loading);
-      customer = await accountData.scanCustomer(phone);
+      customer = await pointifyData.scanCustomer(phone);
       await prepareOrder();
       notifyListeners();
       setState(ViewStatus.Completed);
@@ -166,10 +166,10 @@ class CartViewModel extends BaseViewModel {
         cart.promotionCode = parts[1];
         cart.voucherCode = null;
       }
+    } else {
+      phoneNumber = code;
     }
-    if (phoneNumber != null) {
-      await scanCustomer(phoneNumber);
-    }
+    await scanCustomer(phoneNumber);
     await prepareOrder();
     notifyListeners();
   }
@@ -201,7 +201,7 @@ class CartViewModel extends BaseViewModel {
     cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
     cart.discountAmount = 0;
     cart.bonusPoint = 0;
-    cart.customerId = customer?.id;
+    cart.customerId = customer?.membershipId;
     cart.customerName = customer?.fullName;
     cart.finalAmount = cart.totalAmount;
     for (var element in cart.productList!) {

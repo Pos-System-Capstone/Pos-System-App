@@ -1,28 +1,44 @@
 class CustomerInfoModel {
-  String? id;
+  String? membershipId;
   String? phoneNumber;
-  String? fullName;
-  String? gender;
   String? email;
+  String? fullName;
+  num? gender;
+  String? memberLevelName;
+  num? point;
+  num? balance;
 
   CustomerInfoModel(
-      {this.id, this.phoneNumber, this.fullName, this.gender, this.email});
+      {this.membershipId,
+      this.phoneNumber,
+      this.email,
+      this.fullName,
+      this.gender,
+      this.memberLevelName,
+      this.point,
+      this.balance});
 
   CustomerInfoModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    membershipId = json['membershipId'];
     phoneNumber = json['phoneNumber'];
+    email = json['email'];
     fullName = json['fullName'];
     gender = json['gender'];
-    email = json['email'];
+    memberLevelName = json['memberLevelName'];
+    point = json['point'];
+    balance = json['balance'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    data['membershipId'] = membershipId;
     data['phoneNumber'] = phoneNumber;
+    data['email'] = email;
     data['fullName'] = fullName;
     data['gender'] = gender;
-    data['email'] = email;
+    data['memberLevelName'] = memberLevelName;
+    data['point'] = point;
+    data['balance'] = balance;
     return data;
   }
 }

@@ -9,6 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../../../../theme/theme_color.dart';
 import '../../../../util/share_pref.dart';
 import '../../widgets/other_dialogs/dialog.dart';
+import '../../widgets/printer_dialogs/add_bluetooth_printer_dialog.dart';
 import '../../widgets/printer_dialogs/add_printer_dialog.dart';
 import 'product_atrribute_bottom_sheet.dart';
 
@@ -84,34 +85,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: Text('Tiền mặt trong quầy',
-                                style: Get.textTheme.titleMedium)),
-                        OutlinedButton(
-                            onPressed: () async {
-                              String? money = await inputDialog(
-                                  "Nhập số tiền",
-                                  "Vui long nhập số tiền",
-                                  model.defaultCashboxMoney.toString(),
-                                  isNum: true);
-                              if (money != null) {
-                                model.setCashboxMoney(int.parse(money));
-                              }
-                            },
-                            child:
-                                Text(formatPrice(model.defaultCashboxMoney))),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     crossAxisAlignment: CrossAxisAlignment.center,
+                  //     children: [
+                  //       Expanded(
+                  //           child: Text('Tiền mặt trong quầy',
+                  //               style: Get.textTheme.titleMedium)),
+                  //       OutlinedButton(
+                  //           onPressed: () async {
+                  //             String? money = await inputDialog(
+                  //                 "Nhập số tiền",
+                  //                 "Vui long nhập số tiền",
+                  //                 model.defaultCashboxMoney.toString(),
+                  //                 isNum: true);
+                  //             if (money != null) {
+                  //               model.setCashboxMoney(int.parse(money));
+                  //             }
+                  //           },
+                  //           child:
+                  //               Text(formatPrice(model.defaultCashboxMoney))),
+                  //     ],
+                  //   ),
+                  // ),
+                  // Divider(
+                  //   thickness: 1,
+                  // ),
                   billPrinterSetting(),
                   Divider(
                     thickness: 1,
@@ -120,10 +121,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  bluetoothPrinterSetting(),
-                  Divider(
-                    thickness: 1,
-                  ),
+                  // bluetoothPrinterSetting(),
+                  // Divider(
+                  //   thickness: 1,
+                  // ),
                   updateMenu(),
                   Divider(
                     thickness: 1,
@@ -132,11 +133,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  promotionSetting(),
-                  Divider(
-                    thickness: 1,
+                  SwitchListTile(
+                    title: Text('Quét đơn từ khách hàng'),
+                    value: model.isScanOrder,
+                    onChanged: (value) async {
+                      await model.setScanOrder(value);
+                    },
                   ),
-                  displayMenu(),
+
                   Divider(
                     thickness: 1,
                   ),
@@ -144,40 +148,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Divider(
                     thickness: 1,
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  //   child: InkWell(
-                  //     onTap: () =>
-                  //         Get.find<PrinterViewModel>().testPrinterMobile(),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //       children: [
-                  //         Expanded(
-                  //             child: Text('Test print mobile',
-                  //                 style: Get.textTheme.titleMedium)),
-                  //         IconButton(
-                  //           alignment: Alignment.bottomCenter,
-                  //           tooltip: "Đăng xuất",
-                  //           onPressed: () => {
-                  //             showConfirmDialog(
-                  //               title: "Đăng xuất",
-                  //               content: "Bạn có muốn đăng xuất không?",
-                  //             ).then((value) => {
-                  //                   if (value)
-                  //                     Get.find<PrinterViewModel>()
-                  //                         .testPrinterMobile(),
-                  //                 })
-                  //           },
-                  //           icon: Icon(
-                  //             Icons.logout,
-                  //             size: 32,
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                 ]),
           ));
         }));
@@ -332,7 +302,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget bluetoothPrinterSetting() {
     return InkWell(
-      onTap: () => Get.toNamed(RouteHandler.PRINTER),
+      onTap: () => showBluetoothPrinterConfigDialog(PrinterTypeEnum.bill),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, depend_on_referenced_packages
 
 import 'dart:typed_data' show Uint8List;
+import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -45,11 +46,9 @@ Future<Uint8List> genQRcode(PdfPageFormat format, String imageURL) async {
 Future<Uint8List> generateBillInvoice(
     PdfPageFormat format, OrderResponseModel order, String payment) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-  final font = await PdfGoogleFonts.interMedium();
+  final font = await PdfGoogleFonts.interLight();
 
   StoreModel storeInfo = Get.find<MenuViewModel>().storeDetails;
-  final provider =
-      await flutterImageProvider(NetworkImage(storeInfo.brandPicUrl!));
 
   pdf.addPage(
     pw.Page(
@@ -61,26 +60,24 @@ Future<Uint8List> generateBillInvoice(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
-                pw.Row(children: [
-                  pw.Image(
-                    provider,
-                    width: 60,
-                    height: 60,
-                  ),
-                  pw.Column(children: [
-                    pw.Text(storeInfo.address ?? "",
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(font: font, fontSize: 7)),
-                    pw.Text("SDT:${storeInfo.phone ?? ""}",
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(font: font, fontSize: 7)),
-                  ]),
-                ]),
+                pw.Text(storeInfo.name ?? "",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(font: font, fontSize: 8)),
+                pw.Text("SDT:${storeInfo.phone ?? ""}",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(font: font, fontSize: 7)),
+                pw.Text(storeInfo.address ?? "",
+                    textAlign: pw.TextAlign.center,
+                    maxLines: 2,
+                    overflow: pw.TextOverflow.clip,
+                    style: pw.TextStyle(font: font, fontSize: 7)),
+                pw.SizedBox(height: 4),
                 pw.FittedBox(
-                  child: pw.Text("Hoá đơn thanh toán",
+                  child: pw.Text("HOÁ ĐƠN THANH TOÁN",
                       textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(font: font, fontSize: 9)),
+                      style: pw.TextStyle(font: font, fontSize: 10)),
                 ),
+                pw.SizedBox(height: 4),
                 pw.Text(order.invoiceId ?? "",
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(font: font, fontSize: 8)),
@@ -277,12 +274,9 @@ Future<Uint8List> generateBillInvoice(
 Future<Uint8List> generateDraftBill(
     PdfPageFormat format, OrderResponseModel order) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-  final font = await PdfGoogleFonts.interMedium();
+  final font = await PdfGoogleFonts.interLight();
 
   StoreModel storeInfo = Get.find<MenuViewModel>().storeDetails;
-  final provider =
-      await flutterImageProvider(NetworkImage(storeInfo.brandPicUrl!));
-
   pdf.addPage(
     pw.Page(
       pageFormat: format,
@@ -293,26 +287,24 @@ Future<Uint8List> generateDraftBill(
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               mainAxisAlignment: pw.MainAxisAlignment.start,
               children: [
-                pw.Row(children: [
-                  pw.Image(
-                    provider,
-                    width: 60,
-                    height: 60,
-                  ),
-                  pw.Column(children: [
-                    pw.Text(storeInfo.address ?? "",
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(font: font, fontSize: 7)),
-                    pw.Text("SDT:${storeInfo.phone ?? ""}",
-                        textAlign: pw.TextAlign.center,
-                        style: pw.TextStyle(font: font, fontSize: 7)),
-                  ]),
-                ]),
+                pw.Text(storeInfo.name ?? "",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(font: font, fontSize: 8)),
+                pw.Text("SDT:${storeInfo.phone ?? ""}",
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(font: font, fontSize: 7)),
+                pw.Text(storeInfo.address ?? "",
+                    textAlign: pw.TextAlign.center,
+                    maxLines: 2,
+                    overflow: pw.TextOverflow.clip,
+                    style: pw.TextStyle(font: font, fontSize: 7)),
+                pw.SizedBox(height: 4),
                 pw.FittedBox(
-                  child: pw.Text("Hoá đơn tạm tính",
+                  child: pw.Text("HOÁ ĐƠN TẠM TÍNH",
                       textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(font: font, fontSize: 9)),
+                      style: pw.TextStyle(font: font, fontSize: 10)),
                 ),
+                pw.SizedBox(height: 4),
                 pw.Text(order.invoiceId ?? "",
                     textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(font: font, fontSize: 8)),
@@ -509,7 +501,7 @@ Future<Uint8List> generateDraftBill(
 Future<Uint8List> generateKitchenInvoice(
     PdfPageFormat format, OrderResponseModel order) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-  final font = await PdfGoogleFonts.interMedium();
+  final font = await PdfGoogleFonts.interLight();
   pdf.addPage(
     pw.Page(
       pageFormat: format,
@@ -630,7 +622,7 @@ Future<Uint8List> generateStampInvoice(
   num? table,
 ) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-  final font = await PdfGoogleFonts.interBold();
+  final font = await PdfGoogleFonts.interLight();
   pdf.addPage(pw.Page(
       pageFormat: format,
       orientation: pw.PageOrientation.natural,
@@ -682,7 +674,7 @@ Future<Uint8List> generateClostSessionInvoice(
     StoreModel store,
     Account account) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-  final font = await PdfGoogleFonts.interBold();
+  final font = await PdfGoogleFonts.interLight();
 
   pdf.addPage(pw.Page(
       pageFormat: format,
@@ -866,6 +858,72 @@ Future<Uint8List> generateClostSessionInvoice(
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
+                  pw.Text("Số đơn GrabFood",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(report.totalGrabFood.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu GrabFood",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.grabFoodAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Số đơn ShopeeFood",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(report.totalShopeeFood.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu ShopeeFood",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.shopeeFoodAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Số đơn BeFood",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(report.totalBeFood.toString(),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Doanh thu BeFood",
+                      textAlign: pw.TextAlign.left,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                  pw.Text(formatPrice(report.beFoodAmount ?? 0),
+                      textAlign: pw.TextAlign.right,
+                      style: pw.TextStyle(font: font, fontSize: 8)),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
                   pw.Text("Số đơn Visa",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
@@ -877,10 +935,10 @@ Future<Uint8List> generateClostSessionInvoice(
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Doanh thu Thẻ thành viên",
+                  pw.Text("Doanh thu Visa",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(report.pointifyAmount ?? 0),
+                  pw.Text(formatPrice(report.visaAmount ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],
@@ -899,10 +957,10 @@ Future<Uint8List> generateClostSessionInvoice(
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Doanh thu Visa",
+                  pw.Text("Doanh thu Thẻ thành viên",
                       textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(font: font, fontSize: 8)),
-                  pw.Text(formatPrice(report.visaAmount ?? 0),
+                  pw.Text(formatPrice(report.pointifyAmount ?? 0),
                       textAlign: pw.TextAlign.right,
                       style: pw.TextStyle(font: font, fontSize: 8)),
                 ],
@@ -1008,7 +1066,7 @@ Future<Uint8List> generateQRCode(
   String? paymentMethod,
 ) async {
   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-  final font = await PdfGoogleFonts.interBold();
+  final font = await PdfGoogleFonts.interLight();
   pdf.addPage(pw.Page(
       pageFormat: format,
       orientation: pw.PageOrientation.natural,
@@ -1403,89 +1461,221 @@ Future<Uint8List> generateEndDayReport(
   return pdf.save();
 }
 
-// pw.Widget categoryReportItem(CategoryReports item, pw.Font font) {
-//   return pw.Column(
-//     children: [
-//       pw.Divider(thickness: 0.5, borderStyle: pw.BorderStyle.dashed),
-//       pw.Row(
-//         mainAxisAlignment: pw.MainAxisAlignment.start,
-//         crossAxisAlignment: pw.CrossAxisAlignment.start,
-//         children: [
-//           pw.Expanded(
-//             flex: 7,
-//             child: pw.Column(
-//               mainAxisAlignment: pw.MainAxisAlignment.start,
-//               crossAxisAlignment: pw.CrossAxisAlignment.start,
-//               children: [
-//                 pw.Text(
-//                   item.name!,
-//                   style: pw.TextStyle(
-//                       font: font, fontSize: 8, fontWeight: pw.FontWeight.bold),
-//                   maxLines: 2,
-//                   overflow: pw.TextOverflow.clip,
-//                 ),
-//               ],
-//             ),
-//           ),
-//           pw.Expanded(
-//             flex: 1,
-//             child: pw.Text(
-//               "${item.totalProduct}",
-//               textAlign: pw.TextAlign.center,
-//               style: pw.TextStyle(font: font, fontSize: 7),
-//             ),
-//           ),
-//           pw.Expanded(
-//             flex: 3,
-//             child: pw.Align(
-//               alignment: pw.Alignment.centerRight,
-//               child: pw.Text(
-//                 formatPrice(item.totalAmount!),
-//                 style: pw.TextStyle(font: font, fontSize: 7),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//       pw.ListView.builder(
-//         itemCount: item.productReports!.length,
-//         itemBuilder: (context, i) {
-//           return pw.Padding(
-//             padding: pw.EdgeInsets.fromLTRB(0, 0, 0, 0),
-//             child: pw.Row(
-//               mainAxisAlignment: pw.MainAxisAlignment.start,
-//               crossAxisAlignment: pw.CrossAxisAlignment.start,
-//               children: [
-//                 pw.Expanded(
-//                   flex: 7,
-//                   child: pw.Text(
-//                     "- ${item.productReports![i].name!}",
-//                     style: pw.TextStyle(font: font, fontSize: 7),
-//                   ),
-//                 ),
-//                 pw.Expanded(
-//                   flex: 1,
-//                   child: pw.Text(
-//                     "${item.productReports![i].quantity}",
-//                     textAlign: pw.TextAlign.center,
-//                     style: pw.TextStyle(font: font, fontSize: 7),
-//                   ),
-//                 ),
-//                 pw.Expanded(
-//                   flex: 3,
-//                   child: pw.Align(
-//                     alignment: pw.Alignment.centerRight,
-//                     child: pw.Text(
-//                       formatPrice(item.productReports![i].totalAmount!),
-//                       style: pw.TextStyle(font: font, fontSize: 7),
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           );
-//         },
-//       ),
-//     ],
-//   );
-// }
+Future<List<int>> generateBluetoothInvoice(
+    OrderResponseModel order, String payment, StoreModel storeInfo) async {
+  List<int> bytes = [];
+  // Using default profile
+  final profile = await CapabilityProfile.load();
+  final generator = Generator(PaperSize.mm80, profile);
+  bytes += generator.setGlobalFont(PosFontType.fontB);
+
+  bytes += generator.setGlobalCodeTable('CP1252');
+  bytes += generator.setStyles(
+      PosStyles(
+        codeTable: 'CP1252',
+        align: PosAlign.center,
+        fontType: PosFontType.fontB,
+      ),
+      isKanji: true);
+  bytes += generator.text(
+    storeInfo.name ?? '',
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      bold: true,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.text(
+    storeInfo.address ?? '',
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.text(
+    "HOÁ ĐƠN THANH TOÁN",
+    styles: PosStyles(codeTable: 'CP1252', align: PosAlign.center, bold: true),
+  );
+  bytes += generator.text(
+    order.invoiceId ?? '',
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.text(
+    formatTime(order.checkInDate ?? ''),
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.text(
+    "STT: ${order.customerNumber ?? 1}",
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.row([
+    PosColumn(
+      text: 'Tên món',
+      width: 6,
+      styles: PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: 'SL',
+      width: 2,
+      styles: PosStyles(align: PosAlign.right),
+    ),
+    PosColumn(
+      text: 'Tổng',
+      width: 3,
+      styles: PosStyles(align: PosAlign.right),
+    ),
+  ]);
+  for (ProductList item in order.productList!) {
+    bytes += generator.row([
+      PosColumn(
+        text: item.name ?? '',
+        width: 6,
+        styles: PosStyles(align: PosAlign.left),
+      ),
+      PosColumn(
+        text: item.quantity.toString(),
+        width: 2,
+        styles: PosStyles(align: PosAlign.right),
+      ),
+      PosColumn(
+        text: formatPrice(item.finalAmount ?? 0),
+        width: 3,
+        styles: PosStyles(align: PosAlign.right),
+      ),
+    ]);
+    if (item.extras != null) {
+      for (Extras extra in item.extras!) {
+        bytes += generator.row([
+          PosColumn(
+            text: "+${extra.name}",
+            width: 6,
+            styles: PosStyles(align: PosAlign.left),
+          ),
+          PosColumn(
+            text: formatPrice(extra.finalAmount ?? 0),
+            width: 3,
+            styles: PosStyles(align: PosAlign.right),
+          ),
+        ]);
+      }
+    }
+  }
+  bytes += generator.row([
+    PosColumn(
+      text: 'Tổng cộng:',
+      width: 4,
+      styles: PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: formatPrice(order.totalAmount ?? 0),
+      width: 6,
+      styles: PosStyles(align: PosAlign.right),
+    ),
+  ]);
+  if (order.promotionList != null || order.productList != []) {
+    for (PromotionList promotion in order.promotionList!) {
+      bytes += generator.row([
+        PosColumn(
+          text: "${promotion.promotionName}",
+          width: 6,
+          styles: PosStyles(align: PosAlign.left),
+        ),
+        PosColumn(
+          text: formatPrice(promotion.discountAmount ?? 0),
+          width: 3,
+          styles: PosStyles(align: PosAlign.right),
+        ),
+      ]);
+    }
+  }
+  bytes += generator.row([
+    PosColumn(
+      text: 'Giảm giá',
+      width: 4,
+      styles: PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: formatPrice(order.discount ?? 0),
+      width: 6,
+      styles: PosStyles(align: PosAlign.right),
+    ),
+  ]);
+  bytes += generator.row([
+    PosColumn(
+      text: "Nhận món",
+      width: 3,
+      styles: PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: showOrderType(order.orderType ?? DeliType().eatIn.type).label ?? '',
+      width: 6,
+      styles: PosStyles(align: PosAlign.right),
+    ),
+  ]);
+  bytes += generator.row([
+    PosColumn(
+      text: "Thanh toán",
+      width: 3,
+      styles: PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: formatPrice(order.finalAmount ?? 0),
+      width: 6,
+      styles: PosStyles(align: PosAlign.right),
+    ),
+  ]);
+  bytes += generator.row([
+    PosColumn(
+      text: "Ghi chú",
+      width: 3,
+      styles: PosStyles(align: PosAlign.left),
+    ),
+    PosColumn(
+      text: order.notes ?? '',
+      width: 6,
+      styles: PosStyles(align: PosAlign.right),
+    ),
+  ]);
+
+  bytes += generator.text(
+    "Xin cảm ơn và hẹn gặp lại",
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.text(
+    "Wifi: ${storeInfo.wifiName}",
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.text(
+    "Pass: ${storeInfo.wifiPassword}",
+    styles: PosStyles(
+      codeTable: 'CP1252',
+      align: PosAlign.center,
+      fontType: PosFontType.fontB,
+    ),
+  );
+  bytes += generator.feed(2);
+  //bytes += generator.cut();
+  return bytes;
+}

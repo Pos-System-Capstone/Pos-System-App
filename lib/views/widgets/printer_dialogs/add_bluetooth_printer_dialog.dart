@@ -4,8 +4,7 @@ import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-void showPrinterConfigDialog(PrinterTypeEnum type) {
-  List<int> options = [58, 80, 0];
+void showBluetoothPrinterConfigDialog(PrinterTypeEnum type) {
   Get.bottomSheet(BottomSheet(
     onClosing: () {
       Get.back();
@@ -23,7 +22,7 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     type == PrinterTypeEnum.bill
-                        ? 'Thiết lập in hóa đơn'
+                        ? 'Thiết lập in hóa đơn Bluetooth'
                         : 'Thiết lập Máy in tem',
                     style: Get.textTheme.titleLarge,
                   ),
@@ -32,36 +31,26 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    DropdownButton<String>(
-                      value: model.paperOptions.toString(),
-                      items: options.map((int option) {
-                        return DropdownMenuItem<String>(
-                          value: option.toString(),
-                          child: Text(option.toString()),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        model.setPaperOption(newValue ?? '0');
-                      },
-                    ),
                     FilledButton(
                         onPressed: () {
-                          model.scanPrinter();
-                          // model.scanBluetoothPrinter();
+                          // model.scanPrinter();
+                          model.scanBluetoothPrinter();
                         },
                         child: model.status == ViewStatus.Loading
                             ? Text('Dang tìm kiếm...')
                             : Text('Tìm kiếm')),
                     SizedBox(width: 8),
                     Text(
-                      'Tìm thấy: ${model.listDevice?.length} thiết bị',
+                      'Tìm thấy: ${model.listBluetoothDevices.length} thiết bị',
                     ),
                   ],
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount:
-                        model.listDevice != null ? model.listDevice!.length : 0,
+                    // ignore: unnecessary_null_comparison
+                    itemCount: model.listBluetoothDevices != null
+                        ? model.listBluetoothDevices.length
+                        : 0,
                     itemBuilder: (BuildContext context, int index) {
                       return Column(
                         children: [
@@ -76,21 +65,25 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    model.listDevice![index].name,
+                                    model.listBluetoothDevices[index].name,
                                   ),
                                 ),
                                 SizedBox(width: 8),
                                 type == PrinterTypeEnum.bill
-                                    ? model.isBillPrinterConnected(
-                                            model.listDevice![index])
+                                    ? model.isBluetoothPrinterConnected(model
+                                            .listBluetoothDevices[index]
+                                            .macAdress)
                                         ? TextButton(
                                             onPressed: () =>
-                                                model.removeBillPrinter(),
-                                            child: Text("Xoá"))
+                                                model.removeBluetoothPrinter(),
+                                            child: Text("Xóa Thiết bị"))
                                         : FilledButton(
                                             onPressed: () =>
-                                                model.selectBillPrinter(
-                                                  model.listDevice![index],
+                                                model.selectBluetoothPrinter(
+                                                  model
+                                                      .listBluetoothDevices[
+                                                          index]
+                                                      .macAdress,
                                                 ),
                                             child: Text("Kết nối"))
                                     : model.isStampPrinterConnected(
@@ -98,7 +91,7 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                                         ? TextButton(
                                             onPressed: () =>
                                                 model.removeStampPrinter(),
-                                            child: Text("Xóa"))
+                                            child: Text("Xóa Thiết bị"))
                                         : FilledButton(
                                             onPressed: () =>
                                                 model.selectProductPrinter(
@@ -107,8 +100,8 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                                             child: Text("Kết nối")),
                                 SizedBox(width: 8),
                                 OutlinedButton(
-                                    onPressed: () => model
-                                        .testPrinter(model.listDevice![index]),
+                                    onPressed: () =>
+                                        model.testBluetoothPrinter(),
                                     child: Text("In thử"))
                               ],
                             ),

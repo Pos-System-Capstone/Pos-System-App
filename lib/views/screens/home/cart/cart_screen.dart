@@ -95,6 +95,21 @@ class _CartScreenState extends State<CartScreen> {
                       thickness: 1,
                       color: Get.theme.colorScheme.onSurface,
                     ),
+                    model.customer != null
+                        ? Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(model.customer?.fullName ?? '',
+                                    style: Get.textTheme.bodyMedium),
+                                Text(model.customer?.phoneNumber ?? '',
+                                    style: Get.textTheme.bodyMedium),
+                              ],
+                            ),
+                          )
+                        : SizedBox(),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
                       child: Row(
@@ -409,7 +424,7 @@ class _CartScreenState extends State<CartScreen> {
                         Text(
                             (item.attributes![i].value != null &&
                                     item.attributes![i].value!.isNotEmpty)
-                                ? "${item.attributes![i].name}:${item.attributes![i].value}, "
+                                ? "${item.attributes![i].value} | "
                                 : "",
                             style: Get.textTheme.bodyMedium,
                             maxLines: 1,

@@ -45,7 +45,8 @@ dependencies:
   cached_network_image: ^3.2.3
   printing: ^5.10.2
   url_strategy: ^0.2.0
-  bluetooth_print: ^4.3.0
+  print_bluetooth_thermal: ^1.1.0
+  esc_pos_utils_plus: ^2.0.3
 
 dev_dependencies:
   flutter_test:

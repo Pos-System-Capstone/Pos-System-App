@@ -6,6 +6,8 @@ enum DeliTypeEnum { TAKE_AWAY, IN_STORE, DELIVERY, NONE }
 
 enum PrinterTypeEnum { bill, stamp }
 
+enum PrinterDeviceEnum { BLUETOOTH, USB }
+
 class DeliType {
   TakeAway takeAway = TakeAway();
   EatIn eatIn = EatIn();

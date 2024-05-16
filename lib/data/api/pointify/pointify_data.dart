@@ -1,8 +1,10 @@
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/request_pointify.dart';
+import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 
 import '../../../util/share_pref.dart';
 import '../../model/account.dart';
+import '../../model/customer.dart';
 import '../../model/pointify/promotion_model.dart';
 
 class PointifyData {
@@ -20,5 +22,25 @@ class PointifyData {
       listPromotion.add(res);
     }
     return listPromotion;
+  }
+
+  Future<CustomerInfoModel?> scanCustomer(String phone) async {
+    Account? userInfo = await getUserInfo();
+    final response = await requestPointify.get("stores/scan-membership",
+        queryParameters: {"code": phone, "apiKey": userInfo?.brandId ?? ''});
+    if (response.statusCode == 400) {
+      showAlertDialog(
+          title: "Lỗi", content: "không tìm thấy thông tin thành viên");
+      return null;
+    }
+    if (response.statusCode == 200) {
+      final customer = response.data;
+
+      CustomerInfoModel customerInfoModel =
+          CustomerInfoModel.fromJson(customer);
+      return customerInfoModel;
+    } else {
+      return null;
+    }
   }
 }

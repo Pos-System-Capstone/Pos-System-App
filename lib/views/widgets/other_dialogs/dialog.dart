@@ -368,6 +368,23 @@ void sessionDetailsDialog(Session session) {
                               "0",
                         ),
                         dashboardCard(
+                          title: "Số đơn GrabFood",
+                          value:
+                              sessionDetailReport?.totalGrabFood.toString() ??
+                                  "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn ShopeeFood",
+                          value:
+                              sessionDetailReport?.totalShopeeFood.toString() ??
+                                  "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn BeFood",
+                          value: sessionDetailReport?.totalBeFood.toString() ??
+                              "0",
+                        ),
+                        dashboardCard(
                           title: "Số đơn thẻ thành viên",
                           value:
                               sessionDetailReport?.totalPointify.toString() ??
@@ -392,6 +409,21 @@ void sessionDetailsDialog(Session session) {
                           title: "Doanh thu chuyển khoản",
                           value: formatPrice(
                               sessionDetailReport?.bankingAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu GrabFood",
+                          value: formatPrice(
+                              sessionDetailReport?.grabFoodAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu ShopeeFood",
+                          value: formatPrice(
+                              sessionDetailReport?.shopeeFoodAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu BeFood",
+                          value: formatPrice(
+                              sessionDetailReport?.beFoodAmount ?? 0),
                         ),
                         dashboardCard(
                           title: "Doanh thu thẻ thành viên",
@@ -433,32 +465,22 @@ void sessionDetailsDialog(Session session) {
 Widget dashboardCard({required String title, required String value}) {
   return Card(
     child: Container(
-      padding: EdgeInsets.all(16),
-      height: 140,
-      width: 160,
+      padding: EdgeInsets.all(8),
+      height: 100,
+      width: 140,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Center(
-              child: Text(
-                title,
-                style: Get.textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-            ),
+          Text(
+            title,
+            style: Get.textTheme.bodyMedium,
+            textAlign: TextAlign.center,
           ),
-          Divider(
-            color: Get.theme.colorScheme.onBackground,
+          Text(
+            value,
+            style: Get.textTheme.bodyLarge,
           ),
-          Expanded(
-              child: Center(
-            child: Text(
-              value,
-              style: Get.textTheme.titleLarge,
-            ),
-          )),
         ],
       ),
     ),
@@ -587,13 +609,17 @@ void hideBottomSheet() {
 }
 
 Future<String?> inputDialog(String title, String hint, String? value,
-    {bool isNum = false}) async {
+    {bool isNum = false, bool isPassword = false}) async {
   hideDialog();
   String? result;
   await Get.dialog(AlertDialog(
     title: Text(title),
     content: TextField(
-      keyboardType: isNum ? TextInputType.number : TextInputType.text,
+      keyboardType: isNum
+          ? TextInputType.number
+          : isPassword
+              ? TextInputType.visiblePassword
+              : TextInputType.text,
       inputFormatters:
           isNum ? [FilteringTextInputFormatter.digitsOnly] : null, // Only numb
       controller: TextEditingController(text: value),
@@ -605,14 +631,14 @@ Future<String?> inputDialog(String title, String hint, String? value,
     actions: [
       TextButton(
           onPressed: () {
-            Get.back(result: result);
-          },
-          child: Text('Cập nhật')),
-      TextButton(
-          onPressed: () {
             Get.back(result: value);
           },
           child: Text('Huỷ')),
+      FilledButton(
+          onPressed: () {
+            Get.back(result: result);
+          },
+          child: Text('Xác nhận')),
     ],
   ));
   return result;

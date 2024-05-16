@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pos_apps/util/format.dart';
@@ -57,214 +58,221 @@ class _OrdersScreenState extends State<OrdersScreen> {
             }
             return Column(
               children: [
-                SizedBox(
-                  height: 40,
-                  child: Row(
-                    children: [
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(isToday
-                                  ? Get.theme.colorScheme.surfaceVariant
-                                  : Get.theme.colorScheme.background)),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    height: 48,
+                    child: Row(
+                      children: [
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    isToday
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    isToday = true;
+                                    isYesterday = false;
+                                  }),
+                                  model.getListOrder(
+                                      isToday: isToday,
+                                      isYesterday: isYesterday,
+                                      page: page,
+                                      orderStatus: status,
+                                      paymentType: payment)
+                                },
+                            child: Text("Hôm nay")),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    isYesterday
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    isToday = false;
+                                    isYesterday = true;
+                                  }),
+                                  model.getListOrder(
+                                      isToday: isToday,
+                                      isYesterday: isYesterday,
+                                      page: page)
+                                },
+                            child: Text("Hôm qua")),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    payment == PaymentTypeEnums.CASH
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    payment = PaymentTypeEnums.CASH;
+                                  }),
+                                  model.getListOrder(
+                                    isToday: isToday,
+                                    isYesterday: isYesterday,
+                                    page: page,
+                                    paymentType: payment,
+                                    orderStatus: status,
+                                  )
+                                },
+                            child: Text("Tiền mặt")),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    payment == PaymentTypeEnums.BANKING
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    payment = PaymentTypeEnums.BANKING;
+                                  }),
+                                  model.getListOrder(
+                                    isToday: isToday,
+                                    isYesterday: isYesterday,
+                                    page: page,
+                                    paymentType: payment,
+                                    orderStatus: status,
+                                  )
+                                },
+                            child: Text("Ngân hàng")),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    payment == PaymentTypeEnums.MOMO
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    payment = PaymentTypeEnums.MOMO;
+                                  }),
+                                  model.getListOrder(
+                                    isToday: isToday,
+                                    isYesterday: isYesterday,
+                                    page: page,
+                                    paymentType: payment,
+                                    orderStatus: status,
+                                  )
+                                },
+                            child: Text("MOMO")),
+                        TextButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    payment == PaymentTypeEnums.POINTIFY
+                                        ? Get.theme.colorScheme.surfaceVariant
+                                        : Get.theme.colorScheme.background)),
+                            onPressed: () => {
+                                  setState(() {
+                                    payment = PaymentTypeEnums.POINTIFY;
+                                  }),
+                                  model.getListOrder(
+                                    isToday: isToday,
+                                    isYesterday: isYesterday,
+                                    page: page,
+                                    paymentType: payment,
+                                    orderStatus: status,
+                                  )
+                                },
+                            child: Text("POINTIFY")),
+                        SizedBox(
+                          width: 200,
+                          child: TextField(
+                            controller: orderController,
+                            decoration: InputDecoration(
+                                hintText: "Quét mã để tìm đơn hàng",
+                                hintStyle: Get.textTheme.bodyMedium,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                filled: true,
+                                isDense: true,
+                                labelStyle: Get.textTheme.labelLarge,
+                                fillColor: Get.theme.colorScheme.background,
+                                prefixIcon: Icon(
+                                  Icons.portrait_rounded,
+                                  color: Get.theme.colorScheme.onBackground,
+                                ),
+                                suffixIcon: IconButton(
+                                    onPressed: () => {
+                                          orderController.clear(),
+                                          setState(() {
+                                            invoice = null;
+                                          }),
+                                          model.getListOrder(
+                                              isToday: isToday,
+                                              isYesterday: isYesterday,
+                                              page: page,
+                                              orderStatus: status,
+                                              paymentType: payment,
+                                              invoiceId: null)
+                                        },
+                                    icon: Icon(
+                                      Icons.clear,
+                                    )),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get
+                                            .theme.colorScheme.primaryContainer,
+                                        width: 2.0)),
+                                contentPadding: EdgeInsets.all(16),
+                                isCollapsed: true,
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Get.theme.colorScheme.error,
+                                        width: 2.0))),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        IconButton.filled(
                           onPressed: () => {
+                            if (orderController.text.isNotEmpty)
+                              {
                                 setState(() {
-                                  isToday = true;
-                                  isYesterday = false;
+                                  invoice = orderController.text;
                                 }),
                                 model.getListOrder(
                                     isToday: isToday,
                                     isYesterday: isYesterday,
                                     page: page,
                                     orderStatus: status,
-                                    paymentType: payment)
-                              },
-                          child: Text("Hôm nay")),
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  isYesterday
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
-                          onPressed: () => {
-                                setState(() {
-                                  isToday = false;
-                                  isYesterday = true;
-                                }),
-                                model.getListOrder(
-                                    isToday: isToday,
-                                    isYesterday: isYesterday,
-                                    page: page)
-                              },
-                          child: Text("Hôm qua")),
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  payment == PaymentTypeEnums.CASH
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
-                          onPressed: () => {
-                                setState(() {
-                                  payment = PaymentTypeEnums.CASH;
-                                }),
-                                model.getListOrder(
-                                  isToday: isToday,
-                                  isYesterday: isYesterday,
-                                  page: page,
-                                  paymentType: payment,
-                                  orderStatus: status,
-                                )
-                              },
-                          child: Text("Tiền mặt")),
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  payment == PaymentTypeEnums.BANKING
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
-                          onPressed: () => {
-                                setState(() {
-                                  payment = PaymentTypeEnums.BANKING;
-                                }),
-                                model.getListOrder(
-                                  isToday: isToday,
-                                  isYesterday: isYesterday,
-                                  page: page,
-                                  paymentType: payment,
-                                  orderStatus: status,
-                                )
-                              },
-                          child: Text("Ngân hàng")),
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  payment == PaymentTypeEnums.MOMO
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
-                          onPressed: () => {
-                                setState(() {
-                                  payment = PaymentTypeEnums.MOMO;
-                                }),
-                                model.getListOrder(
-                                  isToday: isToday,
-                                  isYesterday: isYesterday,
-                                  page: page,
-                                  paymentType: payment,
-                                  orderStatus: status,
-                                )
-                              },
-                          child: Text("MOMO")),
-                      TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  payment == PaymentTypeEnums.POINTIFY
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
-                          onPressed: () => {
-                                setState(() {
-                                  payment = PaymentTypeEnums.POINTIFY;
-                                }),
-                                model.getListOrder(
-                                  isToday: isToday,
-                                  isYesterday: isYesterday,
-                                  page: page,
-                                  paymentType: payment,
-                                  orderStatus: status,
-                                )
-                              },
-                          child: Text("POINTIFY")),
-                      Expanded(
-                          child: TextField(
-                        controller: orderController,
-                        decoration: InputDecoration(
-                            hintText: "Quét mã để tìm đơn hàng",
-                            hintStyle: Get.textTheme.bodyMedium,
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            filled: true,
-                            isDense: true,
-                            labelStyle: Get.textTheme.labelLarge,
-                            fillColor: Get.theme.colorScheme.background,
-                            prefixIcon: Icon(
-                              Icons.portrait_rounded,
-                              color: Get.theme.colorScheme.onBackground,
-                            ),
-                            suffixIcon: IconButton(
-                                onPressed: () => {
-                                      orderController.clear(),
-                                      setState(() {
-                                        invoice = null;
-                                      }),
-                                      model.getListOrder(
-                                          isToday: isToday,
-                                          isYesterday: isYesterday,
-                                          page: page,
-                                          orderStatus: status,
-                                          paymentType: payment,
-                                          invoiceId: null)
-                                    },
-                                icon: Icon(
-                                  Icons.clear,
-                                )),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color:
-                                        Get.theme.colorScheme.primaryContainer,
-                                    width: 2.0)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color:
-                                        Get.theme.colorScheme.primaryContainer,
-                                    width: 2.0)),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color:
-                                        Get.theme.colorScheme.primaryContainer,
-                                    width: 2.0)),
-                            contentPadding: EdgeInsets.all(16),
-                            isCollapsed: true,
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                    color: Get.theme.colorScheme.error,
-                                    width: 2.0))),
-                      )),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      IconButton.filled(
-                        onPressed: () => {
-                          if (orderController.text.isNotEmpty)
-                            {
-                              setState(() {
-                                invoice = orderController.text;
-                              }),
-                              model.getListOrder(
-                                  isToday: isToday,
-                                  isYesterday: isYesterday,
-                                  page: page,
-                                  orderStatus: status,
-                                  paymentType: payment,
-                                  invoiceId: invoice == "" ? null : invoice)
-                            }
-                        },
-                        icon: Icon(Icons.search),
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      IconButton(
-                          onPressed: () => {
-                                setState(() {
-                                  status = null;
-                                  payment = null;
-                                  invoice = null;
-                                }),
-                                fetchOrder(),
-                              },
-                          icon: Icon(Icons.replay_outlined)),
-                    ],
+                                    paymentType: payment,
+                                    invoiceId: invoice == "" ? null : invoice)
+                              }
+                          },
+                          icon: Icon(Icons.search),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        IconButton(
+                            onPressed: () => {
+                                  setState(() {
+                                    status = null;
+                                    payment = null;
+                                    invoice = null;
+                                  }),
+                                  fetchOrder(),
+                                },
+                            icon: Icon(Icons.replay_outlined)),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
@@ -292,98 +300,92 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: SizedBox(
-                    height: 40,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Trang:",
-                          style: Get.textTheme.titleMedium,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Trang:",
+                        style: Get.textTheme.titleMedium,
+                      ),
+                      for (var i = 1; i < 7; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: OutlinedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      page == i
+                                          ? Get.theme.colorScheme.surfaceVariant
+                                          : Get.theme.colorScheme.background)),
+                              onPressed: () => {
+                                    setState(() {
+                                      page = i;
+                                    }),
+                                    model.getListOrder(
+                                        isToday: isToday,
+                                        isYesterday: isYesterday,
+                                        page: page)
+                                  },
+                              child: Text(i.toString())),
                         ),
-                        for (var i = 1; i < 7; i++)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: OutlinedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        page == i
-                                            ? Get.theme.colorScheme
-                                                .surfaceVariant
-                                            : Get
-                                                .theme.colorScheme.background)),
-                                onPressed: () => {
-                                      setState(() {
-                                        page = i;
-                                      }),
-                                      model.getListOrder(
-                                          isToday: isToday,
-                                          isYesterday: isYesterday,
-                                          page: page)
-                                    },
-                                child: Text(i.toString())),
-                          ),
-                        TextButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    status == OrderStatusEnum.PAID
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
-                            onPressed: () => {
-                                  setState(() {
-                                    status = OrderStatusEnum.PAID;
-                                  }),
-                                  model.getListOrder(
-                                      isToday: isToday,
-                                      isYesterday: isYesterday,
-                                      page: page,
-                                      orderStatus: status)
-                                },
-                            child: Text(showOrderStatus(OrderStatusEnum.PAID),
-                                style: Get.textTheme.bodyMedium
-                                    ?.copyWith(color: Colors.teal))),
-                        TextButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    status == OrderStatusEnum.PENDING
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
-                            onPressed: () => {
-                                  setState(() {
-                                    status = OrderStatusEnum.PENDING;
-                                  }),
-                                  model.getListOrder(
-                                      isToday: isToday,
-                                      isYesterday: isYesterday,
-                                      page: page,
-                                      orderStatus: status)
-                                },
-                            child: Text(
-                                showOrderStatus(OrderStatusEnum.PENDING),
-                                style: Get.textTheme.bodyMedium
-                                    ?.copyWith(color: Colors.orange))),
-                        TextButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    status == OrderStatusEnum.NEW
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
-                            onPressed: () => {
-                                  setState(() {
-                                    status = OrderStatusEnum.NEW;
-                                  }),
-                                  model.getListOrder(
-                                      isToday: isToday,
-                                      isYesterday: isYesterday,
-                                      page: page,
-                                      orderStatus: status)
-                                },
-                            child: Text(showOrderStatus(OrderStatusEnum.NEW),
-                                style: Get.textTheme.bodyMedium
-                                    ?.copyWith(color: Colors.grey))),
-                      ],
-                    ),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  status == OrderStatusEnum.PAID
+                                      ? Get.theme.colorScheme.surfaceVariant
+                                      : Get.theme.colorScheme.background)),
+                          onPressed: () => {
+                                setState(() {
+                                  status = OrderStatusEnum.PAID;
+                                }),
+                                model.getListOrder(
+                                    isToday: isToday,
+                                    isYesterday: isYesterday,
+                                    page: page,
+                                    orderStatus: status)
+                              },
+                          child: Text(showOrderStatus(OrderStatusEnum.PAID),
+                              style: Get.textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.teal))),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  status == OrderStatusEnum.PENDING
+                                      ? Get.theme.colorScheme.surfaceVariant
+                                      : Get.theme.colorScheme.background)),
+                          onPressed: () => {
+                                setState(() {
+                                  status = OrderStatusEnum.PENDING;
+                                }),
+                                model.getListOrder(
+                                    isToday: isToday,
+                                    isYesterday: isYesterday,
+                                    page: page,
+                                    orderStatus: status)
+                              },
+                          child: Text(showOrderStatus(OrderStatusEnum.PENDING),
+                              style: Get.textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.orange))),
+                      TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  status == OrderStatusEnum.NEW
+                                      ? Get.theme.colorScheme.surfaceVariant
+                                      : Get.theme.colorScheme.background)),
+                          onPressed: () => {
+                                setState(() {
+                                  status = OrderStatusEnum.NEW;
+                                }),
+                                model.getListOrder(
+                                    isToday: isToday,
+                                    isYesterday: isYesterday,
+                                    page: page,
+                                    orderStatus: status)
+                              },
+                          child: Text(showOrderStatus(OrderStatusEnum.NEW),
+                              style: Get.textTheme.bodyMedium
+                                  ?.copyWith(color: Colors.grey))),
+                    ],
                   ),
                 ),
               ],

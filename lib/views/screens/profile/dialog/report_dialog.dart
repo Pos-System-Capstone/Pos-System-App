@@ -26,7 +26,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
           builder: (context, build, model) {
         if (model.status == ViewStatus.Loading) {
           return Container(
-            width: Get.size.width * 0.4,
+            width: Get.size.width * 0.8,
             height: Get.size.height * 0.9,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -61,7 +61,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
           );
         } else if (model.status == ViewStatus.Error && reportDetails == null) {
           return Container(
-            width: Get.size.width * 0.4,
+            width: Get.size.width * 0.8,
             height: Get.size.height * 0.9,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -90,7 +90,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
           );
         }
         return Container(
-          width: Get.size.width * 0.5,
+          width: Get.size.width,
           height: Get.size.height,
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -143,66 +143,6 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.only(
-                      //         topLeft: Radius.circular(8),
-                      //         topRight: Radius.circular(8)),
-                      //   ),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     mainAxisAlignment: MainAxisAlignment.start,
-                      //     children: [
-                      //       Padding(
-                      //         padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-                      //         child: Row(
-                      //           mainAxisAlignment: MainAxisAlignment.center,
-                      //           crossAxisAlignment: CrossAxisAlignment.center,
-                      //           children: [
-                      //             Expanded(
-                      //               flex: 8,
-                      //               child: Text(
-                      //                 'Tên',
-                      //                 style: Get.textTheme.bodyMedium,
-                      //               ),
-                      //             ),
-                      //             Expanded(
-                      //               flex: 1,
-                      //               child: Text(
-                      //                 'SL',
-                      //                 style: Get.textTheme.bodyMedium,
-                      //               ),
-                      //             ),
-                      //             Expanded(
-                      //               flex: 2,
-                      //               child: Align(
-                      //                 alignment: Alignment.centerRight,
-                      //                 child: Text(
-                      //                   'Giảm giá',
-                      //                   style: Get.textTheme.bodyMedium,
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //             Expanded(
-                      //               flex: 2,
-                      //               child: Align(
-                      //                 alignment: Alignment.centerRight,
-                      //                 child: Text(
-                      //                   'Tổng',
-                      //                   style: Get.textTheme.bodyMedium,
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      // Divider(
-                      //   color: Get.theme.colorScheme.onSurface,
-                      //   thickness: 1,
-                      // ),
                       Text(
                         'Doanh thu bán hàng',
                         style: Get.textTheme.bodyLarge,
@@ -419,6 +359,48 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
+                            'Đơn GrabFood',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalGrabFood ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đơn ShopeeFood',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalShopeeFood ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Đơn BeFood',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "${reportDetails?.totalBefood ?? 0}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
                             'Đơn Visa',
                             style: Get.textTheme.bodyMedium,
                           ),
@@ -428,7 +410,6 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                         ],
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -467,6 +448,48 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                           Text(
                             formatPrice(reportDetails?.momoAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu GrabFood',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.grabFoodAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu ShopeeFood',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.shopeeFoodAmount ?? 0),
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Doanh thu BeFood',
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            formatPrice(reportDetails?.beFoodAmount ?? 0),
                             style: Get.textTheme.bodyMedium,
                           ),
                         ],
@@ -553,7 +576,6 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                         ],
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -572,7 +594,6 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                         ],
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -609,7 +630,6 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                           ),
                         ],
                       ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/api/pointify/pointify_data.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
@@ -31,6 +32,7 @@ class OrderViewModel extends BaseViewModel {
   PaymentProvider? selectedPaymentMethod;
   AccountData accountData = AccountData();
   PaymentData? paymentData;
+  PointifyData? pointifyData;
   List<OrderInList> listOrder = [];
   String currentPaymentStatusMessage = "Chưa thanh toán";
   String paymentCheckingStatus = PaymentStatusEnum.PENDING;
@@ -40,6 +42,7 @@ class OrderViewModel extends BaseViewModel {
   OrderViewModel() {
     api = OrderAPI();
     paymentData = PaymentData();
+    pointifyData = PointifyData();
   }
   Future getListPayment() async {
     try {
@@ -63,7 +66,7 @@ class OrderViewModel extends BaseViewModel {
   void scanMembership(String phone) async {
     try {
       setState(ViewStatus.Loading);
-      memberShipInfo = await accountData.scanCustomer(phone);
+      memberShipInfo = await pointifyData?.scanCustomer(phone);
       setState(ViewStatus.Completed);
       notifyListeners();
     } catch (e) {
@@ -87,7 +90,7 @@ class OrderViewModel extends BaseViewModel {
     Account? userInfo = await getUserInfo();
     TopUpWalletRequest request = TopUpWalletRequest(
         storeId: userInfo!.storeId,
-        userId: memberShipInfo?.id ?? '',
+        userId: memberShipInfo?.membershipId ?? '',
         amount: amount,
         paymentType: topupPaymentType);
     await api.topupMemberWallet(request).then((value) => {
@@ -133,6 +136,7 @@ class OrderViewModel extends BaseViewModel {
     // if (listPayment.isEmpty) {
     paymentCheckingStatus = PaymentStatusEnum.PAID;
     await completeOrder(currentOrder!.orderId ?? '');
+    getListOrder();
     // } else {
     //   qrCodeData = null;
     //   if (currentOrder == null) {

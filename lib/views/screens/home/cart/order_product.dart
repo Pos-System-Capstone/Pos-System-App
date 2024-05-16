@@ -36,8 +36,8 @@ class _OrderProductState extends State<OrderProduct> {
 
         listCategoryTab = model.categories!.map((e) {
           return Tab(
-            height: 48,
-            child: Text(e.name ?? '', style: Get.textTheme.titleLarge),
+            height: 40,
+            child: Text(e.name ?? '', style: Get.textTheme.titleMedium),
           );
         }).toList();
 
@@ -52,8 +52,6 @@ class _OrderProductState extends State<OrderProduct> {
                   indicatorColor: Get.theme.colorScheme.primary,
                   tabs: listCategoryTab,
                   onTap: (value) {
-                    debugPrint("value: $value");
-
                     setState(() {
                       selectCate = model.categories![value];
                       listSubCate =
@@ -63,9 +61,9 @@ class _OrderProductState extends State<OrderProduct> {
                           .getChildCategory(model.categories![value])!
                           .map((e) {
                         return Tab(
-                          height: 48,
+                          height: 40,
                           child: Text(e.name ?? '',
-                              style: Get.textTheme.titleLarge),
+                              style: Get.textTheme.titleMedium),
                         );
                       }).toList();
                     });
@@ -82,7 +80,6 @@ class _OrderProductState extends State<OrderProduct> {
                         indicatorColor: Get.theme.colorScheme.primary,
                         tabs: listSubCategoryTab,
                         onTap: (value) {
-                          debugPrint("value: $value");
                           model.handleChangeFilterProductByCategory(
                               listSubCate![value].id);
                         },
@@ -91,12 +88,12 @@ class _OrderProductState extends State<OrderProduct> {
                   : SizedBox(),
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 4.0),
                 child: GridView.count(
                     scrollDirection: Axis.vertical,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    childAspectRatio: 3,
+                    mainAxisSpacing: 1,
+                    crossAxisSpacing: 1,
+                    childAspectRatio: 2,
                     crossAxisCount: ResponsiveHelper.isDesktop()
                         ? 3
                         : ResponsiveHelper.isTab()
@@ -104,7 +101,7 @@ class _OrderProductState extends State<OrderProduct> {
                             : ResponsiveHelper.isSmallTab()
                                 ? 2
                                 : ResponsiveHelper.isMobile()
-                                    ? 1
+                                    ? 2
                                     : 1,
                     children: [
                       for (int i = 0; i < model.productsFilter!.length; i++)

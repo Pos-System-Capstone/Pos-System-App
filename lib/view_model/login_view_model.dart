@@ -17,15 +17,7 @@ class LoginViewModel extends BaseViewModel {
       showLoadingDialog();
       dao.login(userName, password).then((value) async => {
             userDTO = value,
-            if (userDTO == null)
-              {
-                setState(ViewStatus.Error),
-                hideDialog(),
-                showAlertDialog(
-                    title: "Đăng nhập thất bại",
-                    content: "Vui lòng kiểm tra lại tài khoản và mật khẩu")
-              }
-            else
+            if (userDTO != null)
               {
                 setUserInfo(userDTO!),
                 await Get.find<MenuViewModel>().getMenuOfStore(),

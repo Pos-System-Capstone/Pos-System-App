@@ -219,8 +219,14 @@ class _ProductDialogState extends State<ProductDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(childProducts[i].name!),
-                  Text(formatPrice(childProducts[i].sellingPrice!)),
+                  Text(
+                    childProducts[i].name,
+                    style: Get.textTheme.bodyMedium,
+                  ),
+                  Text(
+                    formatPrice(childProducts[i].sellingPrice),
+                    style: Get.textTheme.bodyMedium,
+                  ),
                 ],
               ),
               value: childProducts[i].menuProductId,
@@ -262,9 +268,14 @@ class _ProductDialogState extends State<ProductDialog> {
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(extraProduct[i].name!),
                           Text(
-                              "+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
+                            extraProduct[i].name,
+                            style: Get.textTheme.bodyMedium,
+                          ),
+                          Text(
+                            "+ ${formatPrice(extraProduct[i].sellingPrice)}",
+                            style: Get.textTheme.bodyMedium,
+                          ),
                         ],
                       ),
 

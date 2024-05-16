@@ -45,10 +45,10 @@ class _PormotionDialogState extends State<PormotionDialog> {
                   icon: Icon(Icons.discount),
                   text: "Khuyến mãi",
                 ),
-                Tab(
-                  icon: Icon(Icons.wallet_membership),
-                  text: "Thành viên",
-                ),
+                // Tab(
+                //   icon: Icon(Icons.wallet_membership),
+                //   text: "Thành viên",
+                // ),
                 Tab(
                   icon: Icon(Icons.payment),
                   text: "Thanh toán",
@@ -58,7 +58,7 @@ class _PormotionDialogState extends State<PormotionDialog> {
             body: TabBarView(
               children: [
                 PromotionSelectWidget(),
-                MembershipWidget(),
+                // MembershipWidget(),
                 ScopedModel<OrderViewModel>(
                   model: orderViewModel,
                   child: ScopedModelDescendant<OrderViewModel>(

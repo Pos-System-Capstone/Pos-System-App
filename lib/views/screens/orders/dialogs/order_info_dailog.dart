@@ -83,7 +83,7 @@ void orderInfoDialog(String orderId) {
             );
           }
           return Container(
-              width: Get.size.width * 0.6,
+              width: Get.size.width * 0.8,
               height: Get.size.height * 0.8,
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(

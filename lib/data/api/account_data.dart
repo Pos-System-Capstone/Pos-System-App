@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pos_apps/util/request.dart';
+import 'package:pos_apps/util/request_pointify.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import '../model/customer.dart';
 import '../model/index.dart';
@@ -34,7 +35,7 @@ class AccountData {
 
   Future<bool> isUserLoggedIn() async {
     bool isTokenExpired = await expireToken();
-    String token = await getToken();
+    var token = await getToken();
     if (isTokenExpired) {
       setToken("", "");
       return false;
@@ -43,22 +44,5 @@ class AccountData {
       requestObj.setToken = token;
     }
     return token.isNotEmpty;
-  }
-
-  Future<CustomerInfoModel?> scanCustomer(String phone) async {
-    Account? userInfo = await getUserInfo();
-    final response = await request.get(
-        "stores/${userInfo?.storeId ?? ""}/scan-user",
-        queryParameters: {"phone": phone});
-
-    if (response.statusCode == 200) {
-      final customer = response.data;
-
-      CustomerInfoModel customerInfoModel =
-          CustomerInfoModel.fromJson(customer);
-      return customerInfoModel;
-    } else {
-      return null;
-    }
   }
 }

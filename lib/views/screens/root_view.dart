@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/util/share_pref.dart';
 
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/cart_screen.dart';
@@ -108,8 +109,11 @@ class _RootScreenState extends State<RootScreen> {
   }
 
   startCountdown() {
-    _timer = Timer.periodic(Duration(seconds: 20), (timer) {
-      Get.find<OrderViewModel>().findNewUserOrder();
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) async {
+      getScanUserOrder().then((value) => {
+            if (value != null && value)
+              {Get.find<OrderViewModel>().findNewUserOrder()}
+          });
     });
   }
 
