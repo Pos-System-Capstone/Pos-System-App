@@ -25,9 +25,16 @@ class PointifyData {
   }
 
   Future<CustomerInfoModel?> scanCustomer(String phone) async {
+    String modifilePhone = phone;
+    if (phone.startsWith("0")) {
+      modifilePhone = phone.replaceFirst('0', "+84");
+    }
     Account? userInfo = await getUserInfo();
     final response = await requestPointify.get("stores/scan-membership",
-        queryParameters: {"code": phone, "apiKey": userInfo?.brandId ?? ''});
+        queryParameters: {
+          "code": modifilePhone,
+          "apiKey": userInfo?.brandId ?? ''
+        });
     if (response.statusCode == 400) {
       showAlertDialog(
           title: "Lỗi", content: "không tìm thấy thông tin thành viên");

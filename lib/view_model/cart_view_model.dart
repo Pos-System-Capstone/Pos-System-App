@@ -155,21 +155,37 @@ class CartViewModel extends BaseViewModel {
 
   Future<void> selectVoucher(String code) async {
     String? phoneNumber;
-    if (code.contains('_')) {
-      List<String> parts = code.split("_");
-      if (parts.length > 2) {
-        phoneNumber = parts[0];
-        cart.promotionCode = parts[1];
-        cart.voucherCode = parts[2];
+    if ((code.startsWith("+84") || code.startsWith("0"))) {
+      if (code.contains('_')) {
+        List<String> parts = code.split("_");
+        if (parts.length > 2) {
+          phoneNumber = parts[0];
+          cart.promotionCode = parts[1];
+          cart.voucherCode = parts[2];
+        } else {
+          phoneNumber = parts[0];
+          cart.promotionCode = parts[1];
+          cart.voucherCode = null;
+        }
       } else {
-        phoneNumber = parts[0];
-        cart.promotionCode = parts[1];
-        cart.voucherCode = null;
+        phoneNumber = code;
       }
     } else {
-      phoneNumber = code;
+      if (code.contains('_')) {
+        List<String> parts = code.split("_");
+        if (parts.length > 1) {
+          cart.promotionCode = parts[0];
+          cart.voucherCode = parts[1];
+        } else {
+          cart.promotionCode = parts[0];
+        }
+      } else {
+        cart.promotionCode = code;
+      }
     }
-    await scanCustomer(phoneNumber);
+    if (phoneNumber != null) {
+      await scanCustomer(phoneNumber);
+    }
     await prepareOrder();
     notifyListeners();
   }
