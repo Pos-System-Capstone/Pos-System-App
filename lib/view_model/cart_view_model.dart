@@ -50,9 +50,9 @@ class CartViewModel extends BaseViewModel {
   Future scanCustomer(String phone) async {
     try {
       setState(ViewStatus.Loading);
-      customer = await pointifyData.scanCustomer(phone);
-      await prepareOrder();
-      notifyListeners();
+      pointifyData.scanCustomer(phone).then((value) => {
+            if (value != null) {customer = value}
+          });
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
@@ -154,40 +154,28 @@ class CartViewModel extends BaseViewModel {
   }
 
   Future<void> selectVoucher(String code) async {
+    setState(ViewStatus.Loading);
     String? phoneNumber;
-    if ((code.startsWith("+84") || code.startsWith("0"))) {
-      if (code.contains('_')) {
-        List<String> parts = code.split("_");
-        if (parts.length > 2) {
-          phoneNumber = parts[0];
-          cart.promotionCode = parts[1];
-          cart.voucherCode = parts[2];
-        } else {
-          phoneNumber = parts[0];
-          cart.promotionCode = parts[1];
-          cart.voucherCode = null;
-        }
-      } else {
-        phoneNumber = code;
+    if (code.contains('_')) {
+      List<String> parts = code.split("_");
+      if (parts.length == 3) {
+        phoneNumber = parts[0];
+        cart.promotionCode = parts[1];
+        cart.voucherCode = parts[2];
+      } else if (parts.length == 2) {
+        phoneNumber = parts[0];
+        cart.promotionCode = parts[1];
       }
     } else {
-      if (code.contains('_')) {
-        List<String> parts = code.split("_");
-        if (parts.length > 1) {
-          cart.promotionCode = parts[0];
-          cart.voucherCode = parts[1];
-        } else {
-          cart.promotionCode = parts[0];
-        }
-      } else {
-        cart.promotionCode = code;
-      }
+      phoneNumber = code;
     }
-    if (phoneNumber != null) {
-      await scanCustomer(phoneNumber);
+    if (phoneNumber != null && phoneNumber.isNotEmpty) {
+      await pointifyData.scanCustomer(phoneNumber).then((value) => {
+            if (value != null) {customer = value}
+          });
     }
     await prepareOrder();
-    notifyListeners();
+    setState(ViewStatus.Completed);
   }
 
   List<PaymentProvider?> getListPayment() {
@@ -218,7 +206,8 @@ class CartViewModel extends BaseViewModel {
     cart.discountAmount = 0;
     cart.bonusPoint = 0;
     cart.customerId = customer?.membershipId;
-    cart.customerName = customer?.fullName;
+    // cart.customerName = customer?.fullName;
+    // cart.customerPhone = customer?.phoneNumber;
     cart.finalAmount = cart.totalAmount;
     for (var element in cart.productList!) {
       element.discount = 0;

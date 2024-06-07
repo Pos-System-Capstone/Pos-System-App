@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
+import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/membership/topup_dialog.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
@@ -153,8 +154,16 @@ class _MembershipScreenState extends State<MembershipScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Email"),
-                Text(model.memberShipInfo?.email ?? '')
+                Text("Số đư"),
+                Text(formatPrice(model.memberShipInfo?.balance ?? 0))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Điểm"),
+                Text(formatPrice(model.memberShipInfo?.point ?? 0))
               ],
             ),
             SizedBox(
@@ -228,10 +237,10 @@ class _MembershipScreenState extends State<MembershipScreen> {
                 ),
                 OutlinedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                             model.topupPaymentType == PaymentTypeEnums.BANKING
-                                ? Get.theme.colorScheme.surfaceVariant
-                                : Get.theme.colorScheme.background)),
+                                ? Get.theme.colorScheme.surfaceContainerHighest
+                                : Get.theme.colorScheme.surface)),
                     onPressed: () {
                       model.setTopUpType(PaymentTypeEnums.BANKING);
                     },

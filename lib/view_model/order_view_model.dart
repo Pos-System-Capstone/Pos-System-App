@@ -57,7 +57,7 @@ class OrderViewModel extends BaseViewModel {
   String getPaymentName(String paymentType) {
     for (var item in listPayment) {
       if (item!.type == paymentType) {
-        return item.name!;
+        return item.name;
       }
     }
     return "Tiền mặt";
@@ -70,7 +70,6 @@ class OrderViewModel extends BaseViewModel {
       setState(ViewStatus.Completed);
       notifyListeners();
     } catch (e) {
-      setState(ViewStatus.Error, e.toString());
       setState(ViewStatus.Completed);
     }
   }
@@ -99,13 +98,18 @@ class OrderViewModel extends BaseViewModel {
           else
             {
               showAlertDialog(
-                  title: value.status == "PAID" ? "Thành công" : "Thất bại",
+                  title: value.status == "SUCCESS" ? "Thành công" : "Thất bại",
                   content: value.message ?? '')
             }
         });
   }
 
   void selectPayment(PaymentProvider payment) {
+    if (payment.type == PaymentTypeEnums.POINTIFY &&
+        currentOrder?.customerInfo == null) {
+      showAlertDialog(
+          title: "Thông báo", content: "Phương thức thanh toán không hợp lệ");
+    }
     selectedPaymentMethod = payment;
     currentPaymentStatusMessage = "Vui lòng tiến hành thanh toán";
     notifyListeners();
@@ -133,37 +137,9 @@ class OrderViewModel extends BaseViewModel {
   }
 
   void makePayment(PaymentProvider payment) async {
-    // if (listPayment.isEmpty) {
     paymentCheckingStatus = PaymentStatusEnum.PAID;
     await completeOrder(currentOrder!.orderId ?? '');
     getListOrder();
-    // } else {
-    //   qrCodeData = null;
-    //   if (currentOrder == null) {
-    //     showAlertDialog(
-    //         title: "Lỗi đơn hàng", content: "Không tìm thấy đơn hàng");
-
-    //     return;
-    //   }
-    //   MakePaymentResponse makePaymentResponse =
-    //       await api.makePayment(currentOrder!, payment.id ?? '');
-    //   if (makePaymentResponse.displayType == "Url") {
-    //     currentPaymentStatusMessage =
-    //         makePaymentResponse.message ?? "Đợi thanh toán";
-    //     // qrCodeData = payment.type != "VNPAY" ? makePaymentResponse.url : null;
-    //     await launchInBrowser(makePaymentResponse.url ?? '');
-    //   } else if (makePaymentResponse.displayType == "Qr") {
-    //     currentPaymentStatusMessage =
-    //         makePaymentResponse.message ?? "Đợi thanh toán";
-    //     qrCodeData = makePaymentResponse.url;
-    //     await launchQrCode(makePaymentResponse.url ?? '');
-    //   } else {
-    //     currentPaymentStatusMessage =
-    //         makePaymentResponse.message ?? "Đợi thanh toán";
-    //   }
-    //   checkPaymentStatus(currentOrder!.orderId ?? '');
-    //   notifyListeners();
-    // }
   }
 
   void getListOrder(
@@ -266,29 +242,28 @@ class OrderViewModel extends BaseViewModel {
             content: "Đơn hàng thanh toán thành công");
         Duration(seconds: 2);
         chooseTableDialog();
+      } else if (currentOrder?.customerInfo == null) {
+        await showAlertDialog(
+            title: "Lỗi thanh toán",
+            content: "Đơn hàng không có thông tin thành viên");
       } else {
-        String? code = await scanPointifyWallet();
-        if (code != null) {
-          MakePaymentResponse? makePaymentResponse =
-              await api.makePayment(orderId, code, selectedPaymentMethod?.type);
-          if (makePaymentResponse?.status == "FAIL") {
-            await showAlertDialog(
-                title: "Lỗi thanh toán",
-                content: makePaymentResponse?.message ?? '');
-          } else if (makePaymentResponse?.status == "SUCCESS") {
-            await api.updateOrder(userInfo!.storeId, orderId,
-                OrderStatusEnum.PAID, makePaymentResponse?.paymentType);
-            Get.find<PrinterViewModel>().printBill(
-                currentOrder!, selectedPaymentMethod!.name ?? "Tiền mặt");
-            clearOrder();
-            await showAlertDialog(
-                title: "Thanh toán thành công",
-                content: "Đơn hàng thanh toán thành công");
-            Duration(seconds: 2);
-            chooseTableDialog();
-          }
-        } else {
-          return;
+        MakePaymentResponse? makePaymentResponse =
+            await api.makePayment(orderId, selectedPaymentMethod?.type);
+        if (makePaymentResponse?.status == "FAIL") {
+          await showAlertDialog(
+              title: "Lỗi thanh toán",
+              content: makePaymentResponse?.message ?? '');
+        } else if (makePaymentResponse?.status == "SUCCESS") {
+          await api.updateOrder(userInfo!.storeId, orderId,
+              OrderStatusEnum.PAID, makePaymentResponse?.paymentType);
+          Get.find<PrinterViewModel>().printBill(
+              currentOrder!, selectedPaymentMethod!.name ?? "Tiền mặt");
+          clearOrder();
+          await showAlertDialog(
+              title: "Thanh toán thành công",
+              content: "Đơn hàng thanh toán thành công");
+          Duration(seconds: 2);
+          chooseTableDialog();
         }
       }
     } else {

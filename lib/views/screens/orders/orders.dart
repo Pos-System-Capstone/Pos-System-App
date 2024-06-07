@@ -472,26 +472,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                     order.customerName != null
-                        ? "KH: ${order.customerName} , ${order.phone?.replaceFirst("+84", "0")} "
+                        ? "KH: ${order.customerName}"
                         : "",
-                    style: Get.textTheme.titleSmall),
+                    style: Get.textTheme.bodyMedium),
                 Text(
-                    order.customerName != null
-                        ? showPaymentStatusEnum(
-                            order.paymentStatus ?? '',
-                          )
+                    order.phone != null
+                        ? " | SDT:${order.phone?.replaceFirst("+84", "0")}"
                         : "",
-                    style: Get.textTheme.titleSmall?.copyWith(
-                        color: order.paymentStatus == PaymentStatusEnum.PENDING
-                            ? Get.theme.colorScheme.primary
-                            : order.paymentStatus == PaymentStatusEnum.PAID
-                                ? Colors.teal
-                                : Colors.redAccent)),
+                    style: Get.textTheme.bodyMedium),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(order.deliTime != null ? "TG giao: ${order.deliTime}" : "",
+                    style: Get.textTheme.bodyMedium),
+                Text(
+                    order.address != null ? " | Địa chỉ: ${order.address}" : "",
+                    style: Get.textTheme.bodyMedium),
               ],
             ),
           ],

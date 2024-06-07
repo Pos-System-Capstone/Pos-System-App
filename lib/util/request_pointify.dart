@@ -112,8 +112,7 @@ class RequestPointify {
       onError: (e, handler) async {
         if (e.response?.statusCode == 400) {
           await showAlertDialog(
-              title: "Lỗi",
-              content: e.response?.data["Error"].toString() ?? 'Có lỗi xãy ra');
+              title: "Lỗi", content: e.response?.data["description"]);
         } else if (e.response?.statusCode == 500) {
           showAlertDialog(
             title: "Lỗi hệ thống",
@@ -127,7 +126,10 @@ class RequestPointify {
           );
           Get.offAllNamed(RouteHandler.LOGIN);
         } else {
-          showAlertDialog(title: "Lỗi", content: e.response.toString());
+          showAlertDialog(
+              title: "Lỗi",
+              content: e.response?.data["description"].toString() ??
+                  'Lỗi không rõ nguyên nhân');
         }
         handler.next(e);
       },

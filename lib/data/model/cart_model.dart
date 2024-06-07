@@ -13,6 +13,7 @@ class CartModel {
   List<PromotionList>? promotionList;
   String? customerId;
   String? customerName;
+  String? customerPhone;
   String? deliveryAddress;
   String? message;
   num? customerNumber;
@@ -33,6 +34,7 @@ class CartModel {
       this.promotionList,
       this.customerId,
       this.customerName,
+      this.customerPhone,
       this.deliveryAddress,
       this.message,
       this.customerNumber,
@@ -63,6 +65,7 @@ class CartModel {
     }
     customerId = json['customerId'];
     customerName = json['customerName'];
+    customerPhone = json['customerPhone'];
     deliveryAddress = json['deliveryAddress'];
     message = json['message'];
     customerNumber = json['customerNumber'];
@@ -89,6 +92,7 @@ class CartModel {
     }
     data['customerId'] = customerId;
     data['customerName'] = customerName;
+    data['customerPhone'] = customerPhone;
     data['deliveryAddress'] = deliveryAddress;
     data['message'] = message;
     data['customerNumber'] = customerNumber;

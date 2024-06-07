@@ -465,6 +465,23 @@ class _BillScreenState extends State<BillScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
+                'Nhận món lúc',
+                style: Get.textTheme.bodyMedium,
+              ),
+              Text(
+                info.deliTime ?? "",
+                style: Get.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
                 'Địa chỉ giao',
                 style: Get.textTheme.bodyMedium,
               ),

@@ -88,7 +88,7 @@ String showPaymentStatusEnum(String status) {
     case PaymentStatusEnum.PAID:
       return 'Đã thanh toán';
     default:
-      return 'Không có thông tin';
+      return '';
   }
 }
 

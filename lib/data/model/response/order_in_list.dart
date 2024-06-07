@@ -12,6 +12,7 @@ class OrderInList {
   String? customerName;
   String? phone;
   String? address;
+  String? deliTime;
   String? storeName;
 
   OrderInList(
@@ -28,6 +29,7 @@ class OrderInList {
       this.customerName,
       this.phone,
       this.address,
+      this.deliTime,
       this.storeName});
 
   OrderInList.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class OrderInList {
     customerName = json['customerName'];
     phone = json['phone'];
     address = json['address'];
+    deliTime = json['deliTime'];
     storeName = json['storeName'];
   }
 
@@ -62,6 +65,7 @@ class OrderInList {
     data['customerName'] = customerName;
     data['phone'] = phone;
     data['address'] = address;
+    data['deliTime'] = deliTime;
     data['storeName'] = storeName;
     return data;
   }

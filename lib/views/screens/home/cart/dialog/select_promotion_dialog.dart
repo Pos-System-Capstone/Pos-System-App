@@ -37,7 +37,7 @@ class _PormotionDialogState extends State<PormotionDialog> {
       elevation: 0,
       child: DefaultTabController(
           initialIndex: 0,
-          length: 3,
+          length: 2,
           child: Scaffold(
             appBar: TabBar(
               tabs: const [
@@ -46,75 +46,65 @@ class _PormotionDialogState extends State<PormotionDialog> {
                   text: "Khuyến mãi",
                 ),
                 // Tab(
-                //   icon: Icon(Icons.wallet_membership),
-                //   text: "Thành viên",
+                //   icon: Icon(Icons.payment),
+                //   text: "Thanh toán",
                 // ),
-                Tab(
-                  icon: Icon(Icons.payment),
-                  text: "Thanh toán",
-                ),
               ],
             ),
             body: TabBarView(
               children: [
                 PromotionSelectWidget(),
                 // MembershipWidget(),
-                ScopedModel<OrderViewModel>(
-                  model: orderViewModel,
-                  child: ScopedModelDescendant<OrderViewModel>(
-                      builder: (context, build, model) {
-                    return SingleChildScrollView(
-                      child: Center(
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          alignment: WrapAlignment.center,
-                          children: model.listPayment
-                              .map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: InkWell(
-                                    onTap: () async {
-                                      // if (e.type == PaymentTypeEnums.CASH) {
-                                      //   num money = await inputMonneyDialog();
-                                      //   model.setCustomerMoney(money);
-                                      // } else {
-                                      //   model.setCustomerMoney(0);
-                                      // }
-                                      model.selectPayment(e);
-                                    },
-                                    child: Card(
-                                      color: model.selectedPaymentMethod == e
-                                          ? Get.theme.colorScheme
-                                              .primaryContainer
-                                          : Get.theme.colorScheme.background,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Image.network(
-                                              e!.picUrl!,
-                                              width: 80,
-                                              height: 80,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(4),
-                                              child: Text(
-                                                e.name!,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
+                // ScopedModel<OrderViewModel>(
+                //   model: orderViewModel,
+                //   child: ScopedModelDescendant<OrderViewModel>(
+                //       builder: (context, build, model) {
+                //     return SingleChildScrollView(
+                //       child: Center(
+                //         child: Wrap(
+                //           crossAxisAlignment: WrapCrossAlignment.center,
+                //           alignment: WrapAlignment.center,
+                //           children: model.listPayment
+                //               .map(
+                //                 (e) => Padding(
+                //                   padding: const EdgeInsets.all(16),
+                //                   child: InkWell(
+                //                     onTap: () async {
+                //                       model.selectPayment(e);
+                //                     },
+                //                     child: Card(
+                //                       color: model.selectedPaymentMethod == e
+                //                           ? Get.theme.colorScheme
+                //                               .primaryContainer
+                //                           : Get.theme.colorScheme.background,
+                //                       child: Padding(
+                //                         padding: const EdgeInsets.all(8.0),
+                //                         child: Column(
+                //                           children: [
+                //                             Image.network(
+                //                               e!.picUrl!,
+                //                               width: 80,
+                //                               height: 80,
+                //                             ),
+                //                             Padding(
+                //                               padding: const EdgeInsets.all(4),
+                //                               child: Text(
+                //                                 e.name!,
+                //                               ),
+                //                             ),
+                //                           ],
+                //                         ),
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               )
+                //               .toList(),
+                //         ),
+                //       ),
+                //     );
+                //   }),
+                // ),
               ],
             ),
             bottomNavigationBar: Padding(
@@ -122,15 +112,6 @@ class _PormotionDialogState extends State<PormotionDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  FilledButton(
-                      onPressed: () async {
-                        await Get.find<CartViewModel>().prepareOrder();
-                        hideDialog();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text("Kiểm tra"),
-                      )),
                   OutlinedButton(
                     onPressed: () {
                       hideDialog();
