@@ -1,6 +1,4 @@
-import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/request_pointify.dart';
-import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 
 import '../../../util/share_pref.dart';
 import '../../model/account.dart';

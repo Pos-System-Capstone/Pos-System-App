@@ -3,11 +3,8 @@ import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/views/screens/membership/topup_dialog.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
-
-import '../../../enums/view_status.dart';
 
 class MembershipScreen extends StatefulWidget {
   const MembershipScreen({super.key});
@@ -49,10 +46,10 @@ class _MembershipScreenState extends State<MembershipScreen> {
                           filled: true,
                           isDense: true,
                           labelStyle: Get.textTheme.labelLarge,
-                          fillColor: Get.theme.colorScheme.background,
+                          fillColor: Get.theme.colorScheme.surface,
                           prefixIcon: Icon(
                             Icons.portrait_rounded,
-                            color: Get.theme.colorScheme.onBackground,
+                            color: Get.theme.colorScheme.onSurface,
                           ),
                           suffixIcon: IconButton(
                               onPressed: () {
@@ -184,10 +181,10 @@ class _MembershipScreenState extends State<MembershipScreen> {
                       filled: true,
                       isDense: true,
                       labelStyle: Get.textTheme.labelLarge,
-                      fillColor: Get.theme.colorScheme.background,
+                      fillColor: Get.theme.colorScheme.surface,
                       prefixIcon: Icon(
                         Icons.portrait_rounded,
-                        color: Get.theme.colorScheme.onBackground,
+                        color: Get.theme.colorScheme.onSurface,
                       ),
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -224,10 +221,10 @@ class _MembershipScreenState extends State<MembershipScreen> {
                 ),
                 OutlinedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                             model.topupPaymentType == PaymentTypeEnums.CASH
-                                ? Get.theme.colorScheme.surfaceVariant
-                                : Get.theme.colorScheme.background)),
+                                ? Get.theme.colorScheme.surfaceContainerHighest
+                                : Get.theme.colorScheme.surface)),
                     onPressed: () {
                       model.setTopUpType(PaymentTypeEnums.CASH);
                     },

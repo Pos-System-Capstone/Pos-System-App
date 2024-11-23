@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/api/index.dart';
 import 'package:pos_apps/data/api/pointify/pointify_data.dart';
@@ -202,7 +201,7 @@ class CartViewModel extends BaseViewModel {
   }
 
   Future<void> prepareOrder() async {
-    cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type!;
+    cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type;
     cart.discountAmount = 0;
     cart.bonusPoint = 0;
     cart.customerId = customer?.membershipId;

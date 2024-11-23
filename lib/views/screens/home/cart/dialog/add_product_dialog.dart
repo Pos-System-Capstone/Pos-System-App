@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/data/model/product_attribute.dart';
 import 'package:pos_apps/enums/product_enum.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/menu_view_model.dart';
@@ -33,11 +32,11 @@ class _ProductDialogState extends State<ProductDialog> {
     super.initState();
     productViewModel.addProductToCartItem(widget.product);
     extraCategory = menuViewModel
-        .getExtraCategoryByNormalProduct(widget.product.menuProductId!)!;
+        .getExtraCategoryByNormalProduct(widget.product.menuProductId)!;
 
     if (widget.product.type == ProductTypeEnum.PARENT) {
       childProducts =
-          menuViewModel.getChildProductByParentProduct(widget.product.id!)!;
+          menuViewModel.getChildProductByParentProduct(widget.product.id)!;
       if (childProducts.isNotEmpty) {
         selectedSize = childProducts[0].menuProductId;
       }
@@ -183,8 +182,8 @@ class _ProductDialogState extends State<ProductDialog> {
                                       "Thêm ${formatPrice(model.productInCart.finalAmount!)}",
                                       style: Get.textTheme.titleMedium
                                           ?.copyWith(
-                                              color: Get.theme.colorScheme
-                                                  .background)),
+                                              color: Get
+                                                  .theme.colorScheme.surface)),
                                 )),
                           ),
                         ],
@@ -447,7 +446,7 @@ class _ProductDialogState extends State<ProductDialog> {
                       .split("_")
                       .map((option) => TextButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
+                            backgroundColor: WidgetStateProperty.all<Color>(
                                 option == selectedAttributes[i].value
                                     ? Get.theme.colorScheme.primaryContainer
                                     : Colors.transparent),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
@@ -66,10 +64,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       children: [
                         TextButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    isToday
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
+                                backgroundColor: WidgetStateProperty.all(isToday
+                                    ? Get.theme.colorScheme
+                                        .surfaceContainerHighest
+                                    : Get.theme.colorScheme.surface)),
                             onPressed: () => {
                                   setState(() {
                                     isToday = true;
@@ -85,10 +83,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             child: Text("Hôm nay")),
                         TextButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                     isYesterday
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
+                                        ? Get.theme.colorScheme
+                                            .surfaceContainerHighest
+                                        : Get.theme.colorScheme.surface)),
                             onPressed: () => {
                                   setState(() {
                                     isToday = false;
@@ -102,10 +101,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             child: Text("Hôm qua")),
                         TextButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                     payment == PaymentTypeEnums.CASH
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
+                                        ? Get.theme.colorScheme
+                                            .surfaceContainerHighest
+                                        : Get.theme.colorScheme.surface)),
                             onPressed: () => {
                                   setState(() {
                                     payment = PaymentTypeEnums.CASH;
@@ -121,10 +121,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             child: Text("Tiền mặt")),
                         TextButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                     payment == PaymentTypeEnums.BANKING
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
+                                        ? Get.theme.colorScheme
+                                            .surfaceContainerHighest
+                                        : Get.theme.colorScheme.surface)),
                             onPressed: () => {
                                   setState(() {
                                     payment = PaymentTypeEnums.BANKING;
@@ -140,10 +141,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             child: Text("Ngân hàng")),
                         TextButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                     payment == PaymentTypeEnums.MOMO
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
+                                        ? Get.theme.colorScheme
+                                            .surfaceContainerHighest
+                                        : Get.theme.colorScheme.surface)),
                             onPressed: () => {
                                   setState(() {
                                     payment = PaymentTypeEnums.MOMO;
@@ -159,10 +161,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             child: Text("MOMO")),
                         TextButton(
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
+                                backgroundColor: WidgetStateProperty.all(
                                     payment == PaymentTypeEnums.POINTIFY
-                                        ? Get.theme.colorScheme.surfaceVariant
-                                        : Get.theme.colorScheme.background)),
+                                        ? Get.theme.colorScheme
+                                            .surfaceContainerHighest
+                                        : Get.theme.colorScheme.surface)),
                             onPressed: () => {
                                   setState(() {
                                     payment = PaymentTypeEnums.POINTIFY;
@@ -188,10 +191,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 filled: true,
                                 isDense: true,
                                 labelStyle: Get.textTheme.labelLarge,
-                                fillColor: Get.theme.colorScheme.background,
+                                fillColor: Get.theme.colorScheme.surface,
                                 prefixIcon: Icon(
                                   Icons.portrait_rounded,
-                                  color: Get.theme.colorScheme.onBackground,
+                                  color: Get.theme.colorScheme.onSurface,
                                 ),
                                 suffixIcon: IconButton(
                                     onPressed: () => {
@@ -313,10 +316,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           padding: const EdgeInsets.only(left: 8),
                           child: OutlinedButton(
                               style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
+                                  backgroundColor: WidgetStateProperty.all(
                                       page == i
-                                          ? Get.theme.colorScheme.surfaceVariant
-                                          : Get.theme.colorScheme.background)),
+                                          ? Get.theme.colorScheme
+                                              .surfaceContainerHighest
+                                          : Get.theme.colorScheme.surface)),
                               onPressed: () => {
                                     setState(() {
                                       page = i;
@@ -330,10 +334,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         ),
                       TextButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                   status == OrderStatusEnum.PAID
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
+                                      ? Get.theme.colorScheme
+                                          .surfaceContainerHighest
+                                      : Get.theme.colorScheme.surface)),
                           onPressed: () => {
                                 setState(() {
                                   status = OrderStatusEnum.PAID;
@@ -349,10 +354,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   ?.copyWith(color: Colors.teal))),
                       TextButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                   status == OrderStatusEnum.PENDING
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
+                                      ? Get.theme.colorScheme
+                                          .surfaceContainerHighest
+                                      : Get.theme.colorScheme.surface)),
                           onPressed: () => {
                                 setState(() {
                                   status = OrderStatusEnum.PENDING;
@@ -368,10 +374,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   ?.copyWith(color: Colors.orange))),
                       TextButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                   status == OrderStatusEnum.NEW
-                                      ? Get.theme.colorScheme.surfaceVariant
-                                      : Get.theme.colorScheme.background)),
+                                      ? Get.theme.colorScheme
+                                          .surfaceContainerHighest
+                                      : Get.theme.colorScheme.surface)),
                           onPressed: () => {
                                 setState(() {
                                   status = OrderStatusEnum.NEW;
@@ -431,7 +438,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       child: Container(
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Get.theme.colorScheme.surfaceVariant,
+          color: Get.theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.all(
             Radius.circular(12),
           ),

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart' hide Image;
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
-import 'package:pos_apps/routes/routes_constraints.dart';
-import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/settings/promotion_setting_bottom_sheet.dart';
 import 'package:scoped_model/scoped_model.dart';

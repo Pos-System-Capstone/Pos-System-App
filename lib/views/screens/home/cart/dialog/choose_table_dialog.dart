@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_deli_type_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../../view_model/index.dart';
-import '../../../../widgets/other_dialogs/dialog.dart';
 
 void chooseTableDialog() {
   Get.dialog(Dialog(
@@ -47,7 +46,7 @@ void chooseTableDialog() {
                             child: Card(
                               color: model.cart.customerNumber == i
                                   ? Get.theme.colorScheme.primaryContainer
-                                  : Get.theme.colorScheme.background,
+                                  : Get.theme.colorScheme.surface,
                               child: SizedBox(
                                 width: 100,
                                 height: 110,

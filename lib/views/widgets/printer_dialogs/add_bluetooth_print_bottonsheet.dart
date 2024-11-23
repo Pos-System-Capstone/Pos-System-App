@@ -154,9 +154,9 @@ class _ScanBluetoohPrinterState extends State<ScanBluetoohPrinter> {
       await PrintBluetoothThermal.writeString(
           printText: PrintTextSize(size: 1, text: text));
       await PrintBluetoothThermal.writeString(
-          printText: PrintTextSize(size: 2, text: text + " size 2"));
+          printText: PrintTextSize(size: 2, text: "$text size 2"));
       await PrintBluetoothThermal.writeString(
-          printText: PrintTextSize(size: 3, text: text + " size 3"));
+          printText: PrintTextSize(size: 3, text: "$text size 3"));
     } else {
       //desconectado
       print("desconectado bluetooth $conexionStatus");
@@ -296,7 +296,7 @@ class _ScanBluetoohPrinterState extends State<ScanBluetoohPrinter> {
     //impresion sin paquete solo de PrintBluetoothTermal
     bool connectionStatus = await PrintBluetoothThermal.connectionStatus;
     if (connectionStatus) {
-      String text = _txtText.text.toString() + "\n";
+      String text = "${_txtText.text}\n";
       bool result = await PrintBluetoothThermal.writeString(
           printText: PrintTextSize(size: int.parse(_selectSize), text: text));
       print("status print result: $result");
@@ -433,7 +433,7 @@ class _ScanBluetoohPrinterState extends State<ScanBluetoohPrinter> {
                       color: Colors.grey.withOpacity(0.3),
                     ),
                     child: ListView.builder(
-                      itemCount: items.length > 0 ? items.length : 0,
+                      itemCount: items.isNotEmpty ? items.length : 0,
                       itemBuilder: (context, index) {
                         return ListTile(
                           onTap: () {
@@ -476,7 +476,7 @@ class _ScanBluetoohPrinterState extends State<ScanBluetoohPrinter> {
                               .map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: new Text(value),
+                              child: Text(value),
                             );
                           }).toList(),
                           onChanged: (String? select) {

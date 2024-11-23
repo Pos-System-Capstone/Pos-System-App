@@ -5,7 +5,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../../view_model/index.dart';
 
 class StartUpView extends StatelessWidget {
-  const StartUpView({Key? key}) : super(key: key);
+  const StartUpView({super.key});
 
   @override
   Widget build(BuildContext context) {

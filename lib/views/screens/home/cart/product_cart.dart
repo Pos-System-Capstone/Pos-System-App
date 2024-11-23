@@ -75,14 +75,14 @@ Widget extraCart(Product extra) {
             children: [
               Expanded(
                 child: Text(
-                  extra.name!,
+                  extra.name,
                   style: Get.theme.textTheme.bodyMedium,
                 ),
               ),
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
-                  formatPrice(extra.sellingPrice!),
+                  formatPrice(extra.sellingPrice),
                   style: Get.theme.textTheme.bodySmall,
                 ),
               ),

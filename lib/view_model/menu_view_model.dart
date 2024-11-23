@@ -1,24 +1,16 @@
 import 'package:get/get.dart';
-import 'package:pos_apps/data/api/promotion_data.dart';
 import 'package:pos_apps/data/api/store_data.dart';
-import 'package:pos_apps/data/model/cart_model.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/promotion.dart';
-import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/view_model/printer_view_model.dart';
 import '../data/api/index.dart';
 import '../data/api/report_data.dart';
 import '../data/api/session_data.dart';
 import '../data/model/response/sessions.dart';
-import '../enums/order_enum.dart';
 import '../enums/product_enum.dart';
 import '../enums/view_status.dart';
-import '../util/share_pref.dart';
-import '../views/widgets/other_dialogs/dialog.dart';
-import '../views/widgets/printer_dialogs/add_printer_dialog.dart';
 
 class MenuViewModel extends BaseViewModel {
   late Menu? currentMenu;

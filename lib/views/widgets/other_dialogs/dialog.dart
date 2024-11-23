@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_detail_report.dart';
-import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/util/format.dart';
-import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/report_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -26,7 +24,7 @@ Future<bool> showAlertDialog(
       width: Get.size.width * 0.3,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
@@ -47,7 +45,7 @@ Future<bool> showAlertDialog(
             style: Get.textTheme.titleLarge,
           ),
           Divider(
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -92,7 +90,7 @@ Future<bool> showConfirmDialog(
       width: Get.size.width * 0.5,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
@@ -113,7 +111,7 @@ Future<bool> showConfirmDialog(
             style: Get.textTheme.titleLarge,
           ),
           Divider(
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -142,7 +140,7 @@ Future<bool> showConfirmDialog(
                 child: Text(
                   confirmText,
                   style: Get.textTheme.titleMedium!.copyWith(
-                    color: Get.theme.colorScheme.background,
+                    color: Get.theme.colorScheme.surface,
                   ),
                 ),
               ),
@@ -164,7 +162,7 @@ showLoadingDialog() {
       width: Get.size.width * 0.3,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
@@ -218,7 +216,7 @@ void sessionDetailsDialog(Session session) {
             height: Get.size.height * 0.8,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Get.theme.colorScheme.background,
+              color: Get.theme.colorScheme.surface,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
@@ -251,7 +249,7 @@ void sessionDetailsDialog(Session session) {
             height: Get.size.height * 0.8,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Get.theme.colorScheme.background,
+              color: Get.theme.colorScheme.surface,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
@@ -278,7 +276,7 @@ void sessionDetailsDialog(Session session) {
         return Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Get.theme.colorScheme.background,
+            color: Get.theme.colorScheme.surface,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
@@ -317,7 +315,7 @@ void sessionDetailsDialog(Session session) {
                       },
                       icon: Icon(
                         Icons.close,
-                        color: Get.theme.colorScheme.onBackground,
+                        color: Get.theme.colorScheme.onSurface,
                         size: 32,
                       ),
                     ),
@@ -325,7 +323,7 @@ void sessionDetailsDialog(Session session) {
                 ],
               ),
               Divider(
-                color: Get.theme.colorScheme.onBackground,
+                color: Get.theme.colorScheme.onSurface,
               ),
               Expanded(
                 child: SingleChildScrollView(

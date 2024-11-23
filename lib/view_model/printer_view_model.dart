@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:async';
-import 'dart:typed_data' show Uint8List;
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,6 @@ import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/index.dart';
-import 'package:pos_apps/enums/view_status.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:print_bluetooth_thermal/post_code.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
@@ -22,7 +20,6 @@ import 'package:printing/printing.dart';
 import '../data/model/response/sessions.dart';
 import '../util/bill-printing.dart';
 import 'base_view_model.dart';
-import 'menu_view_model.dart';
 
 /// Network Printer
 class PrinterViewModel extends BaseViewModel {

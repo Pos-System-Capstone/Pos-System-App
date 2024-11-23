@@ -11,8 +11,6 @@ import '../enums/view_status.dart';
 import '../util/share_pref.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
 import '../views/widgets/printer_dialogs/add_printer_dialog.dart';
-import 'base_view_model.dart';
-import 'printer_view_model.dart';
 
 class ReportViewModel extends BaseViewModel {
   ReportData? reportData;

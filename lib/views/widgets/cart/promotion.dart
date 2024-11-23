@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/enums/index.dart';
@@ -49,10 +48,10 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                         filled: true,
                         isDense: true,
                         labelStyle: Get.textTheme.labelLarge,
-                        fillColor: Get.theme.colorScheme.background,
+                        fillColor: Get.theme.colorScheme.surface,
                         prefixIcon: Icon(
                           Icons.portrait_rounded,
-                          color: Get.theme.colorScheme.onBackground,
+                          color: Get.theme.colorScheme.onSurface,
                         ),
                         suffixIcon: IconButton(
                           onPressed: () {
@@ -146,7 +145,7 @@ class _PromotionSelectWidgetState extends State<PromotionSelectWidget> {
                       child: Card(
                         color: model.isPromotionApplied(item.promotionCode)
                             ? Get.theme.colorScheme.primaryContainer
-                            : Get.theme.colorScheme.background,
+                            : Get.theme.colorScheme.surface,
                         child: Container(
                           padding: EdgeInsets.all(4),
                           width: GetPlatform.isMobile ? Get.width : 200,

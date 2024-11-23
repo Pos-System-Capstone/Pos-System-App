@@ -208,7 +208,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                             style: Get.textTheme.titleMedium
                                                 ?.copyWith(
                                                     color: Get.theme.colorScheme
-                                                        .background)),
+                                                        .surface)),
                                       )),
                                 )
                               : Expanded(
@@ -224,7 +224,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                                             style: Get.textTheme.titleMedium
                                                 ?.copyWith(
                                                     color: Get.theme.colorScheme
-                                                        .background)),
+                                                        .surface)),
                                       )),
                                 )
                         ],
@@ -261,8 +261,8 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Size ${childProducts[i].name!}"),
-                  Text(formatPrice(childProducts[i].sellingPrice!)),
+                  Text("Size ${childProducts[i].name}"),
+                  Text(formatPrice(childProducts[i].sellingPrice)),
                 ],
               ),
               value: childProducts[i].menuProductId,
@@ -305,9 +305,9 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(extraProduct[i].name!),
+                          Text(extraProduct[i].name),
                           Text(
-                              "+ ${formatPrice(extraProduct[i].sellingPrice!)}"),
+                              "+ ${formatPrice(extraProduct[i].sellingPrice)}"),
                         ],
                       ),
 
@@ -400,7 +400,7 @@ class _UpdateCartItemDialogState extends State<UpdateCartItemDialog> {
                       .split("_")
                       .map((option) => TextButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
+                            backgroundColor: WidgetStateProperty.all<Color>(
                                 selectedAttributes.isNotEmpty
                                     ? (selectedAttributes
                                             .where((element) =>

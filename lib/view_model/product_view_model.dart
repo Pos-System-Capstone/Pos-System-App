@@ -76,7 +76,7 @@ class ProductViewModel extends BaseViewModel {
   }
 
   void addOrRemoveExtra(Product extra) {
-    if (isExtraExist(extra.menuProductId!)) {
+    if (isExtraExist(extra.menuProductId)) {
       productInCart.extras?.removeWhere(
           (element) => element.productInMenuId == extra.menuProductId);
       countAmount();
@@ -85,7 +85,7 @@ class ProductViewModel extends BaseViewModel {
           productInMenuId: extra.menuProductId,
           name: extra.name,
           quantity: productInCart.quantity,
-          totalAmount: extra.sellingPrice! * productInCart.quantity!,
+          totalAmount: extra.sellingPrice * productInCart.quantity!,
           sellingPrice: extra.sellingPrice));
       countAmount();
     }

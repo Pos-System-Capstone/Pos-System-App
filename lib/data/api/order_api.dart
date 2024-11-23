@@ -4,8 +4,6 @@ import 'package:pos_apps/data/model/response/new_user_order.dart';
 import 'package:pos_apps/data/model/response/order_in_list.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/topup_wallet_response.dart';
-import 'package:pos_apps/util/share_pref.dart';
-import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
 
 import '../../util/request.dart';

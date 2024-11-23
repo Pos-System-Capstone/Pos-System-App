@@ -25,7 +25,7 @@ void orderInfoDialog(String orderId) {
               height: Get.size.height * 0.8,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Get.theme.colorScheme.background,
+                color: Get.theme.colorScheme.surface,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
@@ -58,7 +58,7 @@ void orderInfoDialog(String orderId) {
               height: Get.size.height * 0.8,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Get.theme.colorScheme.background,
+                color: Get.theme.colorScheme.surface,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
@@ -87,7 +87,7 @@ void orderInfoDialog(String orderId) {
               height: Get.size.height * 0.8,
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Get.theme.colorScheme.background,
+                color: Get.theme.colorScheme.surface,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
@@ -124,7 +124,7 @@ void orderInfoDialog(String orderId) {
                           },
                           icon: Icon(
                             Icons.close,
-                            color: Get.theme.colorScheme.onBackground,
+                            color: Get.theme.colorScheme.onSurface,
                             size: 32,
                           ),
                         ),
@@ -132,7 +132,7 @@ void orderInfoDialog(String orderId) {
                     ],
                   ),
                   Divider(
-                    color: Get.theme.colorScheme.onBackground,
+                    color: Get.theme.colorScheme.onSurface,
                   ),
                   Expanded(
                     child: SingleChildScrollView(

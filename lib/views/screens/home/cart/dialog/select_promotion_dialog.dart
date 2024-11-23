@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scoped_model/scoped_model.dart';
 import '../../../../../view_model/index.dart';
-import '../../../../widgets/cart/membership.dart';
 import '../../../../widgets/cart/promotion.dart';
 import '../../../../widgets/other_dialogs/dialog.dart';
 
@@ -52,7 +50,7 @@ class _PormotionDialogState extends State<PormotionDialog> {
               ],
             ),
             body: TabBarView(
-              children: [
+              children: const [
                 PromotionSelectWidget(),
                 // MembershipWidget(),
                 // ScopedModel<OrderViewModel>(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/product_attribute.dart';
@@ -13,9 +12,9 @@ class ProductAttributeScreen extends StatefulWidget {
 }
 
 class _ProductAttributeScreenState extends State<ProductAttributeScreen> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _valueController = TextEditingController();
-  RootViewModel _rootViewModel = Get.find<RootViewModel>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _valueController = TextEditingController();
+  final RootViewModel _rootViewModel = Get.find<RootViewModel>();
   List<Attribute>? productAttributes = [];
   @override
   void initState() {
@@ -52,7 +51,7 @@ class _ProductAttributeScreenState extends State<ProductAttributeScreen> {
               ],
             ),
             Divider(
-              color: Get.theme.colorScheme.onBackground,
+              color: Get.theme.colorScheme.onSurface,
             ),
             Expanded(
                 child: Padding(

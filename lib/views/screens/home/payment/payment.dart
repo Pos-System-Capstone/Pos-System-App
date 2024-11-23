@@ -5,7 +5,6 @@ import 'package:pos_apps/views/screens/home/payment/payment_dialogs/input_custom
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../view_model/index.dart';
 import 'bill_screen.dart';
-import 'payment_dialogs/payment_dialog.dart';
 
 class PaymentScreen extends StatefulWidget {
   String orderId;
@@ -30,7 +29,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         model: Get.find<OrderViewModel>(),
         child: Container(
           decoration: BoxDecoration(
-            color: Get.theme.colorScheme.background,
+            color: Get.theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(8),
           ),
           width: Get.width * 0.9,
@@ -104,7 +103,7 @@ Widget paymentTypeSelect() {
           ),
           Divider(
             thickness: 1,
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           model.listPayment.isEmpty
               ? Expanded(
@@ -136,7 +135,7 @@ Widget paymentTypeSelect() {
                             child: Card(
                               color: model.selectedPaymentMethod == e
                                   ? Get.theme.colorScheme.primaryContainer
-                                  : Get.theme.colorScheme.background,
+                                  : Get.theme.colorScheme.surface,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(

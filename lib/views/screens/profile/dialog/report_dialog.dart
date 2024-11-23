@@ -30,7 +30,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
             height: Get.size.height * 0.9,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Get.theme.colorScheme.background,
+              color: Get.theme.colorScheme.surface,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
@@ -65,7 +65,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
             height: Get.size.height * 0.9,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Get.theme.colorScheme.background,
+              color: Get.theme.colorScheme.surface,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
@@ -94,7 +94,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
           height: Get.size.height,
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Get.theme.colorScheme.background,
+            color: Get.theme.colorScheme.surface,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
@@ -129,7 +129,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                       },
                       icon: Icon(
                         Icons.close,
-                        color: Get.theme.colorScheme.onBackground,
+                        color: Get.theme.colorScheme.onSurface,
                         size: 32,
                       ),
                     ),
@@ -137,7 +137,7 @@ void reportDetailsDialog(DateTime startDate, DateTime endDate) {
                 ],
               ),
               Divider(
-                color: Get.theme.colorScheme.onBackground,
+                color: Get.theme.colorScheme.onSurface,
               ),
               Expanded(
                 child: SingleChildScrollView(

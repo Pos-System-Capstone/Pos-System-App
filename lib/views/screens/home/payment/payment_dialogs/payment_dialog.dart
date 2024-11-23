@@ -36,7 +36,7 @@ void showQRCodeDialog(String paymentName, num amount, String invoiceId) {
       height: Get.size.height * 0.8,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
       ),
@@ -67,7 +67,7 @@ void showQRCodeDialog(String paymentName, num amount, String invoiceId) {
                     },
                     icon: Icon(
                       Icons.close,
-                      color: Get.theme.colorScheme.onBackground,
+                      color: Get.theme.colorScheme.onSurface,
                       size: 32,
                     ),
                   ),
@@ -76,7 +76,7 @@ void showQRCodeDialog(String paymentName, num amount, String invoiceId) {
             ],
           ),
           Divider(
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           Expanded(
             child: Image.network(
@@ -131,7 +131,7 @@ void scanQRCodeDialog(String paymentName, num amount, String invoiceId) {
       height: Get.size.height * 0.8,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
@@ -178,7 +178,7 @@ void scanQRCodeDialog(String paymentName, num amount, String invoiceId) {
                     },
                     icon: Icon(
                       Icons.close,
-                      color: Get.theme.colorScheme.onBackground,
+                      color: Get.theme.colorScheme.onSurface,
                       size: 32,
                     ),
                   ),
@@ -187,7 +187,7 @@ void scanQRCodeDialog(String paymentName, num amount, String invoiceId) {
             ],
           ),
           Divider(
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           SizedBox(
             height: 16,

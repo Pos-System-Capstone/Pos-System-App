@@ -5,7 +5,7 @@ import 'package:pos_apps/view_model/login_view_model.dart';
 import '../../../data/api/index.dart';
 
 class LogInScreen extends StatefulWidget {
-  const LogInScreen({Key? key}) : super(key: key);
+  const LogInScreen({super.key});
 
   @override
   _LogInScreenState createState() => _LogInScreenState();
@@ -97,10 +97,10 @@ class _LogInScreenState extends State<LogInScreen> {
                                 filled: true,
                                 isDense: true,
                                 labelStyle: Get.textTheme.labelLarge,
-                                fillColor: Get.theme.colorScheme.background,
+                                fillColor: Get.theme.colorScheme.surface,
                                 prefixIcon: Icon(
                                   Icons.portrait_rounded,
-                                  color: Get.theme.colorScheme.onBackground,
+                                  color: Get.theme.colorScheme.onSurface,
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -163,10 +163,10 @@ class _LogInScreenState extends State<LogInScreen> {
                                     FloatingLabelBehavior.never,
                                 filled: true,
                                 isDense: true,
-                                fillColor: Get.theme.colorScheme.background,
+                                fillColor: Get.theme.colorScheme.surface,
                                 prefixIcon: Icon(
                                   Icons.key,
-                                  color: Get.theme.colorScheme.onBackground,
+                                  color: Get.theme.colorScheme.onSurface,
                                 ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
@@ -214,7 +214,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                         color: Get.theme.colorScheme.error,
                                         width: 2.0))),
                             maxLines: 1,
-                            cursorColor: Get.theme.colorScheme.onBackground,
+                            cursorColor: Get.theme.colorScheme.onSurface,
                           ),
                         ],
                       ),
@@ -294,10 +294,10 @@ class _LogInScreenState extends State<LogInScreen> {
                                   filled: true,
                                   isDense: true,
                                   labelStyle: Get.textTheme.labelLarge,
-                                  fillColor: Get.theme.colorScheme.background,
+                                  fillColor: Get.theme.colorScheme.surface,
                                   prefixIcon: Icon(
                                     Icons.portrait_rounded,
-                                    color: Get.theme.colorScheme.onBackground,
+                                    color: Get.theme.colorScheme.onSurface,
                                   ),
                                   suffixIcon: IconButton(
                                     onPressed: () {
@@ -360,10 +360,10 @@ class _LogInScreenState extends State<LogInScreen> {
                                       FloatingLabelBehavior.never,
                                   filled: true,
                                   isDense: true,
-                                  fillColor: Get.theme.colorScheme.background,
+                                  fillColor: Get.theme.colorScheme.surface,
                                   prefixIcon: Icon(
                                     Icons.key,
-                                    color: Get.theme.colorScheme.onBackground,
+                                    color: Get.theme.colorScheme.onSurface,
                                   ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
@@ -412,7 +412,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                           color: Get.theme.colorScheme.error,
                                           width: 2.0))),
                               maxLines: 1,
-                              cursorColor: Get.theme.colorScheme.onBackground,
+                              cursorColor: Get.theme.colorScheme.onSurface,
                             ),
                           ],
                         ),

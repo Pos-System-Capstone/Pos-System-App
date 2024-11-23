@@ -8,7 +8,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_detail_report.dart';
-import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/format.dart';
@@ -17,7 +16,6 @@ import 'package:pos_apps/view_model/index.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 
-import '../data/model/account.dart';
 import '../data/model/response/sessions.dart';
 
 Future<Uint8List> genQRcode(PdfPageFormat format, String imageURL) async {

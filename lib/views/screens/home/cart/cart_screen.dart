@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/cart_model.dart';
-import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:pos_apps/util/format.dart';
 import 'package:pos_apps/view_model/index.dart';
@@ -282,7 +280,7 @@ class _CartScreenState extends State<CartScreen> {
                                 child: Text(
                                   'Tạo đơn hàng',
                                   style: Get.textTheme.titleMedium?.copyWith(
-                                      color: Get.theme.colorScheme.background),
+                                      color: Get.theme.colorScheme.surface),
                                 ),
                               ),
                             ),

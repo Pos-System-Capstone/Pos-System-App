@@ -3,7 +3,6 @@ import 'package:pos_apps/data/model/response/payment_provider.dart';
 import '../../util/request.dart';
 import '../../util/share_pref.dart';
 import '../model/account.dart';
-import '../model/response/order_response.dart';
 
 class PaymentData {
   Future<List<PaymentProvider?>> getListPayment() async {

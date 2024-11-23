@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pos_apps/util/request.dart';
-import 'package:pos_apps/util/request_pointify.dart';
 import 'package:pos_apps/util/share_pref.dart';
-import '../model/customer.dart';
 import '../model/index.dart';
 
 class AccountData {

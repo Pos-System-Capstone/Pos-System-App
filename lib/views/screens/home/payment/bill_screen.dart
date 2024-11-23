@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pos_apps/data/model/customer.dart';
 import 'package:pos_apps/enums/index.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../data/model/response/order_response.dart';

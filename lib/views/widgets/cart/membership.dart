@@ -49,10 +49,10 @@ class _MembershipWidgetState extends State<MembershipWidget> {
                         filled: true,
                         isDense: true,
                         labelStyle: Get.textTheme.labelLarge,
-                        fillColor: Get.theme.colorScheme.background,
+                        fillColor: Get.theme.colorScheme.surface,
                         prefixIcon: Icon(
                           Icons.portrait_rounded,
-                          color: Get.theme.colorScheme.onBackground,
+                          color: Get.theme.colorScheme.onSurface,
                         ),
                         suffixIcon: IconButton(
                             onPressed: () {

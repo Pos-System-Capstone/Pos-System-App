@@ -91,7 +91,7 @@ Widget deliveryOptionButton(
     child: Card(
       color: isSelected
           ? Get.theme.colorScheme.primaryContainer
-          : Get.theme.colorScheme.background,
+          : Get.theme.colorScheme.surface,
       child: SizedBox(
         width: 120,
         height: 120,

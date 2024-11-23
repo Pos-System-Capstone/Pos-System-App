@@ -11,7 +11,6 @@ import 'package:pos_apps/routes/routes_constraints.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_table_dialog.dart';
-import 'package:pos_apps/views/screens/home/payment/payment_dialogs/scan_membership_card_dialog.dart';
 import '../data/api/account_data.dart';
 import '../data/api/order_api.dart';
 import '../data/api/payment_data.dart';
@@ -213,7 +212,7 @@ class OrderViewModel extends BaseViewModel {
       paymentCheckingStatus = PaymentStatusEnum.PENDING;
     }
     for (var element in listPayment) {
-      if (element!.type! == currentOrder!.paymentType) {
+      if (element!.type == currentOrder!.paymentType) {
         selectedPaymentMethod = element;
       }
     }

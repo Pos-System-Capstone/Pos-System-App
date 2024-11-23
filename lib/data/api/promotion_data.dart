@@ -1,8 +1,3 @@
-import '../../util/request.dart';
-import '../../util/share_pref.dart';
-import '../model/index.dart';
-import '../model/pointify/promotion_model.dart';
-
 class PromotionData {
   // Future<List<PromotionPointify>> getListPromotionOfStore() async {
   //   Account? userInfo = await getUserInfo();
