@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/util/format.dart';
 
-import '../../../../widgets/other_dialogs/dialog.dart';
-
 Future<num> inputMonneyDialog({bool isNum = true}) async {
   List<num> list = [50000, 100000, 200000, 500000];
   TextEditingController value = TextEditingController();

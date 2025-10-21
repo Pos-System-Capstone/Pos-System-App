@@ -6,31 +6,44 @@ enum DeliTypeEnum { TAKE_AWAY, IN_STORE, DELIVERY, NONE }
 
 enum PrinterTypeEnum { bill, stamp }
 
+enum PrinterDeviceEnum { BLUETOOTH, USB }
+
 class DeliType {
   TakeAway takeAway = TakeAway();
   EatIn eatIn = EatIn();
   Delivery delivery = Delivery();
+  Topup topup = Topup();
 }
 
 class TakeAway {
   String type = 'TAKE_AWAY';
   IconData icon = Icons.home;
   String label = 'Mang đi';
+  Color color = Colors.amber;
 }
 
 class EatIn {
   String type = 'EAT_IN';
   IconData icon = Icons.store;
   String label = 'Tại quán';
+  Color color = Colors.cyan;
 }
 
 class Delivery {
   String type = 'DELIVERY';
   IconData icon = Icons.delivery_dining;
   String label = 'Giao hàng';
+  Color color = Colors.teal;
+}
+
+class Topup {
+  String type = 'TOP_UP';
+  IconData icon = Icons.credit_card;
+  String label = 'Nạp thẻ';
 }
 
 class OrderStatusEnum {
+  static const String NEW = 'NEW';
   static const String PENDING = 'PENDING';
   static const String CANCELED = 'CANCELED';
   static const String PAID = 'PAID';
@@ -38,14 +51,16 @@ class OrderStatusEnum {
 
 String showOrderStatus(String status) {
   switch (status) {
+    case OrderStatusEnum.NEW:
+      return 'Chờ xác nhận';
     case OrderStatusEnum.PENDING:
-      return 'Chờ thanh toán';
+      return 'Đang thực hiện';
     case OrderStatusEnum.CANCELED:
       return 'Đã huỷ';
     case OrderStatusEnum.PAID:
-      return 'Đã thanh toán';
+      return 'Đã hoàn thành';
     default:
-      return 'Chờ thanh toán';
+      return 'Chờ xác nhận';
   }
 }
 
@@ -57,16 +72,30 @@ dynamic showOrderType(String type) {
     return deliType.eatIn;
   } else if (type == deliType.delivery.type) {
     return deliType.delivery;
+  } else if (type == deliType.topup.type) {
+    return deliType.topup;
   } else {
     return deliType.eatIn;
   }
 }
 
+String showPaymentStatusEnum(String status) {
+  switch (status) {
+    case PaymentStatusEnum.PENDING:
+      return 'Chưa thanh toán';
+    case PaymentStatusEnum.FAIL:
+      return 'Thất bại';
+    case PaymentStatusEnum.PAID:
+      return 'Đã thanh toán';
+    default:
+      return '';
+  }
+}
+
 class PaymentStatusEnum {
   static const String FAIL = 'Fail';
-  static const String PAID = 'Paid';
-  static const String PENDING = 'Pending';
-  static const String CANCELED = 'Canceled';
+  static const String PAID = 'PAID';
+  static const String PENDING = 'PENDING';
 }
 
 class PaymentTypeEnums {
@@ -77,8 +106,9 @@ class PaymentTypeEnums {
   static const String MOMO = 'MOMO';
   static const String BANKING = 'BANKING';
   static const String VISA = 'VISA';
+  static const String POINTIFY = 'POINTIFY';
   static const String GRABFOOD = 'GRABFOOD';
-  static const String SHOPEEFODD = 'SHOPEEFODD';
+  static const String SHOPEEFOOD = 'SHOPEEFOOD';
   static const String BEFOOD = 'BEFOOD';
 }
 

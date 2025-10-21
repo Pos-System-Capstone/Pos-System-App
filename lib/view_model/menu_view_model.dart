@@ -1,23 +1,16 @@
 import 'package:get/get.dart';
-import 'package:pos_apps/data/api/promotion_data.dart';
 import 'package:pos_apps/data/api/store_data.dart';
 import 'package:pos_apps/data/model/index.dart';
 import 'package:pos_apps/data/model/response/promotion.dart';
-import 'package:pos_apps/data/model/response/session_detail_report.dart';
 import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/data/model/response/store.dart';
 import 'package:pos_apps/view_model/index.dart';
-import 'package:pos_apps/view_model/printer_view_model.dart';
 import '../data/api/index.dart';
 import '../data/api/report_data.dart';
 import '../data/api/session_data.dart';
 import '../data/model/response/sessions.dart';
-import '../enums/order_enum.dart';
 import '../enums/product_enum.dart';
 import '../enums/view_status.dart';
-import '../util/share_pref.dart';
-import '../views/widgets/other_dialogs/dialog.dart';
-import '../views/widgets/printer_dialogs/add_printer_dialog.dart';
 
 class MenuViewModel extends BaseViewModel {
   late Menu? currentMenu;
@@ -26,11 +19,11 @@ class MenuViewModel extends BaseViewModel {
   StoreModel storeDetails = StoreModel();
   List<Product>? normalProducts = [];
   List<Category>? categories = [];
+  List<Category>? subCategories = [];
   List<Product>? extraProducts = [];
   List<Product>? childProducts = [];
   List<Product>? productsFilter = [];
   List<Session>? sessions = [];
-  List<Promotion>? promotions = [];
   SessionAPI? sessionAPI;
   ReportData? reportData;
 
@@ -46,16 +39,19 @@ class MenuViewModel extends BaseViewModel {
 
   Future<void> getMenuOfStore() async {
     try {
-      setState(ViewStatus.Loading);
       await getStore();
       currentMenu = await menuData?.getMenuOfStore();
-      // Get.find<OrderViewModel>().getListPayment();
       Get.find<CartViewModel>().getListPromotion();
+      Get.find<OrderViewModel>().getListPayment();
       getListSession(DateTime.now());
       categories = currentMenu?.categories!
           .where((element) => element.type == CategoryTypeEnum.Normal)
           .toList();
       categories?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
+      subCategories = currentMenu?.categories!
+          .where((element) => element.type == CategoryTypeEnum.Child)
+          .toList();
+      subCategories?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
       normalProducts = currentMenu?.products!
           .where((element) =>
               element.type == ProductTypeEnum.SINGLE ||
@@ -69,9 +65,9 @@ class MenuViewModel extends BaseViewModel {
           .where((element) => element.type == ProductTypeEnum.CHILD)
           .toList();
       productsFilter = normalProducts;
+      handleChangeFilterProductByCategory(categories![0].id);
       productsFilter
           ?.sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
-      setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }
@@ -154,6 +150,16 @@ class MenuViewModel extends BaseViewModel {
     return listChildsSorted;
   }
 
+  List<Category>? getChildCategory(Category? cate) {
+    List<Category>? listSubCate = [];
+    subCategories?.forEach((element) {
+      if (cate!.childCategoryIds!.any((e) => e == element.id)) {
+        listSubCate.add(element);
+      }
+    });
+    return listSubCate;
+  }
+
   List<GroupProducts>? getGroupProductByComboProduct(String productId) {
     List<GroupProducts> listGroupProducts = [];
     if (currentMenu?.groupProducts == null) {
@@ -176,10 +182,26 @@ class MenuViewModel extends BaseViewModel {
         .toList();
   }
 
-  List<Category>? getExtraCategoryByNormalProduct(Product product) {
+  List<Category>? getExtraCategoryByNormalProduct(String productMenuId) {
     List<Category> listExtraCategory = [];
+    Product? product = normalProducts
+        ?.firstWhereOrNull((element) => element.menuProductId == productMenuId);
     for (Category item in currentMenu!.categories!) {
-      if (product.extraCategoryIds!.contains(item.id)) {
+      if (product!.extraCategoryIds!.contains(item.id)) {
+        listExtraCategory.add(item);
+      }
+    }
+    listExtraCategory
+        .sort((a, b) => b.displayOrder!.compareTo(a.displayOrder!));
+    return listExtraCategory;
+  }
+
+  List<Category>? getExtraCategoryByChildProduct(String parentProductId) {
+    List<Category> listExtraCategory = [];
+    Product? product = normalProducts
+        ?.firstWhereOrNull((element) => element.id == parentProductId);
+    for (Category item in currentMenu!.categories!) {
+      if (product!.extraCategoryIds!.contains(item.id)) {
         listExtraCategory.add(item);
       }
     }
@@ -208,6 +230,11 @@ class MenuViewModel extends BaseViewModel {
 
   Product getProductById(String id) {
     return currentMenu!.products!.firstWhere((element) => element.id == id);
+  }
+
+  Product? getProductByMenuProductId(String id) {
+    return currentMenu!.products!
+        .firstWhere((element) => element.menuProductId == id);
   }
 
   Future getStoreEndDayReport(DateTime startDate, DateTime endDate) async {

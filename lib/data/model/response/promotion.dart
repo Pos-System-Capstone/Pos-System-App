@@ -50,7 +50,7 @@ class Promotion {
     if (json['listProductApply'] != null) {
       listProductApply = <ListProductApply>[];
       json['listProductApply'].forEach((v) {
-        listProductApply!.add(new ListProductApply.fromJson(v));
+        listProductApply!.add(ListProductApply.fromJson(v));
       });
     }
     status = json['status'];

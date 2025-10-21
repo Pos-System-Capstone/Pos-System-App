@@ -1,394 +1,180 @@
-// ignore_for_file: unnecessary_import
-
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/data/api/index.dart';
+import 'package:pos_apps/data/api/pointify/pointify_data.dart';
+import 'package:pos_apps/data/model/cart_model.dart';
+import 'package:pos_apps/data/model/customer.dart';
 import 'package:pos_apps/data/model/response/payment_provider.dart';
-import 'package:pos_apps/data/model/response/promotion.dart';
 import 'package:pos_apps/enums/index.dart';
-import 'package:pos_apps/view_model/base_view_model.dart';
 import 'package:pos_apps/views/widgets/other_dialogs/dialog.dart';
-
+import '../data/api/order_api.dart';
 import '../data/api/promotion_data.dart';
 import '../data/model/index.dart';
-import '../enums/view_status.dart';
+import '../data/model/pointify/promotion_model.dart';
+import '../util/share_pref.dart';
 import 'index.dart';
 
 class CartViewModel extends BaseViewModel {
-  List<CartItem> _cartList = [];
-  List<Promotion> promotionApplyList = [];
-  num _finalAmount = 0;
-  int? _peopleNumber;
-  num _totalAmount = 0;
-  num _discountAmount = 0;
-  num _productDiscount = 0;
-  int _quantity = 0;
+  CartModel cart = CartModel();
+  int? peopleNumber;
+  late OrderAPI api = OrderAPI();
+  PointifyData pointifyData = PointifyData();
   PromotionData? promotionData = PromotionData();
-  List<Promotion>? promotions = [];
-  List<CartItem> get cartList => _cartList;
-  num get finalAmount => _finalAmount;
-  num get totalAmount => _totalAmount;
-  int? get peopleNumber => _peopleNumber;
-  num? get discountAmount => _discountAmount;
-  int? get quantity => _quantity;
-  num? get productDiscount => _productDiscount;
+  AccountData accountData = AccountData();
+  List<PromotionPointify>? promotions = [];
+  CustomerInfoModel? customer;
 
-  set setPeopleNumber(int value) {
-    _peopleNumber = value;
+  CartViewModel() {
+    cart.productList = [];
+    cart.promotionList = [];
+    cart.paymentType = PaymentTypeEnums.CASH;
+    cart.totalAmount = 0;
+    cart.finalAmount = 0;
+    cart.bonusPoint = 0;
+    cart.shippingFee = 0;
+    cart.customerId = null;
+    cart.promotionCode = null;
+    cart.voucherCode = null;
+    cart.orderType = DeliType().eatIn.type;
+    cart.customerNumber = 1;
   }
 
-  set setTotalAmount(int value) {
-    _totalAmount = value;
-  }
-
-  int isExistInCart(
-    int productId,
-    String? variationType,
-    bool isUpdate,
-    int? cartIndex,
-  ) {
-    for (int index = 0; index < _cartList.length; index++) {
-      if (_cartList[index].product.id == productId) {
-        if ((isUpdate && index == cartIndex)) {
-          return -1;
-        } else {
-          return index;
-        }
-      }
+  Future getListPromotion() async {
+    try {
+      promotions = await pointifyData.getListPromotionOfStore();
+    } catch (e) {
+      setState(ViewStatus.Error, e.toString());
     }
-    return -1;
   }
 
-  void getListPromotion() async {
+  Future scanCustomer(String phone) async {
     try {
       setState(ViewStatus.Loading);
-      promotions = await promotionData?.getListPromotionOfStore();
+      pointifyData.scanCustomer(phone).then((value) => {
+            if (value != null) {customer = value}
+          });
       setState(ViewStatus.Completed);
     } catch (e) {
       setState(ViewStatus.Error, e.toString());
     }
   }
 
-  void addToCart(CartItem cartModel) {
-    _cartList.add(cartModel);
-    checkAvailablePromotion();
+  Future<void> addToCart(ProductList cartModel) async {
+    cart.productList!.add(cartModel);
     countCartAmount();
     countCartQuantity();
+    await prepareOrder();
     notifyListeners();
   }
 
-  void updateCart(CartItem cartModel, int cartIndex) {
-    _cartList[cartIndex] = cartModel;
-    checkAvailablePromotion();
+  Future<void> updateCart(ProductList cartModel, int cartIndex) async {
+    cart.productList![cartIndex] = cartModel;
     countCartAmount();
     countCartQuantity();
+    await prepareOrder();
     notifyListeners();
   }
 
   void countCartAmount() {
-    print(promotionApplyList.length);
-    _totalAmount = 0;
-    _productDiscount = 0;
-    _discountAmount = 0;
-    for (CartItem cart in _cartList) {
-      _totalAmount = _totalAmount + cart.totalAmount;
-      _productDiscount =
-          _productDiscount + cart.product.discountPrice! * cart.quantity;
+    cart.totalAmount = 0;
+    cart.discountAmount = 0;
+    for (ProductList item in cart.productList!) {
+      cart.totalAmount = cart.totalAmount! + item.totalAmount!;
     }
-    for (Promotion promotion in promotionApplyList) {
-      _discountAmount += ((promotion.discountInOrder ?? 0));
-    }
-    _finalAmount = _totalAmount - _discountAmount - _productDiscount;
-    notifyListeners();
+    cart.finalAmount = cart.totalAmount! - cart.discountAmount!;
   }
 
   countCartQuantity() {
-    _quantity = 0;
-    for (CartItem cart in _cartList) {
-      _quantity = _quantity + cart.quantity;
+    num quantity = 0;
+    for (ProductList item in cart.productList!) {
+      quantity = quantity + item.quantity!;
     }
-    notifyListeners();
+    return quantity;
   }
 
-  void removeFromCart(int idx) {
-    _totalAmount = _totalAmount - (_cartList[idx].totalAmount);
-    _cartList.remove(_cartList[idx]);
-    checkAvailablePromotion();
+  Future<void> removeFromCart(int idx) async {
+    cart.productList!.remove(cart.productList![idx]);
     countCartAmount();
-    countCartQuantity();
+    await prepareOrder();
     notifyListeners();
   }
 
-  bool isPromotionApplied(String promotionId) {
-    for (var promotion in promotionApplyList) {
-      if (promotion.id == promotionId) {
-        return true;
-      }
-    }
-    return false;
+  Future<void> removeCustomer() async {
+    customer = null;
+    await prepareOrder();
+    notifyListeners();
+  }
+
+  bool isPromotionApplied(String code) {
+    return cart.promotionCode == code;
   }
 
   void clearCartData() {
-    _cartList = [];
-    _finalAmount = 0;
-    _totalAmount = 0;
-    _discountAmount = 0;
-    _productDiscount = 0;
-    _quantity = 0;
-    promotionApplyList = [];
+    customer = null;
+    cart.paymentType = PaymentTypeEnums.CASH;
+    cart.orderType = DeliType().eatIn.type;
+    cart.customerNumber = 1;
+    cart.productList = [];
+    cart.finalAmount = 0;
+    cart.totalAmount = 0;
+    cart.discountAmount = 0;
+    cart.promotionList = [];
+    cart.voucherCode = null;
+    cart.promotionCode = null;
+    cart.bonusPoint = 0;
+    cart.shippingFee = 0;
+    cart.customerId = null;
+    cart.customerName = null;
     notifyListeners();
   }
 
-  bool isPromotionTypeExist(String type) {
-    Promotion? res =
-        promotionApplyList.firstWhereOrNull((element) => element.type == type);
-    if (res == null) {
-      return false;
-    }
-    return true;
+  bool isPromotionExist(String code) {
+    return cart.promotionCode == code;
   }
 
-  bool isPromotionExist(String id) {
-    Promotion? res =
-        promotionApplyList.firstWhereOrNull((element) => element.id == id);
-    if (res == null) {
-      return false;
-    }
-    return true;
-  }
-
-  //UPDATE CART ITEM
-  void checkPromotion(Promotion promotion) {
-    switch (promotion.type) {
-      case PromotionTypeEnums.AMOUNT:
-        if (isPromotionTypeExist(promotion.type!)) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: "Loại khuyến mãi này đã được áp dụng rồi",
-          );
-        } else if (promotion.minConditionAmount! <= _totalAmount) {
-          promotion.quantity = 1;
-          promotion.discountInOrder = promotion.discountAmount;
-          promotionApplyList.add(promotion);
-          checkAvailablePromotion();
-        } else {
-          showAlertDialog(
-            title: "Lỗi",
-            content: "Khuyến mãi không hợp lệ",
-          );
-        }
-        break;
-      case PromotionTypeEnums.PERCENT:
-        if (isPromotionTypeExist(promotion.type!)) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: "Loại khuyến mãi này đã được áp dụng rồi",
-          );
-        } else if (promotion.minConditionAmount! <= _totalAmount) {
-          promotion.quantity = 1;
-          promotion.discountInOrder =
-              (_totalAmount * promotion.discountPercent!) >
-                      promotion.maxDiscount!
-                  ? promotion.maxDiscount!
-                  : (_totalAmount * promotion.discountPercent!);
-          promotionApplyList.add(promotion);
-          checkAvailablePromotion();
-          hideDialog();
-        } else {
-          showAlertDialog(
-            title: "Lỗi",
-            content: "Khuyến mãi không hợp lệ",
-          );
-        }
-        break;
-      case PromotionTypeEnums.PRODUCT:
-        if (promotion.minConditionAmount! <= _totalAmount) {
-          for (var item in _cartList) {
-            for (var p in promotion.listProductApply!) {
-              if (item.product.id == p.productId) {
-                int idx = promotionApplyList
-                    .indexWhere((element) => element.id == promotion.id);
-                if (idx == -1) {
-                  promotion.quantity = item.quantity;
-                  promotion.discountInOrder =
-                      promotion.discountAmount! * promotion.quantity!;
-                  promotionApplyList.add(promotion);
-                  checkAvailablePromotion();
-                } else {
-                  promotionApplyList[idx].quantity =
-                      (promotionApplyList[idx].quantity! + item.quantity);
-                  promotionApplyList[idx].discountInOrder =
-                      (promotionApplyList[idx].discountInOrder! +
-                          (promotion.discountAmount! * item.quantity));
-                  checkAvailablePromotion();
-                }
-              }
-            }
-          }
-          if (promotion.type != PromotionTypeEnums.PRODUCT) {
-            showAlertDialog(
-              title: "Lỗi",
-              content: "Khuyến mãi không hợp lệ",
-            );
-          }
-        } else {
-          showAlertDialog(
-            title: "Lỗi",
-            content: "Khuyến mãi không hợp lệ",
-          );
-        }
-
-        break;
-      default:
-        showAlertDialog(
-          title: "Lỗi",
-          content: "Khuyến mãi không hợp lệ",
-        );
-        break;
-    }
+  Future<void> removePromotion() async {
+    cart.promotionCode = null;
+    cart.voucherCode = null;
+    await prepareOrder();
     notifyListeners();
   }
 
-  void removePromotion(String promotionId) {
-    _discountAmount = 0;
-    promotionApplyList.removeWhere((element) => element.id == promotionId);
-    // checkAutoApplyPromotion();
-    checkAvailablePromotion();
-    hideDialog();
+  Future<void> selectPromotion(String code) async {
+    cart.promotionCode = code;
+    cart.voucherCode = null;
+    await prepareOrder();
     notifyListeners();
   }
 
-  // void checkAutoApplyPromotion() {
-  //   List<Promotion>? listAutoApplyPromotion = promotions
-  //       ?.where((element) =>
-  //           element.type == PromotionTypeEnums.AUTOAPPLY &&
-  //           element.isAvailable == true)
-  //       .toList();
-  //   if (listAutoApplyPromotion == null || listAutoApplyPromotion.isEmpty) {
-  //     return;
-  //   } else {
-  //     for (var item in _cartList) {
-  //       for (var autoApplyPromotion in listAutoApplyPromotion) {
-  //         for (var product in autoApplyPromotion.listProductApply!) {
-  //           if (item.product.id == product.productId) {
-  //             item.product.discountPrice =
-  //                 (autoApplyPromotion.discountAmount ?? 0 * item.quantity);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   countCartAmount();
-  // }
+  Future<void> removeVoucher() async {
+    cart.voucherCode = null;
+    cart.promotionCode = null;
+    await prepareOrder();
+    notifyListeners();
+  }
 
-  void checkAvailablePromotion() {
-    countCartAmount();
-    for (var promotion in promotionApplyList) {
-      switch (promotion.type) {
-        case PromotionTypeEnums.AMOUNT:
-          if (promotion.minConditionAmount! <= _totalAmount) {
-            continue;
-          } else {
-            promotionApplyList
-                .removeWhere((element) => element.id == promotion.id);
-            countCartAmount();
-          }
-          break;
-        case PromotionTypeEnums.PERCENT:
-          if (promotion.minConditionAmount! <= _totalAmount) {
-            promotion.discountInOrder =
-                (_totalAmount * promotion.discountPercent!) >
-                        promotion.maxDiscount!
-                    ? promotion.maxDiscount!
-                    : (_totalAmount * promotion.discountPercent!);
-            countCartAmount();
-          } else {
-            promotionApplyList
-                .removeWhere((element) => element.id == promotion.id);
-            countCartAmount();
-          }
-          break;
-        case PromotionTypeEnums.PRODUCT:
-          if ((promotion.minConditionAmount! * promotion.quantity!) <=
-              _totalAmount) {
-            for (var item in _cartList) {
-              for (var product in promotion.listProductApply!) {
-                if (item.product.id == product.productId) {
-                  return;
-                }
-              }
-            }
-            promotionApplyList
-                .removeWhere((element) => element.id == promotion.id);
-            countCartAmount();
-          } else {
-            showAlertDialog(
-              title: "Thông báo",
-              content: "Khuyến mãi không hợp lệ",
-            );
-            promotionApplyList
-                .removeWhere((element) => element.id == promotion.id);
-            countCartAmount();
-          }
-          break;
-        default:
-          showAlertDialog(
-            title: "Thông báo",
-            content: "Khuyến mãi đã bị xoá",
-          );
-          promotionApplyList
-              .removeWhere((element) => element.id == promotion.id);
-          countCartAmount();
-          break;
+  Future<void> selectVoucher(String code) async {
+    setState(ViewStatus.Loading);
+    String? phoneNumber;
+    if (code.contains('_')) {
+      List<String> parts = code.split("_");
+      if (parts.length == 3) {
+        phoneNumber = parts[0];
+        cart.promotionCode = parts[1];
+        cart.voucherCode = parts[2];
+      } else if (parts.length == 2) {
+        phoneNumber = parts[0];
+        cart.promotionCode = parts[1];
       }
+    } else {
+      phoneNumber = code;
     }
-
-    notifyListeners();
-  }
-
-  Future<void> createOrder() async {
-    String deliType = Get.find<OrderViewModel>().deliveryType;
-    List<ProductInOrder> productList = <ProductInOrder>[];
-    for (CartItem cart in _cartList) {
-      List<ExtraInOrder> extraList = <ExtraInOrder>[];
-      cart.extras?.forEach((element) {
-        ExtraInOrder extra = ExtraInOrder(
-            productInMenuId: element.menuProductId,
-            quantity: 1,
-            sellingPrice: element.sellingPrice,
-            discount: element.discountPrice! * cart.quantity);
-        extraList.add(extra);
-      });
-      ProductInOrder product = ProductInOrder(
-        productInMenuId: cart.product.menuProductId,
-        quantity: cart.quantity,
-        sellingPrice: cart.product.sellingPrice,
-        discount: cart.product.discountPrice! * cart.quantity,
-        note: cart.attributes == null && cart.note == null
-            ? null
-            : ("${cart.attributes!.map((e) => e.value).join(" ")} ${cart.note ?? ''}"),
-        extras: extraList,
-      );
-      productList.add(product);
+    if (phoneNumber != null && phoneNumber.isNotEmpty) {
+      await pointifyData.scanCustomer(phoneNumber).then((value) => {
+            if (value != null) {customer = value}
+          });
     }
-    OrderModel order = OrderModel(
-      orderType: deliType,
-      productsList: productList,
-      totalAmount: _totalAmount,
-      discountAmount: _discountAmount + _productDiscount,
-      finalAmount: _finalAmount,
-      promotionList: promotionApplyList
-          .map((e) => PromotionList(
-              promotionId: e.id,
-              promotionName: e.name,
-              quantity: e.quantity,
-              discountAmount: e.discountInOrder))
-          .toList(),
-    );
-    bool res = false;
-    Get.find<OrderViewModel>().placeOrder(order).then((value) => {
-          res = value,
-          if (res == true) {clearCartData()}
-        });
+    await prepareOrder();
+    setState(ViewStatus.Completed);
   }
 
   List<PaymentProvider?> getListPayment() {
@@ -397,51 +183,64 @@ class CartViewModel extends BaseViewModel {
     return listPayment;
   }
 
-  void increasePromotionQuantity(String id) {
-    int idx = promotionApplyList.indexWhere((element) => element.id == id);
-    if (idx == -1) {
-      showAlertDialog(
-        title: "Thông báo",
-        content: "Khuyến mãi đã bị xoá",
-      );
-      return;
-    }
-    promotionApplyList[idx].quantity = (promotionApplyList[idx].quantity! + 1);
-    promotionApplyList[idx].discountInOrder =
-        (promotionApplyList[idx].discountAmount! *
-            promotionApplyList[idx].quantity!);
-    checkAvailablePromotion();
+  void chooseOrderType(String type) {
+    cart.orderType = type;
+    hideDialog();
+    notifyListeners();
   }
 
-  void decreasePromotionQuantity(String id) {
-    int idx = promotionApplyList.indexWhere((element) => element.id == id);
-    if (idx == -1) {
-      showAlertDialog(
-        title: "Thông báo",
-        content: "Khuyến mãi đã bị xoá",
-      );
-      return;
-    }
-    if (promotionApplyList[idx].quantity == 1) {
-      removePromotion(id);
-      checkAvailablePromotion();
-      return;
-    } else {
-      promotionApplyList[idx].quantity =
-          (promotionApplyList[idx].quantity! - 1);
-      promotionApplyList[idx].discountInOrder =
-          (promotionApplyList[idx].discountAmount! *
-              promotionApplyList[idx].quantity!);
-      checkAvailablePromotion();
-    }
+  void chooseTable(num table) {
+    cart.customerNumber = table;
+    hideDialog();
+    notifyListeners();
   }
 
-  Promotion? selectedPromotion(String id) {
-    for (var promotion in promotionApplyList) {
-      if (promotion.id == id) {
-        return promotion;
+  void setCartNote(String note) {
+    cart.notes = note;
+    notifyListeners();
+  }
+
+  Future<void> prepareOrder() async {
+    cart.paymentType = Get.find<OrderViewModel>().selectedPaymentMethod!.type;
+    cart.discountAmount = 0;
+    cart.bonusPoint = 0;
+    cart.customerId = customer?.membershipId;
+    // cart.customerName = customer?.fullName;
+    // cart.customerPhone = customer?.phoneNumber;
+    cart.finalAmount = cart.totalAmount;
+    for (var element in cart.productList!) {
+      element.discount = 0;
+      element.finalAmount = element.totalAmount;
+      element.promotionCodeApplied = null;
+    }
+    cart.promotionList!.clear();
+    if (cart.promotionCode == null &&
+        cart.voucherCode == null &&
+        cart.customerId == null) {
+      hideDialog();
+      return;
+    }
+    Account? userInfo = await getUserInfo();
+    await api.prepareOrder(cart, userInfo!.storeId ?? '').then((value) => {
+          cart = value,
+        });
+    hideDialog();
+  }
+
+  Future<void> createOrder() async {
+    bool res = false;
+    for (var item in cart.productList!) {
+      if (item.attributes != null) {
+        for (var attribute in item.attributes!) {
+          item.note = (attribute.value != null && attribute.value!.isNotEmpty)
+              ? "${attribute.name} ${attribute.value}, ${item.note}"
+              : item.note;
+        }
       }
     }
-    return null;
+    await Get.find<OrderViewModel>().placeOrder(cart).then((value) => {
+          res = value,
+          if (res == true) {clearCartData()}
+        });
   }
 }

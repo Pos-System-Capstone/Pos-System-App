@@ -15,25 +15,25 @@ class LoginViewModel extends BaseViewModel {
     try {
       setState(ViewStatus.Loading);
       showLoadingDialog();
-      dao.login(userName, password).then((value) => {
+      dao.login(userName, password).then((value) async => {
             userDTO = value,
-            if (userDTO == null)
-              {
-                setState(ViewStatus.Error),
-                hideDialog(),
-                showAlertDialog(
-                    title: "Đăng nhập thất bại",
-                    content: "Vui lòng kiểm tra lại tài khoản và mật khẩu")
-              }
-            else
+            if (userDTO != null)
               {
                 setUserInfo(userDTO!),
+                if (userDTO?.accessToken != null)
+                  {
+                    setToken(userDTO!.accessToken, userDTO?.role ?? ""),
+                  },
+                await Get.find<MenuViewModel>().getMenuOfStore(),
+                // await Get.find<OrderViewModel>().getListPayment(),
+                // await Get.find<CartViewModel>().getListPromotion(),
+                Get.offAllNamed(RouteHandler.HOME),
                 setState(ViewStatus.Completed),
                 hideDialog(),
-                Get.offAllNamed(RouteHandler.HOME)
               }
           });
     } catch (e) {
+      hideDialog();
       setState(ViewStatus.Error);
     }
   }
@@ -41,6 +41,7 @@ class LoginViewModel extends BaseViewModel {
   Future<void> logout() async {
     userDTO = null;
     Get.snackbar("Đăng xuất", "Đăng xuất thành công");
+    Get.find<CartViewModel>().clearCartData();
     await deleteUserInfo();
     await Get.offAllNamed(RouteHandler.LOGIN);
   }

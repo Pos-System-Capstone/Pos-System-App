@@ -6,6 +6,7 @@ import 'package:pos_apps/theme/app_theme.dart';
 import 'package:pos_apps/util/request.dart';
 import 'package:pos_apps/util/share_pref.dart';
 import 'package:pos_apps/views/screens/not_found_screen.dart';
+import 'package:pos_apps/views/widgets/printer_dialogs/add_bluetooth_print_bottonsheet.dart';
 import 'routes/routes_constraints.dart';
 import 'setup.dart';
 import 'views/screens/login_screen/login_by_mobile_pos.dart';
@@ -66,7 +67,13 @@ class _MyAppState extends State<MyApp> {
             transition: Transition.zoom),
         GetPage(
             name: RouteHandler.HOME,
-            page: () => RootScreen(),
+            page: () => RootScreen(
+                  idx: int.parse(Get.parameters['idx'] ?? '0'),
+                ),
+            transition: Transition.cupertino),
+        GetPage(
+            name: RouteHandler.PRINTER,
+            page: () => ScanBluetoohPrinter(),
             transition: Transition.cupertino),
       ],
       initialRoute: RouteHandler.WELCOME,

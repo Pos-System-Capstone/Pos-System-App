@@ -1,42 +1,45 @@
 class OrderResponseModel {
   String? orderId;
   String? invoiceId;
+  String? storeName;
   num? totalAmount;
   num? finalAmount;
   num? vat;
   num? vatAmount;
   num? discount;
-  num? discountProduct = 0;
-  num? discountPromotion = 0;
   String? orderStatus;
   String? orderType;
-  String? checkInDate;
   String? paymentType;
+  String? checkInDate;
+  num? customerNumber;
+  String? notes;
+  List<PromotionList>? promotionList;
   List<ProductList>? productList;
-  PaymentMethod? paymentMethod;
-  List<PromotionListResponse>? promotionList;
+  CustomerInfo? customerInfo;
 
   OrderResponseModel(
       {this.orderId,
       this.invoiceId,
+      this.storeName,
       this.totalAmount,
       this.finalAmount,
       this.vat,
       this.vatAmount,
       this.discount,
-      this.discountProduct,
-      this.discountPromotion,
       this.orderStatus,
       this.orderType,
-      this.checkInDate,
       this.paymentType,
+      this.notes,
+      this.checkInDate,
+      this.customerNumber,
+      this.promotionList,
       this.productList,
-      this.paymentMethod,
-      this.promotionList});
+      this.customerInfo});
 
   OrderResponseModel.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
     invoiceId = json['invoiceId'];
+    storeName = json['storeName'];
     totalAmount = json['totalAmount'];
     finalAmount = json['finalAmount'];
     vat = json['vat'];
@@ -46,24 +49,30 @@ class OrderResponseModel {
     orderType = json['orderType'];
     paymentType = json['paymentType'];
     checkInDate = json['checkInDate'];
+    customerNumber = json['customerNumber'];
+    notes = json['notes'];
+    if (json['promotionList'] != null) {
+      promotionList = <PromotionList>[];
+      json['promotionList'].forEach((v) {
+        promotionList!.add(PromotionList.fromJson(v));
+      });
+    }
     if (json['productList'] != null) {
       productList = <ProductList>[];
       json['productList'].forEach((v) {
         productList!.add(ProductList.fromJson(v));
       });
     }
-    if (json['promotionList'] != null) {
-      promotionList = <PromotionListResponse>[];
-      json['promotionList'].forEach((v) {
-        promotionList!.add(PromotionListResponse.fromJson(v));
-      });
-    }
+    customerInfo = json['customerInfo'] != null
+        ? CustomerInfo.fromJson(json['customerInfo'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['orderId'] = orderId;
     data['invoiceId'] = invoiceId;
+    data['storeName'] = storeName;
     data['totalAmount'] = totalAmount;
     data['finalAmount'] = finalAmount;
     data['vat'] = vat;
@@ -73,12 +82,50 @@ class OrderResponseModel {
     data['orderType'] = orderType;
     data['paymentType'] = paymentType;
     data['checkInDate'] = checkInDate;
-    if (productList != null) {
-      data['productList'] = productList!.map((v) => v.toJson()).toList();
-    }
+    data['customerNumber'] = customerNumber;
+    data['notes'] = notes;
     if (promotionList != null) {
       data['promotionList'] = promotionList!.map((v) => v.toJson()).toList();
     }
+    if (productList != null) {
+      data['productList'] = productList!.map((v) => v.toJson()).toList();
+    }
+    if (customerInfo != null) {
+      data['customerInfo'] = customerInfo!.toJson();
+    }
+    return data;
+  }
+}
+
+class PromotionList {
+  String? promotionId;
+  String? promotionName;
+  num? discountAmount;
+  num? quantity;
+  String? effectType;
+
+  PromotionList(
+      {this.promotionId,
+      this.promotionName,
+      this.discountAmount,
+      this.quantity,
+      this.effectType});
+
+  PromotionList.fromJson(Map<String, dynamic> json) {
+    promotionId = json['promotionId'];
+    promotionName = json['promotionName'];
+    discountAmount = json['discountAmount'];
+    quantity = json['quantity'];
+    effectType = json['effectType'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['promotionId'] = promotionId;
+    data['promotionName'] = promotionName;
+    data['discountAmount'] = discountAmount;
+    data['quantity'] = quantity;
+    data['effectType'] = effectType;
     return data;
   }
 }
@@ -87,7 +134,7 @@ class ProductList {
   String? productInMenuId;
   String? orderDetailId;
   num? sellingPrice;
-  int? quantity;
+  num? quantity;
   String? name;
   num? totalAmount;
   num? finalAmount;
@@ -146,7 +193,7 @@ class ProductList {
 class Extras {
   String? productInMenuId;
   num? sellingPrice;
-  int? quantity;
+  num? quantity;
   num? totalAmount;
   num? finalAmount;
   num? discount;
@@ -184,53 +231,47 @@ class Extras {
   }
 }
 
-class PaymentMethod {
-  String? paymentProviderId;
-  String? paymentProviderName;
-  String? picUrl;
+class CustomerInfo {
+  String? id;
+  String? name;
+  String? phone;
+  String? address;
+  String? customerType;
+  String? deliTime;
+  String? paymentStatus;
+  String? deliStatus;
 
-  PaymentMethod(
-      {this.paymentProviderId, this.paymentProviderName, this.picUrl});
+  CustomerInfo(
+      {this.id,
+      this.name,
+      this.phone,
+      this.address,
+      this.customerType,
+      this.deliTime,
+      this.paymentStatus,
+      this.deliStatus});
 
-  PaymentMethod.fromJson(Map<String, dynamic> json) {
-    paymentProviderId = json['paymentProviderId'];
-    paymentProviderName = json['paymentProviderName'];
-    picUrl = json['picUrl'];
-  }
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['paymentProviderId'] = paymentProviderId;
-    data['paymentProviderName'] = paymentProviderName;
-    data['picUrl'] = picUrl;
-    return data;
-  }
-}
-
-class PromotionListResponse {
-  String? promotionId;
-  String? promotionName;
-  int? discountAmount;
-  int? quantity;
-
-  PromotionListResponse(
-      {this.promotionId,
-      this.promotionName,
-      this.discountAmount,
-      this.quantity});
-
-  PromotionListResponse.fromJson(Map<String, dynamic> json) {
-    promotionId = json['promotionId'];
-    promotionName = json['promotionName'];
-    discountAmount = json['discountAmount'];
-    quantity = json['quantity'];
+  CustomerInfo.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    phone = json['phone'];
+    address = json['address'];
+    customerType = json['customerType'];
+    deliTime = json['deliTime'];
+    paymentStatus = json['paymentStatus'];
+    deliStatus = json['deliStatus'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['promotionId'] = promotionId;
-    data['promotionName'] = promotionName;
-    data['discountAmount'] = discountAmount;
-    data['quantity'] = quantity;
+    data['id'] = id;
+    data['name'] = name;
+    data['phone'] = phone;
+    data['address'] = address;
+    data['customerType'] = customerType;
+    data['deliTime'] = deliTime;
+    data['paymentStatus'] = paymentStatus;
+    data['deliStatus'] = deliStatus;
     return data;
   }
 }

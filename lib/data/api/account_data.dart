@@ -16,7 +16,6 @@ class AccountData {
         final userRole = user['role'] as String;
 
         requestObj.setToken = accessToken;
-        paymentRequestObj.setToken = accessToken;
         setToken(accessToken, userRole);
 
         Account userResponse = Account.fromJson(user);
@@ -34,14 +33,14 @@ class AccountData {
 
   Future<bool> isUserLoggedIn() async {
     bool isTokenExpired = await expireToken();
-    String token = await getToken();
+    var token = await getToken();
     if (isTokenExpired) {
       setToken("", "");
       return false;
     }
-    if (!isTokenExpired && token.isNotEmpty) {
+    if (!isTokenExpired && token != null && token.isNotEmpty) {
       requestObj.setToken = token;
     }
-    return token.isNotEmpty;
+    return token != null && token.isNotEmpty;
   }
 }

@@ -64,9 +64,9 @@ Future<bool> setToken(String value, String userRole) async {
   return prefs.setString('token', value);
 }
 
-Future<String> getToken() async {
+Future<String?> getToken() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('token') ?? "";
+  return prefs.getString('token');
 }
 
 Future<bool> setThemeColor(int idx) async {
@@ -89,10 +89,30 @@ Future<bool?> getThemeMode() async {
   return prefs.getBool('darkMode');
 }
 
+Future<bool> setScanUserOrder(bool isScan) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setBool('scanUserOrder', isScan);
+}
+
+Future<bool?> getScanUserOrder() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('scanUserOrder');
+}
+
 Future<void> setUserInfo(Account userDTO) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final userInfo = userDTO.toJson();
   prefs.setString("userInfo", jsonEncode(userInfo));
+}
+
+Future<void> setUserId(String userId) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("userId", userId);
+}
+
+Future<String> getUserId() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('userId') ?? "";
 }
 
 Future<Account?> getUserInfo() async {
@@ -138,6 +158,16 @@ Future<bool> setCashboxMonney(int num) async {
   return prefs.setInt("cashboxMoney", num);
 }
 
+Future<bool> setPaperRoll(int num) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setInt("paper", num);
+}
+
+Future<int?> getPaperRoll() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getInt("paper");
+}
+
 Future<bool> setBillPrinter(String url) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.setString("billPrinter", url);
@@ -146,6 +176,21 @@ Future<bool> setBillPrinter(String url) async {
 Future<String?> getBillPrinter() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString("billPrinter");
+}
+
+Future<bool> setBluetoothPrinter(String mac) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setString("billPrinterBlue", mac);
+}
+
+Future<String?> getBluetoothPrinter() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString("billPrinterBlue");
+}
+
+Future<void> deleteBluetoothPrinter() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove("billPrinterBlue");
 }
 
 Future<bool> setProductPrinter(String url) async {
@@ -186,7 +231,6 @@ Future<List<Attribute>?> getAttributes() async {
 
 Future<void> setPromotions(List<String> promotion) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  // await prefs.setString('PROMOTIONS', jsonEncode(promotion));
   await prefs.setStringList('PROMOTIONS', promotion);
 }
 

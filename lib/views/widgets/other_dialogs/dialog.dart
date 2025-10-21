@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pos_apps/data/model/response/order_response.dart';
 import 'package:pos_apps/data/model/response/session_detail_report.dart';
-import 'package:pos_apps/data/model/response/session_details.dart';
 import 'package:pos_apps/util/format.dart';
-import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/view_model/report_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -26,7 +24,7 @@ Future<bool> showAlertDialog(
       width: Get.size.width * 0.3,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
@@ -47,7 +45,7 @@ Future<bool> showAlertDialog(
             style: Get.textTheme.titleLarge,
           ),
           Divider(
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -92,7 +90,7 @@ Future<bool> showConfirmDialog(
       width: Get.size.width * 0.5,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
@@ -113,7 +111,7 @@ Future<bool> showConfirmDialog(
             style: Get.textTheme.titleLarge,
           ),
           Divider(
-            color: Get.theme.colorScheme.onBackground,
+            color: Get.theme.colorScheme.onSurface,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -142,7 +140,7 @@ Future<bool> showConfirmDialog(
                 child: Text(
                   confirmText,
                   style: Get.textTheme.titleMedium!.copyWith(
-                    color: Get.theme.colorScheme.background,
+                    color: Get.theme.colorScheme.surface,
                   ),
                 ),
               ),
@@ -164,7 +162,7 @@ showLoadingDialog() {
       width: Get.size.width * 0.3,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
@@ -218,7 +216,7 @@ void sessionDetailsDialog(Session session) {
             height: Get.size.height * 0.8,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Get.theme.colorScheme.background,
+              color: Get.theme.colorScheme.surface,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
@@ -251,7 +249,7 @@ void sessionDetailsDialog(Session session) {
             height: Get.size.height * 0.8,
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Get.theme.colorScheme.background,
+              color: Get.theme.colorScheme.surface,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
@@ -278,7 +276,7 @@ void sessionDetailsDialog(Session session) {
         return Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Get.theme.colorScheme.background,
+            color: Get.theme.colorScheme.surface,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
@@ -317,7 +315,7 @@ void sessionDetailsDialog(Session session) {
                       },
                       icon: Icon(
                         Icons.close,
-                        color: Get.theme.colorScheme.onBackground,
+                        color: Get.theme.colorScheme.onSurface,
                         size: 32,
                       ),
                     ),
@@ -325,7 +323,7 @@ void sessionDetailsDialog(Session session) {
                 ],
               ),
               Divider(
-                color: Get.theme.colorScheme.onBackground,
+                color: Get.theme.colorScheme.onSurface,
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -368,6 +366,29 @@ void sessionDetailsDialog(Session session) {
                               "0",
                         ),
                         dashboardCard(
+                          title: "Số đơn GrabFood",
+                          value:
+                              sessionDetailReport?.totalGrabFood.toString() ??
+                                  "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn ShopeeFood",
+                          value:
+                              sessionDetailReport?.totalShopeeFood.toString() ??
+                                  "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn BeFood",
+                          value: sessionDetailReport?.totalBeFood.toString() ??
+                              "0",
+                        ),
+                        dashboardCard(
+                          title: "Số đơn thẻ thành viên",
+                          value:
+                              sessionDetailReport?.totalPointify.toString() ??
+                                  "0",
+                        ),
+                        dashboardCard(
                           title: "Số đơn Visa",
                           value:
                               sessionDetailReport?.totalVisa.toString() ?? "0",
@@ -386,6 +407,26 @@ void sessionDetailsDialog(Session session) {
                           title: "Doanh thu chuyển khoản",
                           value: formatPrice(
                               sessionDetailReport?.bankingAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu GrabFood",
+                          value: formatPrice(
+                              sessionDetailReport?.grabFoodAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu ShopeeFood",
+                          value: formatPrice(
+                              sessionDetailReport?.shopeeFoodAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu BeFood",
+                          value: formatPrice(
+                              sessionDetailReport?.beFoodAmount ?? 0),
+                        ),
+                        dashboardCard(
+                          title: "Doanh thu thẻ thành viên",
+                          value: formatPrice(
+                              sessionDetailReport?.pointifyAmount ?? 0),
                         ),
                         dashboardCard(
                           title: "Doanh thu Visa",
@@ -422,32 +463,22 @@ void sessionDetailsDialog(Session session) {
 Widget dashboardCard({required String title, required String value}) {
   return Card(
     child: Container(
-      padding: EdgeInsets.all(16),
-      height: 160,
-      width: 200,
+      padding: EdgeInsets.all(8),
+      height: 100,
+      width: 140,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Center(
-              child: Text(
-                title,
-                style: Get.textTheme.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-            ),
+          Text(
+            title,
+            style: Get.textTheme.bodyMedium,
+            textAlign: TextAlign.center,
           ),
-          Divider(
-            color: Get.theme.colorScheme.onBackground,
+          Text(
+            value,
+            style: Get.textTheme.bodyLarge,
           ),
-          Expanded(
-              child: Center(
-            child: Text(
-              value,
-              style: Get.textTheme.titleLarge,
-            ),
-          )),
         ],
       ),
     ),
@@ -466,21 +497,11 @@ Widget productItem(ProductList item) {
           children: [
             Expanded(
               flex: 7,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name!,
-                    style: Get.textTheme.bodyLarge,
-                    maxLines: 2,
-                    overflow: TextOverflow.clip,
-                  ),
-                  Text(
-                    formatPrice(item.sellingPrice ?? 0),
-                    style: Get.textTheme.bodyMedium,
-                  )
-                ],
+              child: Text(
+                item.name!,
+                style: Get.textTheme.bodyMedium,
+                maxLines: 2,
+                overflow: TextOverflow.clip,
               ),
             ),
             Expanded(
@@ -491,7 +512,7 @@ Widget productItem(ProductList item) {
                 children: [
                   Text(
                     "${item.quantity}",
-                    style: Get.textTheme.bodyLarge,
+                    style: Get.textTheme.bodyMedium,
                   ),
                 ],
               ),
@@ -503,8 +524,8 @@ Widget productItem(ProductList item) {
                 child: Column(
                   children: [
                     Text(
-                      formatPrice(item.totalAmount!),
-                      style: Get.textTheme.bodyLarge,
+                      formatPrice(item.finalAmount!),
+                      style: Get.textTheme.bodyMedium,
                     ),
                     item.discount != 0
                         ? Text(
@@ -533,7 +554,7 @@ Widget productItem(ProductList item) {
                     flex: 6,
                     child: Text(
                       "+${item.extras![i].name!}",
-                      style: Get.textTheme.bodyMedium,
+                      style: Get.textTheme.bodySmall,
                     ),
                   ),
                   Expanded(
@@ -542,7 +563,7 @@ Widget productItem(ProductList item) {
                       alignment: AlignmentDirectional.centerEnd,
                       child: Text(
                         formatPrice(item.extras![i].sellingPrice!),
-                        style: Get.textTheme.bodyMedium,
+                        style: Get.textTheme.bodySmall,
                       ),
                     ),
                   ),
@@ -557,7 +578,7 @@ Widget productItem(ProductList item) {
             child: Align(
               alignment: AlignmentDirectional.centerStart,
               child: Text(item.note ?? '',
-                  style: Get.textTheme.bodyMedium,
+                  style: Get.textTheme.bodySmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis),
             ),
@@ -586,13 +607,17 @@ void hideBottomSheet() {
 }
 
 Future<String?> inputDialog(String title, String hint, String? value,
-    {bool isNum = false}) async {
+    {bool isNum = false, bool isPassword = false}) async {
   hideDialog();
   String? result;
   await Get.dialog(AlertDialog(
     title: Text(title),
     content: TextField(
-      keyboardType: isNum ? TextInputType.number : TextInputType.text,
+      keyboardType: isNum
+          ? TextInputType.number
+          : isPassword
+              ? TextInputType.visiblePassword
+              : TextInputType.text,
       inputFormatters:
           isNum ? [FilteringTextInputFormatter.digitsOnly] : null, // Only numb
       controller: TextEditingController(text: value),
@@ -604,14 +629,14 @@ Future<String?> inputDialog(String title, String hint, String? value,
     actions: [
       TextButton(
           onPressed: () {
-            Get.back(result: result);
-          },
-          child: Text('Cập nhật')),
-      TextButton(
-          onPressed: () {
             Get.back(result: value);
           },
           child: Text('Huỷ')),
+      FilledButton(
+          onPressed: () {
+            Get.back(result: result);
+          },
+          child: Text('Xác nhận')),
     ],
   ));
   return result;

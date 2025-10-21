@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
 import '../routes/routes_constraints.dart';
+import '../util/request.dart';
+import '../util/share_pref.dart';
 import 'index.dart';
 
 class StartUpViewModel extends BaseViewModel {
@@ -8,7 +10,14 @@ class StartUpViewModel extends BaseViewModel {
     handleStartUpLogic();
   }
   Future handleStartUpLogic() async {
-    await Future.delayed(const Duration(seconds: 2));
-    Get.offNamed(RouteHandler.LOGIN);
+    await Future.delayed(const Duration(seconds: 1));
+    var token = await getToken();
+    if (token != null && token.isNotEmpty) {
+      requestObj.setToken = token;
+      await Get.find<MenuViewModel>().getMenuOfStore();
+      await Get.offAllNamed(RouteHandler.HOME);
+    } else {
+      await Get.offNamed(RouteHandler.LOGIN);
+    }
   }
 }

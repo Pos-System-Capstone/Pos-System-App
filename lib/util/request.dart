@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart' hide Response;
-import '../routes/routes_constraints.dart';
+import 'package:get/get.dart' show Get, Inst;
+import '../view_model/index.dart';
 import '../views/widgets/other_dialogs/dialog.dart';
 
 Map<String, dynamic> convertToQueryParams(
@@ -78,7 +78,7 @@ class CustomInterceptors extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(err, ErrorInterceptorHandler handler) {
     if (kDebugMode) {
       print(
           'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
@@ -86,15 +86,15 @@ class CustomInterceptors extends Interceptor {
     return super.onError(err, handler);
   }
 }
-// or new Dio with a BaseOptions instance.
 
+// or new Dio with a BaseOptions instance
 class MyRequest {
   static BaseOptions options = BaseOptions(
-      // baseUrl: 'https://admin.reso.vn/api/v1/',
-      baseUrl: 'http://posapi.reso.vn/api/v1/',
+      baseUrl: 'https://admin.reso.vn/api/v1/',
+      // baseUrl: 'https://localhost:7131/api/v1/',
       headers: {
         Headers.contentTypeHeader: "application/json",
-        Headers.acceptHeader: "text/plain",
+        Headers.acceptHeader: "text/plain"
       },
       sendTimeout: Duration(seconds: 15),
       receiveTimeout: Duration(seconds: 5));
@@ -108,26 +108,22 @@ class MyRequest {
       },
       onError: (e, handler) async {
         if (e.response?.statusCode == 400) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-        } else if (e.response?.statusCode == 500) {
-          Future<bool> res = showConfirmDialog(
-            title: "Lỗi hệ thống",
-            content: "Vui lòng đăng nhập lại",
-          );
-          // res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
-        } else if (e.response?.statusCode == 401) {
           await showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-          Get.offAllNamed(RouteHandler.LOGIN);
-        } else {
+              title: "Lỗi",
+              content: e.response?.data["Error"].toString() ?? 'Có lỗi xãy ra');
+        } else if (e.response?.statusCode == 403) {
+          showConfirmDialog(
+            title: "Lỗi đăng nhập",
+            content:
+                "Tài khoản của bạn không có quyền đăng nhập vào hệ thống này",
+          ).then((value) => {
+                if (value) Get.find<LoginViewModel>().logout(),
+              });
+        } else if (e.response?.statusCode == 500) {
           showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
+            title: "Lỗi hệ thống",
+            content:
+                "Lỗi xảy ra do hệ thống gặp vấn đề, vui lòng thử lại sau hoặc là tắt ứng dụng và mở lại",
           );
         }
         handler.next(e);
@@ -144,65 +140,8 @@ class MyRequest {
   }
 }
 
-class PaymentRequest {
-  static BaseOptions options = BaseOptions(
-      // baseUrl: 'https://localhost:7102/api/v1/',
-      baseUrl: 'https://payment.endy.bio/api/v1/',
-      headers: {
-        Headers.contentTypeHeader: "application/json",
-        Headers.acceptHeader: "text/plain",
-      },
-      sendTimeout: Duration(seconds: 15),
-      receiveTimeout: Duration(seconds: 5));
-  late Dio _inner;
-
-  PaymentRequest() {
-    _inner = Dio(options);
-    _inner.interceptors.add(CustomInterceptors());
-    _inner.interceptors.add(InterceptorsWrapper(
-      onResponse: (e, handler) {
-        return handler.next(e); // continue
-      },
-      onError: (e, handler) async {
-        if (kDebugMode) {
-          print(e.response?.statusCode);
-        }
-        if (e.response?.statusCode == 400) {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-        } else if (e.response?.statusCode == 500) {
-          Future<bool> res = showConfirmDialog(
-            title: "Lỗi hệ thống " + e.response?.data["StatusCode"],
-            content: e.response?.data["Error"] + "/n Vui lòng đăng nhập lại",
-          );
-          res.then((value) => Get.offAllNamed(RouteHandler.LOGIN));
-        } else {
-          showAlertDialog(
-            title: "Lỗi",
-            content: e.response?.data["Error"],
-          );
-        }
-        // handler.next(e);
-      },
-    ));
-  }
-
-  Dio get paymentRequest {
-    return _inner;
-  }
-
-  set setToken(token) {
-    options.headers["Authorization"] = "Bearer $token";
-  }
-}
-
 final requestObj = MyRequest();
 final request = requestObj.request;
-
-final paymentRequestObj = PaymentRequest();
-final paymentRequest = paymentRequestObj.paymentRequest;
 
 class MyHttpOverrides extends HttpOverrides {
   @override

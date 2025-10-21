@@ -5,7 +5,7 @@ class OrderModel {
   num? totalAmount;
   num? discountAmount;
   num? finalAmount;
-  List<PromotionList>? promotionList;
+  List<PromotionInOrder>? promotionList;
 
   OrderModel(
       {this.orderType,
@@ -27,9 +27,9 @@ class OrderModel {
     discountAmount = json['discountAmount'];
     finalAmount = json['finalAmount'];
     if (json['promotionList'] != null) {
-      promotionList = <PromotionList>[];
+      promotionList = <PromotionInOrder>[];
       json['promotionList'].forEach((v) {
-        promotionList!.add(PromotionList.fromJson(v));
+        promotionList!.add(PromotionInOrder.fromJson(v));
       });
     }
   }
@@ -120,19 +120,19 @@ class ExtraInOrder {
   }
 }
 
-class PromotionList {
+class PromotionInOrder {
   String? promotionId;
   String? promotionName;
   num? quantity;
   num? discountAmount;
 
-  PromotionList(
+  PromotionInOrder(
       {this.promotionId,
       this.promotionName,
       this.quantity,
       this.discountAmount});
 
-  PromotionList.fromJson(Map<String, dynamic> json) {
+  PromotionInOrder.fromJson(Map<String, dynamic> json) {
     promotionId = json['promotionId'];
     quantity = json['quantity'];
     discountAmount = json['discountAmount'];

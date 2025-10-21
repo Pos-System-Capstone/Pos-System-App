@@ -9,6 +9,7 @@ import 'base_view_model.dart';
 class RootViewModel extends BaseViewModel {
   int numberOfTable = 20;
   bool isDarkMode = false;
+  bool isScanOrder = false;
   num defaultCashboxMoney = 1000000;
   int colorIndex = 0;
   List<Attribute> listAttribute = [];
@@ -19,6 +20,7 @@ class RootViewModel extends BaseViewModel {
     getCashboxMonney().then((value) => defaultCashboxMoney = value ?? 1000000);
     getAttributes().then((value) => listAttribute = value ?? []);
     getPromotions().then((value) => promotions = value ?? []);
+    getScanUserOrder().then((value) => isScanOrder = value ?? false);
   }
   void handleChangeTheme(bool isDarkMode) async {
     int index = await getThemeColor() ?? 0;
@@ -108,6 +110,12 @@ class RootViewModel extends BaseViewModel {
     defaultCashboxMoney = value;
     setCashboxMonney(value);
     setState(ViewStatus.Completed);
+  }
+
+  Future<void> setScanOrder(bool value) async {
+    isScanOrder = value;
+    await setScanUserOrder(value);
+    notifyListeners();
   }
 
   void increaseNumberOfTabele() {

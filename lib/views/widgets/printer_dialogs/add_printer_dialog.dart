@@ -5,6 +5,7 @@ import 'package:pos_apps/view_model/printer_view_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 void showPrinterConfigDialog(PrinterTypeEnum type) {
+  List<int> options = [58, 80, 0];
   Get.bottomSheet(BottomSheet(
     onClosing: () {
       Get.back();
@@ -31,8 +32,23 @@ void showPrinterConfigDialog(PrinterTypeEnum type) {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    DropdownButton<String>(
+                      value: model.paperOptions.toString(),
+                      items: options.map((int option) {
+                        return DropdownMenuItem<String>(
+                          value: option.toString(),
+                          child: Text(option.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        model.setPaperOption(newValue ?? '0');
+                      },
+                    ),
                     FilledButton(
-                        onPressed: () => model.scanPrinter(),
+                        onPressed: () {
+                          model.scanPrinter();
+                          // model.scanBluetoothPrinter();
+                        },
                         child: model.status == ViewStatus.Loading
                             ? Text('Dang tìm kiếm...')
                             : Text('Tìm kiếm')),

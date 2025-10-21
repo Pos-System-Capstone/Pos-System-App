@@ -11,8 +11,8 @@ class PromotionInfoScreen extends StatefulWidget {
 }
 
 class _PromotionInfoScreenState extends State<PromotionInfoScreen> {
-  TextEditingController _nameController = TextEditingController();
-  RootViewModel _rootViewModel = Get.find<RootViewModel>();
+  final TextEditingController _nameController = TextEditingController();
+  final RootViewModel _rootViewModel = Get.find<RootViewModel>();
   List<String>? promotions = [];
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _PromotionInfoScreenState extends State<PromotionInfoScreen> {
       child: ScopedModel(
         model: _rootViewModel,
         child: Container(
-          color: Get.theme.colorScheme.background,
+          color: Get.theme.colorScheme.surface,
           width: Get.size.width,
           height: Get.size.height,
           child: ScopedModelDescendant<RootViewModel>(
@@ -54,7 +54,7 @@ class _PromotionInfoScreenState extends State<PromotionInfoScreen> {
                   ],
                 ),
                 Divider(
-                  color: Get.theme.colorScheme.onBackground,
+                  color: Get.theme.colorScheme.onSurface,
                 ),
                 Card(
                   child: ListTile(

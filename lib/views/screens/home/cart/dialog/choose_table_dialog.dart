@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pos_apps/views/screens/home/cart/dialog/choose_deli_type_dialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../../../../../view_model/index.dart';
-import '../../../../widgets/other_dialogs/dialog.dart';
 
 void chooseTableDialog() {
   Get.dialog(Dialog(
@@ -12,11 +11,10 @@ void chooseTableDialog() {
     ),
     elevation: 0,
     child: ScopedModel(
-      model: Get.find<OrderViewModel>(),
-      child: ScopedModelDescendant<OrderViewModel>(
+      model: Get.find<CartViewModel>(),
+      child: ScopedModelDescendant<CartViewModel>(
         builder: (context, child, model) {
           int numberOfTable = Get.find<RootViewModel>().numberOfTable;
-          List<String> listPromotion = Get.find<RootViewModel>().promotions;
           return SizedBox(
             width: Get.width * 0.9,
             height: Get.height * 0.9,
@@ -28,8 +26,8 @@ void chooseTableDialog() {
                   padding: const EdgeInsets.all(16),
                   child: Align(
                       alignment: Alignment.center,
-                      child:
-                          Text("Chọn số bàn", style: Get.textTheme.titleLarge)),
+                      child: Text("Chọn số thứ tự",
+                          style: Get.textTheme.titleLarge)),
                 ),
                 Divider(
                   height: 1,
@@ -46,9 +44,9 @@ void chooseTableDialog() {
                               chooseDeliTypeDialog();
                             },
                             child: Card(
-                              color: model.selectedTable == i
+                              color: model.cart.customerNumber == i
                                   ? Get.theme.colorScheme.primaryContainer
-                                  : Get.theme.colorScheme.background,
+                                  : Get.theme.colorScheme.surface,
                               child: SizedBox(
                                 width: 100,
                                 height: 110,

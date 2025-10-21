@@ -1,17 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pos_apps/util/share_pref.dart';
 
 import 'package:pos_apps/view_model/index.dart';
 import 'package:pos_apps/views/screens/home/cart/cart_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../widgets/other_dialogs/dialog.dart';
 import 'home/cart/cart.dart';
+import 'membership/membership_screen.dart';
 import 'orders/orders.dart';
 import 'profile/profile.dart';
 import 'settings/setting.dart';
 
 class RootScreen extends StatefulWidget {
-  const RootScreen({super.key});
+  final int idx;
+  const RootScreen({super.key, required this.idx});
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -22,6 +27,7 @@ class _RootScreenState extends State<RootScreen> {
     AddToCartScreen(),
     OrdersScreen(),
     ProfileScreen(),
+    MembershipScreen(),
     SettingsScreen(),
   ];
 
@@ -30,6 +36,7 @@ class _RootScreenState extends State<RootScreen> {
     CartScreen(),
     OrdersScreen(),
     ProfileScreen(),
+    MembershipScreen(),
     SettingsScreen(),
   ];
   List<BottomNavigationBarItem> items = const [
@@ -54,6 +61,11 @@ class _RootScreenState extends State<RootScreen> {
       label: 'Cửa hàng',
     ),
     BottomNavigationBarItem(
+      icon: Icon(Icons.card_membership),
+      activeIcon: Icon(Icons.card_membership_outlined),
+      label: 'Thành viên',
+    ),
+    BottomNavigationBarItem(
       icon: Icon(Icons.settings),
       activeIcon: Icon(Icons.settings_outlined),
       label: 'Thiết lập',
@@ -76,16 +88,39 @@ class _RootScreenState extends State<RootScreen> {
       label: Text('Cửa hàng'),
     ),
     NavigationRailDestination(
+      icon: Icon(Icons.card_membership),
+      selectedIcon: Icon(Icons.card_membership_outlined),
+      label: Text('Thành viên'),
+    ),
+    NavigationRailDestination(
       icon: Icon(Icons.settings),
       selectedIcon: Icon(Icons.settings_outlined),
       label: Text('Thiết lập'),
     ),
   ];
   int _selectedIndex = 0;
+  Timer? _timer;
   @override
   void initState() {
+    _selectedIndex = widget.idx;
     Get.find<MenuViewModel>().getMenuOfStore();
+    startCountdown();
     super.initState();
+  }
+
+  startCountdown() {
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) async {
+      getScanUserOrder().then((value) => {
+            if (value != null && value)
+              {Get.find<OrderViewModel>().findNewUserOrder()}
+          });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

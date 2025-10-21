@@ -4,6 +4,7 @@ class Category {
   String? name;
   String? type;
   int? displayOrder;
+  List<String>? childCategoryIds;
   String? description;
   String? picUrl;
 
@@ -13,6 +14,7 @@ class Category {
       this.name,
       this.type,
       this.displayOrder,
+      this.childCategoryIds,
       this.description,
       this.picUrl});
 
@@ -22,6 +24,7 @@ class Category {
     name = json['name'];
     type = json['type'];
     displayOrder = json['displayOrder'];
+    childCategoryIds = json['childCategoryIds'].cast<String>();
     description = json['description'];
     picUrl = json['picUrl'];
   }
