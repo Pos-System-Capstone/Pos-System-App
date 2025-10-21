@@ -20,6 +20,10 @@ class LoginViewModel extends BaseViewModel {
             if (userDTO != null)
               {
                 setUserInfo(userDTO!),
+                if (userDTO?.accessToken != null)
+                  {
+                    setToken(userDTO!.accessToken, userDTO?.role ?? ""),
+                  },
                 await Get.find<MenuViewModel>().getMenuOfStore(),
                 // await Get.find<OrderViewModel>().getListPayment(),
                 // await Get.find<CartViewModel>().getListPromotion(),

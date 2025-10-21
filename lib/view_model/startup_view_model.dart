@@ -12,7 +12,7 @@ class StartUpViewModel extends BaseViewModel {
   Future handleStartUpLogic() async {
     await Future.delayed(const Duration(seconds: 1));
     var token = await getToken();
-    if (false) {
+    if (token != null && token.isNotEmpty) {
       requestObj.setToken = token;
       await Get.find<MenuViewModel>().getMenuOfStore();
       await Get.offAllNamed(RouteHandler.HOME);

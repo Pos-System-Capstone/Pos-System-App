@@ -64,9 +64,9 @@ Future<bool> setToken(String value, String userRole) async {
   return prefs.setString('token', value);
 }
 
-Future<String> getToken() async {
+Future<String?> getToken() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('token') ?? "";
+  return prefs.getString('token');
 }
 
 Future<bool> setThemeColor(int idx) async {

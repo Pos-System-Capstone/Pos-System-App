@@ -38,9 +38,9 @@ class AccountData {
       setToken("", "");
       return false;
     }
-    if (!isTokenExpired && token.isNotEmpty) {
+    if (!isTokenExpired && token != null && token.isNotEmpty) {
       requestObj.setToken = token;
     }
-    return token.isNotEmpty;
+    return token != null && token.isNotEmpty;
   }
 }
